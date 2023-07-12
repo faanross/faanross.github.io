@@ -1,8 +1,8 @@
 baseURL = "https://athul.github.io/archie/"
 languageCode = "en-us"
-title = "Archie"
+title = "faan|ross"
 theme="archie"
-copyright = "© Athul"
+copyright = "| hack the planet"
 # Code Highlight
 pygmentsstyle = "monokai"
 pygmentscodefences = true
@@ -10,31 +10,33 @@ pygmentscodefencesguesssyntax = true
 
 disqusShortname = "yourDisqusShortname"
 
-paginate=3 # articles per page
+paginate=2 # articles per page
 
 [params]
 	mode="auto" # color-mode → light,dark,toggle or auto
 	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
-	subtitle = "Minimal and Clean [blog theme for Hugo](https://github.com/athul/archie)"
+	subtitle = "write-ups for my [threat hunting content](https://www.youtube.com/channel/UCtwchzdOYHiXai5BxXPiHMg)"
 	mathjax = true # enable MathJax support
 	katex = true # enable KaTeX support
+	favicon = "/favicon.ico"
+
 
 # Social Tags
 
 [[params.social]]
 name = "GitHub"
 icon = "github"
-url = "https://github.com/athul/archie"
+url = "https://github.com/faanross"
 
 [[params.social]]
 name = "Twitter"
 icon = "twitter"
-url = "https://twitter.com/athulcajay/"
+url = "https://twitter.com/faanross"
 
 [[params.social]]
-name = "GitLab"
-icon = "gitlab"
-url = "https://gitlab.com/athul/"
+name = "YouTube"
+icon = "youtube"
+url = "https://www.youtube.com/channel/UCtwchzdOYHiXai5BxXPiHMg"
 
 # Main menu Items
 
