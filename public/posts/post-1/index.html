@@ -211,13 +211,32 @@
 <li>install winpmem</li>
 <li>install wireshark</li>
 </ul>
-<p>.
-In VMWare Workstation goto <code>File</code> -&gt; New Virtual Machine. Choose <code>Typical (recommended)</code>, then click <code>Next</code>. Then select <code>I will install the operating system later</code> and hit <code>Next</code>.</p>
+<p>In VMWare Workstation goto <code>File</code> -&gt; New Virtual Machine. Choose <code>Typical (recommended)</code>, then click <code>Next</code>. Then select <code>I will install the operating system later</code> and hit <code>Next</code>.</p>
 <figure class="custom-figure"><img src="/img/image001.png"/>
 </figure>
 
-<p>and that do it.</p>
-<p>ok how about that then do it.</p>
+<p>Select Microsoft Windows, and under Version select Windows 10. Here you are free to call the machine whatever you&rsquo;d like, in my case I am calling it <code>Victim</code>. Select 60 GB and ‘Split virtual disk into multiple files’. Then on the final screen click on Customize Hardware.</p>
+<figure class="custom-figure"><img src="/img/image002.png"/>
+</figure>
+
+<p>Under Memory (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. Under Processors I suggest at least 2, if possible given your available resources then increase it to 4.</p>
+<p>Under <code>New CD/DVD (SATA)</code> change Connection from Use Physical Drive to <code>Use ISO image file</code>. Click Browse… and select the location of your Windows 10 iso file</p>
+<figure class="custom-figure"><img src="/img/image003.png"/>
+</figure>
+
+<p>Now finally select <code>Network Adapter</code>. Note we&rsquo;ll change this later to Host-Only (to minimize noise), but for now we&rsquo;ll need an internet connection to finish the installation so you can select either <code>NAT</code> or <code>Bridged</code>. Click <code>Close</code> then <code>Finish</code>.</p>
+<p>You should now see your VM in your Library (left hand column), select it and then click on Power on this virtual machine.</p>
+<figure class="custom-figure"><img src="/img/image004.png"/>
+</figure>
+
+<p>Wait a short while and then you should see a Windows Setup window. Choose your desired language etc, select Next and then click on Install Now. Select ‘I accept the license terms’ and click Next. Next select ‘Custom: Install Windows only (advanced)’, and then select your virtual HD and click Next.</p>
+<figure class="custom-figure"><img src="/img/image005.png"/>
+</figure>
+
+<p>Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the License Agreement (if you dare!). Now once you reach the Sign in page don’t fill anything in, rather select ‘Domain join instead’ in the bottom left corner.</p>
+<figure class="custom-figure"><img src="/img/image006.png"/>
+</figure>
+
 
 		</section>
 

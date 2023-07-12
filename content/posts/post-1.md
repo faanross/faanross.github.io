@@ -141,17 +141,33 @@ First we'll install the OS using the iso, following that we'll make a bunch of c
 - install winpmem
 - install wireshark
 
-.
 In VMWare Workstation goto `File` -> New Virtual Machine. Choose `Typical (recommended)`, then click `Next`. Then select `I will install the operating system later` and hit `Next`.
 
 {{< figure src="/img/image001.png" title="" class="custom-figure" >}}
 
- and that do it.
+Select Microsoft Windows, and under Version select Windows 10. Here you are free to call the machine whatever you'd like, in my case I am calling it `Victim`. Select 60 GB and ‘Split virtual disk into multiple files’. Then on the final screen click on Customize Hardware.
 
- ok how about that then do it.
+{{< figure src="/img/image002.png" title="" class="custom-figure" >}}
 
+Under Memory (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. Under Processors I suggest at least 2, if possible given your available resources then increase it to 4.
 
+Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click Browse… and select the location of your Windows 10 iso file
 
+{{< figure src="/img/image003.png" title="" class="custom-figure" >}}
+
+Now finally select `Network Adapter`. Note we'll change this later to Host-Only (to minimize noise), but for now we'll need an internet connection to finish the installation so you can select either `NAT` or `Bridged`. Click `Close` then `Finish`.
+
+You should now see your VM in your Library (left hand column), select it and then click on Power on this virtual machine.
+
+{{< figure src="/img/image004.png" title="" class="custom-figure" >}}
+
+Wait a short while and then you should see a Windows Setup window. Choose your desired language etc, select Next and then click on Install Now. Select ‘I accept the license terms’ and click Next. Next select ‘Custom: Install Windows only (advanced)’, and then select your virtual HD and click Next.
+
+{{< figure src="/img/image005.png" title="" class="custom-figure" >}}
+
+Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the License Agreement (if you dare!). Now once you reach the Sign in page don’t fill anything in, rather select ‘Domain join instead’ in the bottom left corner.
+
+{{< figure src="/img/image006.png" title="" class="custom-figure" >}}
 
 
 
