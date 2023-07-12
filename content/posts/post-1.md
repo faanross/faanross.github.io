@@ -49,7 +49,8 @@ Sounds good? Let's get it.
 
 
 
-{{< figure src="/img/randy01.gif" title="" >}}
+{{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
+
 
 
 ***
