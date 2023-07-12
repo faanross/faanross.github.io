@@ -48,7 +48,6 @@ But first, *le sigh*, it's required we just dip our toes into a wee bit of theor
 Sounds good? Let's get it.
 
 
-
 {{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
 
 
@@ -89,6 +88,8 @@ In this specific course however we'll be focussing on a very specific type of ma
 
 Let's start by sketching a scenario of how many typical attacks play out these days.
 
+{{< figure src="/img/hackers01.gif" title="" class="custom-figure" >}}
+
 An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the "uregent invoice" attached to the email. Opening this attachment executes a tiny program called a stager.
 
 A stager, though not inherently malicious, "sets the stage" by performing a specific task: it reaches out to a designated address (owned by the hacker) to download another piece of code, then executes it.
@@ -118,16 +119,36 @@ GREAT, and that's it for the theory, it's time to get going! But in case you are
 
 For this course I'll be using [VMWare Workstation](https://store-us.vmware.com/workstation_buy_dual) which as of writing costs around $200. However you could also do it with either [VMWare Player](https://www.vmware.com/ca/products/workstation-player.html), or [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads), both of which are free. 
 
-Now some of the details of the setup might be slightly different if you choose to use these and it'll be upto you to figure that out, but honestly in the world of cybersecurity having these kinds of challenges where you can't simply follow step-by-step instructions but need to adapt it for your specific situation is a great form of education in and of itself.
+Note that some of the details of the setup might be slightly different if you choose to use either of the lastmentioned options and if that occurs then it'll be upto you to figure that out. Google, ChatGPT, StackExchange etc.
 
-So once you have your hosted hypervisor up download the following three iso's:
-1. Windows 10 Enterprise Evaluation as our Victim
-2. the latest Kali image as the attacker
-3. And Ubuntu 20.04 (Focal Fossa) which we'll use for post-mortem analysis. Just note here the actual edition 20.04 is important since we'll run RITA on it, which requires Focal Fossa 20.04. 
+One final thing before we get setting up, you'll need the following three iso's (all free of course):
+* for the victim we'll use [Windows 10 Enterprise Evaluation](https://info.microsoft.com/ww-landing-windows-10-enterprise.html)
+* for the attacker we'll use [Kali Linux](https://www.kali.org/get-kali/#kali-installer-images)
+* for post-mortem analysis we'll be using [Ubuntu Linux 20.04 Focal Fossa](https://releases.ubuntu.com/focal/). Just note here the actual edition 20.04 is important since we'll run RITA on it, which, as of writing, runs best on Focal Fossa.
 
-These images are all free and you can find their links below, or you if for some reason the links have changed since I published this just Google it. 
+Ok so at this point if you have your hosted hypervisor and all three iso's we are ready to proceed.
 
-Ok let's get on
+# VM 1: Windows 10 aka "The Victim" 
+
+{{< figure src="/img/screamdrew.gif" title="" class="custom-figure" >}}
+ 
+First we'll install the OS using the iso, following that we'll make a bunch of configurations including: 
+- deep disable MS Defender
+- deep disable Windows updates
+- install sysmon
+- enable powershell logging
+- install Process Hacker
+- install winpmem
+- install wireshark
+
+.
+In VMWare Workstation goto `File` -> New Virtual Machine. Choose `Typical (recommended)`, then click `Next`. Then select `I will install the operating system later` and hit `Next`.
+
+{{< figure src="/img/image001.png" title="" class="custom-figure" >}}
+
+ and that do it.
+
+ ok how about that then do it.
 
 
 
