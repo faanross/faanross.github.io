@@ -1,8 +1,8 @@
 ---
-title: "Primer: When You Have Too Much to Do"
-date: 2020-04-01T02:01:58+05:30
-description: "You have a to-do list that scrolls on for days. You are managing multiple projects, getting lots of email and messages on different messaging systems, managing finances and personal health habits and so much more."
-tags: [Primer, todo]
+title: "Threat Hunting Dll-injected C2 beacons"
+date: 2023-07-12T02:01:58+05:30
+description: "In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 fundamental approaches: memory forensics, log analysis + UEBA, and traffic analysis."
+tags: [threat_hunting, C2, dll_injection_attacks]
 ---
 
 You have a to-do list that scrolls on for days. You are managing multiple projects, getting lots of email and messages on different messaging systems, managing finances and personal health habits and so much more.
