@@ -47,9 +47,14 @@ But first, *le sigh*, it's required we just dip our toes into a wee bit of theor
 
 Sounds good? Let's get it.
 
+
+
 {{< figure src="/img/randy01.gif" title="" >}}
 
 
+***
+
+# Theory
 
 
 
