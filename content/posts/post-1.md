@@ -8,7 +8,7 @@ author: "faan ross"
 
 *** 
 
-# Preview 
+# Introduction
 
 In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we'll learn by doing. I'll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document. 
 
@@ -56,20 +56,83 @@ Sounds good? Let's get it.
 ***
 
 # Theory
+# what is a DLL?
+Succinctly as possible, a DLL is a communal library containing code. They are not a program or an executable in and of themselves, but they are in essence a collection of functions and data that can be used by other programs. 
+
+So think of a DLL as a communal resource: let's say you have 4 programs running and they all want to use a common function - let's say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they'll instead access a DLL that contains the function to minimize gui windows instead. So when you click on the minimize icon and that program needs the code to know how to behave, it does not get instructions from its own program code, rather it pulls it from the appropriate DLL with some help from the Windows API. 
+
+Thus any program you run will constantly call on different DLLs to get access to a wide-variety of common (and often critical) functions and data.
+
+# what is a classical DLL-injection?
+So keeping what I just mentioned in mind - that any running program is accessing a variety of code from various DLLs at any time - what then is a DLL-injection attack? Well in a normal environment we have legit programs accessing code from legit DLLs. 
+
+With a DLL-injection attack we enter into the population of legit DLLs a malicious one, that is a DLL that contains the code the attacker wants executed. The attacker then injects it into the memory space of a legitimate process. Using a Windows API function (commonly LoadLibrary or CreateRemoteThread), the attacker manipulates the legitimate process into loading and executing the malicious DLL. This effectively allows the malicious code within the DLL to run, often with the same permissions as the hijacked process.
+
+Threat actors love DLL-injection attacks because since they are executed within the context of a legitimate process they run with the same privileges as that of the process (ie potentially elevated), but even more so it makes them much harder to detect. No longer can we look on the process-level for malware, instead we have to peer beneath them at a arguably convoluted level of abstraction. 
+
+Even though classical DLL-injection attacks are less noisy for this exact reason, they still have a design flaw that makes our lives as threat hunters easier - they leave their fingerprints all over the disc. When the malicious DLL is initially transferred to the victim's system, it's written to disc, allowing us a potential breadcrumb for discovery. 
+
+And thus the inevitable next iteration in this branch of digital evolution is...
+
+# what is a reflective DLL-injection?
+At a *high-level*  classical and reflective DLLs are identical save for one difference: whereas the former is written to disc then injected into memory space, the latter is injected into memory space directly. This makes them conventionally even harder to catch since we can't rely on any disc forensics to reveal its presence. However, as we'll learn in this course, in another way it makes it for those who know what to look for perhaps a bit easier. 
+
+How come?
+
+Well, on a pattern-level we can observe that the very fact that a DLL, meaning ANY DLL, is in memory without a disc counterpart is very unusual. Perhaps not immediate incident alert level unusual, but at the very least more than unusual enough to warrant further prodding with piqued interest. 
+
+As a bridge to the closing part of our theory section let's zoom out a bit. Here we have been speaking about a specific mechanism of how malware (that is bad code) gets a victim's system to execute it. There are obviously many other such mechanisms, and equally bviously there are many different types of malware that use specifically DLL-injection attacks as the means to their desired ends (ie getting executed). 
+
+In this specific course however we'll be focussing on a very specific type of malware, actually it would be even more accurate to say we'll focus on a specific component of a specific type of malware... 
+
+# what is a Command and Control (C2) framework, stager, and beacon?
+
+Let's start by sketching a scenario of how many typical attacks play out these days.
+
+An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the "uregent invoice" attached to the email. Opening this attachment executes a tiny program called a stager.
+
+A stager, though not inherently malicious, "sets the stage" by performing a specific task: it reaches out to a designated address (owned by the hacker) to download another piece of code, then executes it.
+
+The downloaded code establishes the attacker's presence on the victim's system. It acts as a "gateway," allowing the attacker to execute commands on the victim's system from their own.
+
+So the system that the attacker uses to execute these commands is called the Command and Control (C2) server.
+
+The code downloaded by the stager is a type of C2 implant known as a beacon, an approach popularized by Cobalt Strike. Unlike traditional C2 implants that maintain a continuous, persistent network connection (which can raise suspicion), a beacon does not. 
+
+Instead, it periodically "calls home" to the C2 server, asking whether there are any new commands. If there are no commands, the connection is immediately terminated. If there are commands, the beacon retrieves them and then terminates the connection, lying dormant until the next scheduled "check-in". This sporadic communication helps the beacon blend into normal network traffic, making it more difficult to detect.
+
+GREAT, and that's it for the theory, it's time to get going! But in case you are feeling inspired here are a selection of incredible resources that helped me.
+
+{{< youtube borfuQGrB8g >}}
+
+.
+{{< youtube lz2ARbZ_5tE >}}
+
+.
+{{< youtube ihElrBBJQo8 >}}
+
+*** 
+
+# PART 1: Setting up our virtualized environment
+# Overview
+
+For this course I'll be using [VMWare Workstation](https://store-us.vmware.com/workstation_buy_dual) which as of writing costs around $200. However you could also do it with either [VMWare Player](https://www.vmware.com/ca/products/workstation-player.html), or [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads), both of which are free. 
+
+Now some of the details of the setup might be slightly different if you choose to use these and it'll be upto you to figure that out, but honestly in the world of cybersecurity having these kinds of challenges where you can't simply follow step-by-step instructions but need to adapt it for your specific situation is a great form of education in and of itself.
+
+So once you have your hosted hypervisor up download the following three iso's:
+1. Windows 10 Enterprise Evaluation as our Victim
+2. the latest Kali image as the attacker
+3. And Ubuntu 20.04 (Focal Fossa) which we'll use for post-mortem analysis. Just note here the actual edition 20.04 is important since we'll run RITA on it, which requires Focal Fossa 20.04. 
+
+These images are all free and you can find their links below, or you if for some reason the links have changed since I published this just Google it. 
+
+Ok let's get on
 
 
 
 
 
-OK and finally before we get going on setting up our virtual environment let's jump into the only theory for this course, namely 
-- what are DLLs?
-- what is a classical DLL-injection attack?
-- what are Command and Control (C2) frameworks?
-- What is a C2 stager/beacon?
-
-what exactly a DLL-injection attack is!
-
-If you're already familiar with it and just wanna jump right in head to this time marker. 
 
 
 
@@ -81,68 +144,3 @@ If you're already familiar with it and just wanna jump right in head to this tim
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## The First Step: Triage
-
-Whether you’re just starting your day, or you’re in the middle of the chaos and just need to find some sanity … the first step is to get into triage mode.
-
-Triage, as you probably know, is sorting through the chaos to prioritize: what needs to be done now, what needs to be done today, what needs to be done this week, and what can wait? You’re looking at urgency, but also what’s meaningful and important.
-
-Here’s what you might do:
-
-* Pick out the things that need to be done today. Start a Short List for things you’re going to do today. That might be important tasks for big projects, urgent tasks that could result in damage if you don’t act, smaller admin tasks that you really should take care of today, and responding to important messages. I would recommend being ruthless and cutting out as much as you can, having just 5 things on your plate if that’s at all possible. Not everything needs to be done today, and not every email needs to be responded to.
-* Push some things to tomorrow and the rest of the week. If you have deadlines that can be pushed back (or renegotiated), do that. Spread the work out over the week, even into next week. What needs to be done tomorrow? What can wait a day or two longer?
-* Eliminate what you can. That might mean just not replying to some messages that aren’t that important and don’t really require a reply. It might mean telling some people that you can’t take on this project after all, or that you need to get out of the commitment that you said you’d do. Yes, this is uncomfortable. For now, just put them on a list called, “To Not Do,” and plan to figure out how to get out of them later.
-
-OK, you have some breathing room and a manageable list now! Let’s shrink that down even further and just pick one thing.
-
-## Next: Focus on One Thing
-
-With a lot on your plate, it’s hard to pick one thing to focus on. But that’s exactly what I’m going to ask you to do.
-
-Pick one thing, and give it your focus. Yes, there are a lot of other things you can focus on. Yes, they’re stressing you out and making it hard to focus. But think about it this way: if you allow it all to be in your head all the time, that will always be your mode of being. You’ll always be thinking about everything, stressing out about it all, with a frazzled mind … unless you start shifting.
-
-The shift:
-
-* Pick something to focus on. Look at the triaged list from the first section … if you have 5-6 things on this Short List, you can assess whether there’s any super urgent, time-sensitive things you need to take care of. If there are, pick one of them. If not, pick the most important one — probably the one you have been putting off doing.
-* Clear everything else away. Just for a little bit. Close all browser tabs, turn off notifications, close open applications, put your phone away.
-* Put that one task before you, and allow yourself to be with it completely. Pour yourself into it. Think of it as a practice, of letting go (of everything else), of focus, of radical simplicity.
-
-When you’re done (or after 15-20 minutes have gone by at least), you can switch to something else. But don’t allow yourself to switch until then.
-
-By closing off all exits, by choosing one thing, by giving yourself completely to that thing … you’re now in a different mode that isn’t so stressful or spread thin. You’ve started a shift that will lead to focus and sanity.
-
-## Third: Schedule Time to Simplify
-
-Remember the To Not Do list above? Schedule some time this week to start reducing your projects, saying no to people, getting out of commitments, crossing stuff off your task list … so that you can have some sanity back.
-
-There are lots of little things that you’ve said “yes” to that you probably shouldn’t have. That’s why you’re overloaded. Protect your more important work, and your time off, and your peace of mind, by saying “no” to things that aren’t as important.
-
-Schedule the time to simplify — you don’t have to do it today, but sometime soon — and you can then not have to worry about the things on your To Not Do list until then.
-
-## Fourth: Practice Mindful Focus
-
-Go through the rest of the day with an attitude of “mindful focus.” That means that you are doing one thing at a time, being as present as you can, switching as little as you can.
-
-Think of it as a settling of the mind. A new mode of being. A mindfulness practice (which means you won’t be perfect at it).
-
-As you practice mindful focus, you’ll learn to practice doing things with an open heart, with curiosity and gratitude, and even joy. Try these one at a time as you get to do each task on your Short List.
-
-You’ll find that you’re not so overloaded, but that each task is just perfect for that moment. And that’s a completely new relationship with the work that you do, and a new relationship with life.

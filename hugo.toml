@@ -15,7 +15,7 @@ paginate=2 # articles per page
 [params]
 	mode="dark" # color-mode → light,dark,toggle or auto
 	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
-	subtitle = "write-ups for my [threat hunting content](https://www.youtube.com/channel/UCtwchzdOYHiXai5BxXPiHMg)"
+	subtitle = "[threat hunting content](https://www.youtube.com/channel/UCtwchzdOYHiXai5BxXPiHMg)"
 	mathjax = true # enable MathJax support
 	katex = true # enable KaTeX support
 	favicon = "/favicon.ico"
@@ -54,8 +54,6 @@ weight = 2
 name = "Posts"
 url = "/posts"
 weight = 3
-
-
 
 [[menu.main]]
 name = "Tags"
