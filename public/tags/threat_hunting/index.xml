@@ -14,9 +14,7 @@
       <pubDate>Wed, 12 Jul 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/posts/post-1/</guid>
-      <description>You have a to-do list that scrolls on for days. You are managing multiple projects, getting lots of email and messages on different messaging systems, managing finances and personal health habits and so much more.
-It all keeps piling up, and it can feel overwhelming.
-How do you keep up with it all? How do you find focus and peace and get stuff accomplished when you have too much on your plate?</description>
+      <description>Preview In this course we&amp;rsquo;ll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We&amp;rsquo;ll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we&amp;rsquo;ll learn by doing. I&amp;rsquo;ll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document.</description>
     </item>
     
   </channel>

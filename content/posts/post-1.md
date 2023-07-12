@@ -3,15 +3,95 @@ title: "Threat Hunting Dll-injected C2 beacons"
 date: 2023-07-12T02:01:58+05:30
 description: "In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 fundamental approaches: memory forensics, log analysis + UEBA, and traffic analysis."
 tags: [threat_hunting, C2, dll_injection_attacks]
+author: "faan ross"
 ---
 
-You have a to-do list that scrolls on for days. You are managing multiple projects, getting lots of email and messages on different messaging systems, managing finances and personal health habits and so much more.
+*** 
 
-It all keeps piling up, and it can feel overwhelming.
+# Preview 
 
-How do you keep up with it all? How do you find focus and peace and get stuff accomplished when you have too much on your plate?
+In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we'll learn by doing. I'll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document. 
 
-In this primer, I’ll look at some key strategies and tactics for taking on an overloaded life with an open heart, lots of energy, and a smile on your face.
+So here's a brief overview of what we'll be getting upto...
+- In PART 1 we're going to set up the virtualized environment,
+- we'll create a windows 10 VM which will server as our victim,
+- we'll also set up a kali linux box which will be our attacker, 
+- as well as an ubuntu box which we'll use to run some post-mortem analysis on.
+
+.
+- In PART 2 we'll run the actual attack ourselves,
+- for the classical dll-injection we'll use metasploit to generate both the stager and meterpreter handler,
+- once we've transferred the stager to the victim we'll run it from memory using powersploit,
+- for the reflective dll-injection we'll perform the entire process using metasploit.
+
+.
+- In PART 3 we'll cover memory forensics,
+- first we'll do a basic live read using Process Hacker,
+- we'll then dump the memory with winpmem,
+- finally we'll have a look at the it with Volatility.
+
+.
+- IN PART 4 we'll get into some logs,
+- along with standard Windows Event Logs, we'll also use other (cough, far superior, cough), logs we setup in the first part: namely sysmon and powershell logging,
+- we'll briefly jump into the raw logs just to look at some very high-level indicators and then,
+- we'll process them using the awesome UEBA framework DeepBlueCLIv3.
+
+.
+- IN PART 5 we'll look at traffic analysis,
+- we'll run our PCAPS through Zeek,
+- and get some insights from the threat hunting framework RITA.
+
+In the end we'll recap and formulate some key takeaways to serve you on your journey as you venture forth into the world and become a bada$$ hunter.
+
+But first, *le sigh*, it's required we just dip our toes into a wee bit of theory. But I promise once we're done here - 10 to 15 mins tops - it'll be applied learning until the end of our journey. 
+
+Sounds good? Let's get it.
+
+{{< figure src="/img/randy01.gif" title="" >}}
+
+
+
+
+
+
+
+OK and finally before we get going on setting up our virtual environment let's jump into the only theory for this course, namely 
+- what are DLLs?
+- what is a classical DLL-injection attack?
+- what are Command and Control (C2) frameworks?
+- What is a C2 stager/beacon?
+
+what exactly a DLL-injection attack is!
+
+If you're already familiar with it and just wanna jump right in head to this time marker. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## The First Step: Triage
 
