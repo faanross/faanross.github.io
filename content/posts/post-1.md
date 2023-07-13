@@ -1,7 +1,7 @@
 ---
-title: "Threat Hunting Dll-injected C2 beacons"
+title: "Threat Hunting Dll-injected C2 beacons (Practical Course)"
 date: 2023-07-12T02:01:58+05:30
-description: "In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 fundamental approaches: memory forensics, log analysis + UEBA, and traffic analysis."
+description: "In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis."
 tags: [threat_hunting, C2, dll_injection_attacks]
 author: "faan ross"
 ---
@@ -12,7 +12,13 @@ author: "faan ross"
 
 In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we'll learn by doing. I'll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document. 
 
-So here's a brief overview of what we'll be getting upto...
+In case you're new and a little trepidated...
+I'm literally going to hold your hand from point A to Z so even if you are a beginner and most of this seems foreign **fret not**! WRITE SOMETHING and add a GIF
+
+
+
+
+Here's a brief overview of what we'll be getting upto...
 - In PART 1 we're going to set up the virtualized environment,
 - we'll create a windows 10 VM which will server as our victim,
 - we'll also set up a kali linux box which will be our attacker, 
@@ -133,13 +139,15 @@ Ok so at this point if you have your hosted hypervisor and all three iso's we ar
 {{< figure src="/img/screamdrew.gif" title="" class="custom-figure" >}}
  
 First we'll install the OS using the iso, following that we'll make a bunch of configurations including: 
-- deep disable MS Defender
-- deep disable Windows updates
+- deep disable MS Defender + Windows updates
 - install sysmon
 - enable powershell logging
 - install Process Hacker
 - install winpmem
 - install wireshark
+- turn our VM into a template so we can clone copies in the future
+
+# Installation
 
 In VMWare Workstation goto `File` -> New Virtual Machine. Choose `Typical (recommended)`, then click `Next`. Then select `I will install the operating system later` and hit `Next`.
 
@@ -169,15 +177,164 @@ Once its done installing we’ll get to the setup, select your region, preferred
 
 {{< figure src="/img/image006.png" title="" class="custom-figure" >}}
 
+Choose any username and password, in my case it'll be the highly original choice of `User` and `password`, feel free to choose something else. Then choose 3 securty questions, since this is a "burner" system used for the express purpose of this course don't overthink it. Turn off all the privacy settings (below), and for Cortana select `Not Now`.
 
+{{< figure src="/img/image007.png" title="" class="custom-figure" >}}
 
+Windows will now finalize installation + configuration, this could take a few minutes, whereafter you will see your Desktop.
 
+# VMWare Tools
+Next we'll install VMWare Tools which will ensure our VMs screen resolution assumes that of our actual monitor, but more importantly it also gives us the ability to copy and paste between the host and the VM. So this is optional, if you're oldskool and prefer writing all commands out by hand then feel free to skip this. 
 
+So just to be sure, at this point you should be starting at a Windows desktop. Now in the VMWare windoes click `VM` and then `Install VMWare Tools`. If you open explorer (in the VM) you should now see a D drive. 
 
+{{< figure src="/img/image008.png" title="" class="custom-figure" >}}
 
+Double-click the drive, hit `Yes` when asked if we want this app to make changes to the device. Hit `Next`, select `Typical` and hit `Next`. Finally hit `Install` and then once done `Finish`. You'll need to restart your system for the changes to take effect, but we'll shut it down since we need to change a setting. So hit the Windows icon, Power icon, and then select `Shut Down`.
 
+Right-click on your VM and select `Settings`. In the list on the LHS select `Display`, which should be right at the bottom. On the bottom - deselect `Automatically adjust user interface size in the virtual machine`, as well as `Strech mode`, it should now look like this:
 
+{{< figure src="/img/image009.png" title="" class="custom-figure" >}}
 
+Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
+# Configuration
+# Deep disable MS Defender + Windows updates
 
+I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. Windows looks at you like a little brother - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your entire OS if you so desired.) 
 
+And just so you know why it is we're doing this:
+- We are disabling Defender so that the AV won't interfere with us attacking the system. Now you might think well this represents an unrealistic situation since in real-life we'll always have our AV running. Thing is, this is a simulation - we are simulating an actual attack. Yes the AV might pick up on our mischevious escapades here since we are using very well-known and widely-used malware (Metasploit mainly). But, if you are being attacked by and actual threat actor worth their salt they likely won't be using something so familiar as default Metasploit modules - they will likely be capcable of using analogous technologies that your AV will not pick up on.
+- As for updates, we disable this because sometimes we can spend all this time configuring and setting things up and then one day we boot our VM up, Windows does it's automatic update schpiel, and suddenly things are broken. This is thus simply to support the stability of our long-term use of this VM. 
+
+1. **Disable Tamper Protection**
+    1. Hit the `Start` icon, then select the `Settings` icon.
+    2. Selet **`Update & Security `**.
+    3. In LHS column, select `Windows Security`, then click `Open Windows Security`.
+    4. A new window will pop up. Click on `Virus & threat protection`.
+    5. Scroll down to the heading that says `Virus & threat protection settings` and click on `Manage settings`.
+    6. There should be 4 toggles in total, we are really interested in disabling `Real-time protection`, however since we are here just go ahead and disable all of them. 
+    7. Note that Windows will warn you and ask if you want to allow this app to make changes to the device, hit `Yes`.
+    8. All 4 toggle settings should now be disabled.
+
+{{< figure src="/img/image010.png" title="" class="custom-figure" >}}
+    
+2. **Disable the Windows Update service**
+    1. Open the Run dialog box by pressing Win+R.
+    2. Type **`services.msc`** and press Enter.
+    3. In the Services list, find **`Windows Update`**, and double-click it.
+    4. In the Windows Update Properties (Local Computer) window, under the **`General`** tab, in the **`Startup type:`** dropdown menu, select **`Disabled`** - see image below.
+    5. Click **`Apply`** and then **`OK`**.
+    
+ {{< figure src="/img/image011.png" title="" class="custom-figure" >}}
+
+3. **Disable Defender via Group Policy Editor**
+    1. Open the Run dialog box by pressing Win+R.
+    2. Type `gpedit.msc` and hit enter. The `Local Group Policy Editor` should have popped up.
+    3. In the tree on the LHS navigate to the following: `Computer Configuration` > `Administrative Templates` > `Windows Components` > `Microsoft Defender Antivirus`.
+    4. In the RHS double-click on `Turn off Microsoft Defender Antivirus`.
+    5. In the new window on the top left select `Enabled` - see image below. 
+    6. First hit `Apply` then `OK`.
+
+ {{< figure src="/img/image012.png" title="" class="custom-figure" >}}
+
+4. **Disable Updates via Group Policy Editor**
+    1. Still in `Local Group Policy Editor`, navigate to: `Computer Configuration` > `Administrative Templates` > `Windows Components` > `Windows Update`.
+    2. In the RHS double-click on `Configure Automatic Updates`.
+    3. Select `Disabled`, then click `Apply` and `OK`.
+
+{{< figure src="/img/image013.png" title="" class="custom-figure" >}}
+
+5. **Disable Defender via Registry**
+    1. In the search bar on the bottom type `cmd`.
+    2. On the top left, right under `Best match` you should see `Command Prompt`.
+    3. Right-click and select `Run as administrator`, hit `Yes`.
+    4. Copy and paste the following command below into your command prompt and hit enter.
+    ```
+    REG ADD "hklm\software\policies\microsoft\windows defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f
+    ```
+    
+Almost there! We just need to boot into Safe Mode to make some final adjustments to the registry and then we are good to go.
+
+6. **Reboot system in Safe Mode**
+    1. Open the Run dialog box by pressing Win+R.
+    2. Write `msconfig` and hit enter.
+    3. Select the `Boot` tab.
+    4. Under `Boot options` select `Safe boot`, ensure `Minimal` is selected - see image below. 
+    5. Hit `Apply` first, the `OK`.
+    6. Select `Restart`.
+    
+{{< figure src="/img/image014.png" title="" class="custom-figure" >}}
+
+7. **Disable Defender via Registry**
+    1. Open the Run dialog box by pressing Win+R.
+    2. Write `regedit` and hit enter, this should bring up the `Registry Editor`.
+    3. Below you will see a list of 6 keys. For each of these keys you will follow the same process: once the key is selected find the `Start` value in the RHS, double-click, change the value to `4` and hit `OK` - see image below.
+    - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `Sense`
+    - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdBoot`
+    - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WinDefend`
+    - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdNisDrv`
+    - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdNisSvc`
+    - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdFilter`
+
+{{< figure src="/img/image015.png" title="" class="custom-figure" >}}
+
+8. **Disable Updates via Registry**
+    1. Still in `Registry Editor` let's navigate to the following:
+    - `Computer` > `HKEY_LOCAL_MACHINE` > `SOFTWARE` > `Microsoft` > `Windows` > `CurrentVersion` > `WindowsUpdate` > `Auto Update`
+    2. Right-click the `Auto Update` key, select `New`, and then click `DWORD (32-bit) Value`.
+    3. Name the new key **`AUOptions`** and press Enter.
+    4. Double-click the new **`AUOptions`** key and change its value to **`2`**. Click **`OK`** - see image below.
+    5. Close Registry Editor.
+
+{{< figure src="/img/image016.png" title="" class="custom-figure" >}}
+
+8. **Leave Safe Mode**
+    1. All that's left to do is get back into our regular Windows environment.
+    2. Open the Run dialog box by pressing Win+R.
+    3. Write `msconfig` and hit enter.
+    4. Select `Boot` tab.
+    5. Deselect `Safe boot`, hit `Apply`, hit `OK`.
+    6. Hit `Restart`.
+
+And that, I can promise you, is by far the most boring part of this entire course. But I did it on purpose - this is very important if you are going to start simulating attacks and threat hunting on your own system. And the cool thing is now that we've done it we'll also learn how to create templates + clones, meaning you would conceivably have to do it again, but simply clone the VM we've created. But before that, let's setup all the awesome tools we'll be using in this course. 
+
+LFG!
+
+IMAGE HERE
+
+# SYSMON 
+ 
+Ok so now you should be back in the normal Windows environment looking at your Desktop. We'll now setup Sysmon, for right now all you need to know is that Sysmon is a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
+
+Thing is the standard Windows Event Logs (hence forth referred to simply as WEL) were not designed by somebody with security in mind. In fact, ask most security professionals what they think of WEL and you'll probably get either a sarcastic chuckle or a couple of expletives.
+
+But Sysmon, created by the legend Mark Russinovich, takes about 5 minutes to setup and will DRAMATICALLY improve logging, specifically as it relates to security events. In case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
+
+Before we get installing Sysmon there's just one thing you need to know - in addition to download the actual Sysmon install we also need a config file. Of late  I have heard a few trusted sources, included Eric Conrad (mentioned above) prefer [this version from Neo23x0](https://github.com/bakedmuffinman/Neo23x0-sysmon-config) whose authors included another blue team giant, Florian Roth. 
+
+So first download the config file (which is in xml format), the [go here to download Sysmon](https://download.sysinternals.com/files/Sysmon.zip). You should now have two zip files - the config you download on Github, as well as the Sysmon zip file. Extract the Sysmon file, the contents should look as follows:
+
+{{< figure src="/img/image017.png" title="" class="custom-figure" >}}
+
+Now also extract the zip file containing the config. Inside of the folder rename `sysmonconfig-export.xml` to `sysmonconfig.xml`. Now simply cut (or copy) the file and paste it in the folder containing sysmon. 
+
+Great everything is setup so now we can install it with a simple command. Open command prompt as administrator and navigate to the folder containing sysmon and the config file - in my case it is `c:\Users\User\Downloads\Sysmon`. Run the following command:
+
+```
+Sysmon.exe -accepteula -i
+```
+
+This is what a successful installation will look like:
+
+{{< figure src="/img/image018.png" title="" class="custom-figure" >}}
+
+Now let's just validate that it's running. First type `powershell` so we change over into a PS shell, and rrun the command `Get-Service sysmon`. In the image below we can see it is running - we are good to go!
+
+{{< figure src="/img/image019.png" title="" class="custom-figure" >}}
+
+That's it for Sysmon, not let's enable PowerShell logging. 
+
+# PowerShell Logging
+
+Unlike Sysmon we don't have to install anything here, Windows comes pre-configured with PS logging, but it's turned off by default. 

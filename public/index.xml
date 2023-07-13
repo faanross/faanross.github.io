@@ -14,14 +14,15 @@
       <pubDate>Wed, 12 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>https://athul.github.io/archie/about/</guid>
-      <description>this page contains extensive write-ups of my youtube courses about threat hunting.
+      <description>this page contains extensive write-ups related to threat hunting and its derivations.
 you can find the courses here.
 you can find my twitter page here.
-you can contact me here.</description>
+you can contact me here.
+thanks for stopping by.</description>
     </item>
     
     <item>
-      <title>Threat Hunting Dll-injected C2 beacons</title>
+      <title>Threat Hunting Dll-injected C2 beacons (Practical Course)</title>
       <link>https://athul.github.io/archie/posts/post-1/</link>
       <pubDate>Wed, 12 Jul 2023 02:01:58 +0530</pubDate>
       
