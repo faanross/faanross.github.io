@@ -149,21 +149,26 @@ First we'll install the OS using the iso, following that we'll make a bunch of c
 
 # Installation
 
-In VMWare Workstation goto `File` -> New Virtual Machine. Choose `Typical (recommended)`, then click `Next`. Then select `I will install the operating system later` and hit `Next`.
+1. In VMWare Workstation goto `File` -> New Virtual Machine. 
+2. Choose `Typical (recommended)`, then click `Next`. 
+3. Then select `I will install the operating system later` and hit `Next`.
 
 {{< figure src="/img/image001.png" title="" class="custom-figure" >}}
 
-Select Microsoft Windows, and under Version select Windows 10. Here you are free to call the machine whatever you'd like, in my case I am calling it `Victim`. Select 60 GB and ‘Split virtual disk into multiple files’. Then on the final screen click on Customize Hardware.
+4. Select `Microsoft Windows`, and under Version select `Windows 10`. 
+5. Here you are free to call the machine whatever you'd like, in my case I am calling it `Victim`. 
+6. Select 60 GB and `Split virtual disk into multiple files`. 
+7. Then on the final screen click on `Customize Hardware`.
 
 {{< figure src="/img/image002.png" title="" class="custom-figure" >}}
 
-Under Memory (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. Under Processors I suggest at least 2, if possible given your available resources then increase it to 4.
-
-Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click Browse… and select the location of your Windows 10 iso file
+8. Under `Memory` (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
+9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
+10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Windows 10 iso file.
 
 {{< figure src="/img/image003.png" title="" class="custom-figure" >}}
 
-Now finally select `Network Adapter`. Note we'll change this later to Host-Only (to minimize noise), but for now we'll need an internet connection to finish the installation so you can select either `NAT` or `Bridged`. Click `Close` then `Finish`.
+11. Now finally select `Network Adapter`. Note we'll change this later to `Host-Only` (to minimize noise), but for now we'll need an internet connection to finish the installation so you can select either `NAT` or `Bridged`. Click `Close` then `Finish`.
 
 You should now see your VM in your Library (left hand column), select it and then click on Power on this virtual machine.
 
@@ -289,7 +294,7 @@ Almost there! We just need to boot into Safe Mode to make some final adjustments
 
 {{< figure src="/img/image016.png" title="" class="custom-figure" >}}
 
-8. **Leave Safe Mode**
+9. **Leave Safe Mode**
     1. All that's left to do is get back into our regular Windows environment.
     2. Open the Run dialog box by pressing Win+R.
     3. Write `msconfig` and hit enter.
@@ -337,4 +342,133 @@ That's it for Sysmon, not let's enable PowerShell logging.
 
 # PowerShell Logging
 
-Unlike Sysmon we don't have to install anything here, Windows comes pre-configured with PS logging, but it's turned off by default. 
+Unlike Sysmon we don't have to install anything here, Windows comes pre-configured with PS logging, but it's turned off by default. So we just need to flip this switch which again, as is the case with Sysmon, will dramatically improve logging as it relates to security.
+
+Why?
+
+Hackers often exploit PowerShell due to its powerful capabilities and direct access to the Windows API and other lower-level operations. This tactic, known as "living off the land," involves using the system's own tools against it. By enabling PowerShell logging, you record all command-line activities, which can be invaluable when conducting threat hunting. By analyzing the logs, you can identify the exact commands executed by an attacker, and therefore gain a clearer understanding of what they did and how they did it. 
+
+Enable PowerShell logging:
+1. Hit **`Win + R`** keys together to open the Run dialog box.
+2. Type **`gpedit.msc`** and press Enter. This will open the **`Local Group Policy Editor`**.
+3. In the left-hand panel, navigate to **`Computer Configuration`** > **`Administrative Templates`** > **`Windows Components`** > **`Windows PowerShell`**.
+4. On the right-hand side, you will see a policy setting named **`Turn on PowerShell Script Block Logging`**, double-click.
+5. In the properties window, select the **`Enabled`** - see image below.
+6. Hit **`Apply`** and then **`OK`**.
+
+{{< figure src="/img/image020.png" title="" class="custom-figure" >}}
+
+# Install Software
+
+And now finally we'll install three programs:
+- We'll use **Process Hacker** for live memory forensics 
+- We'll use **winpmem** to create a memory dump for post-mortem memory forensics 
+- We'll use **Wireshark** to generate a pcap for egress analysis
+
+.
+You can download [Process Hacker here](https://processhacker.sourceforge.io/downloads.php). Once downloaded go ahead and install.
+
+You can download the latest release of [winpmem here](https://github.com/Velocidex/WinPmem/releases). Since its a portable executable there is no installation required, just download the `.exe` file and place it on the desktop. 
+
+And finally the Wireshark setup file can be [downloaded from here](https://2.na.dl.wireshark.org/win32/Wireshark-win32-3.6.15.exe). Once downloaded run Setup, just keep all options per default, nothing fancy required. 
+
+That's it friend. We are done with BY FAR the heaviest lifting in terms of VM setup - the next two will be a breeze. But before we get to that there's one very simple thing we can do that will make our lives much easier in the future - turning this VM into a template for cloning.
+
+# Creating a Template 
+
+So why do we want to do this. Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same "victim" system for any project or course we can simply clone it. Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in under a minute. This is also useful if we ever "mess up" the VM, we can just come back to this starting point where the machine is fresh, but all our configurations and software are as required. 
+
+1. First shut down the VM.
+2. In VMWare you should see the library pane on the LHS listing our VM. If you don't, hit `F9`, or go to `View` > `Customize` > `Library`.
+3. Right-click on our VM (`Victim`), select `Snapshot` > `Take Snapshot`.
+4. Name it anything you'd like, I will be calling it `Genesis`. Hit `Take Snapshot`.
+5. Again right-click the VM and select `Settings`. 
+6. On the top left we can see two tabs - `Hardware` and `Options`, select `Options`.
+7. Go down to the bottom and select `Advanced`.
+8. Select `Enable Template mode (to be used for cloning)`, hit `OK`.
+
+{{< figure src="/img/image021.png" title="" class="custom-figure" >}}
+
+9. Note you might want to rename this VM to something like `Victim Template`, so we are aware this is the template that we should not be using, but rather use for cloning. You can do this under `Settings` > `Options` > `General`.
+
+{{< figure src="/img/image022.png" title="" class="custom-figure" >}}
+
+10. Now let's create our first clone which we will actually be using in the course. Right-click on `Victim Template`, select `Manage` > `Clone`. Hit `Next`.
+11. We'll select the snapshot we created and hit `Next`. 
+12. Keep selection as `Create a linked clone` and hit `Next`. 
+13. Give your clone a name, I will be calling it `Victim01`. Choose a location and hit `Next`.
+
+That's it! You should now see both `Victim Template` and `Victim01` in your library.
+
+The bad news - we still have two VMs to install. The good news - they will require minimal-to-no configuration, so at this point we're about 80% done with our VM setup. So let's get it done.
+
+# Kali Linux Installation
+
+We'll be using Kali Linux for attack, that is it'll effectively serve as our C2 server. The great thing about Kali Linux is that everything we'll need is already installed, so we just have to install the actual operating system. 
+
+1. In VMWare hit `File` > `New Virtual Machine...`
+2. `Typical (recommended)` and hit `Next`. 
+3. `I will install the operating system later` and hit `Next`.
+4. Select `Linux`, and under Version select `Debian 11.x 64-bit`. (Note: Kali Linux is built on top of Debian Linux).
+
+{{< figure src="/img/image023.png" title="" class="custom-figure" >}}
+
+5. Again call the machine whatever you'd like, in my case I am calling it `Hacker`. 
+6. Increase the Maximum disk size to 60 GB and select `Split virtual disk into multiple files`. 
+7. Then on the final screen click on `Customize Hardware`.
+8. Under `Memory` I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
+9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
+10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Kali Linux iso image.
+11. And again for `Network Adapter` we'll keep it as either `NAT` or `Bridged` for now. Click `Close` then `Finish`.
+
+So now let's get to actually installing it:
+1. Right-click on the VM and select `Power` > `Start Up Guest`.
+2. Select `Graphical Install`.
+3. Select language, country etc.
+4. Choose any `Hostname`, leave `Domain name` blank, for Full name and username I chose `hacker`.
+5. Create a password, again though OBVIOUSLY not a suggested real-world practice, in these simulations I tend to simply use `password` since it minimizes any administrative friction. 
+6. Choose a timezone.
+7. Next select `Guided - use entire disk` and hit `Continue`.
+8. The only disk should be selected, hit `Continue`.
+9. Keep `All files in one partition (recommended for new users)`, hit `Continue`.
+10. Keep `Finish partinioning and write changes to disk`, hit `Continue`.
+11. Select `Yes` and `Continue`.
+12. In `Software selection` keep the default selection and hit `Continue`. Kali will now start installing, just be aware this can take a few minutes, probably around 5 to 10. 
+
+{{< figure src="/img/image024.png" title="" class="custom-figure" >}}
+
+13. Next it'll ask you about installing a GRUB boot loader, keep it selected as `Yes` and hit `Continue`. 
+14. Select `/dev/sda` and hit `Continue`. More installing... 
+
+{{< figure src="/img/image025.png" title="" class="custom-figure" >}}
+
+15. Finally it will inform us it's complete, we can hit `Continue` causing the system to reboot into Kali Linux. Enter your username and password and hit `Log In`.
+16. Let's shut down the VM, then right-click on it in the library and select `Settings`. Under `Display` deselect `Stretch mode` and hit `OK`.
+
+{{< figure src="/img/image026.png" title="" class="custom-figure" >}}
+
+And that's it for our attacker machine - feel free to repeat the Template-Cloning process we performed for our Windows 10 VM if you so desire.
+
+# Ubuntu Linux 20.04 Installation
+
+And now finally we'll set up our Ubuntu VM, afterwards we'll install RITA, Zeek, and Volatility. 
+
+1. In VMWare hit `File` > `New Virtual Machine...`
+2. `Typical (recommended)` and hit `Next`. 
+3. `I will install the operating system later` and hit `Next`.
+4. Select `Linux`, and under Version select `Ubuntu 64-bit`.
+5. Again call the machine whatever you'd like, in my case I am calling it `Analyst`. 
+6. Increase the Maximum disk size to 60 GB and select `Split virtual disk into multiple files`. 
+7. Then on the final screen click on `Customize Hardware`.
+8. Under `Memory` I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
+- NOTE: Keep in mind that you will never run more than 2 VMs at the same time (Victim + Hacker), this VM will always only run by itself after the simulated attack. 
+9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
+10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Ubuntu Linux 20.04 iso image.
+11. And again for `Network Adapter` we'll keep it as either `NAT` or `Bridged` for now. Click `Close` then `Finish`.
+
+So now let's get to actually installing it:
+1. Right-click on the VM and select `Power` > `Start Up Guest`.
+
+
+
+Remmeber once all three are installed change Network adapter to host only. 
