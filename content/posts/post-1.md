@@ -463,11 +463,74 @@ And now finally we'll set up our Ubuntu VM, afterwards we'll install RITA, Zeek,
 8. Under `Memory` I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 - NOTE: Keep in mind that you will never run more than 2 VMs at the same time (Victim + Hacker), this VM will always only run by itself after the simulated attack. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
-10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Ubuntu Linux 20.04 iso image.
+10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Ubuntu Linux 20.04 iso image. Make sure `Connect at power on` is enabled.
 11. And again for `Network Adapter` we'll keep it as either `NAT` or `Bridged` for now. Click `Close` then `Finish`.
 
 So now let's get to actually installing it:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
+2. Select `Try or Install Ubuntu`.
+3. Once it boots up the GUI, select `Install Ubuntu`.
+
+{{< figure src="/img/image027.png" title="" class="custom-figure" >}}
+
+4. Select your keyboard and language, hit `Continue`.
+5. Keep `Normal Installation` selected, unselect `Download updates while installing Ubuntu`.
+
+{{< figure src="/img/image028.png" title="" class="custom-figure" >}}
+
+6. Keep `Erase disk and install Ubuntu` selected, then hit `Install Now`. 
+7. For the popup asking if you want to `Write the changes to disks?`, hit `Continue`.
+8. Choose a timezone and hit `Continue`.
+9. Now fill in your name and desired credentials, I'll be using `analyst` and `password`.
+10. When it's complete you can power the system off. Go into settings, under `CD/DVD (SATA)` disable `Connect at power on`.
+11. Then goto `Display`, disable `Stretch mode`.
+12. Hit `OK`, start the VM up once again, log in.
+13. A few moments after logging in and answer Ubuntu's questions you'll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer. 
+
+{{< figure src="/img/image029.png" title="" class="custom-figure" >}}
+
+OK, that's it and now we'll just install RITA, Zeek, and Volatility and then the fun can finally begin!
+
+# RITA + Zeek
+
+Here's the cool thing about RITA: it will automatically install Zeek (and MariaDB btw) when you install it. Even better, it actually makes alterations to the standard Zeek config which will serve us even better - I'll discuss the exact details of this and why it's important when we get to that section in our course. For now let's get to installing.
+
+1. Goto the [RITA Github repo](https://github.com/activecm/rita).
+2. Scroll down to `Install` and follow the instructions using the `install.sh` script. During installation you will be asked a few questions, answer `y` and hit enter each time. 
+3. Let's check the version of RITA to ensure installation was successful. First close your terminal and reopen and then run the commands seen in image below, you should get similiar results. 
+
+{{< figure src="/img/image030.png" title="" class="custom-figure" >}}
+
+# Volatility
+1. Once again we'll visit the [program's Github repo.](https://github.com/volatilityfoundation/volatility3)
+2. There is no real installation here, we'll simply git clone the repo, and then we'll run Volatility from that local directory whenever we use it. 
+```
+sudo git clone https://github.com/volatilityfoundation/volatility3.git
+```
+3. Shut down your Ubuntu VM, we won't be using it for some time. 
+
+Aaaaaaaalright! We are good to get rolling with our Attack. YEAH. There is however one more optional step, this is not required but will decrease network noise meaning when we do our log analysis we'll have a tidier dataset. I recommend doing it, it'll take about 30 seconds.
+
+For the Kali and Windows VMs repeat both these steps:
+1. Right-click on the VM in the library and select `Settings`.
+2. Go to `Network Adapter`, change to `Host-only`, hit `OK`.
+
+{{< figure src="/img/image031.png" title="" class="custom-figure" >}}
+
+That's it. And just so you are aware - we took these VMs ability to connect to the internet away, but they can still connect to one another on the local network. 
+
+OK. Do you know what time it is? Yeah it's time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let's get it!
+
+{{< figure src="/img/strangelove.gif" title="" class="custom-figure" >}}
+
+***
+
+# PART 2: ATTACK TIME + LIVE ANALYSIS
+
+We'll do the two different type of attacks - standard vs. reflective loaded - seperately. First we'll do the classical injection + its live analysis. Then we'll follow that by performing the reflective loading DLL injection attack + live analysis. 
+
+
+
 
 
 

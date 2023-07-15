@@ -566,13 +566,75 @@ You can download <a href="https://processhacker.sourceforge.io/downloads.php">Pr
 </ul>
 <ol start="9">
 <li>Under <code>Processors</code> I suggest at least 2, if possible given your available resources then increase it to 4.</li>
-<li>Under <code>New CD/DVD (SATA)</code> change Connection from Use Physical Drive to <code>Use ISO image file</code>. Click <code>Browse…</code> and select the location of your Ubuntu Linux 20.04 iso image.</li>
+<li>Under <code>New CD/DVD (SATA)</code> change Connection from Use Physical Drive to <code>Use ISO image file</code>. Click <code>Browse…</code> and select the location of your Ubuntu Linux 20.04 iso image. Make sure <code>Connect at power on</code> is enabled.</li>
 <li>And again for <code>Network Adapter</code> we&rsquo;ll keep it as either <code>NAT</code> or <code>Bridged</code> for now. Click <code>Close</code> then <code>Finish</code>.</li>
 </ol>
 <p>So now let&rsquo;s get to actually installing it:</p>
 <ol>
 <li>Right-click on the VM and select <code>Power</code> &gt; <code>Start Up Guest</code>.</li>
+<li>Select <code>Try or Install Ubuntu</code>.</li>
+<li>Once it boots up the GUI, select <code>Install Ubuntu</code>.</li>
 </ol>
+<figure class="custom-figure"><img src="/img/image027.png"/>
+</figure>
+
+<ol start="4">
+<li>Select your keyboard and language, hit <code>Continue</code>.</li>
+<li>Keep <code>Normal Installation</code> selected, unselect <code>Download updates while installing Ubuntu</code>.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image028.png"/>
+</figure>
+
+<ol start="6">
+<li>Keep <code>Erase disk and install Ubuntu</code> selected, then hit <code>Install Now</code>.</li>
+<li>For the popup asking if you want to <code>Write the changes to disks?</code>, hit <code>Continue</code>.</li>
+<li>Choose a timezone and hit <code>Continue</code>.</li>
+<li>Now fill in your name and desired credentials, I&rsquo;ll be using <code>analyst</code> and <code>password</code>.</li>
+<li>When it&rsquo;s complete you can power the system off. Go into settings, under <code>CD/DVD (SATA)</code> disable <code>Connect at power on</code>.</li>
+<li>Then goto <code>Display</code>, disable <code>Stretch mode</code>.</li>
+<li>Hit <code>OK</code>, start the VM up once again, log in.</li>
+<li>A few moments after logging in and answer Ubuntu&rsquo;s questions you&rsquo;ll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image029.png"/>
+</figure>
+
+<p>OK, that&rsquo;s it and now we&rsquo;ll just install RITA, Zeek, and Volatility and then the fun can finally begin!</p>
+<h1 id="rita--zeek">RITA + Zeek</h1>
+<p>Here&rsquo;s the cool thing about RITA: it will automatically install Zeek (and MariaDB btw) when you install it. Even better, it actually makes alterations to the standard Zeek config which will serve us even better - I&rsquo;ll discuss the exact details of this and why it&rsquo;s important when we get to that section in our course. For now let&rsquo;s get to installing.</p>
+<ol>
+<li>Goto the <a href="https://github.com/activecm/rita">RITA Github repo</a>.</li>
+<li>Scroll down to <code>Install</code> and follow the instructions using the <code>install.sh</code> script. During installation you will be asked a few questions, answer <code>y</code> and hit enter each time.</li>
+<li>Let&rsquo;s check the version of RITA to ensure installation was successful. First close your terminal and reopen and then run the commands seen in image below, you should get similiar results.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image030.png"/>
+</figure>
+
+<h1 id="volatility">Volatility</h1>
+<ol>
+<li>Once again we&rsquo;ll visit the <a href="https://github.com/volatilityfoundation/volatility3">program&rsquo;s Github repo.</a></li>
+<li>There is no real installation here, we&rsquo;ll simply git clone the repo, and then we&rsquo;ll run Volatility from that local directory whenever we use it.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo git clone https://github.com/volatilityfoundation/volatility3.git
+</span></span></code></pre></div><ol start="3">
+<li>Shut down your Ubuntu VM, we won&rsquo;t be using it for some time.</li>
+</ol>
+<p>Aaaaaaaalright! We are good to get rolling with our Attack. YEAH. There is however one more optional step, this is not required but will decrease network noise meaning when we do our log analysis we&rsquo;ll have a tidier dataset. I recommend doing it, it&rsquo;ll take about 30 seconds.</p>
+<p>For the Kali and Windows VMs repeat both these steps:</p>
+<ol>
+<li>Right-click on the VM in the library and select <code>Settings</code>.</li>
+<li>Go to <code>Network Adapter</code>, change to <code>Host-only</code>, hit <code>OK</code>.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image031.png"/>
+</figure>
+
+<p>That&rsquo;s it. And just so you are aware - we took these VMs ability to connect to the internet away, but they can still connect to one another on the local network.</p>
+<p>OK. Do you know what time it is? Yeah it&rsquo;s time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let&rsquo;s get it!</p>
+<figure class="custom-figure"><img src="/img/strangelove.gif"/>
+</figure>
+
+<hr>
+<h1 id="part-2-attack-time--live-analysis">PART 2: ATTACK TIME + LIVE ANALYSIS</h1>
+<p>We&rsquo;ll do the two different type of attacks - standard vs. reflective loaded - seperately. First we&rsquo;ll do the classical injection + its live analysis. Then we&rsquo;ll follow that by performing the reflective loading DLL injection attack + live analysis.</p>
 <p>Remmeber once all three are installed change Network adapter to host only.</p>
 
 		</section>
