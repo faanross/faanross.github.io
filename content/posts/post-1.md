@@ -7,10 +7,11 @@ author: "faan ross"
 ---
 
 *** 
+[FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE]()
 
 # Introduction
 
-Hello, friend. Glad you're here, are you ready to have fun and learn some terrificly badass treat hunting action? Thought so.
+Hellom friend, so glad you could make it!
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
 
@@ -55,16 +56,15 @@ IN PART 4 we do post-mortem analysis
 - we'll run our PCAPS through Zeek,
 - and get some insights from the threat hunting framework RITA.
 
+IN final art put everything together and write a report./ 
+
 In the end we'll recap and formulate some key takeaways to serve you on your journey as you venture forth into the world and become a bada$$ hunter.
 
 But first, *le sigh*, it's required we just dip our toes into a wee bit of theory. But I promise once we're done here - 10 to 15 mins tops - it'll be applied learning until the end of our journey. 
 
 Sounds good? Let's get it.
 
-
 {{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
-
-
 
 ***
 
@@ -497,7 +497,7 @@ So now let's get to actually installing it:
 
 {{< figure src="/img/image029.png" title="" class="custom-figure" >}}
 
-OK, that's it and now we'll just install RITA, Zeek, and Volatility and then the fun can finally begin!
+OK, that's it and now we'll just install RITA, Zeek, Volatility, DeepBlueCLIv3 and then the fun can finally begin!
 
 # RITA + Zeek
 
@@ -510,11 +510,78 @@ Here's the cool thing about RITA: it will automatically install Zeek (and MariaD
 {{< figure src="/img/image030.png" title="" class="custom-figure" >}}
 
 # Volatility
+
+CHANGE THIS SIMPLY RUN THIS
+git clone https://github.com/volatilityfoundation/volatility3.git
+
+
+sudo apt install python3-pip
+
+
+pip3 install -r requirements.txt
+
+
+
 1. Once again we'll visit the [program's Github repo.](https://github.com/volatilityfoundation/volatility3)
 2. There is no real installation here, we'll simply git clone the repo, and then we'll run Volatility from that local directory whenever we use it. 
 ```
 sudo git clone https://github.com/volatilityfoundation/volatility3.git
 ```
+
+now install python2 
+Yes, you can install Python 2 and Python 3 side by side on Ubuntu without them interfering with each other. They are designed to coexist. You can use Python 3 with the python3 command and Python 2 with the python command.
+
+If Python 2 is not already installed on your Ubuntu system, you can install it using the following command:
+
+bash
+Copy code
+sudo apt update
+sudo apt install python2
+
+# DeepBlueCLI
+
+To run DeepBlueCLI we'll need PowerShell. And the good news of course is that PowerShell core is now cross-platform, so we can go ahead and install it on our analyst machine.
+
+1. Open your terminal.
+2. First update your list of packages
+```
+sudo apt update
+```
+3. Next, install the prerequisite packages. Microsoft provides a package for easy installation.
+```
+sudo apt install -y wget apt-transport-https software-properties-common
+```
+4. Now you will need to download and add Microsoft's GPG key which is used to sign their packages.
+```
+wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+```
+5. We can now install PowerShell.
+```
+sudo apt update
+sudo apt install -y powershell
+```
+6. You can now switch from **bash** to  **PowerShell** at anytime in your terminal by running `pwsh`, if you want to switch back run `bash`.
+
+{{< figure src="/img/image065.png" title="" class="custom-figure" >}}
+
+Great now all that's left to do is install DeepBlueCLI.
+
+1. Staying in the terminal, in `bash`, let's navigate to the `/Desktop`.
+2. Run the following command
+```
+git clone https://github.com/sans-blue-team/DeepBlueCLI.git
+```
+
+That's literally it.
+
+{{< figure src="/img/easy.gif" title="" class="custom-figure" >}}
+
+
+
+
+
+
 3. Shut down your Ubuntu VM, we won't be using it for some time. 
 
 Aaaaaaaalright! We are good to get rolling with our Attack. YEAH. There is however one more optional step, this is not required but will decrease network noise meaning when we do our log analysis we'll have a tidier dataset. I recommend doing it, it'll take about 30 seconds.
@@ -672,6 +739,8 @@ Invoke-DllInjection -ProcessID 784 -Dll C:\Users\User\Desktop\evil.dll
 
 5. We see some output, now to know if it worked let's head on back to our Kali VM. We can immediately see that we received the connection and are now in a `meterpreter` shell - success!
 
+{{< figure src="/img/popped_shell.gif" title="" class="custom-figure" >}}
+
 {{< figure src="/img/image050.png" title="" class="custom-figure" >}}
 
 6. We can run a few commands if we'd like, also we'll exfiltrate the "nuclear launch codes" we created in the beginning. 
@@ -800,18 +869,189 @@ Feel free to shut down the Kali VM - this will of course kill the connection but
 
 # PART 4: Post-Mortem Memory Analysis
 
-First is we would like to
+First thing's first - we need to transfer all our artifacts over from the Windows VM to our Ubuntu analyst VM. There are a number of ways to do this, and if you have your own method you prefer please do go ahead. I'm going to install python3 so we can quickly spin up a simply http server and transfer it that way.
 
-Once these settings are enabled, PowerShell logs can be found in the Event Viewer at the following location:
+But before we do that, let's aggregate all our data.
+1. (opt) For simplicity I am going to create a new folder on the desktop called `artifacts`.
+2. Copy your pcap (traffic packet capture) into it, in my case it's `dllattack.pcap` located on the desktop.
+3. Then copy your memory dump into the same folder, in my case again it was saved to desktop as `memdump.raw`.
+4. Now we'll need to copy the logs over, first we'll do the WEL logs. Open an administrative PowerShell terminal and run the following command:
 
-"Applications and Services Logs" -> "Microsoft" -> "Windows" -> "PowerShell" -> "Operational"
+```
+Copy-Item -Path "C:\Windows\System32\winevt\Logs\System.evtx","C:\Windows\System32\winevt\Logs\Application.evtx","C:\Windows\System32\winevt\Logs\Security.evtx" -Destination "C:\Users\User\Desktop\artifacts"
+```
+5. Now we'll do the Sysmon logs, for this we'll need to convert it into an .evtx file wherafter we can save it directly in our `artifacts` directory. 
 
-Remember, accessing and changing Group Policy settings, and viewing Event Logs, will typically require administrative permissions.
+```
+wevtutil epl "Microsoft-Windows-Sysmon/Operational" "C:\Users\User\Desktop\artifacts\Sysmon.evtx"
+```
+6. Finally we'll do the same for the PowerShell Script Block Logs.
+```
+wevtutil epl "Microsoft-Windows-PowerShell/Operational" "C:\Users\User\Desktop\artifacts\PowerShell.evtx"
+```
 
-After you've found the logs in the Event Viewer, you can save them for transfer and analysis. You can right-click on the "Operational" log (or any other log) and select "Save All Events As..." to save the logs as an .evtx file. This file can then be opened in the Event Viewer on another machine for analysis.
+Great so in your `artifacts` folder you should now have the following itesms - see image below.
 
-Windows Event Logs (WEL): Windows Event Logs are not stored as simple text files, but rather as .evtx files. These files can be found in the %SystemRoot%\System32\Winevt\Logs\ directory. This usually translates to C:\Windows\System32\winevt\Logs\. Notably important files may include "System.evtx", "Application.evtx", and "Security.evtx", among others.
+{{< figure src="/img/image060.png" title="" class="custom-figure" >}}
 
-Sysmon Logs: Sysmon (System Monitor) logs are actually part of the Windows Event Logs. After installing Sysmon, its logs are stored as "Microsoft-Windows-Sysmon/Operational" under the Applications and Services Logs in the Event Viewer. You can export these logs to .evtx or .csv file format from the Event Viewer.
+We're now ready to transfer the files over.
+1. First download the Python3 installer [here](https://www.python.org/downloads/windows/). 
+2. Then simply run the installer, all default selections.
+3. Once it's done open an administrative `Command Prompt` and navigate to the `artifacts` folder.
+4. We can now spawn our **http server**.
+```
+python -m http.server 8008
+```
+5. You will more than likely receive a Windows Security Alert, click Allow Access.
 
-then also we'll transfer dllatack.pcap and memdump.raw
+{{< figure src="/img/image058.png" title="" class="custom-figure" >}}
+6. Now head on over to your Ubuntu analyst VM and open the browser (FireFox). Navigate to `http://[windows_IP]:8008`, in my case that would be `http://192.168.230.158:8008`.
+
+{{< figure src="/img/image061.png" title="" class="custom-figure" >}}
+
+7. Now you can simply go ahead and save each of the files to wherever you want - for simplicity's sake I will be saving them all directly to the desktop in another folder called `artifacts`.
+
+Now that we have all the data on the analyst system we're free to start analysis. Note you are free to close the Windows VM, for the rest of the course we'll only be using the Ubuntu VM.
+
+We'll now start our Post-Mortem Memory Analysis, but in case you are interested here is a short little overview of the tool we'll be working with, Volatility. 
+
+# VOLATILITY THEORY
+Volatility is an open-source memory forensics framework used to extract digital artifacts from volatile memory (RAM) dumps. It's developed in Python and allows us to investigate potential malicious activity by looking processes, network connections and much, much more.
+
+It takes a sort of modular approach where you use different plug-ins (seperate `.py` scripts) to perform specific tasks - for example `pslist` gives us an overview of processes while `netstat` gives us statistics about network connections. There are a few dozen such plug-ins and you can either write your own.  
+
+For this course we'll be exploring the following 6 and I strongly encourage you to explore others to become more familiar with this great tool.
+- pslist
+- handles
+- cmdline
+- netscan
+- malfind
+
+# ANALYSIS WITH VOLATILITY
+**pslist**
+Two of the most common/popular plugs-ins are `pslist` and `pstree`. The former gives us a list of all processes including some key details, `pstree` conversely will also show Parent-Child relationships.
+
+We won't go into these plug-ins very deep right now because, in essence, we already gleamed most of the insights it has to offer during our live analysis. But it is good to be aware, if for whatever reason you were not able to perform the live analysis but did come in possession of the memory dump, then effectively you can through a perhaps somewhat more convoluted manner arrive at the same insights. 
+
+I will however quickly run `psinfo` below just so we get the PID of our suspicious process, we'll use that with other plug-ins. 
+
+1. Open a terminal and navigate your your main Volatility3 directory, in my case it is `/home/analyst/Desktop/volatility3`.
+2. Let's run our `psinfo` plugin using the following command:
+```
+python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.pslist 
+```
+3. Scroll down until you see `rundll32.exe` and note it's PID, you can see in my example below it's `5060`, we'll use this for our next plug-in. 
+
+{{< figure src="/img/image062.png" title="" class="custom-figure" >}}
+
+**handles**
+Now that we've got the PID of our suspicious program we're going to look at its handles. 
+
+A handle is like a reference that a program uses to access a resource - whether that be files, registry keys, or network connections. When a process wants to access one of these resources, the operating system gives it a handle, kind of like a ticket, that the process uses to read from or write to the resource.
+
+For threat hunting it's a great idea to look at the handles of any process you consider suspect since it will give you a lot of information about what a process is actually doing. For instance, if a process has a handle to a sensitive file or network connection that it shouldn't have access to, it could be a sign of malicious activity. By examining the handles, we can get a clearer picture of what the suspicious process is up to, helping you understand its purpose and potentially identify the nature of the threat.
+
+Now to be frank this analysis of handles can be a rather complex endeavour, relying on a deep techincal understanding of the subject. So I'll show how it works, and of course provide some insight on the findings, but be aware that I won't be able to do an exhaustive exploration of this topic as that could be a multi-hour course in and of itself. 
+
+So let's run the `windows.handles` plugin with the following command, including the PID of `rundll32.exe` as we just learned. 
+```
+python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.handles --pid 5060
+``` 
+
+We see a large number of output, too much to meaningfully process right now. However what immediately sticks out is `Key` - meaning registry keys. So let's run the same search but utilize `grep` to only see all handles to registry keys:
+```
+python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.handles --pid 5060 | grep Key
+``` 
+We can see all the results in the image below:
+
+{{< figure src="/img/image063.png" title="" class="custom-figure" >}}
+
+Again, as has been the case before: nothing here is inherently indicative of malware. However, in the case where we suspect something of being malware, many of these registry key handles are commonly absed by malware. 
+
+`MACHINE\SOFTWARE\MICROSOFT\WINDOWS NT\CURRENTVERSION\IMAGE FILE EXECUTION OPTIONS`: 
+This key is commonly used to debug applications in Windows. However, it is also used by some malware to intercept the execution of programs. Malware can create a debugger entry for a certain program, and then reroute its execution to a malicious program instead.
+
+`MACHINE\SYSTEM\CONTROLSET001\CONTROL\NLS\SORTING\VERSIONS`: This key is related to National Language Support (NLS) and the sorting of strings in various languages. It's uncommon for applications to directly interact with these keys. If the process is modifying this key, it may be an attempt to affect system behavior or mask its activity.
+
+`MACHINE\SYSTEM\CONTROLSET001\CONTROL\NETWORKPROVIDER\HWORDER and MACHINE\SYSTEM\CONTROLSET001\CONTROL\NETWORKPROVIDER\PROVIDERORDER`: These keys are related to the order in which network providers are accessed in Windows. Modification of these keys may indicate an attempt to intercept or manipulate network connections.
+
+`MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\PROTOCOL_CATALOG9 and MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\NAMESPACE_CATALOG5`: These keys are related to the Winsock API, which is used by applications to communicate over a network. If the process is interacting with these keys, it could be trying to manipulate network communication, which is a common tactic of malware.
+
+=============================
+**cmdline**
+
+The `cmdline` is another useful plug-in I'm mentioning because I wanted you to be aware of it, even though we won't learn anything new from it in this specific case. Running the command below we'll see a history of all the command prompt, inlcuding `rundll32.exe`. So again we learn here, as we did in the live analysis, that it ran without any expected arguments. In the case a live analysis was not feasible, we'd once again be able to attain that same insight here in the post-mortem analysis. 
+
+```
+python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 5060 | grep Key
+``` 
+
+**netscan**
+The `netscan` plugin will scan the memory dump looking for any network connections and sockets made by the OS.
+
+You can run the scan using the following command:
+```
+python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.netscan
+```
+
+Right now I'll defer comment, since we're going to jump into network connections DEEPLY in PART X with `Wireshark`, `Zeek`, and `RITA`. I just wanted you to be aware that you can also use a memory dump to look at network connections if for some reason you don't have a packet capture available.   
+
+**malfind**
+`malfind` is the quintessential plugin for, well, finding malware. The plugin will look for suspected inject code, which it determines based on header info - much indeed like we did during our live analysis in steps 6 and 7. 
+
+We can run it with:
+```
+python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.malfind
+```
+Below is a sample of the result, which is quite extensive:
+
+{{< figure src="/img/image064.png" title="" class="custom-figure" >}}
+
+We can see that it correctly flagged `rundll32.exe`. However, if we go through the entire list we can see a number of false positives: 
+- RuntimeBroker.exe
+- SearchApp.exe
+- powershell.exe
+- smartscreen.exe
+
+This is thus a good reminder that the mere appearance of a process in malfind's output is not an unequivocal affirmation of its malicious nature.
+
+**Closing Thoughts**
+This section was admitrtedly not all-too revelatory. But that's really because we have already performed live analysis, and thus we can say the point of performing post-mortem analysis is really:
+- to strengthen the case/conviction of suspicious malware identified during live analysis, or
+- in the case that live analysis was unfeasible, much of the same data/insights could be obtained here with Volatility3.
+
+I think this a good introduction to Volatility3, though we could obviously go much deeper I'll leave that for our next course. 
+
+SO for now let's jump straight into log analysis with an emphasis on UEBA.
+
+***
+
+# PART X: LOG ANALYSIS AND UEBA
+
+Time for us to get into some LOGGING...
+
+{{< figure src="/img/lumberjack.gif" title="" class="custom-figure" >}}
+
+No, not that kinda logging.
+
+The kind which, admittedly, is not too exicting. 
+
+Here let's touch on some regular logging. 
+
+
+
+
+# DeepBlueCLI
+
+OK big change: we have to run this on Windows
+So remove part where you install it on Linux, install on Windows instead,
+don't shut windows off
+no need to trasnfer it over (logs) to Linux
+
+`Set-ExecutionPolicy unrestricted`
+warning
+`A`
+
+`.\DeepBlue.ps1 ..\artifacts\Security.evtx`
+warning
+`R`
