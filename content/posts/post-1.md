@@ -15,7 +15,7 @@ author: "faan ross"
 
 This is the first in what I intend to be an **ongoing, always-evolving** series on threat hunting. 
 
-The main thing I want you to know about this course is that it's going to be practical-oriented - ***we will learn by doing***. **(1)** We'll start off b learning how to create + configure our own virtual network from scratch. **(2)** Then, instead of using prepackaged data we'll perform the very attack we'll hunt ourselves. **(3)** After that we'll perform the actual threat hunt, including multiple facets of both live and post-mortem analysis. **(4)** Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
+The main thing I want you to know about this course is that it's going to be practical-oriented - ***we will learn by doing***. **(1)** We'll start off by creating + configuring our own virtual network from scratch. **(2)** Then, instead of using prepackaged data, we'll perform the attack ourselves. **(3)** We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. **(4)** Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
 I will provide sprinklings of theory when and where necessary, additionally, throughout this document I will be layering each section with extensive references. Feel free to follow up on these to gain deeper insight on any specific area, to your heart's absolute content. 
 
