@@ -13,24 +13,30 @@ author: "faan ross"
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
 
-This is the first in what I intend to be an ongoing, always-evolving series on threat hunting. 
+This is the first in what I intend to be an **ongoing, always-evolving** series on threat hunting. 
 
-The main thing I want you to know about this course is that it's going to be practical-oriented - we will learn by doing. **(1)** We'll start off by doing by learning to create + configure our own virtual network from scratch. 
+The main thing I want you to know about this course is that it's going to be practical-oriented - ***we will learn by doing***. **(1)** We'll start off b learning how to create + configure our own virtual network from scratch. **(2)** Then, instead of using prepackaged data we'll perform the very attack we'll hunt ourselves. **(3)** After that we'll perform the actual threat hunt, including multiple facets of both live and post-mortem analysis. **(4)** Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
+I will provide sprinklings of theory when and where necessary, additionally, throughout this document I will be layering each section with extensive references. Feel free to follow up on these to gain deeper insight on any specific area, to your heart's absolute content. 
 
+{{< figure src="/img/heart2.gif" title="" class="custom-figure" >}}
 
+As mentioned in the opening line - this is the first course in an ongoing series I have intentionally chosen to label ***always-evolving***. By this I mean perpetual evolution both as it relates to our approach, as well as our setup. Our approach - the specific tools and techniques we employ - will not only diversify in upcoming courses, but indeed we'll also get to gain a deeper sense of mastery of all the core threat hunting tools. And we'll continue to add to our virtualized setup, meaning in each subsequent course we'll spend some time in the beginning to fine tune our network with the goal of becoming increasingly representative of "real-world" situations. 
 
-end off with report
+All to say: I see this whole series of courses on threat hunting as a journey where you and I will learn together. As we get better, it's natural that we not only feel able to handle more complexity - but indeed we'll desire to do so. I'm going to do my best to progressively structure it in such a manner as to optimize the relationship between our skill and the challenge on offer. 
 
-alwats-evolving: the subhect matter in terms of waht we are hunting will shift withe very course, but our appraoach and even 
-
-What I mean by approach -> techinques, tools, will learn more, and we'll learn to use ones we already use better
-
-What I mean by environment -> always finding ways to tune our network to be icnreasingly representative of "real-world" sitations. 
-
-As we get better, and not only fee able to handle more but indeed desirious to do so, so we'll. Trying to find, as epsousedz the the "Flow Model", the perfect relatnhsip between our skill and challenge.
+{{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
 
+
+
+
+I am not one prone to the use of ALL CAPS and !!!, however I do wanna say that I am genuinely INCREDIBLY EXCITED (!!!) about our journey together. So excited in fact that I can think of no better way to celebrate than to share my favourite gif right here, right now. 
+
+
+
+not everything is always as it appears
+nathan watermelon gif
 
 
 
@@ -38,7 +44,7 @@ beginner-friendly
 practical oriented.
 
 
-
+ I am a firm believer that your capacity to defend is, at least in some manner, proportionate to you ability to attack.  
 
 
 WHAT WILL YOU NEED - describe system
