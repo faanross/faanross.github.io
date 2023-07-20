@@ -15,7 +15,39 @@ author: "faan ross"
 
 This is the first in what I intend to be an ongoing, always-evolving series on threat hunting. 
 
+The main thing I want you to know about this course is that it's going to be practical-oriented - we will learn by doing. **(1)** We'll start off by doing by learning to create + configure our own virtual network from scratch. 
 
+
+
+
+end off with report
+
+alwats-evolving: the subhect matter in terms of waht we are hunting will shift withe very course, but our appraoach and even 
+
+What I mean by approach -> techinques, tools, will learn more, and we'll learn to use ones we already use better
+
+What I mean by environment -> always finding ways to tune our network to be icnreasingly representative of "real-world" sitations. 
+
+As we get better, and not only fee able to handle more but indeed desirious to do so, so we'll. Trying to find, as epsousedz the the "Flow Model", the perfect relatnhsip between our skill and challenge.
+
+
+
+
+
+beginner-friendly
+practical oriented.
+
+
+
+
+
+WHAT WILL YOU NEED - describe system
+not an ezpert at this
+4+ CPUs (ideally 8)
+16GB RAM (ideally 32)
+Around 200 gb of free HD space. 
+
+I know that's a lot, and again as I said: I am not an expert in hardware. If you believe you can finagile your way to getting the same results by adapting the process - then I salute you good Sir/Madam, 
 
 
 
