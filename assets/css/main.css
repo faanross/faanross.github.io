@@ -346,8 +346,12 @@ table td{
 .custom-figure {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.custom-figure img {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
+
 
