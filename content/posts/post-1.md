@@ -1,5 +1,5 @@
 ---
-title: "Threat Hunting Dll-injected C2 beacons (Practical Course)"
+title: "Threat Hunting standard Dll-injected C2 beacons (Practical Course)"
 date: 2023-07-12T02:01:58+05:30
 description: "In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis."
 tags: [threat_hunting, C2, dll_injection_attacks]
@@ -9,11 +9,15 @@ author: "faan ross"
 *** 
 [FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE]()
 
-# Introduction
-
-Hellom friend, so glad you could make it!
+# Hello friend, so glad you could make it!
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
+
+This is the first in what I intend to be an ongoing, always-evolving series on threat hunting. 
+
+
+
+
 
 In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we'll learn by doing. I'll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document. 
 
