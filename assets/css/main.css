@@ -27,7 +27,7 @@ body{
 
 p {
   /* font-family: 'Fira Sans', sans-serif; */
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'roboto-mono', monospace;
   line-height: 2;
   margin-bottom: 2em;
 }
