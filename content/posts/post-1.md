@@ -21,18 +21,32 @@ I will provide sprinklings of theory when and where necessary, additionally, thr
 
 {{< figure src="/img/heart2.gif" title="" class="custom-figure" >}}
 
+Here's a quick overview of the entire course: 
+1. Introduction
+- subsections
+2. 
+
+
+
+
+
+
+
+
+
+# INTRODUCTION
+
 As mentioned in the opening line - this is the first course in an ongoing series I have intentionally chosen to label ***always-evolving***. By this I mean perpetual evolution both as it relates to our approach, as well as our setup. Our approach - the specific tools and techniques we employ - will not only diversify in upcoming courses, but indeed we'll also get to gain a deeper sense of mastery of all the core threat hunting tools. And we'll continue to add to our virtualized setup, meaning in each subsequent course we'll spend some time in the beginning to fine tune our network with the goal of becoming increasingly representative of "real-world" situations. 
 
-All to say: I see this whole series of courses on threat hunting as a journey where you and I will learn together. As we get better, it's natural that we not only feel able to handle more complexity - but indeed we'll desire to do so. I'm going to do my best to progressively structure it in such a manner as to optimize the relationship between our skill and the challenge on offer. 
+All to say: I see this whole series of courses on threat hunting as a journey where you and I will learn together. As we get better, it's natural that we not only feel able to handle more complexity - but indeed we'll desire to do so. I'm going to do my best to progressively structure it in such a manner as to optimize the relationship between our skill and the challenge on offer.
+
+And now, before we go any further, in case you were not yet familiar it's my pleasure to introduce you to `Thin Watermelon`. 
 
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
 
 
-
-
-I am not one prone to the use of ALL CAPS and !!!, however I do wanna say that I am genuinely INCREDIBLY EXCITED (!!!) about our journey together. So excited in fact that I can think of no better way to celebrate than to share my favourite gif right here, right now. 
-
+CONTINUE 2ND EDIT HERE
 
 
 not everything is always as it appears
