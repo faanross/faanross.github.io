@@ -7,23 +7,24 @@ author: "faan ross"
 ---
 
 *** 
-[FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE]()
 
-# Hello friend, so glad you could make it!
+# Hello friend, so glad you could make it.
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
 
 `This is the first in an **ongoing, always-evolving** series on threat hunting.`
 
+[NOTE: FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE]()
+
 The main thing I want you to know about this course is that it's going to be practical-oriented - ***we will learn by doing***. **(1)** We'll start off by creating + configuring our own virtual network from scratch. **(2)** Then, instead of using prepackaged data, we'll perform the attack ourselves. **(3)** We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. **(4)** Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
-I will provide sprinklings of theory when and where necessary, additionally, throughout this document I will be layering each section with extensive references. Feel free to follow up on these to gain deeper insight on any specific area, to your heart's absolute content. 
+I will only provide sprinklings of theory when and where necessary, additionally, throughout this document I will be layering each section with extensive references. Feel free to follow up on these to gain deeper insight on any specific area, to your heart's absolute content. 
 
-{{< figure src="/img/heart.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
 Here's a quick overview of the entire course: 
 1. Introduction
-- subsections
+    - subsections
 2. VM
 3. Live mem
 4. Post-mortem mem
@@ -33,7 +34,7 @@ Here's a quick overview of the entire course:
 8. List of all references
 9. Cheat Sheets
 
-
+`NOTE: This page contains the entire course on one single page. If you'd like to view any specific section outline above by itself feel free to click on it.`
 
 CONTINUE HERE
 
