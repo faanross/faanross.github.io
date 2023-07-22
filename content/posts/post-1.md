@@ -1,7 +1,7 @@
 ---
-title: "Threat Hunting standard Dll-injected C2 beacons (Practical Course)"
+title: "Threat Hunting Standard Dll-Injected C2 Implants (Practical Course)"
 date: 2023-07-12T02:01:58+05:30
-description: "In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis."
+description: "In this beginner-friendly practical course we'll learn how to threat hunt standard DLL-injected C2 implants. We'll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings."
 tags: [threat_hunting, C2, dll_injection_attacks]
 author: "faan ross"
 ---
@@ -12,29 +12,60 @@ author: "faan ross"
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
 
-`This is the first in an **ongoing, always-evolving** series on threat hunting.`
+`This is the first in an ongoing + always-evolving series on threat hunting.`
 
 [NOTE: FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE]()
 
-The main thing I want you to know about this course is that it's going to be practical-oriented - ***we will learn by doing***. **(1)** We'll start off by creating + configuring our own virtual network from scratch. **(2)** Then, instead of using prepackaged data, we'll perform the attack ourselves. **(3)** We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. **(4)** Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
+The main thing I want you to know about this course is that ***we will learn by doing***. 
 
-I will only provide sprinklings of theory when and where necessary, additionally, throughout this document I will be layering each section with extensive references. Feel free to follow up on these to gain deeper insight on any specific area, to your heart's absolute content. 
+`(1)` We'll start off by creating + configuring our own virtual network, including systems for both the victim and attacker. `(2)` Then, instead of using prepackaged data, we'll perform the attack ourselves. `(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. `(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
+
+I will interject with theory when and where necessary, as well as provide extensive references in each associated section. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand.
+
+
+{{< figure src="/img/brentleave.gif" title="" class="custom-figure" >}}
+
+
+Threat Hunting is not typically seen as an "entry-level" cybersecurity discipline, probably because in a certain sense it is a layer of abstraction woven from other, more "fundamental", layers of abstraction. I have however `created this course specifically with the beginner in mind`. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient information so that you can follow along not only with what we are doing, but crucially, ***why we are doing it***.
+
+Further, I also believe in the merit of a top-down learning approach - instead of mastering all the fundamental fields of knowledge, start with the final application and then work your way back to understand the reason for their inclusion. All this to say - `if you are beginner and you are curious about Threat Hunting then you are in the right place`. I can promise that if you venture along by the end of our journey many so-called "advanced" topics will appear in a whole new light since you've established a connection between the concept and the actual application. 
 
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
-Here's a quick overview of the entire course: 
-1. Introduction
-    - subsections
-2. VM
-3. Live mem
-4. Post-mortem mem
-5. Log + UEBA
-6. Traffic analysis
-7. Report write-up
-8. List of all references
-9. Cheat Sheets
+`This first course is focused on threat hunting standard DLL-injected C2 implants.`
 
-`NOTE: This page contains the entire course on one single page. If you'd like to view any specific section outline above by itself feel free to click on it.`
+Here's a quick overview of the entire course: 
+1. **Introduction**
+    - subsections
+2. Setting up our Virtual Environment
+    - subsections
+3. Performing the Attack
+    - subsections
+4. Attack Review (Shenanigans!)
+    - subsections
+5. Live Forensics: Native Windows Tools
+    - subsections
+6. Live Forensics: Process Hacker 2
+    - subsections
+7. Post-Mortem Forensics: Memory
+    - subsections
+8. Post-Mortem Forensics: Log Analysis
+    - subsections
+9. Post-Mortem Forensics: Traffic Analysis
+    - subsections
+10. Report write-up
+    - subsections
+11. List of all references
+12. Cheat Sheets
+
+`NOTE: This page contains the entire course on one single page. If you'd like to view any specific section outlined above by itself feel free to click on it.`
+
+So without any further preamble, LET'S GET IT.
+
+{{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
+
+
+
 
 CONTINUE HERE
 
@@ -56,7 +87,7 @@ And now, before we go any further, in case you were not yet familiar it's my ple
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
 
-
+- everything here is free or OS. exception is AChuntern, which has a paid full version, but we'll use the free verison which for our purpose has all the same features.  
 CONTINUE 2ND EDIT HERE
 
 
@@ -131,7 +162,7 @@ But first, *le sigh*, it's required we just dip our toes into a wee bit of theor
 
 Sounds good? Let's get it.
 
-{{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
+
 
 ***
 
@@ -184,6 +215,8 @@ The code downloaded by the stager is a type of C2 implant known as a beacon, an 
 Instead, it periodically "calls home" to the C2 server, asking whether there are any new commands. If there are no commands, the connection is immediately terminated. If there are commands, the beacon retrieves them and then terminates the connection, lying dormant until the next scheduled "check-in". This sporadic communication helps the beacon blend into normal network traffic, making it more difficult to detect.
 
 GREAT, and that's it for the theory, it's time to get going! But in case you are feeling inspired here are a selection of incredible resources that helped me.
+
+Change these for links and short descriptions
 
 {{< youtube borfuQGrB8g >}}
 
@@ -384,6 +417,26 @@ LFG!
 IMAGE HERE
 
 # SYSMON 
+
+We have to activate IMPHASH!
+
+Sysmon indeed supports a variety of hashes, including MD5, SHA1, SHA256, and ImpHash. However, the configuration has to be explicitly set to include these.
+
+To include the Image Hash (Imphash) in your Sysmon logs, you need to modify the Sysmon configuration XML. Here's an example:
+
+xml
+Copy code
+<Sysmon schemaversion="4.50">
+  <HashAlgorithms>MD5,SHA256,IMPHASH</HashAlgorithms>
+  <!-- event filtering rules go here -->
+</Sysmon>
+In the "HashAlgorithms" tag, you can specify the hash algorithms you want to use. The above configuration tells Sysmon to log MD5, SHA256, and Imphash.
+
+Once you've made your changes, you can update the running Sysmon configuration by using the -c option, followed by the path to your configuration file. For example:
+
+bash
+Copy code
+sysmon.exe -c sysmonconfig.xml
  
 Ok so now you should be back in the normal Windows environment looking at your Desktop. We'll now setup Sysmon, for right now all you need to know is that Sysmon is a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
 
@@ -831,6 +884,11 @@ And while this connection is still going we'll jump right into live memory analy
 
 ***
 
+RIGHT AFTER ATTACK WE DO THE "REVIEW"
+
+
+NOTE WE ALSO WANT TO INCLUDE THE ANALYSIS WITH STANDARD WINDOWS TOOLS A LA JOHN STRAND STYLE TO SEE WHAT WE CAN LEARN
+
 # SIDE QUEST: The theoretical berries of C2 beacon live reading
 
 {{< figure src="/img/quest02.gif" title="" class="custom-figure" >}}
@@ -861,6 +919,9 @@ Note: have to review Eric Conrad and Chad Tilbury to beef out the first few
 ***
 
 # PART 3: Live Memory Analysis
+
+WHY MEMORY?
+and finally we'll also look at memory foresnics: for some reason a lot fo thought is still stuck in malware paradignms for a decade ago looking at discs. but almost all modern malware won't even exists on the disk, they live in memory and their proably followign a "living off the land" approach in that they use local processes and services to handle all the mischief. so we'll create a dump with something like dumpit! and then we'll use volatitliy
 
 Open Process Hacker as admin - ie right-click and select `Run as administrator`. Scroll down until you see `rufus.exe` (or whatever other legitimate process you chose to inject into). We can now look at our 7 signs.
 

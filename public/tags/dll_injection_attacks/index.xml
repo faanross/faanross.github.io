@@ -9,14 +9,15 @@
     <copyright>| hack the planet</copyright>
     <lastBuildDate>Wed, 12 Jul 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://athul.github.io/archie/tags/dll_injection_attacks/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Threat Hunting Dll-injected C2 beacons (Practical Course)</title>
+      <title>Threat Hunting Standard Dll-Injected C2 Implants (Practical Course)</title>
       <link>https://athul.github.io/archie/posts/post-1/</link>
       <pubDate>Wed, 12 Jul 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/posts/post-1/</guid>
-      <description>FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE
-Introduction Hellom friend, so glad you could make it!
-In this course we&amp;rsquo;ll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We&amp;rsquo;ll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we&amp;rsquo;ll learn by doing. I&amp;rsquo;ll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document.</description>
+      <description>Hello friend, so glad you could make it. This is the first in an ongoing + always-evolving series on threat hunting.
+NOTE: FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE
+The main thing I want you to know about this course is that we will learn by doing.
+(1) We&amp;rsquo;ll start off by creating + configuring our own virtual network, including systems for both the victim and attacker. (2) Then, instead of using prepackaged data, we&amp;rsquo;ll perform the attack ourselves.</description>
     </item>
     
   </channel>
