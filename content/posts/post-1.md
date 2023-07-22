@@ -67,8 +67,6 @@ Here's a quick overview of the entire course:
 11. **List of all references**
 12. **Cheat Sheets**
 
-`NOTE: This page contains the entire course on one single page. If you'd like to view any specific section outlined above by itself feel free to click on it.`
-
 So without any further preamble, ***LET'S GET IT***.
 
 {{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
@@ -78,70 +76,78 @@ So without any further preamble, ***LET'S GET IT***.
 # 1. Setting up our Virtual Environment
 # Introduction
 
-In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso files online, and then we'll install the base operating systems. 
+In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso files online, and then we'll install the base operating systems. In addition we will configure each VM further: 
 
-For the Windows 10 VM (Victim) we will then also
-- Disable Antivirus and Updates
-- 
+1. For the Windows 10 VM (Victim) we will then also
+    - deep disable MS Defender + Windows updates
+    - install sysmon
+    - enable powershell logging
+    - install Process Hacker
+    - install winpmem
+    - install wireshark
+    - install DeepBlueCLI
 
-Since the Kali Linux VM (Attacker) contains
+- turn our VM into a template so we can clone copies in the future
 
-For the Ubuntu 20.04 VM (Post-Mortem Analysis) we will then also
-- 
-- 
+    - 
+
+2. Since the Kali Linux VM (Attacker) contains
+
+3. For the Ubuntu 20.04 (Post-Mortem Analysis) we will then also
+    - ni
+
 
 # Requirements
 
-I do want to give you some sense of the hardware requirements for this course, however also have to add that I am not an expert in this area. AT ALL. So I'll provide an overview of what we'll be running, as well as what I thus think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can finagle your way to getting the same results by adapting the process, then I salute you for that is the *way of the hacker*. 
+I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can finagle your way to getting the same results by adapting the process, then I salute you for that is the *way of the hacker*. 
 
-As mentioned above, we'll have 3 VMs, however, at any one moment there will only be a maximum of 2 VMs running. For each of these VMs I recommend the following broad system resources:
-- min 2 ideally 4 CPU cores
-- min 4 ideally 8 GB RAM
+As mentioned above, we'll have 3 VMs, however, at any one moment there will only be a `maximum of 2 VMs running`. For each of these VMs I recommend the following broad system resources:
+- min 2 (ideally 4) CPU cores
+- min 4 (ideally 8) GB RAM
 - around 60 GB HD space (allocated)
 
-So based on this, that is roughly 2x above and resources for your actual host system, you would like need something along the lines of:
+So based on this, that is roughly 2x the above + resources for your actual host system, you would likely need something along the lines of:
 - 8 CPU cores (12+ even better)
 - 16 GB RAM (32+ even better)
 - 200 GB free HD space
 
-I understand this is beefy, but again consider:
-- You could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that.
-- You could use a service like Linode and simply rent resources via the cloud.
-- You might be able to simply get away with less that I propose since I'm no expert at software-hardware interface optimization. 
+{{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
 
-What I propose is just a rough guide, please if you don't have a system in that ballpark don't be discouraged and do your best to find alternative paths to the same/better outcome. For again, after all - that is the *way of the hacker*.
+I understand this is beefy, but consider:
+- You could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that. Or mini-pcs, or refurbished clients - really for a few hundred dollars you could more than easily be equipped to run a small network. I don't want to sound insensitive to a few 100 dollars, but I'm gonna level with you: if you want to learn cybersecurity then there is no better investment than having localized resources to create virtual simulations. 
+- In case you don't want to invest up-front but don't mind paying some running costs: You can also use a service like Linode and simply rent resources via the cloud. 
 
-Finally I want to mention that everything we will use is completely free. This course ain't upselling a full course, and every piece of software is freely available in the legal sense. The only exception has free alternatives, and I'm about to discuss that with you right now. 
+Finally I want to mention that everything we will use is completely free. This course ain't upselling a full course, and every piece of software is freely available. The only exception has free alternatives, and I'm about to discuss that with you right now. 
 
 # Hosted (type 2) Hypervisor
-So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like Inception - it allows us to create our machines within our machine. 
+So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like Inception - it allows us to create machines within our machine. 
 
 {{< figure src="/img/inception.gif" title="" class="custom-figure" >}}
 
 For this course I'll be using [VMWare Workstation](https://store-us.vmware.com/workstation_buy_dual) which as of writing costs around $200. However you could also do it with either [VMWare Player](https://www.vmware.com/ca/products/workstation-player.html), or [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads), both of which are free. 
 
-Note that some of the details of the setup might be slightly different if you choose to use either of the lastmentioned options and if that occurs then it'll be upto you to figure that out. Google, ChatGPT, StackExchange etc.
+Note that some of the details of the setup might be slightly different if you choose to use either of the free options, and if that occurs then it'll be up to you to figure that out. Google, ChatGPT, StackExchange etc. 
 
-One final thing before we get setting up, you'll need the following three iso's (all free of course):
-* for the victim we'll use [Windows 10 Enterprise Evaluation](https://info.microsoft.com/ww-landing-windows-10-enterprise.html)
+`So at this point please take a moment to download and install the hypervisor of your choice.`
+And if you've never (ever) used any hypervisor before then you might want to find an introductory tutorial to simply orient yourself with regards to the basic interface and functionality. 
+
+Once your hypervisor is installed and you feel at least a modicum of comfort in interacting with it you can proceed...
+
+{{< figure src="/img/pleasego.gif" title="" class="custom-figure" >}}
+
+# Virtual Machine Images (iso files)
+
+Please download the following three iso's:
+* for the victim we'll use [Windows 10 Enterprise Evaluation 32-bit](https://info.microsoft.com/ww-landing-windows-10-enterprise.html)
 * for the attacker we'll use [Kali Linux](https://www.kali.org/get-kali/#kali-installer-images)
 * for post-mortem analysis we'll be using [Ubuntu Linux 20.04 Focal Fossa](https://releases.ubuntu.com/focal/). Just note here the actual edition 20.04 is important since we'll run RITA on it, which, as of writing, runs best on Focal Fossa.
 
-Ok so at this point if you have your hosted hypervisor and all three iso's we are ready to proceed.
+Ok so at this point if you have your hosted hypervisor installed, and all three iso's are downloaded we are ready to proceed.
 
 # VM 1: Windows 10 aka "The Victim" 
 
 {{< figure src="/img/screamdrew.gif" title="" class="custom-figure" >}}
  
-First we'll install the OS using the iso, following that we'll make a bunch of configurations including: 
-- deep disable MS Defender + Windows updates
-- install sysmon
-- enable powershell logging
-- install Process Hacker
-- install winpmem
-- install wireshark
-- turn our VM into a template so we can clone copies in the future
-
 # Installation
 
 1. In VMWare Workstation goto `File` -> New Virtual Machine. 
@@ -163,9 +169,7 @@ First we'll install the OS using the iso, following that we'll make a bunch of c
 
 {{< figure src="/img/image003.png" title="" class="custom-figure" >}}
 
-11. Now finally select `Network Adapter`. Note we'll change this later to `Host-Only` (to minimize noise), but for now we'll need an internet connection to finish the installation so you can select either `NAT` or `Bridged`. Click `Close` then `Finish`.
-
-You should now see your VM in your Library (left hand column), select it and then click on Power on this virtual machine.
+You should now see your VM in your Library (left hand column), select it and then click on `Power on this virtual machine`.
 
 {{< figure src="/img/image004.png" title="" class="custom-figure" >}}
 
@@ -177,16 +181,16 @@ Once its done installing we’ll get to the setup, select your region, preferred
 
 {{< figure src="/img/image006.png" title="" class="custom-figure" >}}
 
-Choose any username and password, in my case it'll be the highly original choice of `User` and `password`, feel free to choose something else. Then choose 3 securty questions, since this is a "burner" system used for the express purpose of this course don't overthink it. Turn off all the privacy settings (below), and for Cortana select `Not Now`.
+Choose any username and password, in my case it'll be the highly original choice of `User` and `password`, feel free to choose something else. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it. Turn off all the privacy settings (below), and for Cortana select `Not Now`.
 
 {{< figure src="/img/image007.png" title="" class="custom-figure" >}}
 
 Windows will now finalize installation + configuration, this could take a few minutes, whereafter you will see your Desktop.
 
 # VMWare Tools
-Next we'll install VMWare Tools which will ensure our VMs screen resolution assumes that of our actual monitor, but more importantly it also gives us the ability to copy and paste between the host and the VM. So this is optional, if you're oldskool and prefer writing all commands out by hand then feel free to skip this. 
+Next we'll install VMWare Tools which will ensure our VMs screen resolution assumes that of our actual monitor, but more importantly it also gives us the ability to copy and paste between the host and the VM. 
 
-So just to be sure, at this point you should be starting at a Windows desktop. Now in the VMWare windoes click `VM` and then `Install VMWare Tools`. If you open explorer (in the VM) you should now see a D drive. 
+So just to be sure, at this point you should be staring at a Windows desktop. Now in the VMWare menu bar click `VM` and then `Install VMWare Tools`. If you open explorer (in the VM) you should now see a D: drive. 
 
 {{< figure src="/img/image008.png" title="" class="custom-figure" >}}
 
@@ -198,18 +202,19 @@ Right-click on your VM and select `Settings`. In the list on the LHS select `Dis
 
 Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
-# Configuration
 # Deep disable MS Defender + Windows updates
 
-I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. Windows looks at you like a little brother - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your entire OS if you so desired.) 
+I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. You see, Windows thinks of you as a younger sibling - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your entire OS if you so desired.) 
+
+{{< figure src="/img/winlin.jpeg" title="" class="custom-figure" >}}
 
 And just so you know why it is we're doing this:
-- We are disabling Defender so that the AV won't interfere with us attacking the system. Now you might think well this represents an unrealistic situation since in real-life we'll always have our AV running. Thing is, this is a simulation - we are simulating an actual attack. Yes the AV might pick up on our mischevious escapades here since we are using very well-known and widely-used malware (Metasploit mainly). But, if you are being attacked by and actual threat actor worth their salt they likely won't be using something so familiar as default Metasploit modules - they will likely be capcable of using analogous technologies that your AV will not pick up on.
-- As for updates, we disable this because sometimes we can spend all this time configuring and setting things up and then one day we boot our VM up, Windows does it's automatic update schpiel, and suddenly things are broken. This is thus simply to support the stability of our long-term use of this VM. 
+- We are disabling Defender so that the AV won't interfere with us attacking the system. Now you might think well this represents an unrealistic situation since in real-life we'll always have our AV running. Thing is, this is a simulation - we are simulating an actual attack. Yes the AV might pick up on our mischievous escapades here since we are using very well-known and widely-used malware (Metasploit mainly). But, if you are being attacked by an actual threat actor worth their salt they likely won't be using something so familiar as default Metasploit modules - they will likely be capable of using analogous but obfuscated technologies that your AV will not pick up on.
+- As for updates, we disable this because sometimes we can spend all this time configuring and setting things up and then one day we boot our VM up, Windows does it's whole automatic update schpiel, and suddenly things are broken. This is thus simply to support the stability of our long-term use of this VM. 
 
 1. **Disable Tamper Protection**
     1. Hit the `Start` icon, then select the `Settings` icon.
-    2. Selet **`Update & Security `**.
+    2. Select **`Update & Security `**.
     3. In LHS column, select `Windows Security`, then click `Open Windows Security`.
     4. A new window will pop up. Click on `Virus & threat protection`.
     5. Scroll down to the heading that says `Virus & threat protection settings` and click on `Manage settings`.
@@ -297,34 +302,15 @@ Almost there! We just need to boot into Safe Mode to make some final adjustments
     5. Deselect `Safe boot`, hit `Apply`, hit `OK`.
     6. Hit `Restart`.
 
-And that, I can promise you, is by far the most boring part of this entire course. But I did it on purpose - this is very important if you are going to start simulating attacks and threat hunting on your own system. And the cool thing is now that we've done it we'll also learn how to create templates + clones, meaning you would conceivably have to do it again, but simply clone the VM we've created. But before that, let's setup all the awesome tools we'll be using in this course. 
+And that, I can promise you, is by far the most boring part of this entire course. But I did it on purpose - this is very important if you are going to start simulating attacks and threat hunting on your own system. And the cool thing is now that we've done it we'll also learn how to create templates + clones in bit, meaning hence forth when you want a victim Windows 10 VM you can simply clone this one with a few clicks instead of going through that entire process again. But before that, let's setup all the awesome tools we'll be using in this course. 
 
-LFG!
-
-IMAGE HERE
 
 # SYSMON 
 
-We have to activate IMPHASH!
+CONTINUE HERE WITH SECOND SMOOTH EDIT!
 
-Sysmon indeed supports a variety of hashes, including MD5, SHA1, SHA256, and ImpHash. However, the configuration has to be explicitly set to include these.
 
-To include the Image Hash (Imphash) in your Sysmon logs, you need to modify the Sysmon configuration XML. Here's an example:
 
-xml
-Copy code
-<Sysmon schemaversion="4.50">
-  <HashAlgorithms>MD5,SHA256,IMPHASH</HashAlgorithms>
-  <!-- event filtering rules go here -->
-</Sysmon>
-In the "HashAlgorithms" tag, you can specify the hash algorithms you want to use. The above configuration tells Sysmon to log MD5, SHA256, and Imphash.
-
-Once you've made your changes, you can update the running Sysmon configuration by using the -c option, followed by the path to your configuration file. For example:
-
-bash
-Copy code
-sysmon.exe -c sysmonconfig.xml
- 
 Ok so now you should be back in the normal Windows environment looking at your Desktop. We'll now setup Sysmon, for right now all you need to know is that Sysmon is a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
 
 Thing is the standard Windows Event Logs (hence forth referred to simply as WEL) were not designed by somebody with security in mind. In fact, ask most security professionals what they think of WEL and you'll probably get either a sarcastic chuckle or a couple of expletives.
@@ -418,6 +404,7 @@ That's it! You should now see both `Victim Template` and `Victim01` in your libr
 The bad news - we still have two VMs to install. The good news - they will require minimal-to-no configuration, so at this point we're about 80% done with our VM setup. So let's get it done.
 
 # Kali Linux Installation
+{{< figure src="/img/screamdrew.gif" title="" class="custom-figure" >}}
 
 We'll be using Kali Linux for attack, that is it'll effectively serve as our C2 server. The great thing about Kali Linux is that everything we'll need is already installed, so we just have to install the actual operating system. 
 
