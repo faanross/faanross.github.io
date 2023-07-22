@@ -22,9 +22,15 @@ The main thing I want you to know about this course is that ***we will learn by 
 
 I will interject with theory when and where necessary, as well as provide extensive references in each associated section. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand.
 
-
 {{< figure src="/img/brentleave.gif" title="" class="custom-figure" >}}
 
+As mentioned in the opening line - this is the first course in an ongoing series I have intentionally labelled ***always-evolving***. By this I mean perpetual evolution both as it relates to our approach, as well as our setup. Our approach - the specific tools and techniques we employ - will not only diversify in upcoming courses, but indeed we'll also get to gain a deeper sense of mastery of all the core threat hunting tools. And we'll continue to add to our virtualized setup, meaning in each subsequent course we'll spend some time in the beginning to fine tune our network with the goal of becoming increasingly representative of "real-world" situations. 
+
+All to say: I see this whole series of courses on threat hunting as a journey where you and I will learn together. As we get better, it's natural that we not only feel able to handle more complexity - but indeed we'll desire to do so. I'm going to do my best to progressively structure it in such a manner as to optimize the relationship between our skill and the challenge on offer. 
+
+But for now, since this is our first course, we'll begin our journey at the start.
+
+{{< figure src="/img/begins.gif" title="" class="custom-figure" >}}
 
 Threat Hunting is not typically seen as an "entry-level" cybersecurity discipline, probably because in a certain sense it is a layer of abstraction woven from other, more "fundamental", layers of abstraction. I have however `created this course specifically with the beginner in mind`. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient information so that you can follow along not only with what we are doing, but crucially, ***why we are doing it***.
 
@@ -34,202 +40,83 @@ Further, I also believe in the merit of a top-down learning approach - instead o
 
 `This first course is focused on threat hunting standard DLL-injected C2 implants.`
 
+INTRO
+THEORY
+| MEAT |
+REFERENCES
+CHEAT SHEET
+
 Here's a quick overview of the entire course: 
-1. **Introduction**
+1. **Setting up our Virtual Environment**
+    - Introduction
+3. **Performing the Attack**
+4. **Attack Review (Shenanigans!)**
     - subsections
-2. Setting up our Virtual Environment
+5. **Live Forensics: Native Windows Tools**
     - subsections
-3. Performing the Attack
+6. **Live Forensics: Process Hacker 2**
     - subsections
-4. Attack Review (Shenanigans!)
+7. **Post-Mortem Forensics: Memory**
     - subsections
-5. Live Forensics: Native Windows Tools
+8. **Post-Mortem Forensics: Log Analysis**
     - subsections
-6. Live Forensics: Process Hacker 2
+9. **Post-Mortem Forensics: Traffic Analysis**
     - subsections
-7. Post-Mortem Forensics: Memory
+10. **Report write-up**
     - subsections
-8. Post-Mortem Forensics: Log Analysis
-    - subsections
-9. Post-Mortem Forensics: Traffic Analysis
-    - subsections
-10. Report write-up
-    - subsections
-11. List of all references
-12. Cheat Sheets
+11. **List of all references**
+12. **Cheat Sheets**
 
 `NOTE: This page contains the entire course on one single page. If you'd like to view any specific section outlined above by itself feel free to click on it.`
 
-So without any further preamble, LET'S GET IT.
+So without any further preamble, ***LET'S GET IT***.
 
 {{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
 
-
-
-
-CONTINUE HERE
-
-
-
-
-
-
-
-
-# INTRODUCTION
-
-As mentioned in the opening line - this is the first course in an ongoing series I have intentionally chosen to label ***always-evolving***. By this I mean perpetual evolution both as it relates to our approach, as well as our setup. Our approach - the specific tools and techniques we employ - will not only diversify in upcoming courses, but indeed we'll also get to gain a deeper sense of mastery of all the core threat hunting tools. And we'll continue to add to our virtualized setup, meaning in each subsequent course we'll spend some time in the beginning to fine tune our network with the goal of becoming increasingly representative of "real-world" situations. 
-
-All to say: I see this whole series of courses on threat hunting as a journey where you and I will learn together. As we get better, it's natural that we not only feel able to handle more complexity - but indeed we'll desire to do so. I'm going to do my best to progressively structure it in such a manner as to optimize the relationship between our skill and the challenge on offer.
-
-And now, before we go any further, in case you were not yet familiar it's my pleasure to introduce you to `Thin Watermelon`. 
-
-{{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
-
-
-- everything here is free or OS. exception is AChuntern, which has a paid full version, but we'll use the free verison which for our purpose has all the same features.  
-CONTINUE 2ND EDIT HERE
-
-
-not everything is always as it appears
-nathan watermelon gif
-
-
-
-beginner-friendly
-practical oriented.
-
-
- I am a firm believer that your capacity to defend is, at least in some manner, proportionate to you ability to attack.  
-
-
-WHAT WILL YOU NEED - describe system
-not an ezpert at this
-4+ CPUs (ideally 8)
-16GB RAM (ideally 32)
-Around 200 gb of free HD space. 
-
-I know that's a lot, and again as I said: I am not an expert in hardware. If you believe you can finagile your way to getting the same results by adapting the process - then I salute you good Sir/Madam, 
-
-
-
-In this course we'll learn how to threat hunt both classical and reflective DLL-injected C2 implants. We'll do so from 3 approaches: memory forensics, log analysis + UEBA, and traffic analysis. The entire course is practically-oriented, meaning that we'll learn by doing. I'll sprinkle in a tiny bit of theory just so we are on the same page re: C2 frameworks and DLL-injection attacks; and in case you wanted to dig in deeper I provide extensive references throughout this document. 
-
-In case you're new and a little trepidated...
-I'm literally going to hold your hand from point A to Z so even if you are a beginner and most of this seems foreign **fret not**! WRITE SOMETHING and add a GIF
-
-
-
-
-Here's a brief overview of what we'll be getting upto...
-- In PART 1 we're going to set up the virtualized environment,
-- we'll create a windows 10 VM which will server as our victim,
-- we'll also set up a kali linux box which will be our attacker, 
-- as well as an ubuntu box which we'll use to run some post-mortem analysis on.
-
-.
-- In PART 2 we'll run the actual attack ourselves,
-- for the classical dll-injection we'll use metasploit to generate both the stager and meterpreter handler,
-- once we've transferred the stager to the victim we'll run it from memory using powersploit,
-- for the reflective dll-injection we'll perform the entire process using metasploit.
-
-.
-- In PART 3 we'll cover livememory forensics,
-- first we'll do a basic live read using Process Hacker,
-
-IN PART 4 we do post-mortem analysis
-
-
-- we'll then dump the memory with winpmem,
-- finally we'll have a look at the it with Volatility.
-
-.
-- IN PART 4 we'll get into some logs,
-- along with standard Windows Event Logs, we'll also use other (cough, far superior, cough), logs we setup in the first part: namely sysmon and powershell logging,
-- we'll briefly jump into the raw logs just to look at some very high-level indicators and then,
-- we'll process them using the awesome UEBA framework DeepBlueCLIv3.
-
-.
-- IN PART 5 we'll look at traffic analysis,
-- we'll run our PCAPS through Zeek,
-- and get some insights from the threat hunting framework RITA.
-
-IN final art put everything together and write a report./ 
-
-In the end we'll recap and formulate some key takeaways to serve you on your journey as you venture forth into the world and become a bada$$ hunter.
-
-But first, *le sigh*, it's required we just dip our toes into a wee bit of theory. But I promise once we're done here - 10 to 15 mins tops - it'll be applied learning until the end of our journey. 
-
-Sounds good? Let's get it.
-
-
-
 ***
 
-# Theory
-# what is a DLL?
-Succinctly as possible, a DLL is a communal library containing code. They are not a program or an executable in and of themselves, but they are in essence a collection of functions and data that can be used by other programs. 
+# 1. Setting up our Virtual Environment
+# Introduction
 
-So think of a DLL as a communal resource: let's say you have 4 programs running and they all want to use a common function - let's say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they'll instead access a DLL that contains the function to minimize gui windows instead. So when you click on the minimize icon and that program needs the code to know how to behave, it does not get instructions from its own program code, rather it pulls it from the appropriate DLL with some help from the Windows API. 
+In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso files online, and then we'll install the base operating systems. 
 
-Thus any program you run will constantly call on different DLLs to get access to a wide-variety of common (and often critical) functions and data.
+For the Windows 10 VM (Victim) we will then also
+- Disable Antivirus and Updates
+- 
 
-# what is a classical DLL-injection?
-So keeping what I just mentioned in mind - that any running program is accessing a variety of code from various DLLs at any time - what then is a DLL-injection attack? Well in a normal environment we have legit programs accessing code from legit DLLs. 
+Since the Kali Linux VM (Attacker) contains
 
-With a DLL-injection attack we enter into the population of legit DLLs a malicious one, that is a DLL that contains the code the attacker wants executed. The attacker then injects it into the memory space of a legitimate process. Using a Windows API function (commonly LoadLibrary or CreateRemoteThread), the attacker manipulates the legitimate process into loading and executing the malicious DLL. This effectively allows the malicious code within the DLL to run, often with the same permissions as the hijacked process.
+For the Ubuntu 20.04 VM (Post-Mortem Analysis) we will then also
+- 
+- 
 
-Threat actors love DLL-injection attacks because since they are executed within the context of a legitimate process they run with the same privileges as that of the process (ie potentially elevated), but even more so it makes them much harder to detect. No longer can we look on the process-level for malware, instead we have to peer beneath them at a arguably convoluted level of abstraction. 
+# Requirements
 
-Even though classical DLL-injection attacks are less noisy for this exact reason, they still have a design flaw that makes our lives as threat hunters easier - they leave their fingerprints all over the disc. When the malicious DLL is initially transferred to the victim's system, it's written to disc, allowing us a potential breadcrumb for discovery. 
+I do want to give you some sense of the hardware requirements for this course, however also have to add that I am not an expert in this area. AT ALL. So I'll provide an overview of what we'll be running, as well as what I thus think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can finagle your way to getting the same results by adapting the process, then I salute you for that is the *way of the hacker*. 
 
-And thus the inevitable next iteration in this branch of digital evolution is...
+As mentioned above, we'll have 3 VMs, however, at any one moment there will only be a maximum of 2 VMs running. For each of these VMs I recommend the following broad system resources:
+- min 2 ideally 4 CPU cores
+- min 4 ideally 8 GB RAM
+- around 60 GB HD space (allocated)
 
-# what is a reflective DLL-injection?
-At a *high-level*  classical and reflective DLLs are identical save for one difference: whereas the former is written to disc then injected into memory space, the latter is injected into memory space directly. This makes them conventionally even harder to catch since we can't rely on any disc forensics to reveal its presence. However, as we'll learn in this course, in another way it makes it for those who know what to look for perhaps a bit easier. 
+So based on this, that is roughly 2x above and resources for your actual host system, you would like need something along the lines of:
+- 8 CPU cores (12+ even better)
+- 16 GB RAM (32+ even better)
+- 200 GB free HD space
 
-How come?
+I understand this is beefy, but again consider:
+- You could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that.
+- You could use a service like Linode and simply rent resources via the cloud.
+- You might be able to simply get away with less that I propose since I'm no expert at software-hardware interface optimization. 
 
-Well, on a pattern-level we can observe that the very fact that a DLL, meaning ANY DLL, is in memory without a disc counterpart is very unusual. Perhaps not immediate incident alert level unusual, but at the very least more than unusual enough to warrant further prodding with piqued interest. 
+What I propose is just a rough guide, please if you don't have a system in that ballpark don't be discouraged and do your best to find alternative paths to the same/better outcome. For again, after all - that is the *way of the hacker*.
 
-As a bridge to the closing part of our theory section let's zoom out a bit. Here we have been speaking about a specific mechanism of how malware (that is bad code) gets a victim's system to execute it. There are obviously many other such mechanisms, and equally bviously there are many different types of malware that use specifically DLL-injection attacks as the means to their desired ends (ie getting executed). 
+Finally I want to mention that everything we will use is completely free. This course ain't upselling a full course, and every piece of software is freely available in the legal sense. The only exception has free alternatives, and I'm about to discuss that with you right now. 
 
-In this specific course however we'll be focussing on a very specific type of malware, actually it would be even more accurate to say we'll focus on a specific component of a specific type of malware... 
+# Hosted (type 2) Hypervisor
+So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like Inception - it allows us to create our machines within our machine. 
 
-# what is a Command and Control (C2) framework, stager, and beacon?
-
-Let's start by sketching a scenario of how many typical attacks play out these days.
-
-{{< figure src="/img/hackers01.gif" title="" class="custom-figure" >}}
-
-An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the "uregent invoice" attached to the email. Opening this attachment executes a tiny program called a stager.
-
-A stager, though not inherently malicious, "sets the stage" by performing a specific task: it reaches out to a designated address (owned by the hacker) to download another piece of code, then executes it.
-
-The downloaded code establishes the attacker's presence on the victim's system. It acts as a "gateway," allowing the attacker to execute commands on the victim's system from their own.
-
-So the system that the attacker uses to execute these commands is called the Command and Control (C2) server.
-
-The code downloaded by the stager is a type of C2 implant known as a beacon, an approach popularized by Cobalt Strike. Unlike traditional C2 implants that maintain a continuous, persistent network connection (which can raise suspicion), a beacon does not. 
-
-Instead, it periodically "calls home" to the C2 server, asking whether there are any new commands. If there are no commands, the connection is immediately terminated. If there are commands, the beacon retrieves them and then terminates the connection, lying dormant until the next scheduled "check-in". This sporadic communication helps the beacon blend into normal network traffic, making it more difficult to detect.
-
-GREAT, and that's it for the theory, it's time to get going! But in case you are feeling inspired here are a selection of incredible resources that helped me.
-
-Change these for links and short descriptions
-
-{{< youtube borfuQGrB8g >}}
-
-.
-{{< youtube lz2ARbZ_5tE >}}
-
-.
-{{< youtube ihElrBBJQo8 >}}
-
-*** 
-
-# PART 1: Setting up our virtualized environment
-# Overview
+{{< figure src="/img/inception.gif" title="" class="custom-figure" >}}
 
 For this course I'll be using [VMWare Workstation](https://store-us.vmware.com/workstation_buy_dual) which as of writing costs around $200. However you could also do it with either [VMWare Player](https://www.vmware.com/ca/products/workstation-player.html), or [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads), both of which are free. 
 
@@ -648,15 +535,7 @@ pip3 install -r requirements.txt
 sudo git clone https://github.com/volatilityfoundation/volatility3.git
 ```
 
-now install python2 
-Yes, you can install Python 2 and Python 3 side by side on Ubuntu without them interfering with each other. They are designed to coexist. You can use Python 3 with the python3 command and Python 2 with the python command.
 
-If Python 2 is not already installed on your Ubuntu system, you can install it using the following command:
-
-bash
-Copy code
-sudo apt update
-sudo apt install python2
 
 # DeepBlueCLI
 
@@ -721,6 +600,65 @@ OK. Do you know what time it is? Yeah it's time for all this installing and conf
 ***
 
 # PART 2: ATTACK TIME 
+# Theory
+# what is a DLL?
+Succinctly as possible, a DLL is a communal library containing code. They are not a program or an executable in and of themselves, but they are in essence a collection of functions and data that can be used by other programs. 
+
+So think of a DLL as a communal resource: let's say you have 4 programs running and they all want to use a common function - let's say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they'll instead access a DLL that contains the function to minimize gui windows instead. So when you click on the minimize icon and that program needs the code to know how to behave, it does not get instructions from its own program code, rather it pulls it from the appropriate DLL with some help from the Windows API. 
+
+Thus any program you run will constantly call on different DLLs to get access to a wide-variety of common (and often critical) functions and data.
+
+# what is a classical DLL-injection?
+So keeping what I just mentioned in mind - that any running program is accessing a variety of code from various DLLs at any time - what then is a DLL-injection attack? Well in a normal environment we have legit programs accessing code from legit DLLs. 
+
+With a DLL-injection attack we enter into the population of legit DLLs a malicious one, that is a DLL that contains the code the attacker wants executed. The attacker then injects it into the memory space of a legitimate process. Using a Windows API function (commonly LoadLibrary or CreateRemoteThread), the attacker manipulates the legitimate process into loading and executing the malicious DLL. This effectively allows the malicious code within the DLL to run, often with the same permissions as the hijacked process.
+
+Threat actors love DLL-injection attacks because since they are executed within the context of a legitimate process they run with the same privileges as that of the process (ie potentially elevated), but even more so it makes them much harder to detect. No longer can we look on the process-level for malware, instead we have to peer beneath them at a arguably convoluted level of abstraction. 
+
+Even though classical DLL-injection attacks are less noisy for this exact reason, they still have a design flaw that makes our lives as threat hunters easier - they leave their fingerprints all over the disc. When the malicious DLL is initially transferred to the victim's system, it's written to disc, allowing us a potential breadcrumb for discovery. 
+
+And thus the inevitable next iteration in this branch of digital evolution is...
+
+# what is a reflective DLL-injection?
+At a *high-level*  classical and reflective DLLs are identical save for one difference: whereas the former is written to disc then injected into memory space, the latter is injected into memory space directly. This makes them conventionally even harder to catch since we can't rely on any disc forensics to reveal its presence. However, as we'll learn in this course, in another way it makes it for those who know what to look for perhaps a bit easier. 
+
+How come?
+
+Well, on a pattern-level we can observe that the very fact that a DLL, meaning ANY DLL, is in memory without a disc counterpart is very unusual. Perhaps not immediate incident alert level unusual, but at the very least more than unusual enough to warrant further prodding with piqued interest. 
+
+As a bridge to the closing part of our theory section let's zoom out a bit. Here we have been speaking about a specific mechanism of how malware (that is bad code) gets a victim's system to execute it. There are obviously many other such mechanisms, and equally bviously there are many different types of malware that use specifically DLL-injection attacks as the means to their desired ends (ie getting executed). 
+
+In this specific course however we'll be focussing on a very specific type of malware, actually it would be even more accurate to say we'll focus on a specific component of a specific type of malware... 
+
+# what is a Command and Control (C2) framework, stager, and beacon?
+
+Let's start by sketching a scenario of how many typical attacks play out these days.
+
+{{< figure src="/img/hackers01.gif" title="" class="custom-figure" >}}
+
+An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the "uregent invoice" attached to the email. Opening this attachment executes a tiny program called a stager.
+
+A stager, though not inherently malicious, "sets the stage" by performing a specific task: it reaches out to a designated address (owned by the hacker) to download another piece of code, then executes it.
+
+The downloaded code establishes the attacker's presence on the victim's system. It acts as a "gateway," allowing the attacker to execute commands on the victim's system from their own.
+
+So the system that the attacker uses to execute these commands is called the Command and Control (C2) server.
+
+The code downloaded by the stager is a type of C2 implant known as a beacon, an approach popularized by Cobalt Strike. Unlike traditional C2 implants that maintain a continuous, persistent network connection (which can raise suspicion), a beacon does not. 
+
+Instead, it periodically "calls home" to the C2 server, asking whether there are any new commands. If there are no commands, the connection is immediately terminated. If there are commands, the beacon retrieves them and then terminates the connection, lying dormant until the next scheduled "check-in". This sporadic communication helps the beacon blend into normal network traffic, making it more difficult to detect.
+
+GREAT, and that's it for the theory, it's time to get going! But in case you are feeling inspired here are a selection of incredible resources that helped me.
+
+Change these for links and short descriptions
+
+{{< youtube borfuQGrB8g >}}
+
+.
+{{< youtube lz2ARbZ_5tE >}}
+
+.
+{{< youtube ihElrBBJQo8 >}}
 
 Preamble:
 1. First things first - fire up both VMs.
