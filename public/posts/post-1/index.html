@@ -171,6 +171,7 @@ CHEAT SHEET</p>
 <li><strong>List of all references</strong></li>
 <li><strong>Cheat Sheets</strong></li>
 </ol>
+<p>Finally I do want to add that I myself am an <code>eternal student</code> and always learning. Creating these courses are part of my own pedagogical process, and as such it&rsquo;s possible, even perhaps probable, that I will make some mistakes. Mistakes themselves of course represent the opportunity for further education - but only if we become aware of them. So if there&rsquo;s anything here you are unsure about, or simply flat-out disagree with <code>PLEASE</code> feel free to reach out and share this with me so that everyone can potentially benefit from improved understanding. You can send me a message on Twitter <a href="https://twitter.com/faanross">here</a>, of feel free to email me <a href="mailto:moi@faanross.com">here</a>.</p>
 <p>So without any further preamble, <em><strong>LET&rsquo;S GET IT</strong></em>.</p>
 <figure class="custom-figure"><img src="/img/randy01.gif"/>
 </figure>
@@ -461,58 +462,69 @@ And if you&rsquo;ve never (ever) used any hypervisor before then you might want 
 </li>
 </ol>
 <p>And that, I can promise you, is by far the most boring part of this entire course. But I did it on purpose - this is very important if you are going to start simulating attacks and threat hunting on your own system. And the cool thing is now that we&rsquo;ve done it we&rsquo;ll also learn how to create templates + clones in bit, meaning hence forth when you want a victim Windows 10 VM you can simply clone this one with a few clicks instead of going through that entire process again. But before that, let&rsquo;s setup all the awesome tools we&rsquo;ll be using in this course.</p>
-<h1 id="sysmon">SYSMON</h1>
-<p>CONTINUE HERE WITH SECOND SMOOTH EDIT!</p>
-<p>Ok so now you should be back in the normal Windows environment looking at your Desktop. We&rsquo;ll now setup Sysmon, for right now all you need to know is that Sysmon is a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability.</p>
-<p>Thing is the standard Windows Event Logs (hence forth referred to simply as WEL) were not designed by somebody with security in mind. In fact, ask most security professionals what they think of WEL and you&rsquo;ll probably get either a sarcastic chuckle or a couple of expletives.</p>
-<p>But Sysmon, created by the legend Mark Russinovich, takes about 5 minutes to setup and will DRAMATICALLY improve logging, specifically as it relates to security events. In case you wanted to learn more about Sysmon&rsquo;s ins and outs <a href="https://www.youtube.com/watch?v=6W6pXp6EojY">see this talk</a>. And if you really wanted to get in deep, which at some point I recommend you do, see <a href="https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7">this playlist</a> from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on <a href="https://www.youtube.com/watch?v=7dEfKn70HCI">using Sysmon for  Threat Hunting</a>.</p>
-<p>Before we get installing Sysmon there&rsquo;s just one thing you need to know - in addition to download the actual Sysmon install we also need a config file. Of late  I have heard a few trusted sources, included Eric Conrad (mentioned above) prefer <a href="https://github.com/bakedmuffinman/Neo23x0-sysmon-config">this version from Neo23x0</a> whose authors included another blue team giant, Florian Roth.</p>
-<p>So first download the config file (which is in xml format), the <a href="https://download.sysinternals.com/files/Sysmon.zip">go here to download Sysmon</a>. You should now have two zip files - the config you download on Github, as well as the Sysmon zip file. Extract the Sysmon file, the contents should look as follows:</p>
+<h1 id="sysmon">Sysmon</h1>
+<p>You should now be back in the normal Windows environment looking at your Desktop. Let&rsquo; set up <code>Sysmon</code> - a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability.</p>
+<p>The reason we do this and not simply rely on the standard <code>Windows Event Logs</code> (hence forth referred to simply as <code>WEL</code>), is that WEL was clearly designed by someone who considered security unimportant. Ask most security professionals what they think of WEL and you&rsquo;ll probably get either a sarcastic chuckle or a couple of expletives. All to say - it sucks. REAL bad. BUt there&rsquo;s hope&hellip;</p>
+<p>Sysmon, created by the legend <a href="https://twitter.com/markrussinovich">Mark Russinovich</a>, takes about 5 minutes to set up and will DRAMATICALLY improve logging, specifically as it relates to security events. In case you wanted to learn more about Sysmon&rsquo;s ins and outs <a href="https://www.youtube.com/watch?v=6W6pXp6EojY">see this talk</a>. And if you really wanted to get in deep, which at some point I recommend you do, see <a href="https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7">this playlist</a> from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on <a href="https://www.youtube.com/watch?v=7dEfKn70HCI">using Sysmon for  Threat Hunting</a>.</p>
+<p>Before we get installing Sysmon there&rsquo;s just one thing you need to know - in addition to downloading the actual Sysmon file we also need a config file. One day when you get to <em>that</em> level you can even create your own config file, which will allow you to make it behave exactly how you want it to. But for now, since we are decidedly not yet there, let&rsquo;s download and use one made by some really smart people. Of late  I have heard a few trusted sources, included <a href="https://www.ericconrad.com">Eric Conrad</a> prefer <a href="https://github.com/bakedmuffinman/Neo23x0-sysmon-config">this version from Neo23x0</a> whose authors included another blue team giant, <a href="https://twitter.com/cyb3rops?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">Florian Roth</a>.</p>
+<p>So first download the config file (which is in xml format) from the link above, then <a href="https://download.sysinternals.com/files/Sysmon.zip">go here to download Sysmon</a>. You should now have two zip files - the config you downloaded from Github, as well as the Sysmon zip file. Extract the Sysmon file, the contents should look as follows:</p>
 <figure class="custom-figure"><img src="/img/image017.png"/>
 </figure>
 
-<p>Now also extract the zip file containing the config. Inside of the folder rename <code>sysmonconfig-export.xml</code> to <code>sysmonconfig.xml</code>. Now simply cut (or copy) the file and paste it in the folder containing sysmon.</p>
-<p>Great everything is setup so now we can install it with a simple command. Open command prompt as administrator and navigate to the folder containing sysmon and the config file - in my case it is <code>c:\Users\User\Downloads\Sysmon</code>. Run the following command:</p>
+<p>Now also extract the zip file containing the config. Inside of the folder rename <code>sysmonconfig-export.xml</code> to <code>sysmonconfig.xml</code>. Now simply cut (or copy) the file and paste it in the folder containing <code>Sysmon</code>.</p>
+<p>Great, everything is set up so now we can install it with a simple command. Open command prompt as administrator and navigate to the folder containing <code>Sysmon</code> and the config file - in my case it is <code>c:\Users\User\Downloads\Sysmon</code>. Run the following command:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Sysmon.exe -accepteula -i
-</span></span></code></pre></div><p>This is what a successful installation will look like:</p>
+</span></span></code></pre></div><p>This is what a successful installation will look like</p>
 <figure class="custom-figure"><img src="/img/image018.png"/>
 </figure>
 
-<p>Now let&rsquo;s just validate that it&rsquo;s running. First type <code>powershell</code> so we change over into a PS shell, and rrun the command <code>Get-Service sysmon</code>. In the image below we can see it is running - we are good to go!</p>
+<p>Now let&rsquo;s just validate that it&rsquo;s running. First type <code>powershell</code> so we change over into a PS shell, then run the command <code>Get-Service sysmon</code>. In the image below we can see it is running - we are good to go!</p>
 <figure class="custom-figure"><img src="/img/image019.png"/>
 </figure>
 
-<p>That&rsquo;s it for Sysmon, not let&rsquo;s enable PowerShell logging.</p>
+<p>That&rsquo;s it for Sysmon, now let&rsquo;s enable PowerShell logging.</p>
 <h1 id="powershell-logging">PowerShell Logging</h1>
-<p>Unlike Sysmon we don&rsquo;t have to install anything here, Windows comes pre-configured with PS logging, but it&rsquo;s turned off by default. So we just need to flip this switch which again, as is the case with Sysmon, will dramatically improve logging as it relates to security.</p>
-<p>Why?</p>
-<p>Hackers often exploit PowerShell due to its powerful capabilities and direct access to the Windows API and other lower-level operations. This tactic, known as &ldquo;living off the land,&rdquo; involves using the system&rsquo;s own tools against it. By enabling PowerShell logging, you record all command-line activities, which can be invaluable when conducting threat hunting. By analyzing the logs, you can identify the exact commands executed by an attacker, and therefore gain a clearer understanding of what they did and how they did it.</p>
-<p>Enable PowerShell logging:</p>
-<ol>
-<li>Hit <strong><code>Win + R</code></strong> keys together to open the Run dialog box.</li>
-<li>Type <strong><code>gpedit.msc</code></strong> and press Enter. This will open the <strong><code>Local Group Policy Editor</code></strong>.</li>
-<li>In the left-hand panel, navigate to <strong><code>Computer Configuration</code></strong> &gt; <strong><code>Administrative Templates</code></strong> &gt; <strong><code>Windows Components</code></strong> &gt; <strong><code>Windows PowerShell</code></strong>.</li>
-<li>On the right-hand side, you will see a policy setting named <strong><code>Turn on PowerShell Script Block Logging</code></strong>, double-click.</li>
-<li>In the properties window, select the <strong><code>Enabled</code></strong> - see image below.</li>
-<li>Hit <strong><code>Apply</code></strong> and then <strong><code>OK</code></strong>.</li>
-</ol>
-<figure class="custom-figure"><img src="/img/image020.png"/>
+<p>For security purposes, another quick and easy proverbial switch we can flip is enabling PowerShell logging. This is great because one specific type of PowerShell logs (<code>ScriptBlock</code>) will record exactly what command was run in PowerShell. As we know, in-line with the <code>Living off the Land</code> paradigm, modern adversaries LOVE abusing PowerShell; and so the ability to see  exactly what commands were run is obviously a huge boon.</p>
+<p>Something to be aware of is that there are a few types of PowerShell logging: Module, ScriptBlock, Operational, Transcription, Core, and Protected Event. For the purposes of this course we will only be activating <code>ScriptBlock</code>, as well as <code>Operational</code>. While activating the former tells PowerShell to log the commands, we also need to activate <code>Operational</code> so that the system is able to properly save the logs.</p>
+<p>NOTE: This entire process could be performed in the GUI using <code>Group Policy Editor</code>, we will however be performing it via PowerShell command line. You should <strong>always</strong> prefer this method to using the GUI. Not simply to look cool, nay, there is a very good practical reason for this.</p>
+<p>Imagine for a moment you needed to activate this feature on 1000 stations. You could either do so by logging into each station individually and interacting with the <code>gpedit</code> GUI interface, which would likely take you a few days working at a ferocious pace like an automaton for 1000 stations. Alternatively, you could run a single command from a domain controller, which would take less than a minute for 1000 stations.</p>
+<p>This is an admittedly dramatic way of saying that performing administrative tasks using PowerShell commands scales well, while flipping GUI toggles does not scale at all. So invest your time early on learning the methods that don&rsquo;t break down the moment you need to do it at scale, it&rsquo;s so worth it.</p>
+<figure class="custom-figure"><img src="/img/worth.gif"/>
 </figure>
 
-<h1 id="install-software">Install Software</h1>
-<p>And now finally we&rsquo;ll install three programs:</p>
+<p>So open up PowerShell as an administrator and run the following commands.</p>
+<ol>
+<li>First we&rsquo;ll set the execution policy to allow us to make the changes:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine
+</span></span></code></pre></div><ol start="2">
+<li>We&rsquo;ll now create a new registry path for <code>ScriptBlockLogging</code>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>New-Item -Path HKLM:\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Force
+</span></span></code></pre></div><ol start="3">
+<li>Now create a new DWORD property EnableScriptBlockLogging and set its value to 1:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>New-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Name EnableScriptBlockLogging -Value 1 -PropertyType DWord -Force
+</span></span></code></pre></div><ol start="4">
+<li>And finally we&rsquo;ll enable Operational logging to ensure our ScriptBlock logs are saved properly:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>wevtutil sl &#34;Microsoft-Windows-PowerShell/Operational&#34; /e:true
+</span></span></code></pre></div><h1 id="install-software">Install Software</h1>
+<p>And now finally we&rsquo;ll install four programs:</p>
 <ul>
 <li>We&rsquo;ll use <strong>Process Hacker</strong> for live memory forensics</li>
 <li>We&rsquo;ll use <strong>winpmem</strong> to create a memory dump for post-mortem memory forensics</li>
 <li>We&rsquo;ll use <strong>Wireshark</strong> to generate a pcap for egress analysis</li>
 </ul>
-<p>.
-You can download <a href="https://processhacker.sourceforge.io/downloads.php">Process Hacker here</a>. Once downloaded go ahead and install.</p>
+<p>You can download <a href="https://processhacker.sourceforge.io/downloads.php">Process Hacker here</a>. Once downloaded go ahead and install.</p>
 <p>You can download the latest release of <a href="https://github.com/Velocidex/WinPmem/releases">winpmem here</a>. Since its a portable executable there is no installation required, just download the <code>.exe</code> file and place it on the desktop.</p>
-<p>And finally the Wireshark setup file can be <a href="https://2.na.dl.wireshark.org/win32/Wireshark-win32-3.6.15.exe">downloaded from here</a>. Once downloaded run Setup, just keep all options per default, nothing fancy required.</p>
+<p>And finally the <code>WireShark</code> setup file can be <a href="https://2.na.dl.wireshark.org/win32/Wireshark-win32-3.6.15.exe">downloaded from here</a>. Once downloaded run Setup, just keep all options per default, nothing fancy required.</p>
 <p>That&rsquo;s it friend. We are done with BY FAR the heaviest lifting in terms of VM setup - the next two will be a breeze. But before we get to that there&rsquo;s one very simple thing we can do that will make our lives much easier in the future - turning this VM into a template for cloning.</p>
 <h1 id="creating-a-template">Creating a Template</h1>
-<p>So why do we want to do this. Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same &ldquo;victim&rdquo; system for any project or course we can simply clone it. Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in under a minute. This is also useful if we ever &ldquo;mess up&rdquo; the VM, we can just come back to this starting point where the machine is fresh, but all our configurations and software are as required.</p>
+<figure class="custom-figure"><img src="/img/mememe.gif"/>
+</figure>
+
+<p>So why do we want to do this? Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same &ldquo;victim&rdquo; system for any project or course we can simply clone it. Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in under a minute. This is also useful if we ever &ldquo;mess up&rdquo; the VM, we can just come back to this starting point where the machine is fresh, but all our configurations and software are as required.</p>
 <ol>
 <li>First shut down the VM.</li>
 <li>In VMWare you should see the library pane on the LHS listing our VM. If you don&rsquo;t, hit <code>F9</code>, or go to <code>View</code> &gt; <code>Customize</code> &gt; <code>Library</code>.</li>
@@ -540,11 +552,11 @@ You can download <a href="https://processhacker.sourceforge.io/downloads.php">Pr
 </ol>
 <p>That&rsquo;s it! You should now see both <code>Victim Template</code> and <code>Victim01</code> in your library.</p>
 <p>The bad news - we still have two VMs to install. The good news - they will require minimal-to-no configuration, so at this point we&rsquo;re about 80% done with our VM setup. So let&rsquo;s get it done.</p>
-<h1 id="kali-linux-installation">Kali Linux Installation</h1>
-<figure class="custom-figure"><img src="/img/screamdrew.gif"/>
+<h1 id="vm-2-kali-linux-aka-the-attacker">VM 2: Kali Linux aka &ldquo;The Attacker&rdquo;</h1>
+<figure class="custom-figure"><img src="/img/attacker.gif"/>
 </figure>
 
-<p>We&rsquo;ll be using Kali Linux for attack, that is it&rsquo;ll effectively serve as our C2 server. The great thing about Kali Linux is that everything we&rsquo;ll need is already installed, so we just have to install the actual operating system.</p>
+<p>We&rsquo;ll be using Kali Linux to simulate the adversary. The great thing about Kali Linux is that everything we&rsquo;ll need comes pre-packaged, so we just have to install the actual operating system.</p>
 <ol>
 <li>In VMWare hit <code>File</code> &gt; <code>New Virtual Machine...</code></li>
 <li><code>Typical (recommended)</code> and hit <code>Next</code>.</li>
@@ -574,7 +586,7 @@ You can download <a href="https://processhacker.sourceforge.io/downloads.php">Pr
 <li>Next select <code>Guided - use entire disk</code> and hit <code>Continue</code>.</li>
 <li>The only disk should be selected, hit <code>Continue</code>.</li>
 <li>Keep <code>All files in one partition (recommended for new users)</code>, hit <code>Continue</code>.</li>
-<li>Keep <code>Finish partinioning and write changes to disk</code>, hit <code>Continue</code>.</li>
+<li>Keep <code>Finish partitioning and write changes to disk</code>, hit <code>Continue</code>.</li>
 <li>Select <code>Yes</code> and <code>Continue</code>.</li>
 <li>In <code>Software selection</code> keep the default selection and hit <code>Continue</code>. Kali will now start installing, just be aware this can take a few minutes, probably around 5 to 10.</li>
 </ol>
@@ -596,8 +608,11 @@ You can download <a href="https://processhacker.sourceforge.io/downloads.php">Pr
 </figure>
 
 <p>And that&rsquo;s it for our attacker machine - feel free to repeat the Template-Cloning process we performed for our Windows 10 VM if you so desire.</p>
-<h1 id="ubuntu-linux-2004-installation">Ubuntu Linux 20.04 Installation</h1>
-<p>And now finally we&rsquo;ll set up our Ubuntu VM, afterwards we&rsquo;ll install RITA, Zeek, and Volatility.</p>
+<h1 id="vm-3-ubuntu-linux-2004-aka-the-analyst">VM 3: Ubuntu Linux 20.04 aka &ldquo;The Analyst&rdquo;</h1>
+<figure class="custom-figure"><img src="/img/analysis.gif"/>
+</figure>
+
+<p>And now finally we&rsquo;ll set up our Ubuntu VM, afterwards we&rsquo;ll install RITA (incl Zeek), and Volatility.</p>
 <ol>
 <li>In VMWare hit <code>File</code> &gt; <code>New Virtual Machine...</code></li>
 <li><code>Typical (recommended)</code> and hit <code>Next</code>.</li>
@@ -640,88 +655,46 @@ You can download <a href="https://processhacker.sourceforge.io/downloads.php">Pr
 <li>When it&rsquo;s complete you can power the system off. Go into settings, under <code>CD/DVD (SATA)</code> disable <code>Connect at power on</code>.</li>
 <li>Then goto <code>Display</code>, disable <code>Stretch mode</code>.</li>
 <li>Hit <code>OK</code>, start the VM up once again, log in.</li>
-<li>A few moments after logging in and answer Ubuntu&rsquo;s questions you&rsquo;ll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.</li>
 </ol>
+<p><code>NOTE: A few moments after logging in and answer Ubuntu's questions you'll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.</code></p>
 <figure class="custom-figure"><img src="/img/image029.png"/>
 </figure>
 
-<p>OK, that&rsquo;s it and now we&rsquo;ll just install RITA, Zeek, Volatility, DeepBlueCLIv3 and then the fun can finally begin!</p>
+<p>OK, that&rsquo;s it and now finally we&rsquo;ll install RITA, Zeek, and Volatility.</p>
 <h1 id="rita--zeek">RITA + Zeek</h1>
 <p>Here&rsquo;s the cool thing about RITA: it will automatically install Zeek (and MariaDB btw) when you install it. Even better, it actually makes alterations to the standard Zeek config which will serve us even better - I&rsquo;ll discuss the exact details of this and why it&rsquo;s important when we get to that section in our course. For now let&rsquo;s get to installing.</p>
 <ol>
 <li>Goto the <a href="https://github.com/activecm/rita">RITA Github repo</a>.</li>
 <li>Scroll down to <code>Install</code> and follow the instructions using the <code>install.sh</code> script. During installation you will be asked a few questions, answer <code>y</code> and hit enter each time.</li>
-<li>Let&rsquo;s check the version of RITA to ensure installation was successful. First close your terminal and reopen and then run the commands seen in image below, you should get similiar results.</li>
+<li>Let&rsquo;s check the version of RITA to ensure installation was successful. First close your terminal and reopen and then run the commands seen in image below, you should get similar results.</li>
 </ol>
 <figure class="custom-figure"><img src="/img/image030.png"/>
 </figure>
 
 <h1 id="volatility">Volatility</h1>
-<p>CHANGE THIS SIMPLY RUN THIS
-git clone <a href="https://github.com/volatilityfoundation/volatility3.git">https://github.com/volatilityfoundation/volatility3.git</a></p>
-<p>sudo apt install python3-pip</p>
-<p>pip3 install -r requirements.txt</p>
+<p>Similarly to RITA we&rsquo;ll install Volatility by downloading/cloning the repo.</p>
 <ol>
-<li>Once again we&rsquo;ll visit the <a href="https://github.com/volatilityfoundation/volatility3">program&rsquo;s Github repo.</a></li>
-<li>There is no real installation here, we&rsquo;ll simply git clone the repo, and then we&rsquo;ll run Volatility from that local directory whenever we use it.</li>
+<li>Either download the zip file from the repo <a href="https://github.com/volatilityfoundation/volatility3">here</a>, or run the command below from terminal to clone the repo</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo git clone https://github.com/volatilityfoundation/volatility3.git
-</span></span></code></pre></div><h1 id="deepbluecli">DeepBlueCLI</h1>
-<p>To run DeepBlueCLI we&rsquo;ll need PowerShell. And the good news of course is that PowerShell core is now cross-platform, so we can go ahead and install it on our analyst machine.</p>
-<ol>
-<li>Open your terminal.</li>
-<li>First update your list of packages</li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>git clone https://github.com/volatilityfoundation/volatility3.git
+</span></span></code></pre></div><ol start="2">
+<li>Next we&rsquo;ll need to install <code>pip</code>, which is a package manager for Python (Volatility is written in Python). We&rsquo;ll do this so we can install all the required package dependencies. Run the following commands:</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install python3-pip
 </span></span></code></pre></div><ol start="3">
-<li>Next, install the prerequisite packages. Microsoft provides a package for easy installation.</li>
+<li>Once that&rsquo;s complete we can install our package dependencies. Open a terminal and navigate to where you installed/cloned Volatility. Now simply run the following command:</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo apt install -y wget apt-transport-https software-properties-common
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pip3 install -r requirements.txt
 </span></span></code></pre></div><ol start="4">
-<li>Now you will need to download and add Microsoft&rsquo;s GPG key which is used to sign their packages.</li>
+<li>We&rsquo;re done, feel free to shut down your Ubuntu VM as we won&rsquo;t be using it for some time.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-</span></span><span style="display:flex;"><span>sudo dpkg -i packages-microsoft-prod.deb
-</span></span></code></pre></div><ol start="5">
-<li>We can now install PowerShell.</li>
-</ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo apt update
-</span></span><span style="display:flex;"><span>sudo apt install -y powershell
-</span></span></code></pre></div><ol start="6">
-<li>You can now switch from <strong>bash</strong> to  <strong>PowerShell</strong> at anytime in your terminal by running <code>pwsh</code>, if you want to switch back run <code>bash</code>.</li>
-</ol>
-<figure class="custom-figure"><img src="/img/image065.png"/>
-</figure>
-
-<p>Great now all that&rsquo;s left to do is install DeepBlueCLI.</p>
-<ol>
-<li>Staying in the terminal, in <code>bash</code>, let&rsquo;s navigate to the <code>/Desktop</code>.</li>
-<li>Run the following command</li>
-</ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>git clone https://github.com/sans-blue-team/DeepBlueCLI.git
-</span></span></code></pre></div><p>That&rsquo;s literally it.</p>
-<figure class="custom-figure"><img src="/img/easy.gif"/>
-</figure>
-
-<ol start="3">
-<li>Shut down your Ubuntu VM, we won&rsquo;t be using it for some time.</li>
-</ol>
-<p>Aaaaaaaalright! We are good to get rolling with our Attack. YEAH. There is however one more optional step, this is not required but will decrease network noise meaning when we do our log analysis we&rsquo;ll have a tidier dataset. I recommend doing it, it&rsquo;ll take about 30 seconds.</p>
-<p>For the Windows VMs only:</p>
-<ol>
-<li>Right-click on the VM in the library and select <code>Settings</code>.</li>
-<li>Go to <code>Network Adapter</code>, change to <code>Host-only</code>, hit <code>OK</code>.</li>
-</ol>
-<figure class="custom-figure"><img src="/img/image031.png"/>
-</figure>
-
-<p>That&rsquo;s it. And just so you are aware - we took this VMs ability to connect to the internet away, but it can still connect to our hacker VM on the local network.</p>
 <p>OK. Do you know what time it is? Yeah it&rsquo;s time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let&rsquo;s get it!</p>
 <figure class="custom-figure"><img src="/img/strangelove.gif"/>
 </figure>
 
 <hr>
-<h1 id="part-2-attack-time">PART 2: ATTACK TIME</h1>
+<h1 id="2-performing-the-attack">2. Performing the Attack</h1>
 <h1 id="theory">Theory</h1>
 <h1 id="what-is-a-dll">what is a DLL?</h1>
 <p>Succinctly as possible, a DLL is a communal library containing code. They are not a program or an executable in and of themselves, but they are in essence a collection of functions and data that can be used by other programs.</p>
@@ -798,6 +771,10 @@ git clone <a href="https://github.com/volatilityfoundation/volatility3.git">http
 <ol start="6">
 <li>And the final step before we get going is starting a Wireshark pcap recording. In the search bar write <code>WireShark</code> and open it. Under <code>Capture</code> you will see the available interfaces, in my case the one we want is called <code>Ethernet0</code> - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names only one should have little spikes representing actual network traffic, the rest are likely all flat. It&rsquo;s the active one, ie the one with traffic, we want - see image below. Once you&rsquo;ve identified it, simply double-click on it, this then starts the recording.</li>
 </ol>
+<p>NO WE ALSO WANT TO CLEAR BOTH POWERSHELL AND SYSMON LOGS</p>
+<ul>
+<li>after attack immediatelly export sysmon log, then powershell log, then dump memory, then stop pcap, then we do live reading, then do we stop malware.</li>
+</ul>
 <figure class="custom-figure"><img src="/img/image036.png"/>
 </figure>
 
@@ -1191,7 +1168,7 @@ This section was admitrtedly not all-too revelatory. But that&rsquo;s really bec
 <p>I think this a good introduction to Volatility3, though we could obviously go much deeper I&rsquo;ll leave that for our next course.</p>
 <p>SO for now let&rsquo;s jump straight into log analysis with an emphasis on UEBA.</p>
 <hr>
-<h1 id="part-x-log-analysis-and-ueba">PART X: LOG ANALYSIS AND UEBA</h1>
+<h1 id="part-x-log-analysis">PART X: LOG ANALYSIS</h1>
 <p>Time for us to get into some LOGGING&hellip;</p>
 <figure class="custom-figure"><img src="/img/lumberjack.gif"/>
 </figure>
@@ -1199,17 +1176,89 @@ This section was admitrtedly not all-too revelatory. But that&rsquo;s really bec
 <p>No, not that kinda logging.</p>
 <p>The kind which, admittedly, is not too exicting.</p>
 <p>Here let&rsquo;s touch on some regular logging.</p>
-<h1 id="deepbluecli-1">DeepBlueCLI</h1>
-<p>OK big change: we have to run this on Windows
-So remove part where you install it on Linux, install on Windows instead,
-don&rsquo;t shut windows off
-no need to trasnfer it over (logs) to Linux</p>
-<p><code>Set-ExecutionPolicy unrestricted</code>
-warning
-<code>A</code></p>
-<p><code>.\DeepBlue.ps1 ..\artifacts\Security.evtx</code>
-warning
-<code>R</code></p>
+<h1 id="sysmon-1">SYSMON</h1>
+<ul>
+<li>we clear log, show amount</li>
+<li>we run attacka gain real quick</li>
+<li>we expoort attack as evtv</li>
+</ul>
+<p>Now as we can see below, after we&rsquo;ve performed the attack we now have 34 total event logs, meaning that in total 32 resulted from our actions since clearing the log. Note that yours should be more-or-less the same, however it could definitely have a couple of events more/less.</p>
+<figure class="custom-figure"><img src="/img/image066.png"/>
+</figure>
+
+<p>We can also immediately observe there are a number of distinct Event IDs - <code>1, 3, 5, 10, 12, 13 and 22</code>.</p>
+<p>Here is a short description of these 7 event IDs we encounter in our dataset. Feel free to review them now, or refer back to them as we discuss each individual event.</p>
+<p><code>Event ID 1 (Process Creation)</code>: The process creation event logs when a process starts, and it provides data with the process, parent process, and the user and group information. It also records the process image file hash.</p>
+<p><code>Event ID 3 (Network Connection)</code>: This event logs TCP/IP connections, and it records the process that made the connection, the destination IP, hostname and port.</p>
+<p><code>Event ID 5 (Process Terminated)</code>: Logs when a process exits, providing data about the process image file.</p>
+<p><code>Event ID 10 (ProcessAccess)</code>: This event logs when a process opens another process, often indicating debugging or injection activity. It reports the source and target process, and the granted access.</p>
+<p><code>Event ID 12 (Registry Event (Object Create and Delete))</code>: Logs when a registry object is created or deleted.</p>
+<p><code>Event ID 13 (Registry Event (Value Set))</code>: Logs when a value is set for a Registry object, which often indicates changes to system configuration.</p>
+<p><code>Event ID 22 (DNS Query)</code>: This event logs when a process conducts a DNS query, providing information about the process and the DNS query.</p>
+<ul>
+<li>the first two represent us clearing the log</li>
+<li>3 + 4 accessing processes windows doing its thing</li>
+</ul>
+<p>now 5th one is the dns query, here is where things start getting interesting
+this one is related to our IEX command - since it needs to go to a FQDN (raw.githubusercontent.com), it needs to use DNS.</p>
+<figure class="custom-figure"><img src="/img/image067.png"/>
+</figure>
+
+<p>6 is then establishing a network connection (ID 3), obvs sicne we just ran DNS we get the IP, establish a connection with the server hosting the script</p>
+<figure class="custom-figure"><img src="/img/image068.png"/>
+</figure>
+
+<p>7 is smartscreen</p>
+<p>8 is explorer opening rufus, 9 is rufus closing, 10 is consent.exe, 11 again rufus opening</p>
+<p>12 is vdsldr.exe, 13 is lsass, so is 14, 15 is vds.exe,</p>
+<p>16 is a big one = 13 (Registry value set)
+we can see rufus is changing a registru</p>
+<figure class="custom-figure"><img src="/img/image069.png"/>
+</figure>
+
+<p>This registry key appears to be related to the Windows Defender&rsquo;s Group Policy settings. More specifically, the &ldquo;DisableAntiSpyware&rdquo; at the end suggests that this policy might control whether the anti-spyware component of Windows Defender is enabled or disabled.</p>
+<p>Breaking down the registry key:</p>
+<ul>
+<li>
+<p>&ldquo;HKU&rdquo; stands for HKEY_USERS, which contains the configuration data for all the user profiles on the computer.</p>
+</li>
+<li>
+<p>&ldquo;S-1-5-21-3300832437-63900680-1611145449-1001&rdquo; is the Security Identifier (SID) for a specific user account on the system.</p>
+</li>
+<li>
+<p>&ldquo;SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects&rdquo; is where Group Policy Objects settings are stored.</p>
+</li>
+<li>
+<p>&ldquo;{F1BFD3AE-2A88-41A2-989E-39817E08E286}Machine&rdquo; identifies a specific Group Policy Object.</p>
+</li>
+<li>
+<p>&ldquo;Software\Policies\Microsoft\Windows Defender\DisableAntiSpyware&rdquo; points to the policy controlling the anti-spyware feature of Windows Defender.</p>
+</li>
+</ul>
+<p>The Sysmon event ID 13 is associated with Registry Value Set operations. If you are seeing this in a Sysmon event, it suggests that this registry key value was modified.</p>
+<p>If the value of &ldquo;DisableAntiSpyware&rdquo; is set to 1, it means that the anti-spyware component of Windows Defender has been disabled for the user associated with the SID. If it&rsquo;s 0, then the feature is enabled.</p>
+<p>Please note that modifying this value could have significant security implications, as it would disable part of the built-in protection of the Windows system. If this change was not intended, it might be a sign of a security breach or malware attempting to lower system defenses.</p>
+<p>The &ldquo;Details DWORD (0x00000001)&rdquo; indicates that the value of the registry key was set to &ldquo;1&rdquo;. In the context of the &ldquo;DisableAntiSpyware&rdquo; key, this means that the anti-spyware component of Windows Defender has been disabled for the user account associated with the given Security Identifier (SID).</p>
+<p>It&rsquo;s also worth noting that this operation seems to be associated with the &ldquo;rufus-4.1_x86.exe&rdquo; executable, which is a utility used to create bootable USB drives. It&rsquo;s unusual for such a utility to interact with Windows Defender settings in this way. If this activity was not expected or initiated by a trusted user, it could potentially indicate a security issue, such as a breach or malware activity.</p>
+<p>So this might suggest to us that when the script ran in dll injected into rufus, one of the very first thing it does is change this registry key to deactivate the feature, likely in an attempt to avoid detection</p>
+<p>Alos observer around 2:04:38 everything happening at same time - moment injetion occurred</p>
+<p>this then follows with 12 and 13, could be that svchost is trying to fix things again?</p>
+<ul>
+<li>will need to follow up and ask ChatGPT now being a moron</li>
+</ul>
+<p>we then see a whole host of 10 - svchost, lsass - no need to worry about that for now</p>
+<p>we then enter into event IDs 1 - a number of process creations.
+all related to taskhostw.exe
+for ex svchost.exe -k netsvcs -p
+svchost.exe: This is the Service Host process, which is used to host multiple Windows operating system services. Each svchost.exe instance can run one or more services, and Windows uses multiple instances of svchost.exe to separate different services from each other.</p>
+<p>-k: This flag is used to specify the service group that this instance of svchost.exe will host. In this case, the group is netsvcs, which is a group of important network-related services in Windows.</p>
+<p>then ffwd to the end, the final event log is process creation of rundll32.exe</p>
+<figure class="custom-figure"><img src="/img/image070.png"/>
+</figure>
+
+<p>let&rsquo;s see here if imphash has any hits?
+no result for MD5 on VT, but yes on joesandbox</p>
+<p>====================</p>
 
 		</section>
 
