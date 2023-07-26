@@ -12,6 +12,8 @@ author: "faan | ross"
 
 This is a short article covering a single foundational concept related to threat hunting. I'm publishing it here as a stand-alone post because I would like to reference it in some of my courses without needing to reproduce it in every such instance. Nevertheless, I hope, even here by itself, **it might provide some value to you**.
 
+# INTRODUCTION
+
 Threat hunting, by its literal definition, is predicated on a single presumption: `we presume a compromise has already occurred, and thus an adversary is established on our network`.
 
 This tenet - *the presumption of compromise* - is an extremely useful abstraction, serving as the main departure point for the entire discipline. However, I believe it's also useful to add some nuance to help us distinguish between different situations within this overarching context. *Yes*, we presume a breach has occurred, but our approach varies depending on whether we're in a state of presumption, suspicion, or actual confirmation of a breach.
@@ -34,7 +36,7 @@ And then, once we do...
 
 The second mode begins the moment we find something that triggers our ***Spidey sense*** - perhaps an unusual parent-child process relationship or a sporadic connection to an unknown IP. Something is off, our interest is piqued, but it's not a slam dunk yet. The last thing we want to do at this point is get trigger happy and call in the DFIR cavalry only for them to immediately refute our claim. *Oh hell naw.* 
 
-So our mindset switches - instead of viewing everything as potentially suspect, we now `seek to build a case` around what we've identified as the potential indicator of compromise. We thus employ a more focused methodology, collecting supporting evidence until we feel satisfied that our conviction stands on firm empirical grounds, i.e., there's a (very) low probability of a false positive
+So our mindset switches - instead of viewing everything as potentially suspect, we now `seek to build a case` around what we've identified as the potential indicator of compromise. We thus employ a more focused methodology, collecting supporting evidence until we feel satisfied that our conviction stands on firm empirical grounds, i.e., there's a (very) low probability of a false positive.
 
 Once this threshold has been reached we then declare an incident and alert DFIR. 
 
@@ -44,9 +46,7 @@ Once this threshold has been reached we then declare an incident and alert DFIR.
 
 The key point to understand is that once DFIR is alerted and the incident is confirmed, `they take the lead in calling the shots`. We are no longer leading, we are supporting - this means the nature of our role can vary considerably. We may be heavily involved in the proceedings, or we may not be involved at all. But the point remains: the extent of our involvement is not our decision. 
 
-Therefore, this mode is less structured as it can manifest in a multitude of ways. We are likely to receive strict and highly specific instructions from DFIR, which we must adhere to.
-
-So this mode is less formulaic since it can manifest in so many different ways. We will likely receive strict and highly specific instructions on how to proceed from DFIR, which we will be obligated to adhere to. Our goal is thus to support them to serve the greater goal of minimizing Mean Time to Remediation (`MTTR`).
+Therefore, this mode is less structured as it can manifest in a multitude of ways. We are likely to receive strict and highly specific instructions from DFIR, which we must adhere to. Our goal is thus to support them to serve the greater goal of minimizing Mean Time to Remediation (`MTTR`).
 
 # FINAL THOUGHTS
 
