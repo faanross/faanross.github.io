@@ -10,10 +10,10 @@
     <lastBuildDate>Wed, 26 Jul 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://athul.github.io/archie/tags/theory/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The 3 Modes of Threat Hunting</title>
-      <link>https://athul.github.io/archie/posts/post-2/</link>
+      <link>https://athul.github.io/archie/posts/three_modes/</link>
       <pubDate>Wed, 26 Jul 2023 02:01:58 +0530</pubDate>
       
-      <guid>https://athul.github.io/archie/posts/post-2/</guid>
+      <guid>https://athul.github.io/archie/posts/three_modes/</guid>
       <description>PREFACE This is a short article covering a single foundational concept related to threat hunting. I&amp;rsquo;m publishing it here as a stand-alone post because I would like to reference it in some of my courses without needing to reproduce it in every such instance. Nevertheless, I hope, even here by itself, it might provide some value to you.
 INTRODUCTION Threat hunting, by its literal definition, is predicated on a single presumption: we presume a compromise has already occurred, and thus an adversary is established on our network.</description>
     </item>
