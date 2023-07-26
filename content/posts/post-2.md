@@ -1,5 +1,5 @@
 ---
-title: "The 3 Modes of Threat Hunting (Beginner Theory)"
+title: "The 3 Modes of Threat Hunting"
 date: 2023-07-26T02:01:58+05:30
 description: "A short article covering a single foundational concept related to Threat Hunting."
 tags: [threat_hunting, theory]
