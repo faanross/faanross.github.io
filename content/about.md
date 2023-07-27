@@ -24,9 +24,9 @@ i have been practicing `brazilian jiu jitsu` since 2015 and think its likely the
 
 `dogs` might be the best thing in existence fr. i love dog training, not competitively, but simply as a way to develop a common language between oneself and a dog. but in general - petting dogs, playing with dogs, and just being around them is embodied joy. i have two friends at the moment - **kuma** the groenendael and **voodoo** the dutch shepherd. i also have a legendary abyssinian called **buddlez** - i love cats too!  
 
-`good stories + storytelling` in all its forms - from myths to graphic novels to nic cage movies to anime to point-and-click adventure games. at the risk of sounding a touch overly woo-woo: i think stories are inextricably intertwined with the evolution of humans. i believe they can serve not merely as some form of temporary distraction, but as a deeply informative source of meaning for our deep + collective psychologies. some favourites include chainsaw man, napoleon dynamite, south park, the wire, and anything by nathan fielder.
+`good stories + storytelling` in all its forms - from myths to graphic novels to nic cage movies to anime to point-and-click adventure games. at the risk of sounding a touch overly woo-woo: i think stories are inextricably intertwined with the evolution of humans. i believe they can serve not merely as some form of temporary distraction, but as a deeply informative source of meaning for our deep + collective psychologies. some favourites include chainsaw man, napoleon dynamite, zelda, south park, the wire, and anything by nathan fielder.
 
-`learning new things` and enjoying the suck is both humbling and deeply invigorating. there is not only an inherent *joie de vivre* in learning new things, but i believe it to be the best practice to keep one's mind potent and pliable. i think it excellent practice to progressively master subjects over time - ***of course***. but perhaps equally, there is great wisdom that emerges from perpetually choosing to enact the role of the archetypal fool. 
+`learning new things` and enjoying the suck is both humbling and deeply invigorating. there is not only an inherent *joie de vivre* in learning new things, but i believe it to be the best practice to keep one's mind potent and pliable. i think it excellent practice to progressively master subjects over time - *of course*. but equally, there is great wisdom that emerges from perpetually choosing to enact the role of the archetypal fool. 
 
 the meta here is also great - the more new things you learn, the better you can become at learning new things. i'm currently learning both spanish and french + electric guitar. i'm admittedly terrible at them, yet sucking at them and becoming infinitesimally better each day brings me tremendous joy. and after all - ***memento mori***.
 
@@ -42,9 +42,12 @@ the meta here is also great - the more new things you learn, the better you can 
 ***“Nature loves courage. You make the commitment and nature will respond to that commitment by removing impossible obstacles. Dream the impossible dream and the world will not grind you under, it will lift you up. This is the trick. This is what all these teachers and philosophers who really counted, who really touched the alchemical gold, this is what they understood. This is the shamanic dance in the waterfall. This is how magic is done. By hurling yourself into the abyss and discovering it's a feather bed.”***
 ― Terence McKenna
 
+***"The universe is not only stranger than we imagine; but stranger than we CAN imagine."***
+- JBS Haldane
+
 ...
 
-`finally, if you wanna connect`:
+`finally, if you wanna connect:`
 
 you can find my video courses [here](https://www.youtube.com/channel/UCtwchzdOYHiXai5BxXPiHMg).
 
