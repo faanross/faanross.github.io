@@ -12,17 +12,17 @@ author = "faan ross"
 
 but since you clicked on 'about' i'm gonna assume you also want to learn a bit about me.
 
-ok well, my name is faan and I love cybersecurity and threat hunting. really, i think its the coolest goddamn thing i've ever had an opportunity to be a student of. praise be. 
+ok well, my name is faan and I love cybersecurity and threat hunting. really, i think its the coolest goddamn thing i've ever had the opportunity to be a student of. praise be. 
 
-here are a other few things that tickle my fancy...
+here are a few other things that tickle my fancy...
 
 {{< figure src="/img/attack_kip.gif" title="" class="custom-figure" >}}
 
-i have been practicing `brazilian jiu jitsu` since 2015 and think its likely the most fun goddamn thing i've ever had an opportunity to be a student of. i have mostly practice nogi, and received my purple belt under louis ho (10th planet montreal). i love hitting a sneaky gogoplata from guard or sliding into a d'arce from side control, but really as vanilla as it may be nothing feels better than finishing a *mata leão*. 
+i have been practicing `brazilian jiu jitsu` since 2015 and think its likely the most fun goddamn thing i've ever had the opportunity to be a student of. i mostly practice nogi, and received my purple belt under louis ho (10th planet montreal). i love hitting a sneaky gogoplata from guard or sliding into a d'arce from side control, but really as vanilla as it may be nothing feels better than finishing a *mata leão*. 
 
 {{< figure src="/img/goodboy.gif" title="" class="custom-figure" >}}
 
-`dogs` might be the best thing in existence fr. i love dog training, not competitively, but simply as a way to develop a common language between oneself and a dog. but in general - pettings dogs, playing with dogs, and just being around them. i have two friends at the moment - `kuma` the groenendael and `voodoo the dutch shepherd`. i also have a legendary abysinnian called `buddlez` - i love cats too!  
+`dogs` might be the best thing in existence fr. i love dog training, not competitively, but simply as a way to develop a common language between oneself and a dog. but in general - petting dogs, playing with dogs, and just being around them. i have two friends at the moment - `kuma` the groenendael and `voodoo` the dutch shepherd. i also have a legendary abyssinian called `buddlez` - i love cats too!  
 
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
