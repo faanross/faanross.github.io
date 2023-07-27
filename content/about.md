@@ -1,12 +1,10 @@
 +++
 title = "About"
 description = "faan ross threat hunting analyst"
-date = "2023-07-12"
+date = "2023-07-27"
 aliases = ["about-me","contact"]
 author = "faan ross"
 +++
-
-# ABOUT ME
 
 **this site contains original content related to threat hunting + memory forensics.**
 
