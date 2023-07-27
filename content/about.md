@@ -8,11 +8,11 @@ author = "faan ross"
 
 **this site contains original content related to threat hunting + memory forensics.**
 
-but since you clicked on 'about' i'm gonna assume you also want to learn a bit about me.
+but since you clicked on ***about*** i'm gonna assume you also want to learn a bit about me, faan ross.
 
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
-ok well, my name is faan and I love cybersecurity and threat hunting - i think its the coolest goddamn thing i've ever had the opportunity to be a student of. praise be. 
+well, since we find ourselves here it should come as not great shock that I love cybersecurity and threat hunting - i think its the coolest goddamn thing i've ever had the opportunity to be a student of. ***praise be***. 
 
 here are a few other things that tickle my fancy...
 
