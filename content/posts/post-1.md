@@ -945,28 +945,77 @@ As we know there exists a tree-like relationship between processes in Windows, m
 
 Because often we'll find a parent process that is not suspicious by itself at all, and equally a child process that we'd expect to see running. But the fact that this specific parent spawned that specific child - we'll that's sometimes off. A great example
 
+Another thing is certain Parent-Child relatipnship will not only inicate that something is suspicious, but also act as a sort of signature implicating the potential malware involved. For example a classical Cobalt Strike Process Tree might look like this:
 
-Another thing is certain Parent-Child relatipnship will not only inicate that something is suspicious, but also act as a sort of signature implicating the potential malware involved. For example a classical Cobalt Strike Process Tree might look liek:
+{{< figure src="/img/image076.png" title="" class="custom-figure" >}}
+
+At the top we can see WMI spawning PowerShell - that itself is pretty uncommon, but used by a variety of malware software. But there's more - PowerShell spawning PowerShell. Again, not a smoking gun but unusual, and something seen with Cobalt Strike. But really the most idiosyncratic property here is the multiple instances of rundll32.exe being spawned. This is a classical Cobalt Strike strategy in action - the use of so-called sacrificial process. Plus the fact that it's rundll32.exe in particular - this is the default setting for Cobalt Strike. It might surprise you but *in situ* it's estimated that about 50% of adversaries never bother changing the default. Which makes one wonder - are they lazy, or are we so bad at detecting even default settings that they don't see the point in even bothering?
+
+All this to say - we'll look for unusual Parent-Child Relationships, and we'll do so typically by looking at a `Process Tree` which shows as all processes and their associated relationships. In the discussion above I might have given the impression that these relationships all exist in pairs with a unidirectional relationship. Not so, just as in actual family trees a parent can spawn multiple children, and each of these can in turn spawn multiple children etc. So depending on the exact direction of the relationship, a process may be a parent or a child. 
+
+2. ***Signature - is it valid + who signed?***
+This is definitely one of the lowest value indicators - something that's nice to help build a case, but by itself, owing to so many potential exceptions, is quite useless. Nevertheless if we see that a process is unsigned, or signed by an untrusted source, we may layer it onto our case. 
+
+3. ***Current directory***
+There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - uh-oh. 
+
+Or, perhaps we see powershell, but it's running from `c:\windows\syswow64\...`, which by itself is a completely legitimate directory. But what's it purpose? Well, this basically means it's 32-bit code that was run. Now 32-bit systems still exist, but the vast majority of systems now are 64-bit. Malware however, still loves to use 32-bit code since it gives it the biggest reach - it can now infect both 32-bit and 64-bit systems. 
+
+So if we saw PowerShell running from that directory, it's an artifact produced when 32-bit code is run, which requires 32-bit PowerShell. Using this on a modern, 64-bit system is pretty unusual.
+
+All this to say: the directory can potentially tell us something about the legitimacy of the process
+
+4. ***Command-line arguments***
+We already saw this in the previous section - for example though running `rundll32.exe` is completely legit, we would expect it to have arguments referencing the exact functions and libraries it's supposed to load. Seeing it nude, well that's strange. Same goes for many other processes - we need thus to understand their function and how they are invoked to be able to determine the legitimacy of the process. 
+
+Note that 1-4 above are not unique to dll-injections, but can be seen in malware in general. Our final 3 indicators we expect however only to see in relation to dll-injections. 
+
+5. ***Thread Start Address***
+
+We would expect to see this with a dll that was injected directly into memory without ever touching disk. Since an injected DLL is not memory-mapped the thread will not display an actual start address, instead it will show only `0x0` - see image below.
+
+{{< figure src="/img/image077.png" title="" class="custom-figure" >}}
+
+
+6. ***Memory Permissions***
+One of the most common, well-known heuristics for injected malware is any memory region with RWX permissions. Memory with `RWX` permissions means that code can be written into that region and then subsequently executed. This is a capability that malware often utilizes, as it allows the malware to inject malicious code into a running program and then execute that code. The *vast* majority of legitimate software will not behave in this manner.
+
+But be forewarned - RWX permissions are the tip of the iceberg in this game of looking for anomalies in memory permissions.It’s not the only one but many people stay stuck on it as if it’s the be all and end all.
+
+Modern malware authors, knowing `RWX` not only sticks out like a thumb but can easily be prevented using a Write XOR Execute security policy, will have an initial pair of permissions (`RW`), and will then afterwards change permissions to `RX`. 
+
+For now however we will focus only on `RWX`, but of course as we advance we will be looking at `odd pairs` in the future. 
+
+
+7. ***Memory Content***
+Once we find a memory space with unusual permissions we then also want to check its content for signs of a PE file. Let's have a brief overview of the PE file structure below:
+
+{{< figure src="/img/image078.png" title="" class="custom-figure" >}}
+
+We can see two things that always stick out: the magic bytes and a vestigial string associated with the `DOS Stub`. Magic bytes are predefined unique values used at the beginning of a file that are used to identify the file format or protocol. For a PE file, we would expect to see the ASCII character `MZ`, or `4D 5A` in hex. 
+
+Then the string `This program cannot be run in DOS mode` is an artifact from an era that some systems only ran DOS. However the string is still kept there for mainly historical reasons. For us in this case however it's a useful thumbprint, informing us we're dealing with a PE file. 
+
+Further, in the remainder of the payload we might be able to find some strings that are associated with specific malware. For example in the image below we can see Yara rules (authored by [Florian Roth]())
+
+
+TK XXX CONTINUE EHRE
 
 
 
 
 
 
-"Process Tree Detection" - shows us all the processes, and their relationships, because fo course it's not only existing in pairs - parents cna have multipole children, some of them can have multiple children etc. So depending on the exact direciton of the relationship, a process may be a parent or a child, meaning a process can be spawned by another process and then of course go ahead and itself spawn a process. 
 
-If you walk into someone's house and see a dog, that's totally normal. Equally, walking into someone's house and seeing a kitten - standard faire. But if you saw a dog giving birth to a kitten, well not so normal then. 
+ that's still included
 
-2. Signature - is it valid + who signed?
-3. Current directory
-4. Command-line arguments 
-5. Thread Start Address
-6. Memory Permissions
-7. Memory Content
+{{< figure src="/img/image079.png" title="" class="custom-figure" >}}
+
+PE Header stomping
+
+Other strings serve as signatures. 
 
 
-
-Note that 1-4 are not unique to dll-injections, but malware in general. Conversely, 5-7 are characteristics we expect only to see related to dll-injections. 
 
 **Parent-Child relationships**
 
