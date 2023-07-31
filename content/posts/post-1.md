@@ -290,9 +290,7 @@ And that, I can promise you, is by far the most boring part of this entire cours
 
 You should now be back in the normal Windows environment looking at your Desktop. Let' set up `Sysmon` - a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
 
-The reason we do this and not simply rely on the standard `Windows Event Logs` (hence forth referred to simply as `WEL`), is that WEL was clearly designed by someone who considered security unimportant. Ask most security professionals what they think of WEL and you'll probably get either a sarcastic chuckle or a couple of expletives. All to say - it sucks. REAL bad. BUt there's hope... 
 
-Sysmon, created by the legend [Mark Russinovich](https://twitter.com/markrussinovich), takes about 5 minutes to set up and will DRAMATICALLY improve logging, specifically as it relates to security events. In case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
 
 Before we get installing Sysmon there's just one thing you need to know - in addition to downloading the actual Sysmon file we also need a config file. One day when you get to *that* level you can even create your own config file, which will allow you to make it behave exactly how you want it to. But for now, since we are decidedly not yet there, let's download and use one made by some really smart people. Of late  I have heard a few trusted sources, included [Eric Conrad](https://www.ericconrad.com) prefer [this version from Neo23x0](https://github.com/bakedmuffinman/Neo23x0-sysmon-config) whose authors included another blue team giant, [Florian Roth](https://twitter.com/cyb3rops?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor). 
 
@@ -1241,35 +1239,140 @@ So let's go ahead and have a look at them...
 
 
 # LOG ANALYSIS (SYSMON)
-# LOG ANALYSIS (POWERSHELL) 
+# Introduction
+We will be using the same Windows system to view our event logs. Note please that this is done purely for the sake of convenience. As of my current understanding (please [tell me](mailto:faan@teonan.com) if I'm wrong), there is no simple way to interact with `.evtx` files in Linux, at least not in the GUI. Yes, yes I am aware it's very uncool to prefer using a GUI, but allow me a momentary expression of nuance: both the command line and GUI have their strengths and weaknesses and better to select the best based on context than to succumb to dogma. 
+
+So it's just simpler to use the built in `Event Viewer` in Windows to work with these files, and since I did not want to create another "non-victim" Windows VM for this one task we're going to be using the same one. But please be aware, unless there is literally no alternative you should never do this. And the reason is intuitive - you cannot be sure that any data you receive is not compromised due to the potential compromise. Performing a post-mortem analysis on a compromised system itself can potentially taint the results and compromise the integrity of the investigation. To ensure an accurate and reliable analysis, it is essential to conduct the investigation on a separate, isolated system or environment to avoid any interference or contamination from the compromised system. Please note that this same standard is not held for live analysis - how else would we find evidence of a compromise if we did not look at the actual system we expect to be compromised?
+
+And so with this little udnerstanding out of the way let's have a quick chat about Sysmon and how insanely awesome it is before moving on the actual analysis. 
+
+# Theory
+The reason we do this and not simply rely on the standard `Windows Event Logs` (hence forth referred to simply as `WEL`), is that WEL was clearly designed by someone who considered security unimportant. Ask most security professionals what they think of WEL and you'll probably get either a sarcastic chuckle or a couple of expletives. All to say - it sucks. REAL bad. BUt there's hope... 
+
+Sysmon, created by the legend [Mark Russinovich](https://twitter.com/markrussinovich), takes about 5 minutes to set up and will DRAMATICALLY improve logging, specifically as it relates to security events. In case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
+
+Finally, before we begin a reminder - earlier, in Section X.X, we exported the Sysmon logs to desktop as an .evtx file.
+
+Thus of course this file will only include Sysmon logged events from the moment we enabled it, to the moment we exported it. 
+
+# Log Analysis: SYSMON
+
+You should be looking at the desktop of your Windows VM at his moment. I saved the `.evtx` export we performed earlier on the desktop, let's simply double-click on it which will open it in `Event Viewer`. 
+
+We can immediately see there are 34 recorded events. If you recall, right before we launched the attack we actually cleared the Sysmon logs. Now what you need to know is that when we clear it, it does not actually reset to 0. Instead, there are immediately 2 event logs - both related to the event of the logs being cleared themselves. 
+
+This means of course that the event produced around 32 event logs. So let's start exploring these by looking at everything at a very high level.
+
+{{< figure src="/img/image080.png" title="" class="custom-figure" >}}
+
+The first thing we notice is we have a number of different event IDs - `1`, `3`, `5`, `10`, `12`, `13`, and `22`.
+
+Now of course in order for us to make sense of these logs we'll have to roughly know what they do.
+
+**Event ID 1 (Process Creation):** The process creation event logs when a process starts, and it provides data with the process, parent process, and the user and group information. It also records the process image file hash.
+
+**Event ID 3 (Network Connection):** This event logs TCP/IP connections, and it records the process that made the connection, the destination IP, hostname and port.
+
+**Event ID 5 (Process Terminated):** Logs when a process exits, providing data about the process image file.
+
+**Event ID 10 (ProcessAccess):** This event logs when a process opens another process, often indicating debugging or injection activity. It reports the source and target process, and the granted access.
+
+**Event ID 12 (Registry Event (Object Create and Delete)):** Logs when a registry object is created or deleted.
+
+**Event ID 13 (Registry Event (Value Set)):** Logs when a value is set for a Registry object, which often indicates changes to system configuration.
+
+**Event ID 22 (DNS Query):** This event logs when a process conducts a DNS query, providing information about the process and the DNS query.
+
+Ok, so let's ignore our first two entries, since we know they are related to clearing the logs.
+
+Looking at the `Date and Time` stamp we can also deduce that the next two are not part of our attack, since they are in their own time cluster.
+
+However, starting with what is for me the fifth entry (`ID 22: DNS`), we can see a time cluster in which nearly all the events happen. Let's start with this entry log. 
+
+{{< figure src="/img/image081.png" title="" class="custom-figure" >}}
+
+This is a crucial entry. We can see that PowerShell is performing a DNS request for the FQDN `raw.githubusercontent.com`. This is of course a result of the command which downloaded the script from the web server before injecting it into memory.
+
+Thus is thus great to be aware of - if we for example relate this to our "real-world" example, then the moment the person opens the malicious attachment it's very likely that it will immediately connect to an evil web server and do something similar. 
+
+Here's the rub however: if the initial script is written to reach out to a web server's FQDN (for ex. `raw.githubusercontent.com`), then a DNS query will occurr and thus we'll expect to see such an event ID. If however the script is written to reach out directly to an IP the system will bypass DNS resolution, in which case no such record will result. 
+
+Your observation about the potential for less noise when using IP addresses instead of FQDNs (Fully Qualified Domain Names) is generally accurate, especially in cases where specific DNS resolution events are being monitored closely. However, there are several reasons why a hacker might still prefer to use an FQDN:
+
+1. **Dynamic IP Addresses**: Servers on the internet frequently have dynamic IP addresses, meaning the IP address can change periodically. If a hacker uses an IP address in their stager, and the server's IP changes, the stager will no longer be able to reach the server. Using an FQDN allows the hacker to ensure their stager can always reach the server, as the DNS system will handle translating the FQDN to the current IP address.
+
+2. **Obfuscation and Evasion**: In some cases, an IP address may be blacklisted or associated with known malicious activity, which can lead to the connection being blocked or flagged. FQDNs can provide an additional layer of obfuscation, as they may not be directly associated with the IP address. In addition, some advanced threats use Domain Generation Algorithms (DGAs) to dynamically generate a large number of domain names and connect to a few for C2 communication. This makes it harder for security teams to block or even anticipate the domains being used.
+
+3. **Content Delivery Networks (CDNs) and Cloud Services**: Many servers are hosted on CDNs or cloud services that use multiple IP addresses for load balancing and redundancy. An FQDN is needed to take advantage of these services, as an IP address wouldn't necessarily connect to the correct server.
+
+4. **SSL/TLS and Certificate Validation**: If the malicious payload is being served over an HTTPS connection, a certificate for the domain will be required for the connection to be considered secure and not raise flags. Certificates are usually issued for FQDNs, not IP addresses. 
+
+In conclusion, while using an IP address might reduce noise in terms of DNS resolution logs, it can introduce other challenges and risks. The choice between using an FQDN and an IP address is usually a strategic decision made by the attacker, weighing the potential benefits against the risks.
+
+Right after this we see an event ID 3, a record of the actual connection to the server to download the script. In this case of course, whether the script has been written with the FQDN or IP as the target to download the script it would not matter - this record (ID 3) should always be present.
+
+We see here of course also that `powershell.exe` is the program responsible for creating the connection. Now if we imagine this was an actual event where a user unwittingly opened a malicious Word document (.docx) we would actually also expect to see `powershell.exe`. Most stagers operating on this paradigm will actually spawn `powershell.exe` to initiate the network connection since `winword.exe` cannot create a socket connection itself. 
+
+Note that pwoershell in and of itself a bit suspect, BUT IN CONTEXT ("regular user)...
+Under normal circumstances, most network connections on a user's machine will be made by applications like web browsers, email clients, media players, and so on. These will make up the bulk of the connections you see in a network monitoring tool or Sysmon logs.
+
+While PowerShell is a powerful tool, it's typically not used by ordinary users, and it's also not commonly used by the system itself for routine tasks or updates. You are right, if you see a large number of PowerShell network connections (Sysmon event ID 3 with powershell.exe as the process), especially in a context where PowerShell isn't normally used, it could be a sign of suspicious activity.
+
+However, there are exceptions. In an enterprise environment, system administrators might use PowerShell for legitimate tasks like software deployment, running maintenance scripts, or other administrative tasks, which can result in network connections from PowerShell. Therefore, it's important to consider the context when interpreting these events.
+
+In conclusion, while PowerShell network connections can be a sign of suspicious activity, they are not inherently suspicious and can occur as part of normal, legitimate operations, especially in an enterprise environment. As always, the key is to understand your baseline, know what normal looks like for your environment, and investigate anything that deviates from that.
 
 
-# SYSMON
-- we clear log, show amount
-- we run attacka gain real quick
-- we expoort attack as evtv
 
-Now as we can see below, after we've performed the attack we now have 34 total event logs, meaning that in total 32 resulted from our actions since clearing the log. Note that yours should be more-or-less the same, however it could definitely have a couple of events more/less. 
+TK XXX CONTINUE HERE
 
-{{< figure src="/img/image066.png" title="" class="custom-figure" >}}
+We continue with log 7, first 1 after the 22 and 3. 
 
-We can also immediately observe there are a number of distinct Event IDs - `1, 3, 5, 10, 12, 13 and 22`.
 
-Here is a short description of these 7 event IDs we encounter in our dataset. Feel free to review them now, or refer back to them as we discuss each individual event. 
 
-`Event ID 1 (Process Creation)`: The process creation event logs when a process starts, and it provides data with the process, parent process, and the user and group information. It also records the process image file hash.
 
-`Event ID 3 (Network Connection)`: This event logs TCP/IP connections, and it records the process that made the connection, the destination IP, hostname and port.
 
-`Event ID 5 (Process Terminated)`: Logs when a process exits, providing data about the process image file.
 
-`Event ID 10 (ProcessAccess)`: This event logs when a process opens another process, often indicating debugging or injection activity. It reports the source and target process, and the granted access.
 
-`Event ID 12 (Registry Event (Object Create and Delete))`: Logs when a registry object is created or deleted.
 
-`Event ID 13 (Registry Event (Value Set))`: Logs when a value is set for a Registry object, which often indicates changes to system configuration.
 
-`Event ID 22 (DNS Query)`: This event logs when a process conducts a DNS query, providing information about the process and the DNS query.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - the first two represent us clearing the log
 - 3 + 4 accessing processes windows doing its thing

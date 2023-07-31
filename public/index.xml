@@ -9,6 +9,17 @@
     <copyright>| hack the planet</copyright>
     <lastBuildDate>Wed, 26 Jul 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://athul.github.io/archie/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>About</title>
+      <link>https://athul.github.io/archie/about/</link>
+      <pubDate>Thu, 27 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://athul.github.io/archie/about/</guid>
+      <description>this site contains original content related to threat hunting + memory forensics.
+but since you clicked on about i&amp;rsquo;m gonna assume you also want to learn a bit about me, faan ross.
+well, since we find ourselves here it should come as no great shock that I love threat hunting + cybersecurity in general - i think its the coolest goddamn thing i&amp;rsquo;ve ever had the opportunity to be a student of.</description>
+    </item>
+    
+    <item>
       <title>The 3 Modes of Threat Hunting</title>
       <link>https://athul.github.io/archie/posts/three_modes/</link>
       <pubDate>Wed, 26 Jul 2023 02:01:58 +0530</pubDate>
@@ -16,18 +27,6 @@
       <guid>https://athul.github.io/archie/posts/three_modes/</guid>
       <description>PREFACE This is a short article covering a single foundational concept related to threat hunting. I&amp;rsquo;m publishing it here as a stand-alone post because I would like to reference it in some of my courses without needing to reproduce it in every such instance. Nevertheless, I hope, even here by itself, it might provide some value to you.
 INTRODUCTION Threat hunting, by its literal definition, is predicated on a single presumption: we presume a compromise has already occurred, and thus an adversary is established on our network.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://athul.github.io/archie/about/</link>
-      <pubDate>Wed, 12 Jul 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://athul.github.io/archie/about/</guid>
-      <description>ABOUT ME this site contains original content related to threat hunting + memory forensics.
-but since you clicked on &amp;lsquo;about&amp;rsquo; i&amp;rsquo;m gonna assume you also want to learn a bit about me.
-ok well, my name is faan and I love cybersecurity and threat hunting. really, i think its the coolest goddamn thing i&amp;rsquo;ve ever had an opportunity to be a student of. praise be.
-here are a other few things that tickle my fancy&amp;hellip;</description>
     </item>
     
     <item>
