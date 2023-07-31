@@ -914,6 +914,8 @@ So now let's bring out the big guns and learn all we can.
 
 {{< figure src="/img/guns.gif" title="" class="custom-figure" >}}
 
+
+
 But alas, as these things go, it really behooves us to learn a bit of theory behind what we're going to look at with the intention of understanding why it is we are looking at these things, and what exactly what we will be looking for. 
 
 Indeed, in matters like these, it is beneficial for us to delve into some theory. This will help us better comprehend what we're about to examine. We aim to understand why we are scrutinizing these things. Furthermore, it's essential to clarify exactly what we will be searching for.
@@ -972,7 +974,17 @@ Note that 1-4 above are not unique to dll-injections, but can be seen in malware
 
 5. ***Thread Start Address***
 
-We would expect to see this with a dll that was injected directly into memory without ever touching disk. Since an injected DLL is not memory-mapped the thread will not display an actual start address, instead it will show only `0x0` - see image below.
+Sure, I'll try to provide some context around the statement.
+
+When a DLL is loaded the traditional way, i.e., from a disk, the operating system memory-maps the DLL into the process's address space. Memory mapping is a method used by the operating system to load the contents of a file into a process's memory space, which allows the process to access the file's data as if it were directly in memory. The operating system also maintains a mapping table that tracks where each DLL is loaded in memory.
+
+With traditional DLL loading, if you were to look at the start address of the thread executing the DLL, you would see a memory address indicating where the DLL has been loaded in the process's address space.
+
+However, in the case of Reflective DLL Injection, the DLL is loaded into memory manually without the involvement of the operating system's regular DLL-loading mechanisms. The custom loader that comes with the DLL takes care of mapping the DLL into memory, and the DLL never touches the disk. Since the operating system isn't involved in the process, it doesn't maintain a mapping table entry for the DLL, and as such, the start address of the thread executing the DLL isn't available. 
+
+As a result, when you inspect the start address of the thread associated with the injected DLL, it will not show the actual memory address where the DLL is loaded. Instead, it will show `0x0`, which essentially means the address is unknown or not available. This is one of the many ways Reflective DLL Injection can be stealthy and evade detection.
+
+Thus this is only for reflective DLL loading!
 
 {{< figure src="/img/image077.png" title="" class="custom-figure" >}}
 
@@ -996,185 +1008,59 @@ We can see two things that always stick out: the magic bytes and a vestigial str
 
 Then the string `This program cannot be run in DOS mode` is an artifact from an era that some systems only ran DOS. However the string is still kept there for mainly historical reasons. For us in this case however it's a useful thumbprint, informing us we're dealing with a PE file. 
 
-Further, in the remainder of the payload we might be able to find some strings that are associated with specific malware. For example in the image below we can see Yara rules (authored by [Florian Roth]())
+Further, in the rest of the contents we might be able to find some strings that are associated with specific malware. And typically, rather than trudging it manually we can automate the proces s using [YARA](https://github.com/VirusTotal/yara/releases) rules. 
 
-
-TK XXX CONTINUE EHRE
-
-
-
-
-
-
-
- that's still included
+For example in below we can see [Yara rules authored by Florian Roth for Cobalt Strike](https://github.com/Neo23x0/signature-base/blob/master/yara/apt_wilted_tulip.yar). The image shows a number of string-based rules it would be looking for - all indications that the PE file is part of a Cobalt Strike attack. 
 
 {{< figure src="/img/image079.png" title="" class="custom-figure" >}}
 
-PE Header stomping
+Finally it's worth being aware of `PE Header Stomping` - a more advanced technique used by some attackers to avoid detection. As another great mind in the Threat Hunting space, [Chris Benton](https://twitter.com/chris_brenton?lang=en), likes to say: ***"Malware does not break the rules, but it bends them".***
 
-Other strings serve as signatures. 
+PE files *have* to have a header, but since nothing really forces or checks the exact contents of the header, the header could theoretically be anything. And so instead of the header containing some giveaways like we saw above - magic bytes, dos stub artifact, signature strings etc - the malware will overwrite the header with something else to appear legitimate. For now I just wanted you to be aware of this, we'll revisit header stomping first-hand in the future. 
 
-
-
-**Parent-Child relationships**
-
-
-OK FINISH THIS LATER NOW UIT IS RUNNING SO LET'S RUN THROUGH HERE
-
-Note: have to review Eric Conrad and Chad Tilbury to beef out the first few
-
-
-
-
+But for now, that's it for the theory - *allons-y*!
 
 # Performing the Analysis
-# Closing Thoughts
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-And while this connection is still going we'll jump right into live memory analysis. Ok so just so we don't end up just learning a bunch of "arbitraty" diagnostic properties to look out for we have to go on a brief side quest to gather some Theory Berries of Enhanced Insight that has the property of helping our party gain greater insight into what we should be looking for, and more importantly - why.
-
-***
-
-RIGHT AFTER ATTACK WE DO THE "REVIEW"
-
-
-NOTE WE ALSO WANT TO INCLUDE THE ANALYSIS WITH STANDARD WINDOWS TOOLS A LA JOHN STRAND STYLE TO SEE WHAT WE CAN LEARN
-
-
-
-
-
-
-
-# SIDE QUEST: The theoretical berries of C2 beacon live reading
-# No this is just the theory section for our Live: Process Hacker section
-
-{{< figure src="/img/quest02.gif" title="" class="custom-figure" >}}
-
-
-
-
-***
-
-# PART 3: Live Memory Analysis
-
-# THEORY
-
-
-
-
-
-
-
-
-For LOG ANALYSIS intro:
-- mention this one usualyl more realm of SOC/SIEM and not Forensics, which usually more focus of threat hutning.
-- Likely one of the thoughts underpinning this attitude is that logs are grunt-work, mountains of nothing that needs to be sifted through, mountains so huge its completly beyond the scope of humams, and so SIEMs not only CAN do it, but are better than humans in it. 
-
-- but that is true for the general appraco to logs. But what we are speaking of here is a much specific way of looking at logs - limitiing the type of logs we look at. Additioarnlly, logs depending on the PHASE. See below - logs might not be a great place to start in Phase 1, but for example can be perfect for Phase 2. Sicne you already more or less know what you are looking for, makes the volume manageable, esp considering we're likely only interested in Sysmon, Powershell, and a highly select WEL IDs. 
-
-
-ULTIMATELY, Phase 1 should focus on where they cannot hide - meaning memory and packets. Every where else, disk, logs, etc they can hide. but they can never hide from memory/packets = memory when they are at rest/use, packets when they are in transit. 
-
-
-Ok so now as we go ahead, remember we have no idea of the attack, we don't know a DLL injected attack has happened, since that was "evil ash" doing it. Meaning we are in Phase 1, and then thios I might not mention but for own sanity - at end of live analysis II (PE Hacker), we can then switch over to Phase II.
-
-WHY MEMORY?
-and finally we'll also look at memory foresnics: for some reason a lot fo thought is still stuck in malware paradignms for a decade ago looking at discs. but almost all modern malware won't even exists on the disk, they live in memory and their proably followign a "living off the land" approach in that they use local processes and services to handle all the mischief. so we'll create a dump with something like dumpit! and then we'll use volatitliy
-
-Open Process Hacker as admin - ie right-click and select `Run as administrator`. Scroll down until you see `rufus.exe` (or whatever other legitimate process you chose to inject into). We can now look at our 7 signs.
+Open Process Hacker as admin - ie right-click and select `Run as administrator`. Scroll down until you see `rufus.exe` (or whatever other legitimate process you chose to inject into). Let's go through our 7 indicators and see what results. 
 
 1. Parent-Child relationships
 
 {{< figure src="/img/image053.png" title="" class="custom-figure" >}}
 
-- TBH even though I said there is no silver bullet, nothing that can lead to 100% certainty, this first sign is HIGHLY SUSPECT. Why?
-- Well first off we can see `rufus`, and then that it itself spawned `rundll32.exe`.
-- There's two things suspect about this. 
-- First, we know that `rundll32.exe` is legitimate Windows process used to launch DLLs. But, since we also know that `rufus` is used to create bootable USB drives we have to ask ourselves: why on earth would this need to run `rundll32.exe`? Logically it makes no sense, and if we Google for example `rufus.exe spawn rundll32.exe` and there are no clean hits, well it certainly raises suspicion.
-- Further, `rundll32.exe` itself is often invovled in malware for a number of reasons - it can be used to execute malicious code concealed in a DLL, it can be used for persistence by associating itself with a DLL and a commonly-called function, and `rundll32.exe` can be misused to initiate or maintain communication with the C2 server. 
-- Further it is also very often associated with the most popular C2 framework for advanced groups - `Cobalt Strike`. Why? Simply because Raphael Mudge, the creator of the Cobalt Strike, decided to name the default dll spawned by `rundll32.exe`. Though this can be renamed in the Cobalt Strike config, it turns out, perhaps somewhat surprisingly; that most hackers don't do this. So more than 50% if Cobalt Strike is present on your system you'd expect to see `rundll32.exe`.
-- All this to say: it's sus to see `rufus` spawning `rundll32.exe`, the fact that it is itself `rundll32.exe` is even more sus, but HOLY SMOKES the most sketchy thing of all is what we see in the next relationship - `rundll32.exe` spawning `cmd.exe`.
-- I just said before that `rundll32.exe` is typically used to launch DLLs. Thus there is **very** little reason for us to expect it to be spawning the Windows command line interpreter `cmd.exe`. Now it could be that some amateur developer wrote some janky code that does this as some workaround, but in honesty if you see this you should get ready to dig in deeper. So let's do that by double-clicking on `rundll32.exe` to bring up its properties.
+We can immediately see the same suspicious process and parent we saw in our read using the native tools - there is the legitimate process `rufus`, which spawned the child process `rundll32.exe`.And as we discussed then this is suspicious since we do not expect `rufus`, a program used to create bootable USB drives, to need to call `rundll32.exe`. 
+
+But then we see something we forgot to consider in our previous analysis - has `rundll32.exe` itself spawned anything in turn? Here things *really* start getting suspicious - `rundll32.exe` in turned spawned `cmd.exe`. 
+
+I mentioned before that `rundll32.exe` is typically used to launch DLLs. Thus there is **very** little reason for us to expect it to be spawning the Windows command line interpreter `cmd.exe`. Now it could be that some amateur developer wrote some janky code that does this as some befuddling workaround, but in honesty even that is a stretch. We're not ringing the alarm bells yet, but we're definitely geared to dig in deeper.
+
+So double-click on the process... 
 
 2. Signature - is it valid + who signed?
 
 {{< figure src="/img/image054.png" title="" class="custom-figure" >}}
 
-- We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of rundll32.exe.
+We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of rundll32.exe. Nothing further to concern ourselves with here. 
 
 3. Current directory
-- On the same image we can see the **Current directory**, that is the "working directory" of the process, which is the directory where the process was started from or where it is operating.
-- We can see here that the Current directory is the Desktop since that's where it was initiated from. 
-- Now this could happen with legitimate scripts or applications that are using rundll32.exe to call a DLL function.
-- However, seeing rundll32.exe being called from an unusual location like a user's desktop could be suspicious, particularly if it's coupled with other strange behavior. 
+In the same image we can see the **Current directory**, that is the "working directory" of the process, which is the directory where the process was started from or where it is operating. We can see here that the Current directory is the Desktop since that's where it was initiated from. 
+
+Now this could happen with legitimate scripts or applications that are using `rundll32.exe` to call a DLL function. However, seeing `rundll32.exe` being called from an unusual location like a user's desktop could be suspicious, particularly if it's coupled with other strange behavior. 
 
 4. Command-line arguments 
-- And again in reference to the same image once more we see that the **Command-line** is `rundll32.exe`. 
-- This is actually very unusual - the `rundll32.exe`` command is typically used to execute a function in a specific DLL file, and thus, you would normally see it accompanied by arguments specifying the DLL file and function it's supposed to execute. 
-- For example, a legitimate command might look something like this: `rundll32.exe shell32.dll,Control_RunDLL`.
-- Thus it being "nude" can certainly be seen as another point for Team Suspect.
+And again in reference to the same image we once more we see that the **Command-line** is `rundll32.exe`. Again, we already saw this before where I discussed why this is suspicous - we expect `rundll32.exe` to be provided with arguments.
 
 5. Thread Start Address
-- In the top of the Properties window select `Threads`.
+On the top of the Properties window select `Threads`.
 {{< figure src="/img/image055.png" title="" class="custom-figure" >}}
-- We can see under `Start address` that it is mapped, meaning it does exist on disk.
-- So this just tells us that this is not a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as `0x0`.
+We can see under `Start address` that it is mapped, meaning it does exist on disk. So this just tells us that this is not a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as `0x0`.
 
 6. Memory Permissions
-- In the top of the Properties window select `Memory`.
+- On the top of the Properties window select `Memory`.
 - Now click once on the `Protection` header to sort it. 
 - Scroll down until you see `RWX` permissions, that is of course if it exists.
 {{< figure src="/img/image056.png" title="" class="custom-figure" >}}
-- And indeed we see the presence of two memory spaces with **Read-Write-Execute** permissions, which as we learned is always unusual/suspect.
+- And indeed we see the presence of two memory spaces with **Read-Write-Execute** permissions, which as we learned is always suspicious since there are very few legitimate programs that will write to memory and then immediately execute it. 
 
 7. Memory Content
 - Finally let's double-click on the larger of the two (172 kB) since this typically represents the payload.
@@ -1182,50 +1068,27 @@ Open Process Hacker as admin - ie right-click and select `Run as administrator`.
 - And immediately we can see two clear giveaways that we are dealing with a PE file: first we see the magic bytes (`MZ`), and we see the strings we associate with a PE Dos Stub - `This program cannot be run in DOS mode`.
 - So once again it seems suspect. 
 
-That's it for our live analysis: feel free to exit Process Hacker. Let's discuss our results before dumping the memory and moving on to our post-mortem analysis. 
+That's it for our live memory analysis: feel free to exit Process Hacker. Let's discuss our results before moving on to our post-mortem analysis. 
 
-ANALYSIS
-add a table here
-review results, conclusions we can come to, next steps etc.
+# CLOSING THOUGHTS
+Let's quickly review where we are in our simulated threat hunt. We began by using doing a basic live memory analysis using some Windows native tools. Here we discovered an unusual outgoing connection, we then dug deeper into the process responsible for said conneciton (`rundll32.exe`) and learned a few suspicious things. We saw that the process was unexpectedly spawned by another process (`rufus.exe`). Additionally, we noted that the way `rundll32.exe` was invoked from the command line was unusual, as it was devoid of arguments that we would typically expect to see.
 
-**Memory Dump**
+We then used `Process Hacker` to reveal even more about `rundll32.exe`. We saw that, in addition to having a suspicious relation to it's parent process (`rufus.exe`), it itself spawned `cmd.exe`, which is *very* unusual. We also learned that it ran from a somewhat suspicious directory, had `RWX` memory space permissions, and ultimately contained a PE file. 
 
-
-Feel free to shut down the Kali VM - this will of course kill the connection but for now that's not an issue since we have everything we need: a memory dump, a traffic packet capture, and logs (WEL, PowerShell, Sysmon). 
+This signifies the end of our ***live analysis***, we'll now proceed with our ***post-mortem analysis***. At this point keep your Windows VM on, shut down your Kali VM, and turn on your Ubuntu VM. 
 
 ***
 
-# PART 4: Post-Mortem Memory Analysis
+# 7. POST-MORTEM FORENSICS: MEMORY
+# HOUSEKEEPING
+First thing's first - we need to transfer the packet capture (`dllattack.pcap`) and memory dump (`memdump.raw`) over to our Ubuntu analyst VM. Now there are a number of ways to do this, and if you have your own method you prefer please do go ahead. I'm going to install `Python3` so we can quickly spin up a simple http server.
 
-First thing's first - we need to transfer all our artifacts over from the Windows VM to our Ubuntu analyst VM. There are a number of ways to do this, and if you have your own method you prefer please do go ahead. I'm going to install python3 so we can quickly spin up a simply http server and transfer it that way.
+Before we start just make sure that both files of interest (`dllattack.pcap` and `memdump.raw`) are in the same directory - in my case both are located on the desktop. 
 
-But before we do that, let's aggregate all our data.
-1. (opt) For simplicity I am going to create a new folder on the desktop called `artifacts`.
-2. Copy your pcap (traffic packet capture) into it, in my case it's `dllattack.pcap` located on the desktop.
-3. Then copy your memory dump into the same folder, in my case again it was saved to desktop as `memdump.raw`.
-4. Now we'll need to copy the logs over, first we'll do the WEL logs. Open an administrative PowerShell terminal and run the following command:
-
-```
-Copy-Item -Path "C:\Windows\System32\winevt\Logs\System.evtx","C:\Windows\System32\winevt\Logs\Application.evtx","C:\Windows\System32\winevt\Logs\Security.evtx" -Destination "C:\Users\User\Desktop\artifacts"
-```
-5. Now we'll do the Sysmon logs, for this we'll need to convert it into an .evtx file wherafter we can save it directly in our `artifacts` directory. 
-
-```
-wevtutil epl "Microsoft-Windows-Sysmon/Operational" "C:\Users\User\Desktop\artifacts\Sysmon.evtx"
-```
-6. Finally we'll do the same for the PowerShell Script Block Logs.
-```
-wevtutil epl "Microsoft-Windows-PowerShell/Operational" "C:\Users\User\Desktop\artifacts\PowerShell.evtx"
-```
-
-Great so in your `artifacts` folder you should now have the following itesms - see image below.
-
-{{< figure src="/img/image060.png" title="" class="custom-figure" >}}
-
-We're now ready to transfer the files over.
-1. First download the Python3 installer [here](https://www.python.org/downloads/windows/). 
-2. Then simply run the installer, all default selections.
-3. Once it's done open an administrative `Command Prompt` and navigate to the `artifacts` folder.
+Let's transfer them:
+1. First download the `Python3` installer [here](https://www.python.org/downloads/windows/). 
+2. Then run the installer, all default selections.
+3. Once it's done open an administrative `Command Prompt` and navigate to the desktop. 
 4. We can now spawn our **http server**.
 ```
 python -m http.server 8008
@@ -1237,31 +1100,31 @@ python -m http.server 8008
 
 {{< figure src="/img/image061.png" title="" class="custom-figure" >}}
 
-7. Now you can simply go ahead and save each of the files to wherever you want - for simplicity's sake I will be saving them all directly to the desktop in another folder called `artifacts`.
+7. Go ahead and save each of the files to wherever you want - for simplicity's sake I will be saving them all directly to the desktop once again. 
 
-Now that we have all the data on the analyst system we're free to start analysis. Note you are free to close the Windows VM, for the rest of the course we'll only be using the Ubuntu VM.
+We'll now start our Post-Mortem Memory Analysis, before that let's briefly discuss the tool we'll be using.
 
-We'll now start our Post-Mortem Memory Analysis, but in case you are interested here is a short little overview of the tool we'll be working with, Volatility. 
+# ANALYSIS (VOLATILITY)
 
-# VOLATILITY THEORY
-Volatility is an open-source memory forensics framework used to extract digital artifacts from volatile memory (RAM) dumps. It's developed in Python and allows us to investigate potential malicious activity by looking processes, network connections and much, much more.
+For our post-mortem analysis we'll be using `Volatility V3`. If you'd like to know more [check out its great documentation.](https://volatility3.readthedocs.io/en/latest/)
 
-It takes a sort of modular approach where you use different plug-ins (seperate `.py` scripts) to perform specific tasks - for example `pslist` gives us an overview of processes while `netstat` gives us statistics about network connections. There are a few dozen such plug-ins and you can either write your own.  
+One important thing you have to know before we move ahead however is that `Volatility` uses a modular approach. Each time you run it you have to specify a specific `Volatility` plug-in, which performs one specific type of analysis.
 
-For this course we'll be exploring the following 6 and I strongly encourage you to explore others to become more familiar with this great tool.
-- pslist
-- handles
-- cmdline
-- netscan
-- malfind
+So for example here are the plug-ins we'll use and their associated functions:
+- `pslist`, `pstree`, and `psinfo` all provide process info.
+- `handles` shows us all the handles associated with a specific process.
+- `cmdline` shows  the command prompt history.
+- `netscan` displays any network connections and sockets made by the OS.
+- `malfind` looks for inject code.
 
-# ANALYSIS WITH VOLATILITY
-**pslist**
-Two of the most common/popular plugs-ins are `pslist` and `pstree`. The former gives us a list of all processes including some key details, `pstree` conversely will also show Parent-Child relationships.
+So let's get to it. 
 
-We won't go into these plug-ins very deep right now because, in essence, we already gleamed most of the insights it has to offer during our live analysis. But it is good to be aware, if for whatever reason you were not able to perform the live analysis but did come in possession of the memory dump, then effectively you can through a perhaps somewhat more convoluted manner arrive at the same insights. 
+NOTE TO SELF: need to redo the screenshots, no longer in folder `artifacts`
 
-I will however quickly run `psinfo` below just so we get the PID of our suspicious process, we'll use that with other plug-ins. 
+**pslist, pstree, and psinfo**
+Two of the most common/popular plugs-ins are `pslist` and `pstree`. The former gives us a list of all processes with some key details, `pstree` conversely will also show Parent-Child relationships. Since we've already seen this info multiple times now we'll skip it here, but I wanted be aware that, if for whatever reason you were not able to perform the live analysis, you can gather all the same important process information from the memory dump using `Volatility`.
+
+Let's quickly run `psinfo` to break the ice and remind ourselves of the PID, which we'll need for some of the other plugins.
 
 1. Open a terminal and navigate your your main Volatility3 directory, in my case it is `/home/analyst/Desktop/volatility3`.
 2. Let's run our `psinfo` plugin using the following command:
@@ -1275,13 +1138,13 @@ python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.pslist
 **handles**
 Now that we've got the PID of our suspicious program we're going to look at its handles. 
 
-A handle is like a reference that a program uses to access a resource - whether that be files, registry keys, or network connections. When a process wants to access one of these resources, the operating system gives it a handle, kind of like a ticket, that the process uses to read from or write to the resource.
+A handle is like a reference that a program uses to access a resource - whether that be files, registry keys, or network connections. When a process wants to access one of these resources, the OS gives it a handle, kind of like a ticket, that the process uses to read from or write to the resource. 
 
-For threat hunting it's a great idea to look at the handles of any process you consider suspect since it will give you a lot of information about what a process is actually doing. For instance, if a process has a handle to a sensitive file or network connection that it shouldn't have access to, it could be a sign of malicious activity. By examining the handles, we can get a clearer picture of what the suspicious process is up to, helping you understand its purpose and potentially identify the nature of the threat.
+For threat hunting it's a great idea to look at the handles of any process you consider suspect since it will give us a lot of information about what the process is actually doing. For instance, if a process has a handle to a sensitive file or network connection that it shouldn't have access to, it could be a sign of malicious activity. By examining the handles, we can get a clearer picture of what the suspicious process is up to, helping us to understand its purpose and potentially identify the nature of the threat.
 
 Now to be frank this analysis of handles can be a rather complex endeavour, relying on a deep techincal understanding of the subject. So I'll show how it works, and of course provide some insight on the findings, but be aware that I won't be able to do an exhaustive exploration of this topic as that could be a multi-hour course in and of itself. 
 
-So let's run the `windows.handles` plugin with the following command, including the PID of `rundll32.exe` as we just learned. 
+Let's run the `windows.handles` plugin with the following command, including the PID of `rundll32.exe` as we just learned. 
 ```
 python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.handles --pid 5060
 ``` 
@@ -1305,11 +1168,9 @@ This key is commonly used to debug applications in Windows. However, it is also 
 
 `MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\PROTOCOL_CATALOG9 and MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\NAMESPACE_CATALOG5`: These keys are related to the Winsock API, which is used by applications to communicate over a network. If the process is interacting with these keys, it could be trying to manipulate network communication, which is a common tactic of malware.
 
-=============================
 **cmdline**
 
-The `cmdline` is another useful plug-in I'm mentioning because I wanted you to be aware of it, even though we won't learn anything new from it in this specific case. Running the command below we'll see a history of all the command prompt, inlcuding `rundll32.exe`. So again we learn here, as we did in the live analysis, that it ran without any expected arguments. In the case a live analysis was not feasible, we'd once again be able to attain that same insight here in the post-mortem analysis. 
-
+The `cmdline` is another useful plug-in that will deliver the same insight we received before, namely that `rundll32.exe` was not provided any arguments when it was invoked from the command line. I'm pointing this out once again so you are aware you can obtain this same information even if you were not able to perform a live analysis. 
 ```
 python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 5060 | grep Key
 ``` 
@@ -1325,7 +1186,7 @@ python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.netscan
 Right now I'll defer comment, since we're going to jump into network connections DEEPLY in PART X with `Wireshark`, `Zeek`, and `RITA`. I just wanted you to be aware that you can also use a memory dump to look at network connections if for some reason you don't have a packet capture available.   
 
 **malfind**
-`malfind` is the quintessential plugin for, well, finding malware. The plugin will look for suspected inject code, which it determines based on header info - much indeed like we did during our live analysis in steps 6 and 7. 
+`malfind` is the quintessential plugin for, well, finding malware. The plugin will look for suspected inject code, which it determines based on header info - much indeed like we did during our live analysis when we look at the memory space content. 
 
 We can run it with:
 ```
@@ -1344,31 +1205,43 @@ We can see that it correctly flagged `rundll32.exe`. However, if we go through t
 This is thus a good reminder that the mere appearance of a process in malfind's output is not an unequivocal affirmation of its malicious nature.
 
 **Closing Thoughts**
-This section was admitrtedly not all-too revelatory. But that's really because we have already performed live analysis, and thus we can say the point of performing post-mortem analysis is really:
-- to strengthen the case/conviction of suspicious malware identified during live analysis, or
-- in the case that live analysis was unfeasible, much of the same data/insights could be obtained here with Volatility3.
+This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform a live analysis and only received a memory dump, then this section showed us how we could derive the same (plus some additional) information. Further, even if we did perform the live analysis, we bolster our case when we can come to the same conclusions via another avenue. 
 
-I think this a good introduction to Volatility3, though we could obviously go much deeper I'll leave that for our next course. 
+I think this serves as a good introduction to `Volatility` - you now have some sense of how it works, how to use it, and what are the "go to" plug-ins for threat hunting.
 
-SO for now let's jump straight into log analysis with an emphasis on UEBA.
-
-reference
-https://www.youtube.com/watch?v=cYphLiySAC4
+That being the case let's move on to the log analysis. For this we'll once again use our Windows VM, so in case you turned it off, please turn it back on. 
 
 ***
 
-# PART X: LOG ANALYSIS 
+# 8. POST-MORTEM FORENSICS: LOGS
+# Introduction
 
 Time for us to get into some LOGGING...
 
 {{< figure src="/img/lumberjack.gif" title="" class="custom-figure" >}}
 
-No, not that kinda logging.
+Now typically we think of logging as belonging more to the realm of the SOC than a threat hunter. That's because, at least in the way that modern logging practices operate, logging is not seen as something approachable by a human operator. Why? Well because of the ***insane*** amount of data involved. It's not unusual for enterprises to generate millions of log events in their SIEM *daily*, and thus it's completly infeasible for a threat hunter to start poking around looking for bread crumbs.
 
-The kind which, admittedly, is not too exicting. 
+But there's two fallacies at play in this viewpoint.
 
-Here let's touch on some regular logging. 
+First, as I pointed out in the ["Three Modes of Threat Hunting article"](https://www.faanross.com/posts/three_modes/), log analysis plays an important role in threat hunting, but not in the initial phase. When are operating only with presumption but not yet any concrete suspicion, then we are way better off poking around in the memory or traffic, looking at connections, processes, services etc so as to find our initial sign that something is off. 
 
+But, as is the case here at this point in our simulation, once we are looking for evidence related to a specific event, then log analysis can be very useful to help build our case. We are no longer considering the entire body of log events as potentially suspicious, rather based on information we already gathered we can whittle it down dramatically and only focus on events potentially related to the suspicious event. Thus we consider log analysis to be a secondary analysis - it only comes into play once we have information to limit the scope of what we will investigate.
+
+Further, the specific logs we are interested in are also typically a subset of the total potential logs. Modern vendors and software pride themselves on a "more is better" type of approach - it seeks not to be discriminate with what it logs, instead there is this idea that everything that possible can be logged should be logged. 
+
+However when it comes to Threat Hunting and Log Analysis, I view the approach more a kin to the Pareto Principle. The Pareto Principle, also known as the "80-20 rule", states that in most systems 80% of outputs result from 20% of inputs. Applied here, what I mean is that 20% of the logs will account for 80% of potential adverse security events. But in honesty, the proportion here is likely even more extreme, my best esimateion is taht about 5% of logs will report about 95% of potential adverse security events.
+
+So, instead of focusing on 100% of the logs to potentiually uncover 100% of the adverse security events, we focus on 5% of the logs to potentially uncover 95% of the adverse security events. What exactly constitutes that 5% will become progressively more nuanced as we continue on our journey in future courses, but for now it simply means that we focus on Sysmon and PowerShell ScriptBlock logs and ignore WEL completely. 
+
+So let's go ahead and have a look at them... 
+
+
+
+
+
+# LOG ANALYSIS (SYSMON)
+# LOG ANALYSIS (POWERSHELL) 
 
 
 # SYSMON
@@ -1469,3 +1342,76 @@ let's see here if imphash has any hits?
 no result for MD5 on VT, but yes on joesandbox
 
 ====================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++
+
+
+
+
+First, build a case mode UII
+
+
+Second, Pareto Principle logging.
+
+
+
+
+
+
+
+
+
+
+
+
+- mention this one usualyl more realm of SOC/SIEM and not Forensics, which usually more focus of threat hutning.
+- Likely one of the thoughts underpinning this attitude is that logs are grunt-work, mountains of nothing that needs to be sifted through, mountains so huge its completly beyond the scope of humams, and so SIEMs not only CAN do it, but are better than humans in it. 
+
+- but that is true for the general appraco to logs. But what we are speaking of here is a much specific way of looking at logs - limitiing the type of logs we look at. Additioarnlly, logs depending on the PHASE. See below - logs might not be a great place to start in Phase 1, but for example can be perfect for Phase 2. Sicne you already more or less know what you are looking for, makes the volume manageable, esp considering we're likely only interested in Sysmon, Powershell, and a highly select WEL IDs. 
+
+
+ULTIMATELY, Phase 1 should focus on where they cannot hide - meaning memory and packets. Every where else, disk, logs, etc they can hide. but they can never hide from memory/packets = memory when they are at rest/use, packets when they are in transit. 
+
+
+Ok so now as we go ahead, remember we have no idea of the attack, we don't know a DLL injected attack has happened, since that was "evil ash" doing it. Meaning we are in Phase 1, and then thios I might not mention but for own sanity - at end of live analysis II (PE Hacker), we can then switch over to Phase II.
+
+
+
+
+Will be using same VM here, victim, in practice we would bnever do this,.
+
+
+
