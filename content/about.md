@@ -6,7 +6,7 @@ aliases = ["about-me","contact"]
 author = "faan ross"
 +++
 
-**this site contains original content related to threat hunting + memory forensics.**
+**this site contains original content related to threat hunting, active defense, and deception.**
 
 but since you clicked on ***about*** i'm gonna assume you also want to learn a bit about me, faan ross.
 
