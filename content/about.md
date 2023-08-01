@@ -12,7 +12,7 @@ but since you clicked on ***about*** i'm gonna assume you also want to learn a b
 
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
-well, since we find ourselves here it should come as no great shock that I love all things cybersecurity. my main interests center around the idea of "offense as defense" - i think it'll likely play a critical role in the industry's immediate evolution. i also love playing CTFs, in particular on HackTheBox - it's how i was introduced to this world in the first place. overall, cybersecurity is the coolest goddamn thing i've ever had the opportunity to be a student of. ***praise be***.
+well, since we find ourselves here it should come as no great shock that I love all things cybersecurity. my main interests center around the idea of "offense as defense" - all about the stuff you'll find on this page. i also love playing CTFs, in particular on HackTheBox - it's how i was introduced to this world in the first place. overall, cybersecurity is the coolest goddamn thing i've ever had the opportunity to be a student of. ***praise be***.
 
 here are a few other things that tickle my fancy...
 
