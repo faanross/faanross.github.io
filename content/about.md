@@ -30,6 +30,8 @@ i have been practicing `brazilian jiu jitsu` since 2015 and think its likely the
 
 the meta here is also great - the more new things you learn, the better you can become at learning new things. i'm currently learning both spanish and french + electric guitar. i'm admittedly terrible at them, yet sucking at them and becoming infinitesimally better each day brings me tremendous joy. and after all - ***memento mori***.
 
+finally, some `honourable mentions`:| design | systems thinking | video editing | motion design | 80+90s aesthetics | meme-magik | evolutionary psychology |
+
 <!-- {{< figure src="/img/mckenna.gif" title="" class="custom-figure" >}} -->
 
 `here are some words + ideas i live by`: 
