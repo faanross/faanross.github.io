@@ -9,4 +9,9 @@ draft: true
 
 *** 
 
-# Hello friend, so glad you could make it.
+# AN OBSESSION WITH WINNING
+Let's start with some background to help us understand why Threat Hunting came to be in the first palce. ANd it all starts, in rather Charlie Sheen-esque manner, with on obsession with winning.
+
+{{< figure src="/img/winning.gif" title="" class="custom-figure" >}}
+
+term firt appears around 2010 - 2012 
