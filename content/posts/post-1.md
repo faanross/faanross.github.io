@@ -1325,40 +1325,65 @@ In conclusion, while PowerShell network connections can be a sign of suspicious 
 NOTE TO MYSELF: It seems to me I opened rufus (perhaps two copies), since there is immediately a 1 (create), 5 (terminate), and then again a 1. So for now I will ignore the first pair of 1 and 5, as if they do not exist. However absolutely have to verify this!
 
 
-
-We can ignore the next 2 entries (smartscreen.exe ID 1, consent.exe ID 1), but immediately after we can see the process creation for rufus.exe. As I mentioned earlier - since an actual attacker will almost certainly inject into an existing process this log is somewhat irrelevant. 
+We can ignore the next 2 entries (`smartscreen.exe` ID 1, `consent.exe` ID 1), but immediately after we can see the process creation for `rufus.exe`. As I mentioned earlier - since an actual attacker will almost certainly inject into an existing process this log is pragmatically irrelevant. 
 
 We then again encounter a few Windows services we can ignore for now:
 - vdsldr.exe ID 1, 
 - svchost.exe ID 10,
 - vds.exe ID 1
 
-We then encounter a very interesting log revealing an inner working of the malware we were up until this point not aware of.
+We then encounter a series of three **very interesting** logs revealing an inner working of the malware we were up until this point not aware of. I find this very cool since we are literally discovering inner workings of the behaviour even us as the attacker were not even aware of at this point.
 
 {{< figure src="/img/image082.png" title="" class="custom-figure" >}}
 
-Based on the log entry we can see that `rufus.exe` modified a Windows registry key, spefically: `HKU\S-1-5-21-3300832437-63900680-1611145449-1001\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{F1BFD3AE-2A88-41A2-989E-39817E08E286}Machine\Software\Policies\Microsoft\Windows Defender\DisableAntiSpyware`.
+Based on the log entry we can see that `rufus.exe` modified a Windows registry key, specifally: `HKU\S-1-5-21-3300832437-63900680-1611145449-1001\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{F1BFD3AE-2A88-41A2-989E-39817E08E286}Machine\Software\Policies\Microsoft\Windows Defender\DisableAntiSpyware`.
 
-Also, the log entry is telling us that the registry key value has set the value of DisableAntiSpyware to 1 (`DWORD (0x00000001)`), effectively disabling Windows Defender's antispyware functionality. This is a common behavior of malware to prevent detection or removal.
+Also, the log entry is telling us that the registry key value has set the value of `DisableAntiSpyware` to 1 (`DWORD (0x00000001)`), which in effect disables the Windows Defender's antispyware functionality. This is a common behavior of malware to prevent detection or removal.
 
-The rule name T1089 is from the MITRE ATT&CK framework, which signifies a Tamper Protection Bypass technique. This is consistent with the action taken to disable the Windows Defender antispyware capability.
+Finally we can also see that it even us the rule name `T1089`, which corresponds with the Tamper Protection Bypass technique.
 
-In general, DLL injection and the subsequent evasion or disabling of security solutions is a common behavior in many types of malware - it allows the malicious code to execute and persist undetected on the compromised system.
+In general, DLL injection and the subsequent evasion or disabling of security solutions is a common behavior in many types of malware - it allows the malicious code to execute and persist undetected on the compromised system. 
 
-This is then followed by another interesting log entry
+So from what we know about malware and how we would expect it to behave all of this makes perfect sense. But then, oh boy, the next two entries is where things get a little strange. 
 
 {{< figure src="/img/image083.png" title="" class="custom-figure" >}}
 
+As we can see this time we have event `ID 12`, and while still related to the registry reveals something different. We can see here that the log entry indicates that a deletion event on a registry key has occurred, executed by `svchost.exe`. The registry key in question is `HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware`.
 
-This log entry indicates that a deletion event on a registry key has occurred, executed by svchost.exe. The registry key in question is HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware.
+Just as the prior log, the rule name `T1089` indicates the Tamper Protection Bypass technique. It seems that here, after the malware disabled the antispyware functionality of Windows Defender (as seen in the previous log), it then deleted the value of the same key.
 
-We can also see that it was carried out with elevated privileges - the user context in which this action is executed is NT AUTHORITY\SYSTEM, which is a high-privileged system account.
+The thing is about this deletion is, in a Windows system, when a registry value is deleted, the associated setting typically reverts back to its default behavior. In this case, when the `DisableAntiSpyware` registry value is deleted, it would likely result in re-enabling the anti-spyware functionality of Windows Defender. This would not be favorable to the malware as it could lead to its detection and removal.
 
-Just as the prior log, the rule name T1089 is from the MITRE ATT&CK framework, indicating a Tamper Protection Bypass technique. It seems that here, after the malware disabled the antispyware functionality of Windows Defender (as seen in the previous log), it then deleted the value of the same key. Deletion could be a strategy to cover up the prior tampering event and make the incident investigation more difficult.
+So this part is confusing - we'll circle back to it soon.
 
-However, it's also interesting that the deletion is carried out by svchost.exe.exe, which is a legitimate Windows process used to host multiple Windows services. This could almost certainly be the malicious DLL hiding its actions by using legitimate system processes.
+Something else that is strange but not that unusual is that we can see these actions are no longer performed by the originally compromised process (`rufus.exe`), but instead by svchost.exem exe, a legitimate Windows process used to host multiple Windows services. Though we cannot be certain, this could almost certainly be the malicious DLL hiding its actions by using legitimate system processes. Hackers LOVE abusing `svchost.exe` for a slew of reasons - its ubiquity, anonymity, persistence, stealth and potential for gaining elevated privs. 
 
-Overall, this is a clear sign of an advanced malware trying to evade detection and remove traces of its actions. The involvement of a system process in these actions suggests that the malware could have escalated its privileges on the system.
+And indeed we also see that here  - the event was carried out with elevated privileges - the user context in which this action is executed is `NT AUTHORITY\SYSTEM`, which is a high-privileged system account.
+
+Ok but now once again - it seems the malware disabled the antispyware function, but then re-enabled it immediately afterwards. But now, once again, we are confronted with another event 13.
+
+{{< figure src="/img/image084.png" title="" class="custom-figure" >}}
+
+In this third Sysmon log entry we once again see a `SetValue` event, which indicates that the value of a registry key has been set or modified. In this case, the key is `HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware`. And again, the value has been set to 1 (DWORD (0x00000001)), which effectively disables the Windows Defender anti-spyware functionality.
+
+Whereas the first event ID 13 was executed by `rufus.exe`, here we see the process behind this action is `svchost.exe`. As is the case with the preceding log entry, this allows it to be executed as `NT AUTHORITY\SYSTEM`, a high-privileged system account.
+
+So here we can observe that the malware re-sets the `DisableAntiSpyware` registry value to `1` immediately after deleting it. This action effectively maintains the disabled state of the anti-spyware function, even though the associated value in the registry had been momentarily deleted.
+
+The behavior of the malware deleting the registry key value and then immediately resetting it might appear confusing, but it's essential to understand that attackers often employ tactics that are designed to confuse, obfuscate, and evade detection. For example, the malware might be trying to cover its tracks. By deleting and re-creating the registry key, the malware might be trying to alter or remove timestamps or other metadata that could be used by forensic analysts.
+
+The only way for us to truly understand what this malware is doing so we can start getting a clear picture of the malware author's intention would be to actually reverse it, which is of course literally an entire other discipline in and of itself. That being the case this is where our speculation on this matter will remain, we will however be jumping into the amazing world of malware analysis in the future. As a threat hunter you are not expected to be an absolute wizard at it, but your abilities as a hunter will expand dramatrically if you add this tool to your kit. 
+
+But for now, let's toodle on. 
+
+
+Following this strange set of events we see a handful of events with ID 10, followed by another series of events all with ID 1. 
+
+{{< figure src="/img/image085.png" title="" class="custom-figure" >}}
+
+We can see they all involve `svchost.exe`, giving us the sense that this might once again be the malware. Fully interpreting and making sense of these event logs is however beyond the scopt of this course, so for now we'll pass. 
+
+
 
 
 
