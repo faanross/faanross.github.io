@@ -1322,52 +1322,93 @@ However, there are exceptions. In an enterprise environment, system administrato
 
 In conclusion, while PowerShell network connections can be a sign of suspicious activity, they are not inherently suspicious and can occur as part of normal, legitimate operations, especially in an enterprise environment. As always, the key is to understand your baseline, know what normal looks like for your environment, and investigate anything that deviates from that.
 
-
-
-TK XXX CONTINUE HERE
-
-We continue with log 7, first 1 after the 22 and 3. 
+NOTE TO MYSELF: It seems to me I opened rufus (perhaps two copies), since there is immediately a 1 (create), 5 (terminate), and then again a 1. So for now I will ignore the first pair of 1 and 5, as if they do not exist. However absolutely have to verify this!
 
 
 
+We can ignore the next 2 entries (smartscreen.exe ID 1, consent.exe ID 1), but immediately after we can see the process creation for rufus.exe. As I mentioned earlier - since an actual attacker will almost certainly inject into an existing process this log is somewhat irrelevant. 
+
+We then again encounter a few Windows services we can ignore for now:
+- vdsldr.exe ID 1, 
+- svchost.exe ID 10,
+- vds.exe ID 1
+
+We then encounter a very interesting log revealing an inner working of the malware we were up until this point not aware of.
+
+{{< figure src="/img/image082.png" title="" class="custom-figure" >}}
+
+Based on the log entry we can see that `rufus.exe` modified a Windows registry key, spefically: `HKU\S-1-5-21-3300832437-63900680-1611145449-1001\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{F1BFD3AE-2A88-41A2-989E-39817E08E286}Machine\Software\Policies\Microsoft\Windows Defender\DisableAntiSpyware`.
+
+Also, the log entry is telling us that the registry key value has set the value of DisableAntiSpyware to 1 (`DWORD (0x00000001)`), effectively disabling Windows Defender's antispyware functionality. This is a common behavior of malware to prevent detection or removal.
+
+The rule name T1089 is from the MITRE ATT&CK framework, which signifies a Tamper Protection Bypass technique. This is consistent with the action taken to disable the Windows Defender antispyware capability.
+
+In general, DLL injection and the subsequent evasion or disabling of security solutions is a common behavior in many types of malware - it allows the malicious code to execute and persist undetected on the compromised system.
+
+This is then followed by another interesting log entry
+
+{{< figure src="/img/image083.png" title="" class="custom-figure" >}}
 
 
+This log entry indicates that a deletion event on a registry key has occurred, executed by svchost.exe. The registry key in question is HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware.
 
+We can also see that it was carried out with elevated privileges - the user context in which this action is executed is NT AUTHORITY\SYSTEM, which is a high-privileged system account.
 
+Just as the prior log, the rule name T1089 is from the MITRE ATT&CK framework, indicating a Tamper Protection Bypass technique. It seems that here, after the malware disabled the antispyware functionality of Windows Defender (as seen in the previous log), it then deleted the value of the same key. Deletion could be a strategy to cover up the prior tampering event and make the incident investigation more difficult.
 
+However, it's also interesting that the deletion is carried out by svchost.exe.exe, which is a legitimate Windows process used to host multiple Windows services. This could almost certainly be the malicious DLL hiding its actions by using legitimate system processes.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Overall, this is a clear sign of an advanced malware trying to evade detection and remove traces of its actions. The involvement of a system process in these actions suggests that the malware could have escalated its privileges on the system.
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Closing Remarks
+
+Based on how we would expect an actual attack to occur, let's look at some of the most important Sysmon logs and what we learned from them.
+
+DNS 22 - the stager reaching out to a web server to download the script, keep in mind ojnly with a FQDN so might not appear. 
+
+Net Connection 3 - we can see powrshell.exe creating connection to web server. This is somethjing we'd alwayus expect to see, whether script used a FQDN or IP. Additionally we'd
+
+Registry Change 3 - erc... 
 
 
 
