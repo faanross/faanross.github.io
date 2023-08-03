@@ -1384,25 +1384,158 @@ Following this strange set of events we see a handful of events with ID 10, foll
 We can see they all involve `svchost.exe`, giving us the sense that this might once again be the malware. Fully interpreting and making sense of these event logs is however beyond the scopt of this course, so for now we'll pass. 
 
 
+XXLXXL
+
+
+
+{{< figure src="/img/image086.png" title="" class="custom-figure" >}}
+
+here in this same set of sysmon logs we can now see an entry 22 where svchost.exe (let's assume this is the malware) is doing a DNS query for  DESKTOP-UKJG356 . This is however the name of the very host it currently compromised. So why would malware do this - why would it do a DNS resolution to find the ip of the host it has currently infected? RuleName - 
+
+There could be several reasons for the malware to initiate a DNS query for the host it is currently running on:
+
+1. **Host Identification:** The malware might be performing an internal reconnaissance or fingerprinting task. By resolving the hostname to an IP address, it could be trying to ascertain more information about the network environment it's operating in, like confirming the host's IP addresses (IPv4 or IPv6). This could help it understand the network configuration or aid in future lateral movement tasks.
+
+2. **Network Connectivity Check:** The malware might be testing network connectivity or DNS functionality. If a DNS query fails, it might indicate a network issue or a potential sandbox environment, which could alter its behavior.
+
+3. **Command & Control (C2) Communication:** Some malware uses Domain Generation Algorithms (DGAs) or other methods that might involve making DNS queries, even for the local host. It might be a way to hide its C2 communications within normal-looking DNS traffic.
+
+4. **Evasion Techniques:** Making benign-looking DNS queries is a common evasion technique employed by malware to blend into regular network traffic and avoid raising alarms.
+
+Again, these are educated guesses. Without the full context and analysis of the malware binary, it's not possible to be 100% certain of the reason.
 
 
 
 
+Then we see some events (ID 10) where powershell is accessing lsass.exe
+
+{{< figure src="/img/image087.png" title="" class="custom-figure" >}}
 
 
+LSASS, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens.
+
+Malware or an attacker might target LSASS for a couple of main reasons:
+
+1. **Credential Dumping:** One common technique used in cyber attacks is credential dumping, where an attacker retrieves usernames and passwords stored in the system's memory. LSASS is often targeted in this kind of attack because it handles password verification and thus might have these credentials in its memory space. Tools like Mimikatz are commonly used for this purpose. PowerShell can be used to invoke such tools or similar commands.
+
+2. **Pass-the-Hash / Pass-the-Ticket:** Another technique that involves LSASS is the "pass-the-hash" or "pass-the-ticket" method. In this technique, attackers steal the hashed versions of passwords (or Kerberos tickets) from LSASS and use them to authenticate as that user without needing to crack the password. PowerShell can be used to extract these hashes or tickets.
+
+3. **Creating or Manipulating Access Tokens:** Since LSASS creates access tokens, an attacker might try to manipulate these tokens to escalate privileges or impersonate other users (a technique known as token impersonation or "token theft"). PowerShell scripts can be written to manipulate these tokens.
+
+In many cases, PowerShell scripts are obfuscated to make detection more difficult. Additionally, PowerShell's wide availability and powerful functionality make it a popular tool for both attackers and benign administrators. For these reasons, any instance of PowerShell interacting with LSASS should be considered potentially suspicious and warrant further investigation.
 
 
+Based on this Sysmon log, the PowerShell executable (SourceImage: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe) with process id 5068 (SourceProcessId: 5068) has accessed the LSASS (Local Security Authority Subsystem Service) process (TargetImage: C:\Windows\system32\lsass.exe) with process id 704 (TargetProcessId: 704).
+
+The GrantedAccess field is set to 0x1000, which corresponds to PROCESS_QUERY_LIMITED_INFORMATION. This means the accessing process has requested or been granted the ability to query certain information from the LSASS process. Such information might include the process's existence, its execution state, the contents of its image file (read-only), etc.
+
+The call trace points to several system and .NET libraries, suggesting the access was done using .NET libraries (System.dll and System.Management.Automation.dll). The call trace also points to System.Management.Automation.ni.dll, which is related to PowerShell.
+
+Given the context, this log could indicate potential malicious activity, such as an attempt to dump credentials from LSASS or a reconnaissance move before further exploitation. PowerShell being used in this manner could be part of living off the land binaries (LOLBins) tactics, where attackers use built-in tools to hide their activities.
+
+However, as always, it's crucial not to jump to conclusions. There can be legitimate reasons for these actions as well. For instance, certain types of system management or security software may legitimately query LSASS. Further investigation and correlation with other signs of malicious activity would be necessary to make a definitive assessment.
+
+It's also important to note that the user who runs the PowerShell process is 'User' on 'DESKTOP-UKJG356', while the target LSASS process runs under 'NT AUTHORITY\SYSTEM', indicating a possible privilege escalation attempt or reconnaissance from a less privileged user account.
+
+And then finally we see two events with ID 1, the first is another crucial piece of evidence indicative of malware activity. 
 
 
+{{< figure src="/img/image088.png" title="" class="custom-figure" >}}
+
+Based on the Sysmon log you've shared, the Windows Remote Assistance COM Server executable (raserver.exe) has been launched. This tool is used for remote assistance, which allows someone to connect to this machine remotely to assist with technical issues.
+
+The flags "/offerraupdate" used in the CommandLine for raserver.exe suggests that it was started to accept unsolicited Remote Assistance invitations. This allows remote users to connect without needing an invitation.
+
+The process was launched by svchost.exe, a system process that hosts multiple Windows services, and it runs with SYSTEM privileges (User NT AUTHORITY\SYSTEM). Also, the parent process is running as NT AUTHORITY\SYSTEM which suggests that the process was started as a service or by another system-level process.
+
+In terms of potential malicious activity, the misuse of raserver.exe can indeed be associated with various forms of attack, including data exfiltration. The Remote Assistance tool can provide an attacker with a remote interactive command-line or GUI access, similar to Remote Desktop, which can be used to interact with the system and potentially exfiltrate data.
+
+If an attacker were to compromise a system and launch raserver.exe with the "/offerraupdate" flag, they could potentially use this as a mechanism to maintain access to the system and potentially exfiltrate data. The actual exfiltration would likely be done through other means (e.g., over the Remote Assistance session, or using other tools), but the Remote Assistance tool could be part of the setup to facilitate it.
+
+However, like many other tools and features of an operating system, the presence of raserver.exe, and even its usage, does not necessarily imply malicious intent. It's often used by IT departments for legitimate remote assistance. As always, it's critical to take into account the wider context, look for other signs of potential compromise, and consider the specific circumstances of the system and network in question.
+
+And then in the last event log we can see rundll32.exe - the suspicous process we fuirst encountered in entwork connecitons and sent uis do this threat hunting rabbit hole in the first place. 
+
+{{< figure src="/img/image088.png" title="" class="custom-figure" >}}
+
+The Sysmon log you've shared shows that a new process rundll32.exe was created. This is a system utility used to run DLL files as standalone applications. While it is a legitimate tool, it's often abused by threat actors for malicious purposes due to its capabilities.
+
+Key points from the log:
+
+1. ProcessId: 3088 - This is the process identifier assigned by the operating system for the newly created rundll32.exe process.
+2. Image: C:\Windows\System32\rundll32.exe - This is the path to the rundll32 executable.
+3. CommandLine: rundll32.exe - There are no additional command-line arguments, which is unusual because rundll32.exe is typically used to run specific functions within DLL files.
+4. CurrentDirectory: C:\Users\User\Desktop\ - The process was started from the User's Desktop directory.
+5. User: DESKTOP-UKJG356\User - The process was launched under the user account "User" on the computer "DESKTOP-UKJG356".
+6. ParentProcessGuid and ParentProcessId: These are the unique identifiers and process ID for the parent process, in this case, rufus-4.1_x86.exe. 
+7. ParentImage: C:\Users\User\Desktop\rufus-4.1_x86.exe - This is the executable that initiated rundll32.exe.
+8. ParentCommandLine: "C:\Users\User\Desktop\rufus-4.1_x86.exe" - This is the command line that was used to start the parent process.
+
+Now, if we consider the context you provided - "when I looked at rufus.exe (the process we injected into) with process hacker it showed that it spawned 'rundll32.exe', which is also what made the connection back to the C2 server" - it suggests that a possible DLL injection attack might have occurred.
+
+In this attack scenario, an adversary could have used the rufus-4.1_x86.exe process to inject malicious code (typically packaged as a DLL) into the rundll32.exe process. Because rundll32.exe is a legitimate system process, this could help to bypass security controls and establish a command and control (C2) communication channel.
+
+The absence of specific arguments in the command line of rundll32.exe is suspicious. Normally, rundll32.exe should be invoked with a DLL file and entry point, so this might suggest that the process was started for malicious purposes. However, without further investigation (e.g., memory forensics to determine what DLLs are being loaded by rundll32.exe), it would be hard to conclusively state whether or not malicious activity occurred.
+
+NOTE TO SELF: not sure if i remembered to drop the cmd shell from meterpreter when i ran this simulation. redo and double-check! also remember it looks like the process rufus was opened, closed, then opened (maybe you opened a second copy by mistake?), so need to check this too. Finall this last section, from XXLXXL to here needs to be edited. 
 
 
+# POWERSHELL LOGS
+# Introduction
+Introduction:
+
+Enabling PowerShell script block logging is a crucial step in bolstering security, particularly in the context of "Living off the Land" (LoL) attacks. As one of the most popular and versatile scripting languages on Windows systems, PowerShell has become a favorite tool for hackers and malicious actors due to its ability to execute commands and scripts directly in memory without leaving traditional traces on the disk. By understanding why PowerShell script block logging is essential, we can better defend against LoL attacks and empower threat hunters and Digital Forensics and Incident Response (DFIR) teams with valuable insights into the techniques employed by adversaries.
+
+Living off the Land and PowerShell Usage:
+
+Living off the Land (LoL) refers to a strategy adopted by hackers to utilize built-in, legitimate tools and features of an operating system to carry out malicious activities, avoiding the use of traditional malware that can be easily detected by security solutions. PowerShell is a prime candidate for LoL attacks, as it is pre-installed on most modern Windows systems, and its versatility allows attackers to bypass security measures.
+
+The Importance of PowerShell Script Block Logging:
+
+Enabling PowerShell script block logging records the exact commands and scripts executed within PowerShell on a system. This feature provides organizations with enhanced visibility into PowerShell activity, making it easier to detect suspicious or malicious actions. Here's why it is important for security:
+
+1. Detecting Malicious Behavior: PowerShell script block logging helps identify malicious PowerShell commands used by hackers, enabling security teams to respond quickly and effectively to potential threats.
+
+2. Unveiling Living off the Land Techniques: Since PowerShell is a popular choice for LoL attacks, script block logging becomes a valuable tool in uncovering these stealthy techniques and tracing adversary actions.
+
+3. Facilitating Incident Response: In the event of a security incident, DFIR teams can analyze the logged PowerShell commands to reconstruct the attacker's actions, determine the extent of the breach, and implement targeted remediation measures.
+
+4. Enhancing Threat Hunting: Threat hunters can use PowerShell script block logs to proactively search for signs of compromise, anomalies, or new attack patterns, thereby strengthening overall cybersecurity posture.
+
+Conclusion:
+
+Enabling PowerShell script block logging is a crucial step in fortifying the security of Windows systems against Living off the Land attacks and other PowerShell-based threats. By providing a comprehensive record of PowerShell commands executed, organizations gain the ability to detect and respond promptly to potential breaches, empower their threat hunting efforts, and improve the overall resilience of their cybersecurity infrastructure.
+
+# Analysis
+
+In Section X.X we exported the PowerShell ScriptBlock logs to dekstop as `xxxx.evtx` - let's go ahead and open it in Event Viewer by double-clicking on the file.
+
+We can immediately see that 17 events were logged in total. As was the case with Sysmon, the first two entries are artifacts from clearing the logs immediately prior to running our attack. Thus in total our attack resulted in 15 log entries. 
 
 
+NOTE: Once again, as was the case above, am unsure whether I actually ran the cmd drop so have to redo and double-check.
 
+SO again let's first look at everything on a high-level to see what patterns we can identify, a few things immediately stand out.
 
+{{< figure src="/img/image089.png" title="" class="custom-figure" >}}
 
+First, we can see that all the entries are assigned the lowest warning level (`Verbose`) with a single expection that is categorized as a `Warning`. Let's make a note to take scrutinise this when we get to that entry.
 
+NOTE TO SELF: The times between sysmon and powershell do not match so we def have to redo both and capture times at same time. in fact need to redo thing entirely according to instructions layed out here so we can be sure everything is sync'ed in terms of date time etc. 
 
+The enxt obvious thing we can see is that every single event ID is the exact same - `4104`. This may seem strange but is actually expected - 
+
+PowerShell script block logging is indeed associated with Event ID 4104 in Windows systems. This event ID is specific to script block logging and records the execution of PowerShell commands or scripts.
+
+PowerShell event ID 4104 is tied to the "ScriptBlockLogging" feature. This feature logs any script block (code that's enclosed in curly braces {}) that gets processed by PowerShell, whether the script block is executed, or merely evaluated or parsed.
+
+Each time PowerShell encounters a script block, event ID 4104 gets logged. This can include entire scripts, single commands, or any expressions within a script. This level of logging can generate a large number of events because PowerShell is often used by various system services and applications. In the context of cybersecurity, it is especially valuable because it records the actual content of the scripts being run, which can be crucial for investigations or threat hunting.
+
+For instance, if an attacker uses PowerShell to perform malicious activities, ScriptBlockLogging will record the commands they used. This can aid in determining what the attacker did, how they did it, and the potential impact of their actions. However, please note that PowerShell logging should be part of a broader security strategy, as sophisticated attackers might try to bypass or disable it.
+
+And then one final observation: look at the date and time stamps. Do you notice anything strange? It seems to me that most, if not all the entries, come in pairs - each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there.
+
+Ok great so let's just go ahead and jump right in, again as the first two entries are "reset artifacts" let's skip them for now and jump straight into the third entry. 
 
 
 
@@ -1510,7 +1643,13 @@ then ffwd to the end, the final event log is process creation of rundll32.exe
 let's see here if imphash has any hits?
 no result for MD5 on VT, but yes on joesandbox
 
-====================
+***
+
+# TRAFFIC ANALYSIS
+
+- Let's first rerun attack (remember to drop cmd etc)
+- redo pcap with just that
+- then let's do threat hunting level 1, other vid courses teaching about c2 in traffic logs etc.
 
 
 
