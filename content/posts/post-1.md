@@ -1211,30 +1211,34 @@ That being the case let's move on to the log analysis. For this we'll once again
 
 ***
 
-# 8. POST-MORTEM FORENSICS: LOGS
-# Introduction
+# 8. POST-MORTEM FORENSICS: LOG ANALYSIS
+# 8.1 INTRODUCTION
 
-Time for us to get into some LOGGING...
+So the time has come for us to get into some LOGGING...
 
 {{< figure src="/img/lumberjack.gif" title="" class="custom-figure" >}}
 
-Now typically we think of logging as belonging more to the realm of the SOC than a threat hunter. That's because, at least in the way that modern logging practices operate, logging is not seen as something approachable by a human operator. Why? Well because of the ***insane*** amount of data involved. It's not unusual for enterprises to generate millions of log events in their SIEM *daily*, and thus it's completly infeasible for a threat hunter to start poking around looking for bread crumbs.
+Now typically we might think of logging as belonging more to the realm of the SOC than a threat hunter. That's because, at least in the way that modern logging practices operate, logging is not seen as something directly approachable by a human operator. Why? Well because of the ***insane*** amount of data involved. It's not unusual for enterprises to generate millions of log events in their SIEM *daily*, and thus it's completly infeasible for a threat hunter to start poking around looking for bread crumbs. We think of logging has something that we feed into the SIEM, and then wait for an alert to act on - i.e. the work of a SOC. 
 
-But there's two fallacies at play in this viewpoint.
+But, depending on context, there's two potential fallacies at play in this viewpoint.
 
-First, as I pointed out in the ["Three Modes of Threat Hunting article"](https://www.faanross.com/posts/three_modes/), log analysis plays an important role in threat hunting, but not in the initial phase. When are operating only with presumption but not yet any concrete suspicion, then we are way better off poking around in the memory or traffic, looking at connections, processes, services etc so as to find our initial sign that something is off. 
+First, as I emphasized in my article ["Three Modes of Threat Hunting article"](https://www.faanross.com/posts/three_modes/), though log analysis is indeed an unsuitable choice for the initial phase of a threat hunt, it can be an important emergent line of enquiry once we're investigating a lead. In the initial phase we operate only with presumption, but not yet any concrete suspicion. We are looking for that first indication of something being off, and as such if we were to consider the logs at that point we'd need to consider *all* logs. And logs is never something we approach manually without a strong set of selective criteria. 
 
-But, as is the case here at this point in our simulation, once we are looking for evidence related to a specific event, then log analysis can be very useful to help build our case. We are no longer considering the entire body of log events as potentially suspicious, rather based on information we already gathered we can whittle it down dramatically and only focus on events potentially related to the suspicious event. Thus we consider log analysis to be a secondary analysis - it only comes into play once we have information to limit the scope of what we will investigate.
+So, as we are simulating here, once we have found some evidence that we are interested in we can use that to dramatically reduce the total amount of log events we consider. We can use specific processes, actions, event IDs, dates, times etc derived from our initial set of evidence so that we no longer have to consider the entire body of log events as potentially suspicious, rather based on information we already gathered we can whittle it down dramatically and only focus on events potentially related to the suspicious event. 
 
-Further, the specific logs we are interested in are also typically a subset of the total potential logs. Modern vendors and software pride themselves on a "more is better" type of approach - it seeks not to be discriminate with what it logs, instead there is this idea that everything that possible can be logged should be logged. 
+And the second fallacy related to "logs being a SOC-thing" relates to what logs we consider to even begin with. In other words, the specific logs we are interested in, even before we apply selective criteria as explained above, is typically a subset of all potential logs. It seems that, for whatever reason, the industry has settled on a "more is always better" approach when it comes to logging. There is this underlying idea that the more endpoints and the more logs the better security becomes. And so, for good or **bad**, this is what SOCs engage with each day - a literal avalance of logs. 
 
-However when it comes to Threat Hunting and Log Analysis, I view the approach more a kin to the Pareto Principle. The Pareto Principle, also known as the "80-20 rule", states that in most systems 80% of outputs result from 20% of inputs. Applied here, what I mean is that 20% of the logs will account for 80% of potential adverse security events. But in honesty, the proportion here is likely even more extreme, my best esimateion is taht about 5% of logs will report about 95% of potential adverse security events.
+{{< figure src="/img/sisy.gif" title="" class="custom-figure" >}}
+
+However when it comes to Threat Hunting and Log Analysis, I view the approach more a kin to the Pareto Principle. The Pareto Principle, also known as the "80-20 rule", states that in most systems 80% of outputs result from 20% of inputs. Contextually applied here, what I mean is that 20% of the logs will account for 80% of potential adverse security events. But in honesty, the proportion here is likely even more extreme - this is a complete guess, but I'd say it's more like ***5% of logs will potentially account for 95% of adverse security events***.
 
 So, instead of focusing on 100% of the logs to potentiually uncover 100% of the adverse security events, we focus on 5% of the logs to potentially uncover 95% of the adverse security events. What exactly constitutes that 5% will become progressively more nuanced as we continue on our journey in future courses, but for now it simply means that we focus on Sysmon and PowerShell ScriptBlock logs and ignore WEL completely. 
 
-So let's go ahead and have a look at them... 
+So let's go ahead and have a look at each of them in turn starting with Sysmon.  
 
+# 8.2 SYSMON
 
+CONTINUE HERE TK XXX
 
 
 
@@ -1510,8 +1514,10 @@ Enabling PowerShell script block logging is a crucial step in fortifying the sec
 
 In Section X.X we exported the PowerShell ScriptBlock logs to dekstop as `xxxx.evtx` - let's go ahead and open it in Event Viewer by double-clicking on the file.
 
-We can immediately see that 17 events were logged in total. As was the case with Sysmon, the first two entries are artifacts from clearing the logs immediately prior to running our attack. Thus in total our attack resulted in 15 log entries. 
+We can immediately see that 15 events were logged in total. As was the case with Sysmon, the first two entries are artifacts from clearing the logs immediately prior to running our attack. Thus in total our attack resulted in 13 log entries. 
 
+
+NOTE: There are actually 17. The first two are from the reset, next two are from me querying amount of log entries - so let's ignore those completely here, we will rerun without doing it. 
 
 NOTE: Once again, as was the case above, am unsure whether I actually ran the cmd drop so have to redo and double-check.
 
@@ -1533,9 +1539,104 @@ Each time PowerShell encounters a script block, event ID 4104 gets logged. This 
 
 For instance, if an attacker uses PowerShell to perform malicious activities, ScriptBlockLogging will record the commands they used. This can aid in determining what the attacker did, how they did it, and the potential impact of their actions. However, please note that PowerShell logging should be part of a broader security strategy, as sophisticated attackers might try to bypass or disable it.
 
-And then one final observation: look at the date and time stamps. Do you notice anything strange? It seems to me that most, if not all the entries, come in pairs - each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there.
+And then one final observation: look at the date and time stamps. Do you notice anything strange? It seems to me that almost all the entries (sans a single exception) come in pairs - each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there.
 
 Ok great so let's just go ahead and jump right in, again as the first two entries are "reset artifacts" let's skip them for now and jump straight into the third entry. 
+
+{{< figure src="/img/image090.png" title="" class="custom-figure" >}}
+
+We can immediately see the log related to our PowerShell command that went to download the injection script from the web server and injected it into memory. 
+
+Right after this we have the only entry with an assigned level of `Warning` (the highest in this specific sample), so let's see what the deal is.
+
+{{< figure src="/img/image091.png" title="" class="custom-figure" >}}
+
+Note the entire log entry is too large to reproduce here in its entirety, but it should immediately become clear what we're looking at here - the actual contents of the script we just downloaded and injected into memory!
+
+So when we ran the preceding IEX command, it downloaded the script from the provided URL and injected it directly in memory. Since PowerShell ScriptBlock logging is enabled, the entire content of the downloaded script is logged as a separate entry.
+
+This is awesome for us since, again, if this was an actual attack it means we'd be able to see the actual script content that was downloaded and injected into memory. This thus defintiely represent an incredibly valuable entry for us. 
+
+Immediately after this we can see another log entry with the same time stamp that simply says `prompt`.
+
+{{< figure src="/img/image092.png" title="" class="custom-figure" >}}
+
+Remember when we looked at everything at the start and we noticed how all the entries come in pairs? Well, this is what we are looking at here. I won't repeat this for the remainder of this analysis, but you'll notice if you go through it by yourself that every single PowerShell ScriptBlock log entry will be followed by another like this - `prompt`.
+
+So what's going on here? Well, this is perfectly normal and expected - you'll likely see it replicated for nearly every single PowerShell ScriptBlock entry you'll investigate in the future. 
+
+
+
+
+
+When PowerShell logs a script block, it logs the entire block of code that's about to be executed. A script block could be a full script, a single command, or even just a portion of a line of code.
+
+In the case of the prompt, what you're seeing is PowerShell logging the execution of the prompt function. PowerShell uses a customizable function for generating the command-line prompt. Every time you see a new prompt, that's because this function has been executed. 
+
+The default prompt function is pretty simple - it just outputs the current path followed by a '> '. But you can customize it to display all sorts of information. 
+
+As part of the logging process, PowerShell logs the execution of the prompt function along with everything else. That's why you see a log entry containing 'prompt' every time you run a command - it's the log entry for the prompt that's displayed after your command finishes.
+
+So, the pair of logs you're seeing for each command is because one log is for the command you ran, and the other log is for the prompt function that runs after your command finishes.
+
+
+
+
+ok so when i run a command, powershell executes it, and then powershell (unbeknownst to me) runs a command in the back called prompt, which then creaates the new prompt wherein i can then run another commadn?
+
+Exactly! PowerShell uses a function called `prompt` to generate the text that you see at the beginning of the line where you enter your commands. It's what creates the `PS C:\>` that you see before entering any command.
+
+This `prompt` function is actually a piece of PowerShell code that's executed after every command, which is why you see it being logged in ScriptBlock logging.
+
+While the default prompt is quite simple (usually just the current directory path followed by `>`), it's actually fully customizable. You can define your own `prompt` function in your profile script to show whatever information you find useful, such as the current time, the last exit code, or even system stats.
+
+But in the context of ScriptBlock logging, the key thing to understand is that the `prompt` function is a block of script that gets executed, and therefore it gets logged. This is why you see pairs of entries in your logs - one for the command you entered, and one for the prompt that was displayed afterwards.
+
+So moving on to the rest of the log entries we'll notice some other commands we ran. First there is the `ps` command we used to get the process ID for `rufus.exe`. However, since this is not expected to occur in an actual attack - we'd expect the script to use Windows API or perhaps WMI to enumerate PIDs - we can ignore this.
+
+We then see the log entry for the script that actually injected the malicious DLL into `rufus.exe`. 
+
+{{< figure src="/img/image093.png" title="" class="custom-figure" >}}
+
+This is then followed by two other entries with the exact same time-stamp, containing commands we did not explicilty run. However, as the time stamp is the exact same, we can assume they resulted from the command we ran (`Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll`).
+
+{{< figure src="/img/image094.png" title="" class="custom-figure" >}}
+
+So what might be happening here?
+
+This first script block (on the left) contains PowerShell code that seems to be filtering some type of assembly objects based on specific conditions. The code checks if the assembly is from the Global Assembly Cache (GAC) and if its location (path) ends with "System.dll". The script uses $_, which likely refers to a variable representing the assembly objects in a loop.
+
+This other script block (on the right) contains PowerShell code that converts an object (likely an assembly object) to a hexadecimal string representation using the 'X2' format specifier. This format specifier ensures that each byte of the object is represented as two hexadecimal characters.
+
+The subsequent entries are likely related to the process of interacting with or analyzing assemblies, possibly as part of the DLL injection procedure. The script blocks might be inspecting certain properties of assemblies to determine whether they meet specific criteria.
+
+It is important to note that the exact context and intention behind these script blocks depend on the full code and script flow. Since the script blocks were not explicitly executed by you but occurred simultaneously with the initial command, it's likely that the script you ran invoked or interacted with other PowerShell cmdlets or functions, leading to these additional script block logs. To fully understand the implications and potential security impact, a comprehensive analysis of the entire script's functionality would be required. Additionally, correlating these script block entries with other logs and events can provide further context and insights into the actions performed by the script.
+
+ACTUALLY THERE ARE THREE LIKE THIS
+ABOEV I DESCRIBE ONE
+
+Now here describe the last which is also the last log event entry
+
+Apologies for the oversight. Let's interpret the third PowerShell script block logging entry that follows the previous two:
+
+**Event Data 3**:
+
+- `ScriptBlockText { $_.FileName.ToLower().Contains($FileName) }`
+- `ScriptBlockId <Another unique ScriptBlock ID>`
+
+This script block contains PowerShell code that involves filtering objects based on a specific condition. The script uses $_, which likely represents an object, and calls the `FileName` property of that object. The `ToLower()` method converts the filename to lowercase, and then the `Contains()` method is used to check if the filename contains the value of the variable `$FileName`.
+
+Interpretation:
+
+The third script block entry appears to be filtering objects based on whether their filenames contain a specific value stored in the `$FileName` variable. The script's purpose might be to find specific files or assemblies that match a particular pattern or name.
+
+Considering the timing of this script block log entry, it is likely that it is related to the same PowerShell script or process that was invoked by the initial command you ran, `Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll`. As with the previous script block entries, this script block might be a result of interactions or functions within the script you executed.
+
+To fully understand the significance of this script block and its potential security implications, it would be necessary to analyze the entire script, including how variables like `$FileName` are defined and used within the code. Correlating this script block entry with the other logs and events can provide a more comprehensive view of the actions performed by the script and its impact on the system's security.
+
+It's important to note that examining logs in isolation may not provide a complete understanding of the entire attack chain or threat context. In security investigations, it's crucial to consider logs from various sources and analyze them collectively to gain insights into potential security incidents and adversary activities.
+
+
 
 
 
