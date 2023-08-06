@@ -1236,131 +1236,114 @@ So, instead of focusing on 100% of the logs to potentiually uncover 100% of the 
 
 So let's go ahead and have a look at each of them in turn starting with Sysmon.  
 
-# 8.2 SYSMON
-
-CONTINUE HERE TK XXX
-
+# 8.2 A QUICK NOTE
+We will be using the same Windows VM (ie the victim) to perform the log analysis in this section. Note that this is done purely for the sake of convenience. As of my current understanding (please [tell me](mailto:faan@teonan.com) if I'm wrong), there is no simple way to interact with `.evtx` files in Linux, at least not in the GUI. *Yes, yes* I am aware it's very uncool to prefer use of a GUI, *totally* not 1337. But if you'd be so kind, please allow me a momentary expression of nuance: both the command line and GUI have their strengths and weaknesses and better to select the best based on context than to succumb to dogma. 
 
 
-# LOG ANALYSIS (SYSMON)
-# Introduction
-We will be using the same Windows system to view our event logs. Note please that this is done purely for the sake of convenience. As of my current understanding (please [tell me](mailto:faan@teonan.com) if I'm wrong), there is no simple way to interact with `.evtx` files in Linux, at least not in the GUI. Yes, yes I am aware it's very uncool to prefer using a GUI, but allow me a momentary expression of nuance: both the command line and GUI have their strengths and weaknesses and better to select the best based on context than to succumb to dogma. 
 
-So it's just simpler to use the built in `Event Viewer` in Windows to work with these files, and since I did not want to create another "non-victim" Windows VM for this one task we're going to be using the same one. But please be aware, unless there is literally no alternative you should never do this. And the reason is intuitive - you cannot be sure that any data you receive is not compromised due to the potential compromise. Performing a post-mortem analysis on a compromised system itself can potentially taint the results and compromise the integrity of the investigation. To ensure an accurate and reliable analysis, it is essential to conduct the investigation on a separate, isolated system or environment to avoid any interference or contamination from the compromised system. Please note that this same standard is not held for live analysis - how else would we find evidence of a compromise if we did not look at the actual system we expect to be compromised?
+So for now it'll just be simpler to move ahead and used the built-in `Event Viewer` in Windows to work with these files. And, since and since I did not want to create another "non-victim" Windows VM for this one task we're going to be using the same one. But please be aware, unless there is literally no alternative you should never do this in an actual threat hunting scenario.  
 
-And so with this little udnerstanding out of the way let's have a quick chat about Sysmon and how insanely awesome it is before moving on the actual analysis. 
+The reason is quite obvious - performing a post-mortem analysis on a compromised system can potentially taint the results. We have no idea how the breach might be impacting our actions and so to ensure the integrity of our data we need to perform it in a secure environment. So that cavaeat out of the way, *let's get it on* with Sysmon. 
 
-# Theory
-The reason we do this and not simply rely on the standard `Windows Event Logs` (hence forth referred to simply as `WEL`), is that WEL was clearly designed by someone who considered security unimportant. Ask most security professionals what they think of WEL and you'll probably get either a sarcastic chuckle or a couple of expletives. All to say - it sucks. REAL bad. BUt there's hope... 
+{{< figure src="/img/getiton.gif" title="" class="custom-figure" >}}
 
-Sysmon, created by the legend [Mark Russinovich](https://twitter.com/markrussinovich), takes about 5 minutes to set up and will DRAMATICALLY improve logging, specifically as it relates to security events. In case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
 
-Finally, before we begin a reminder - earlier, in Section X.X, we exported the Sysmon logs to desktop as an .evtx file.
+# 8.3 SYSMON
+# 8.3.1 INTRODUCTION
 
-Thus of course this file will only include Sysmon logged events from the moment we enabled it, to the moment we exported it. 
+So we've installed Sysmon (Section X), enabled it, captured logs with it (Section X), and then exported those logs as a `.evtx` file. But we've not really discussed why we've done any of this. Why don't we simply rely on the default `Windows Event Logs`  (hence forth referred to simply as `WEL`), why go through the additional effort of setting `Sysmon` up?
+
+Well, without pussyfooting around let me just give it to you straight - `WEL` SUCKS. REAL BAD. 
+
+{{< figure src="/img/rubbish.gif" title="" class="custom-figure" >}}
+
+In stark contrast, `Sysmon`, created by a literal living legend [Mark Russinovich](https://twitter.com/markrussinovich), takes about 5 minutes to set up and will DRAMATICALLY improve logging as it relates specifically to security events. 
+
+That's really about all you need to know at this point - WEL bad, Sysmon epic. If you wanted to learn more about Sysmon check out Section X further below. 
 
 # Log Analysis: SYSMON
 
-You should be looking at the desktop of your Windows VM at his moment. I saved the `.evtx` export we performed earlier on the desktop, let's simply double-click on it which will open it in `Event Viewer`. 
+In case it's off, switch on your Windows VM. I saved the `.evtx` export we performed earlier on the desktop, let's simply double-click on it, which will open it in `Event Viewer`. 
 
-We can immediately see there are 34 recorded events. If you recall, right before we launched the attack we actually cleared the Sysmon logs. Now what you need to know is that when we clear it, it does not actually reset to 0. Instead, there are immediately 2 event logs - both related to the event of the logs being cleared themselves. 
+We can immediately see there are 34 recorded events. If you recall, right before we launched the attack we actually cleared the Sysmon logs. So one would expect right after you clear something you start with 0, but here actually (and with many logging systems), the very act of clearing the log is immediately logged in the new log. This is done for obvious security reasons, and as a consequence we start anew with 2 log entries.
 
-This means of course that the event produced around 32 event logs. So let's start exploring these by looking at everything at a very high level.
+Given this, the entire incident we performed generated 
+
+This means of course that the event produced a maximum of 32 event logs. I say a maximum because it's likely something else could have generated a log entry - we'll find out soon enough. 
+
+Now with logs, especially a small-ish set like we have here, I always like starting off by looking at everything at a high level. Let's see if we can see any interesting trends or patterns. 
 
 {{< figure src="/img/image080.png" title="" class="custom-figure" >}}
 
 The first thing we notice is we have a number of different event IDs - `1`, `3`, `5`, `10`, `12`, `13`, and `22`.
 
-Now of course in order for us to make sense of these logs we'll have to roughly know what they do.
+Now each of these represent a specific category event. I'm not going to hamstring us by reviewing them all here now, instead if you'd like check this [awesome overview by our friends from Black Hills Infosec](https://www.blackhillsinfosec.com/a-sysmon-event-id-breakdown/). I recommend reviewing each of them briefly, but if not you'll still be able to follow along. 
 
-**Event ID 1 (Process Creation):** The process creation event logs when a process starts, and it provides data with the process, parent process, and the user and group information. It also records the process image file hash.
+So as I said, we can ignore our first two event entries since we know they are related to clearing the logs.
 
-**Event ID 3 (Network Connection):** This event logs TCP/IP connections, and it records the process that made the connection, the destination IP, hostname and port.
-
-**Event ID 5 (Process Terminated):** Logs when a process exits, providing data about the process image file.
-
-**Event ID 10 (ProcessAccess):** This event logs when a process opens another process, often indicating debugging or injection activity. It reports the source and target process, and the granted access.
-
-**Event ID 12 (Registry Event (Object Create and Delete)):** Logs when a registry object is created or deleted.
-
-**Event ID 13 (Registry Event (Value Set)):** Logs when a value is set for a Registry object, which often indicates changes to system configuration.
-
-**Event ID 22 (DNS Query):** This event logs when a process conducts a DNS query, providing information about the process and the DNS query.
-
-Ok, so let's ignore our first two entries, since we know they are related to clearing the logs.
-
-Looking at the `Date and Time` stamp we can also deduce that the next two are not part of our attack, since they are in their own time cluster.
-
-However, starting with what is for me the fifth entry (`ID 22: DNS`), we can see a time cluster in which nearly all the events happen. Let's start with this entry log. 
+Looking at the `Date and Time` stamp we can also deduce that the next two entries are probably not part of our attack. We can see that they form their own little time cluster, and then starting with the fifth entry(`ID 22: DNS`), we can see a time cluster in which nearly all the events happen. This is likely where the action is, so let's start there. 
 
 {{< figure src="/img/image081.png" title="" class="custom-figure" >}}
 
-This is a crucial entry. We can see that PowerShell is performing a DNS request for the FQDN `raw.githubusercontent.com`. This is of course a result of the command which downloaded the script from the web server before injecting it into memory.
+We can see that PowerShell is performing a DNS request for the FQDN `raw.githubusercontent.com`. This is of course a result of the command  we ran which downloaded the script from the web server before injecting it into memory.
 
-Thus is thus great to be aware of - if we for example relate this to our "real-world" example, then the moment the person opens the malicious attachment it's very likely that it will immediately connect to an evil web server and do something similar. 
+And so take a moment to think of what this means - when an attacker uses a stager, and as is mostly the case that stager then initially goes out to a web server to retrieve another script, there will be DNS footprint. Thus DNS, for this reason and others we'll discuss in the future, is always an important dimension to dig into when threat hunting C2. 
 
-Here's the rub however: if the initial script is written to reach out to a web server's FQDN (for ex. `raw.githubusercontent.com`), then a DNS query will occurr and thus we'll expect to see such an event ID. If however the script is written to reach out directly to an IP the system will bypass DNS resolution, in which case no such record will result. 
+There is a caveat here however - DNS resolution only occurs if the web server the stager reaches out to is specified as a FQDN and not an IP. In the command we ran we instructed it to reach out to `raw.githubusercontent.com` (FQDN), and not for example to `101.14.18.44`, hence DNS resolution and a Sysmon event ID 22 occurred. 
 
-Your observation about the potential for less noise when using IP addresses instead of FQDNs (Fully Qualified Domain Names) is generally accurate, especially in cases where specific DNS resolution events are being monitored closely. However, there are several reasons why a hacker might still prefer to use an FQDN:
+From the malware author's POV, there are pro's and cons to taking either approach. I don't have any data to back this up, but if I had to venture a guess I'd say specifiying the server using a FQDN is more common. Regardless - be aware of this. 
 
-1. **Dynamic IP Addresses**: Servers on the internet frequently have dynamic IP addresses, meaning the IP address can change periodically. If a hacker uses an IP address in their stager, and the server's IP changes, the stager will no longer be able to reach the server. Using an FQDN allows the hacker to ensure their stager can always reach the server, as the DNS system will handle translating the FQDN to the current IP address.
+The good news though is whether or not the author specified the server using FQDN or IP, we would see the following entry (`ID 3`) regardless. 
 
-2. **Obfuscation and Evasion**: In some cases, an IP address may be blacklisted or associated with known malicious activity, which can lead to the connection being blocked or flagged. FQDNs can provide an additional layer of obfuscation, as they may not be directly associated with the IP address. In addition, some advanced threats use Domain Generation Algorithms (DGAs) to dynamically generate a large number of domain names and connect to a few for C2 communication. This makes it harder for security teams to block or even anticipate the domains being used.
+{{< figure src="/img/image081.png" title="" class="custom-figure" >}}
 
-3. **Content Delivery Networks (CDNs) and Cloud Services**: Many servers are hosted on CDNs or cloud services that use multiple IP addresses for load balancing and redundancy. An FQDN is needed to take advantage of these services, as an IP address wouldn't necessarily connect to the correct server.
+This entry is a record of the actual network connection between the victim and the server. This is great for us since we can always expect to find such a log entry, and it will provide us with both the IP as well as hostname of the server where the script was pulled from. 
 
-4. **SSL/TLS and Certificate Validation**: If the malicious payload is being served over an HTTPS connection, a certificate for the domain will be required for the connection to be considered secure and not raise flags. Certificates are usually issued for FQDNs, not IP addresses. 
+Additionally, we can see here that `powershell.exe` is the program responsible for creating the connection. Now if we imagine this was an actual event where a user unwittingly opened a malicious Word document (`.docx`), you might guess that we'd see `winword.exe` instead of `powershell.exe`. But not so - since `winword.exe` cannot itself initiate a socket connection we would indeed most likely see `powershell.exe` (or something else) responsible for the network connection. 
 
-In conclusion, while using an IP address might reduce noise in terms of DNS resolution logs, it can introduce other challenges and risks. The choice between using an FQDN and an IP address is usually a strategic decision made by the attacker, weighing the potential benefits against the risks.
-
-Right after this we see an event ID 3, a record of the actual connection to the server to download the script. In this case of course, whether the script has been written with the FQDN or IP as the target to download the script it would not matter - this record (ID 3) should always be present.
-
-We see here of course also that `powershell.exe` is the program responsible for creating the connection. Now if we imagine this was an actual event where a user unwittingly opened a malicious Word document (.docx) we would actually also expect to see `powershell.exe`. Most stagers operating on this paradigm will actually spawn `powershell.exe` to initiate the network connection since `winword.exe` cannot create a socket connection itself. 
-
-Note that pwoershell in and of itself a bit suspect, BUT IN CONTEXT ("regular user)...
-Under normal circumstances, most network connections on a user's machine will be made by applications like web browsers, email clients, media players, and so on. These will make up the bulk of the connections you see in a network monitoring tool or Sysmon logs.
-
-While PowerShell is a powerful tool, it's typically not used by ordinary users, and it's also not commonly used by the system itself for routine tasks or updates. You are right, if you see a large number of PowerShell network connections (Sysmon event ID 3 with powershell.exe as the process), especially in a context where PowerShell isn't normally used, it could be a sign of suspicious activity.
-
-However, there are exceptions. In an enterprise environment, system administrators might use PowerShell for legitimate tasks like software deployment, running maintenance scripts, or other administrative tasks, which can result in network connections from PowerShell. Therefore, it's important to consider the context when interpreting these events.
-
-In conclusion, while PowerShell network connections can be a sign of suspicious activity, they are not inherently suspicious and can occur as part of normal, legitimate operations, especially in an enterprise environment. As always, the key is to understand your baseline, know what normal looks like for your environment, and investigate anything that deviates from that.
+Further, on a "regular" user's station we'd mostly expect to see outside network connections created by the browser, email client, and a variety of Windows processes (backend communcation with MS). We would not however, in most situations, expect to see `powershell.exe` creating them. Note there are *many* potential exception to this, and of course if the system belongs to an administrator etc then this would be quite normal. 
 
 NOTE TO MYSELF: It seems to me I opened rufus (perhaps two copies), since there is immediately a 1 (create), 5 (terminate), and then again a 1. So for now I will ignore the first pair of 1 and 5, as if they do not exist. However absolutely have to verify this!
 
-
-We can ignore the next 2 entries (`smartscreen.exe` ID 1, `consent.exe` ID 1), but immediately after we can see the process creation for `rufus.exe`. As I mentioned earlier - since an actual attacker will almost certainly inject into an existing process this log is pragmatically irrelevant. 
+We can ignore the next 2 entries (`smartscreen.exe` `ID 1`, `consent.exe` `ID 1`), but immediately after we can see the process creation for `rufus.exe`. As I mentioned earlier - since an actual attacker will almost certainly inject into an existing process this log is pragmatically irrelevant. 
 
 We then again encounter a few Windows services we can ignore for now:
-- vdsldr.exe ID 1, 
-- svchost.exe ID 10,
-- vds.exe ID 1
+- vdsldr.exe `ID 1`, 
+- svchost.exe `ID 10`,
+- vds.exe `ID 1`
 
-We then encounter a series of three **very interesting** logs revealing an inner working of the malware we were up until this point not aware of. I find this very cool since we are literally discovering inner workings of the behaviour even us as the attacker were not even aware of at this point.
+We then encounter a series of three **very interesting** logs - `ID 13`, `ID 12`, `ID 13`. These are really awesome since, as you'll soon see, they give us insight into an inner workings of the malware that even us, as "the attacker", were not aware of.
+
+There's quite a lot to unpack here and it will seem confusing at times, but just stick along till the end and hopefully everything will become clear. 
+
+The first of the three entries (`Event ID 3`) is shown below. 
 
 {{< figure src="/img/image082.png" title="" class="custom-figure" >}}
 
-Based on the log entry we can see that `rufus.exe` modified a Windows registry key, specifally: `HKU\S-1-5-21-3300832437-63900680-1611145449-1001\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{F1BFD3AE-2A88-41A2-989E-39817E08E286}Machine\Software\Policies\Microsoft\Windows Defender\DisableAntiSpyware`.
+So we immediately see that `rufus.exe`, a program that supposedly is used for the sole purpose of creating bootable USB drives, has modified a Windows registry key. This is obvs quite strange, even more so if we look at the name of the actual key we can see it ends with `DisableAntiSpyware`. 
 
-Also, the log entry is telling us that the registry key value has set the value of `DisableAntiSpyware` to 1 (`DWORD (0x00000001)`), which in effect disables the Windows Defender's antispyware functionality. This is a common behavior of malware to prevent detection or removal.
+Further, we can see the value has been set to 1 (`DWORD (0x00000001)`). Now a value of 1 actually means 'enable', but since the feature is `DisableAntiSpyware`, in effect by enabling the disabling function it becomes disabled. 
 
-Finally we can also see that it even us the rule name `T1089`, which corresponds with the Tamper Protection Bypass technique.
+So in effect the malware is turning off a feature of MS Defender's antispyware functionality, which is common behaviour for malware - pretty normal stuff. So from what we know about malware and how we would expect it to behave all of this makes perfect sense. But then, oh boy, the next two entries is where things get a little strange. 
 
-In general, DLL injection and the subsequent evasion or disabling of security solutions is a common behavior in many types of malware - it allows the malicious code to execute and persist undetected on the compromised system. 
-
-So from what we know about malware and how we would expect it to behave all of this makes perfect sense. But then, oh boy, the next two entries is where things get a little strange. 
+The next log entry (`ID 12`) which indicates that a deletion event has occurred on a registry key.
 
 {{< figure src="/img/image083.png" title="" class="custom-figure" >}}
 
-As we can see this time we have event `ID 12`, and while still related to the registry reveals something different. We can see here that the log entry indicates that a deletion event on a registry key has occurred, executed by `svchost.exe`. The registry key in question is `HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware`.
+We can see the same registry key as above (`DisableAntiSpyware`), and it seems to indicate that `svchost.exe` has deleted it. The thing thas is strange about this deletion is, in a Windows system, when a registry value is deleted, the associated setting typically reverts back to its default behavior. Meaning that here when the `DisableAntiSpyware` registry value is deleted, it would likely result in re-enabling the anti-spyware functionality of Windows Defender. 
 
-Just as the prior log, the rule name `T1089` indicates the Tamper Protection Bypass technique. It seems that here, after the malware disabled the antispyware functionality of Windows Defender (as seen in the previous log), it then deleted the value of the same key.
+{{< figure src="/img/wtf.gif" title="" class="custom-figure" >}}
 
-The thing is about this deletion is, in a Windows system, when a registry value is deleted, the associated setting typically reverts back to its default behavior. In this case, when the `DisableAntiSpyware` registry value is deleted, it would likely result in re-enabling the anti-spyware functionality of Windows Defender. This would not be favorable to the malware as it could lead to its detection and removal.
+So this part is obviously confusing - we'll circle back to it soon.
 
-So this part is confusing - we'll circle back to it soon.
+Another thing to unpack is the fact that, unlike the previous entry, this action is not performed by the originally compromised process (`rufus.exe`), instead by `svchost.exe`. In case you were not aware this is a legitimate Windows process, and actually it being co-opted for nefarious purposes by malware is quite common. 
 
-Something else that is strange but not that unusual is that we can see these actions are no longer performed by the originally compromised process (`rufus.exe`), but instead by svchost.exem exe, a legitimate Windows process used to host multiple Windows services. Though we cannot be certain, this could almost certainly be the malicious DLL hiding its actions by using legitimate system processes. Hackers LOVE abusing `svchost.exe` for a slew of reasons - its ubiquity, anonymity, persistence, stealth and potential for gaining elevated privs. 
+
+
+Something else that is strange but not that unusual is that we can see these actions are no longer 
+
+
+ but instead by `svchost.exe` a legitimate Windows process used to host multiple Windows services. Though we cannot be certain, this could almost certainly be the malicious DLL hiding its actions by using legitimate system processes. Hackers LOVE abusing `svchost.exe` for a slew of reasons - its ubiquity, anonymity, persistence, stealth and potential for gaining elevated privs. 
 
 And indeed we also see that here  - the event was carried out with elevated privileges - the user context in which this action is executed is `NT AUTHORITY\SYSTEM`, which is a high-privileged system account.
 
@@ -1640,6 +1623,8 @@ It's important to note that examining logs in isolation may not provide a comple
 
 
 
+# REFERENCES (this will be for both)
+In case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
 
 
 
