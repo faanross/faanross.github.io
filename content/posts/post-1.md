@@ -1243,7 +1243,11 @@ We will be using the same Windows VM (ie the victim) to perform the log analysis
 
 So for now it'll just be simpler to move ahead and used the built-in `Event Viewer` in Windows to work with these files. And, since and since I did not want to create another "non-victim" Windows VM for this one task we're going to be using the same one. But please be aware, unless there is literally no alternative you should never do this in an actual threat hunting scenario.  
 
-The reason is quite obvious - performing a post-mortem analysis on a compromised system can potentially taint the results. We have no idea how the breach might be impacting our actions and so to ensure the integrity of our data we need to perform it in a secure environment. So that cavaeat out of the way, *let's get it on* with Sysmon. 
+The reason is quite obvious - performing a post-mortem analysis on a compromised system can potentially taint the results. We have no idea how the breach might be impacting our actions and so to ensure the integrity of our data we need to perform it in a secure environment. 
+
+This also why for example certain antimalware software vendors provide versions of their products that can run directly from a bootable CD or USB drive - to ensure a scan that is unaffected by the resident malware. 
+
+So that cavaeat out of the way, *let's get it on* with Sysmon. 
 
 {{< figure src="/img/getiton.gif" title="" class="custom-figure" >}}
 
@@ -1377,7 +1381,7 @@ And then finally we see two events with `ID 1`, the first is another crucial pie
 
 Here we can see the Windows Remote Assistance COM Server executable (`raserver.exe`) has been launched. This tool is used for remote assistance, which allows someone to connect to this machine remotely to assist with technical issues.
 
-The flag `/offerraupdate` used in the CommandLine for `raserver.exe` suggests that it was started to accept unsolicited Remote Assistance invitations. This allows remote users to connect without needing an invitation. This Remote Assistance tool can provide an attacker with a remote interactive command-line or GUI access, similar to Remote Desktop, which can be used to interact with the system and potentially exfiltrate data. Additionally, this is of course another method that can be used to ensure persistence - creating alternative methods of reconnecting to the system. 
+The flag `/offerraupdate` used in the CommandLine for `raserver.exe` suggests that it was started to accept unsolicited Remote Assistance invitations. This allows remote users to connect without needing an invitation. This Remote Assistance tool can provide an attacker with a remote interactive command-line or GUI access, similar to Remote Desktop, which can be used to interact with the system and potentially exfiltrate data. 
 
 And then in the last event log we can see our old friend `rundll32.exe` - the suspicious process we first encountered way back when we looked at unusual network connections. This was of course what set us down this path of threat hunting in the first place. 
 
@@ -1416,24 +1420,15 @@ The next obvious thing we can see is that every single event ID is the exact sam
 
 And then one final observation: look at the date and time stamps. Do you notice anything peculiar? 
 
+It seems to me that almost all the entries (for but a single exception) come in pairs - that is each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there. Ok great so now that we've spotted some interesting patterns let's just go ahead and jump right in.
 
-CONTINUE HERE TK xxx
+Note that as was the case with Sysmon, the first two entries are artifacts created when we cleared the log. We can once again skip these. 
 
-
-
-
-
-
-
-
-
-It seems to me that almost all the entries (sans a single exception) come in pairs - each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there.
-
-Ok great so let's just go ahead and jump right in, again as the first two entries are "reset artifacts" let's skip them for now and jump straight into the third entry. 
+In the third entry then we can immediately see the log related to our PowerShell command that went to download the injection script from the web server and injected it into memory. 
 
 {{< figure src="/img/image090.png" title="" class="custom-figure" >}}
 
-We can immediately see the log related to our PowerShell command that went to download the injection script from the web server and injected it into memory. 
+This is worth taking note of since in a "real-world" attack scenario we would expect something similar to run from the stager. 
 
 Right after this we have the only entry with an assigned level of `Warning` (the highest in this specific sample), so let's see what the deal is.
 
@@ -1441,115 +1436,53 @@ Right after this we have the only entry with an assigned level of `Warning` (the
 
 Note the entire log entry is too large to reproduce here in its entirety, but it should immediately become clear what we're looking at here - the actual contents of the script we just downloaded and injected into memory!
 
-So when we ran the preceding IEX command, it downloaded the script from the provided URL and injected it directly in memory. Since PowerShell ScriptBlock logging is enabled, the entire content of the downloaded script is logged as a separate entry.
-
-This is awesome for us since, again, if this was an actual attack it means we'd be able to see the actual script content that was downloaded and injected into memory. This thus defintiely represent an incredibly valuable entry for us. 
+So when we ran the preceding IEX command, it downloaded the script from the provided URL and injected it directly in memory. Since PowerShell ScriptBlock logging is enabled, the entire content of the downloaded script is logged as a separate entry. This is awesome for us since, again, if this was an actual attack it means we'd be able to see the actual script content that was downloaded and injected into memory. 
 
 Immediately after this we can see another log entry with the same time stamp that simply says `prompt`.
 
 {{< figure src="/img/image092.png" title="" class="custom-figure" >}}
 
-Remember when we looked at everything at the start and we noticed how all the entries come in pairs? Well, this is what we are looking at here. I won't repeat this for the remainder of this analysis, but you'll notice if you go through it by yourself that every single PowerShell ScriptBlock log entry will be followed by another like this - `prompt`.
+Remember when we looked at everything at the start and we noticed how all the entries come in pairs? Well, this is what we are looking at here - the second half of the pair. I won't repeat this for the remainder of this analysis, but you'll notice if you go through it by yourself that every single PowerShell ScriptBlock log entry will be followed by another like this that simply says `prompt`.
 
-So what's going on here? Well, this is perfectly normal and expected - you'll likely see it replicated for nearly every single PowerShell ScriptBlock entry you'll investigate in the future. 
+So what's going on here? Well whenever you interact with PowerShell, it actually performs a magical sleigt-of-hand. Think of when you yourself have a PowerShell terminal open - you see the prompt, you run a command, it executes, and then once again you see the prompt, ready for you to enter the subsequent command.
 
+IMAGE HERE OF WHAT YOU MEAN
 
+So it seems to us as the observer that once the command we ran is complete PowerShell just magically drops back into the prompt, as if it is the default state to which PowerShell just returns to automatically each time. But this is actually not so. When we run a command PowerShell executes it and then, unbeknownst to us, it runs another function in the background called `prompt`. It's that what creates the `PS C:\>` that you see before entering any command.
 
+So this is perfectly normal and expect to always see it - for every PowerShell command that runs, it will be followed by a `prompt` log. 
 
+So moving on to the rest of the log entries we'll notice some other commands we ran. First there is the `ps` command we used to get the process ID for `rufus.exe`. However, since as I mentioned before this is not expected to occur in an actual attack we can ignore this.
 
-When PowerShell logs a script block, it logs the entire block of code that's about to be executed. A script block could be a full script, a single command, or even just a portion of a line of code.
-
-In the case of the prompt, what you're seeing is PowerShell logging the execution of the prompt function. PowerShell uses a customizable function for generating the command-line prompt. Every time you see a new prompt, that's because this function has been executed. 
-
-The default prompt function is pretty simple - it just outputs the current path followed by a '> '. But you can customize it to display all sorts of information. 
-
-As part of the logging process, PowerShell logs the execution of the prompt function along with everything else. That's why you see a log entry containing 'prompt' every time you run a command - it's the log entry for the prompt that's displayed after your command finishes.
-
-So, the pair of logs you're seeing for each command is because one log is for the command you ran, and the other log is for the prompt function that runs after your command finishes.
-
-
-
-
-ok so when i run a command, powershell executes it, and then powershell (unbeknownst to me) runs a command in the back called prompt, which then creaates the new prompt wherein i can then run another commadn?
-
-Exactly! PowerShell uses a function called `prompt` to generate the text that you see at the beginning of the line where you enter your commands. It's what creates the `PS C:\>` that you see before entering any command.
-
-This `prompt` function is actually a piece of PowerShell code that's executed after every command, which is why you see it being logged in ScriptBlock logging.
-
-While the default prompt is quite simple (usually just the current directory path followed by `>`), it's actually fully customizable. You can define your own `prompt` function in your profile script to show whatever information you find useful, such as the current time, the last exit code, or even system stats.
-
-But in the context of ScriptBlock logging, the key thing to understand is that the `prompt` function is a block of script that gets executed, and therefore it gets logged. This is why you see pairs of entries in your logs - one for the command you entered, and one for the prompt that was displayed afterwards.
-
-So moving on to the rest of the log entries we'll notice some other commands we ran. First there is the `ps` command we used to get the process ID for `rufus.exe`. However, since this is not expected to occur in an actual attack - we'd expect the script to use Windows API or perhaps WMI to enumerate PIDs - we can ignore this.
-
-We then see the log entry for the script that actually injected the malicious DLL into `rufus.exe`. 
+We then see the log entry for the script that actually injected the malicious DLL into `rufus.exe`, again something we would expect to see in an actual attack. 
 
 {{< figure src="/img/image093.png" title="" class="custom-figure" >}}
 
-This is then followed by two other entries with the exact same time-stamp, containing commands we did not explicilty run. However, as the time stamp is the exact same, we can assume they resulted from the command we ran (`Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll`).
+This is then followed by two other entries with the exact same time-stamp, containing commands we did not explicitly run. However, as the time stamp is the exact same, we can assume they resulted from the command we ran (`Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll`).
 
 {{< figure src="/img/image094.png" title="" class="custom-figure" >}}
 
-So what might be happening here?
+So what might be happening here? There entries are likely related to the process of interacting with or analyzing assemblies, possibly as part of the DLL injection procedure. My best guess is that the script blocks might be inspecting certain properties of assemblies to determine whether they meet specific criteria. As was the case before, this is not really a rabbit hole that will offer much value for us here and now, so let's move ahead. 
 
-This first script block (on the left) contains PowerShell code that seems to be filtering some type of assembly objects based on specific conditions. The code checks if the assembly is from the Global Assembly Cache (GAC) and if its location (path) ends with "System.dll". The script uses $_, which likely refers to a variable representing the assembly objects in a loop.
+The final entry is more of the same, so for now that's that. Let's jump into the `Closing THoughts` where we'll zoom out and review exactly what we learned with our log analysis.  
 
-This other script block (on the right) contains PowerShell code that converts an object (likely an assembly object) to a hexadecimal string representation using the 'X2' format specifier. This format specifier ensures that each byte of the object is represented as two hexadecimal characters.
+# CLOSING THOUGHTS
 
-The subsequent entries are likely related to the process of interacting with or analyzing assemblies, possibly as part of the DLL injection procedure. The script blocks might be inspecting certain properties of assemblies to determine whether they meet specific criteria.
+So here's a quick recap of everything we've learned in our investigation thus far.
 
-It is important to note that the exact context and intention behind these script blocks depend on the full code and script flow. Since the script blocks were not explicitly executed by you but occurred simultaneously with the initial command, it's likely that the script you ran invoked or interacted with other PowerShell cmdlets or functions, leading to these additional script block logs. To fully understand the implications and potential security impact, a comprehensive analysis of the entire script's functionality would be required. Additionally, correlating these script block entries with other logs and events can provide further context and insights into the actions performed by the script.
-
-ACTUALLY THERE ARE THREE LIKE THIS
-ABOEV I DESCRIBE ONE
-
-Now here describe the last which is also the last log event entry
-
-Apologies for the oversight. Let's interpret the third PowerShell script block logging entry that follows the previous two:
-
-**Event Data 3**:
-
-- `ScriptBlockText { $_.FileName.ToLower().Contains($FileName) }`
-- `ScriptBlockId <Another unique ScriptBlock ID>`
-
-This script block contains PowerShell code that involves filtering objects based on a specific condition. The script uses $_, which likely represents an object, and calls the `FileName` property of that object. The `ToLower()` method converts the filename to lowercase, and then the `Contains()` method is used to check if the filename contains the value of the variable `$FileName`.
-
-Interpretation:
-
-The third script block entry appears to be filtering objects based on whether their filenames contain a specific value stored in the `$FileName` variable. The script's purpose might be to find specific files or assemblies that match a particular pattern or name.
-
-Considering the timing of this script block log entry, it is likely that it is related to the same PowerShell script or process that was invoked by the initial command you ran, `Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll`. As with the previous script block entries, this script block might be a result of interactions or functions within the script you executed.
-
-To fully understand the significance of this script block and its potential security implications, it would be necessary to analyze the entire script, including how variables like `$FileName` are defined and used within the code. Correlating this script block entry with the other logs and events can provide a more comprehensive view of the actions performed by the script and its impact on the system's security.
-
-It's important to note that examining logs in isolation may not provide a complete understanding of the entire attack chain or threat context. In security investigations, it's crucial to consider logs from various sources and analyze them collectively to gain insights into potential security incidents and adversary activities.
+In our live analysis using native Windows tools we learned that:
+- there was an outbound network connection mediated by `rundll32.exe`
+- we 
 
 
 
+- the main point here is really to lay out:
 
+- what did we know when we arrived here based on memory analysis?
+- what did we then learn from Sysmon.
+- what did we then leanr from PowerShell
 
-# REFERENCES (this will be for both)
-In case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Closing Remarks
+Remember redundancy is good - like many eyewitness accounts, each helps to strengthen the convicion of our case. 
 
 Based on how we would expect an actual attack to occur, let's look at some of the most important Sysmon logs and what we learned from them.
 
@@ -1636,7 +1569,32 @@ no result for MD5 on VT, but yes on joesandbox
 
 ***
 
+
+# REFERENCES (this will be for both)
+In case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
+
+
+
 # TRAFFIC ANALYSIS
+# Introduction
+
+traffic analyssius one of most powerful ways to do threat hunting
+but like every tool has strenghts and weaknesses
+
+our specific investaition here, analyzing ane vent that was basicalkly only the initiiaal foothold, its weakness. 
+
+
+For Traffic Analysis cIntroductyion
+LIMITATION of traffic in this scenarion
+- mention here that it's strength not really as much as others in deteceting intiail actions. Traffic is not great for finding individual actions, it's great for finding emergent patterns (time, session size etc), usually the longer period the better.
+
+Here we only simulated an initial comprmoise, we did not really maintain a long perdio (1 day +) etc, communciating with server, sharing data etc. So
+
+
+- first do the Threat Hunting Level 1 course
+- then do the Chris Benton traffic analysis
+
+
 
 - Let's first rerun attack (remember to drop cmd etc)
 - redo pcap with just that
