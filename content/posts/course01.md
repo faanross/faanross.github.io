@@ -65,13 +65,12 @@ Mistakes themselves of course represent the potential for further understanding 
 | 1.4 | VM Images |
 
 
-And that's all you need to know, so now, without any further preamble, ***LET'S GET TO IT***.
-
-{{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
-
 ***
 
 # 1. SETTING UP OUR VIRTUAL ENVIRONMENT
+
+{{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
+
 # 1.1 INTRODUCTION
 
 In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso files, then we'll install the operating systems, and finally we'll configure them.
