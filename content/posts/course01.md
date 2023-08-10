@@ -73,7 +73,7 @@ Mistakes themselves of course represent the potential for further understanding 
 
 # 1.1 INTRODUCTION
 
-In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso files, then we'll install the operating systems, and finally we'll configure them.
+In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we'll perform some configurations as well as install extra software.
 
 # 1.2 REQUIREMENTS
 
