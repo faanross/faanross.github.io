@@ -19,31 +19,25 @@ draft: false
 
 The main thing I want you to know about this course is that ***we will learn by doing***. 
 
-`(1)` We'll start off by creating + configuring our own virtual network, including systems for the victim, attacker, and analysis. 
+`(1)` We'll start off by creating + configuring our own virtual network, including systems for the victim, attacker, and analyst. 
 
-`(2)` Then, instead of using prepackaged data, we'll perform the attack ourselves. 
+`(2)` Then, instead of using prepackaged data we'll generate data by perform the attack ourselves. 
 
 `(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. 
 
 `(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
-I will interject with theory when and where necessary, as well as provide references in each associated section. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that needs not be linear - the goal is to learn as much, and have as much fun as possible. Act accordingly. 
+I will interject with `theory when and where necessary`, as well as provide `references in each associated section`. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that need not be linear - the goal is to learn, and have as much fun as possible. `Act accordingly`. 
 
 {{< figure src="/img/brentleave.gif" title="" class="custom-figure" >}}
 
-As mentioned in the opening line - this is the first course in an ongoing series I have intentionally labelled ***always-evolving***. By this I mean perpetual evolution both as it relates to our approach, as well as our setup. Our approach - the specific tools and techniques we employ - will not only diversify in upcoming courses, but indeed we'll also gain a deeper sense of mastery of all the core threat hunting tools. And we'll continue to add to our virtualized setup, meaning in each subsequent course we'll spend some time in the beginning to fine tune our network with the goal of becoming increasingly representative of real-world situations. 
+Threat Hunting is not typically seen as an "entry-level" cybersecurity discipline, probably because in a certain sense it is a layer of abstraction woven from other, more "fundamental", layers of abstraction. It is not a house built from bricks, but a neighbourhood built from houses. 
 
-All to say: I see this whole series of courses on threat hunting as a journey where you and I will learn together. As we get better, it's natural that we not only feel able to handle more complexity - but indeed we'll desire to do so. I'm going to do my best to progressively structure it in such a manner as to optimize the relationship between our skill and the challenge on offer. 
-
-But for now, since this is our first course, we'll start our journey at the very beginning.
-
-{{< figure src="/img/begins.gif" title="" class="custom-figure" >}}
-
-Threat Hunting is not typically seen as an "entry-level" cybersecurity discipline, probably because in a certain sense it is a layer of abstraction woven from other, more "fundamental", layers of abstraction. I have however `created this course specifically with the beginner in mind`. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient information so that you can follow along not only with what we are doing, but crucially, ***why we are doing it***.
+I have however `created this course specifically with the beginner in mind`. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient foundational information so that you can follow along not only with what we are doing, but crucially, ***why we are doing it***.
 
 {{< figure src="/img/karpathy.png" title="" class="custom-figure" >}}
 
-I am a huge believer in this approach to learning outlined above by the wonderful [Andrej Karpathy](https://twitter.com/karpathy). This course is built on this approach - instead of mastering every single foundational discipline that converge as Threat Hunting, we will be learning on-demand. That's to say we'll start with the final application, and then work our way back to understand the reason for their inclusion. So the fat is trimmed - we'll learn what we need, when we need to understand why we're doing what we're doing. 
+I am a huge believer in this approach to learning outlined above by the wonderful [Andrej Karpathy](https://twitter.com/karpathy). This course is built on this approach - instead of mastering every single foundational discipline that converge as Threat Hunting, we will be learning on-demand. That's to say we'll start with the final application, and then work our way back to understand how it connects to its foundational knowledge. This way the fat is trimmed - we'll learn what we need, when we need, to understand why we're doing what we're doing. 
 
 Enough with the abstractions, all this to say - `if you are beginner and you are curious about Threat Hunting then you are in the right place`. I can promise that if you venture along, by the end of our journey many so-called "advanced" topics will appear in a whole new light since you've established a connection between the concept and its actual application. 
 
@@ -56,30 +50,19 @@ Finally I do want to add that I myself am an `eternal student` and always learni
 # COURSE OUTLINE
 
 `Here's a quick overview of the entire course:` 
-| # | Header 2 | Header 3 |
-|----------|----------|----------|
-| 1 | Row1Col2 | Row1Col3 |
-| 1.2 | Row2Col2 | Row2Col3 |
+| # | ***Topic*** |
+|----------|----------|
+| 1 | `Setting Up Your Virtual Environment` | 
+| 1.1 | Introduction |
+| 1.2 | Requirements |
+| 1.3 | Hosted Hypervisor |
+| 1.4 | VM Images |
 
 
-1. **Setting up our Virtual Environment**
-    - Introduction
-3. **Performing the Attack**
-4. **Attack Review (Shenanigans!)**
-    - subsections
-5. **Live Forensics: Native Windows Tools**
-    - subsections
-6. **Live Forensics: Process Hacker 2**
-    - subsections
-7. **Post-Mortem Forensics: Memory**
-    - subsections
-8. **Post-Mortem Forensics: Log Analysis**
-    - subsections
 
-10. **Report write-up**
-    - subsections
-11. **List of all references**
-12. **Cheat Sheets**
+
+I am actually lacking a broader overview of this speciufic course 
+
 
 And that's all you need to know, so now, without any further preamble, ***LET'S GET TO IT***.
 
