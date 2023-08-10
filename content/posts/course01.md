@@ -8,7 +8,7 @@ draft: false
 ---
 
 *** 
-
+# NOTE THIS IS CURRENTLY STILL WIP, THE REASON IT'S A PUBLIC DRAFT IS LONG AND CONVOLUTED SO JUST TRUST ME. ANYHOO - DO AS YOU WISH. 
 # HELLO FRIEND, SO GLAD YOU COULD MAKE IT.
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
@@ -21,9 +21,11 @@ The main thing I want you to know about this course is that ***we will learn by 
 
 `(1)` We'll start off by creating + configuring our own virtual network, including systems for the victim, attacker, and analyst. 
 
-`(2)` Then, instead of using prepackaged data we'll generate data by perform the attack ourselves. 
+`(2)` Then, instead of using prepackaged data we'll generate data by performing the attack ourselves. We'll use the *metasploit* framework along with a *powersploit* DLL-injection script to connect back from the victim to a *meterpreter* handler. We'll then simulate a few rudimentary actions such as data exfiltration etc. 
 
-`(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. 
+`(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. We'll initially perform two rounds of live analysis - first only using Windows native tools, and then using *Process Hacker*. 
+
+
 
 `(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
@@ -37,13 +39,15 @@ I have however `created this course specifically with the beginner in mind`. Wha
 
 {{< figure src="/img/karpathy.png" title="" class="custom-figure" >}}
 
-I am a huge believer in this approach to learning outlined above by the wonderful [Andrej Karpathy](https://twitter.com/karpathy). This course is built on this approach - instead of mastering every single foundational discipline that converge as Threat Hunting, we will be learning on-demand. That's to say we'll start with the final application, and then work our way back to understand how it connects to its foundational knowledge. This way the fat is trimmed - we'll learn what we need, when we need, to understand why we're doing what we're doing. 
+I am a huge believer in this approach to learning outlined above by the wonderful [Andrej Karpathy](https://twitter.com/karpathy). This course is built on this approach - instead of mastering every single foundational discipline that converge as threat hunting, we will be learning on-demand. That's to say we'll start with the final application, and then work our way back to understand how it connects to its foundational knowledge. This way the fat is trimmed - we'll learn what we need, when we need, to understand why we're doing what we're doing. 
 
-Enough with the abstractions, all this to say - `if you are beginner and you are curious about Threat Hunting then you are in the right place`. I can promise that if you venture along, by the end of our journey many so-called "advanced" topics will appear in a whole new light since you've established a connection between the concept and its actual application. 
+All this to say - `if you are beginner and you are curious about threat hunting then you are in the right place`. I can promise that if you venture along, by the end of our journey many so-called "advanced" topics will appear in a whole new light. Since we only truly begin a journey of understanding when we go from the idea to the experience phase, we might as well start there.  
 
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
-Finally I do want to add that I myself am an `eternal student` and always learning. Creating these courses are part of my own pedagogical process, and as such it's possible, even perhaps probable, that I will make mistakes. Mistakes themselves of course represent the opportunity for further education - but only if we become aware of them. So if there's anything here you are unsure about, or simply flat-out disagree with `PLEASE` feel free to reach out and share this with me so that everyone can potentially benefit from improved understanding. You can send me a message on Twitter [here](https://twitter.com/faanross), or feel free to email me [here](mailto:moi@faanross.com).
+Finally I do want to add that I myself am an `eternal student` and always learning. As this course (hopefully) may play some role in your journey of understanding, so of course it is part of my own. As such it's *highly* likely I will make mistakes. 
+
+Mistakes themselves of course represent the potential for further understanding - but only if we become aware of them. So if there's anything here you are unsure about, or simply flat-out disagree with `PLEASE` feel free to reach out and share this with me so that everyone can potentially benefit. You can connect with me on Twitter [here](https://twitter.com/faanross), or feel free to email me [here](mailto:moi@faanross.com).
 
 ***
 
@@ -57,11 +61,6 @@ Finally I do want to add that I myself am an `eternal student` and always learni
 | 1.2 | Requirements |
 | 1.3 | Hosted Hypervisor |
 | 1.4 | VM Images |
-
-
-
-
-I am actually lacking a broader overview of this speciufic course 
 
 
 And that's all you need to know, so now, without any further preamble, ***LET'S GET TO IT***.
