@@ -10,7 +10,9 @@ draft: true
 *** 
 
 # AN OBSESSION WITH WINNING
-Let's start with some background to help us understand why Threat Hunting came to be in the first palce. ANd it all starts, in rather Charlie Sheen-esque manner, with on obsession with winning.
+Instead of plodding down some abstract-ridden definition of Threat Hunting, one you are immediately fated to forget, let's start with a story. Specifically, let's sketch the milieu in which Threat Hunting came to be - once we understand what Threat Hunting was a reaction to, in other words what problem it arose to solve, then I think 
+
+Let's start with some background to help us understand why Threat Hunting came to be in the first place. ANd it all starts, in rather Charlie Sheen-esque manner, with on obsession with winning.
 
 {{< figure src="/img/winning.gif" title="" class="custom-figure" >}}
 

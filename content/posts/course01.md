@@ -1,9 +1,9 @@
 ---
-title: "Threat Hunting Standard Dll-Injected C2 Implants (Practical Course)"
+title: "Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course)"
 date: 2023-07-12T02:01:58+05:30
 description: "In this beginner-friendly practical course we'll learn how to threat hunt standard DLL-injected C2 implants. We'll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings."
 tags: [threat_hunting, C2, dll_injection_attacks]
-author: "faan | ross"
+author: "faan|ross"
 draft: true
 ---
 
@@ -15,11 +15,17 @@ draft: true
 
 `This is the first in an ongoing + always-evolving series on threat hunting.`
 
-[NOTE: FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE]()
+<!-- [NOTE: FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE]() -->
 
 The main thing I want you to know about this course is that ***we will learn by doing***. 
 
-`(1)` We'll start off by creating + configuring our own virtual network, including systems for both the victim and attacker. `(2)` Then, instead of using prepackaged data, we'll perform the attack ourselves. `(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. `(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
+`(1)` We'll start off by creating + configuring our own virtual network, including systems for the victim, attacker, and analysis. 
+
+`(2)` Then, instead of using prepackaged data, we'll perform the attack ourselves. 
+
+`(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. 
+
+`(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
 I will interject with theory when and where necessary, as well as provide extensive references in each associated section. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand.
 
@@ -770,7 +776,7 @@ Awesome. We're ready to move on to our analysis, however I wanna take a kinda "d
 
 # Shenanigans! A (honest) review of our attack
 
-OK so let's just hold back for a second. At this point, if you have your wits about you, you might, and rightfully I'll add, be calling **shenanigans** on me. 
+OK so let's just hold back for a second. At this point, if you have your wits about you, you might, and rightfully so I'll add, be calling **shenanigans** on me. 
 
 {{< figure src="/img/shenanigans.gif" title="" class="custom-figure" >}}
 
@@ -885,11 +891,11 @@ wmic process where processid=6944 get Name
 ```
 {{< figure src="/img/image074.png" title="" class="custom-figure" >}}
 
-We see thus that the name of the Parent Process, that is the name of the process that spawned `rundll32.exe` is `rufus` - a program used to create bootable thumb drives. 
+We see thus that the name of the Parent Process, that is the name of the process that spawned `rundll32.exe` is `rufus.exe` - a program used to create bootable thumb drives. 
 
-Now this, on quick glance seems unusual - why is this app needing to call `rundll32.exe`? However, since we're not an expert on this program's design, this could potentially be part of its normal operation - we'd have to jump in deeper to understand that.
+Now this, on quick glance this too seems unusual - why is this app needing to call `rundll32.exe`? However, since we're not an expert on this program's design, this could potentially be part of its normal operation - we'd have to jump in deeper to understand that.
 
-However, let's keep the bigger picture in mind again - we came upon `rundll32.exe` because it created a network connection to an external IP. So in that sense, yes this is very weird - why is a program used to create bootable thumb drives spawning `rundll32.exe` which then creates a network connection? Very sus.
+Let's keep the bigger picture in mind again - we came upon `rundll32.exe` because it created a network connection to an external IP. So in that sense, yes this is very weird - why is a program used to create bootable thumb drives spawning `rundll32.exe` which then creates a network connection? Very sus.
 
 One final thing here using our native tools, let's have a look at the command-line arguments:
 ```
@@ -913,7 +919,6 @@ So now let's bring out the big guns and learn all we can.
 {{< figure src="/img/guns.gif" title="" class="custom-figure" >}}
 
 
-
 But alas, as these things go, it really behooves us to learn a bit of theory behind what we're going to look at with the intention of understanding why it is we are looking at these things, and what exactly what we will be looking for. 
 
 Indeed, in matters like these, it is beneficial for us to delve into some theory. This will help us better comprehend what we're about to examine. We aim to understand why we are scrutinizing these things. Furthermore, it's essential to clarify exactly what we will be searching for.
@@ -922,11 +927,11 @@ Indeed, in matters like these, it is beneficial for us to delve into some theory
 
 ***"A traditional anti-virus product might look at my payload when I touch disk or load content in a browser. If I defeat that, I win. Now, the battleground is the functions we use to get our payloads into memory. -Raphael Mudge"***
 
-There are a few key properties we want to be on the lookout for when doing live memory analysis with something like `Process Hacker`. BuT, it's very important to know that there are **NO silver bullets**. There are no hard and fast rules where if we see any of the following we can be 100% sure we're dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.
+There are a few key properties we want to be on the lookout for when doing live memory analysis with something like `Process Hacker`. But, it's very important to know that there are **NO silver bullets**. There are no hard and fast rules where if we see any of the following we can be 100% sure we're dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.
 
-Again we're building a case, and each additionarl piece of evidence serves to decrease the probability of a false positive. We keep this process up until our self-defined threshold has been reached and we're ready to push the big red button. 
+Again we're building a case, and each additional piece of evidence serves to decrease the probability of a false positive. We keep this process up until our self-defined threshold has been reached and we're ready to push the big red button. 
 
-Additionally, the process as outline here may give the impression that it typically plays out as a strictly linear process. This is not necessarilly the case - instead of going through our list 1-7 below, we could jump around not only on the list itself, but with other techniqes completely. As a casual example - if we find a suspicious process by following this procedure, we might want to pause and 
+Additionally, the process as outlined here may give the impression that it typically plays out as a strictly linear process. This is not necessarilly the case - instead of going through our list 1-7 below, we could jump around not only on the list itself, but with other techniqes completely. As a casual example - if we find a suspicious process by following this procedure, we might want to pause and 
 
 have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
 
@@ -1041,7 +1046,7 @@ So double-click on the process...
 We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of rundll32.exe. Nothing further to concern ourselves with here. 
 
 3. Current directory
-In the same image we can see the **Current directory**, that is the "working directory" of the process, which is the directory where the process was started from or where it is operating. We can see here that the Current directory is the Desktop since that's where it was initiated from. 
+In the same image we can see the **Current directory**, that is the "working directory" of the process, which is the directory where the process was started from or where it is operating. We can see here that the current directory is the desktop since that's where it was initiated from. 
 
 Now this could happen with legitimate scripts or applications that are using `rundll32.exe` to call a DLL function. However, seeing `rundll32.exe` being called from an unusual location like a user's desktop could be suspicious, particularly if it's coupled with other strange behavior. 
 
@@ -1167,19 +1172,28 @@ This key is commonly used to debug applications in Windows. However, it is also 
 `MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\PROTOCOL_CATALOG9 and MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\NAMESPACE_CATALOG5`: These keys are related to the Winsock API, which is used by applications to communicate over a network. If the process is interacting with these keys, it could be trying to manipulate network communication, which is a common tactic of malware.
 
 **cmdline**
+This is one of my favourite modules in Volatility, allowing us to extract command-line arguments of running processes from our memory dump. Here we'll apply it only to the process of interest, but of course keep in mind that we could review the entire available history.
 
-The `cmdline` is another useful plug-in that will deliver the same insight we received before, namely that `rundll32.exe` was not provided any arguments when it was invoked from the command line. I'm pointing this out once again so you are aware you can obtain this same information even if you were not able to perform a live analysis. 
+{{< figure src="/img/image096.png" title="" class="custom-figure" >}}
+
+Here we receive the same insight as before, namely that `rundll32.exe` was not provided any arguments when it was invoked from the command line. I'm pointing this out once again so you are aware you can obtain this same information even if you were not able to perform a live analysis. 
 ```
-python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 5060 | grep Key
+python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 5060 
 ``` 
 
 **netscan**
 The `netscan` plugin will scan the memory dump looking for any network connections and sockets made by the OS.
 
-You can run the scan using the following command:
+We can run the scan using the command:
 ```
 python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.netscan
 ```
+
+
+NO REDO THIS because we want to see the same ip as we got in native tools section for redundancy purposes. 
+
+
+
 
 Right now I'll defer comment, since we're going to jump into network connections DEEPLY in PART X with `Wireshark`, `Zeek`, and `RITA`. I just wanted you to be aware that you can also use a memory dump to look at network connections if for some reason you don't have a packet capture available.   
 
@@ -1204,6 +1218,8 @@ This is thus a good reminder that the mere appearance of a process in malfind's 
 
 **Closing Thoughts**
 This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform a live analysis and only received a memory dump, then this section showed us how we could derive the same (plus some additional) information. Further, even if we did perform the live analysis, we bolster our case when we can come to the same conclusions via another avenue. 
+
+MENTION HERE like alle vidence, the more points yuou have better. in a other case two eye withness tesitmonies beter than 1, 3 better than 2 etc - each strengthens conviction of case. 
 
 I think this serves as a good introduction to `Volatility` - you now have some sense of how it works, how to use it, and what are the "go to" plug-ins for threat hunting.
 
@@ -1289,7 +1305,7 @@ Looking at the `Date and Time` stamp we can also deduce that the next two entrie
 
 {{< figure src="/img/image081.png" title="" class="custom-figure" >}}
 
-We can see that PowerShell is performing a DNS request for the FQDN `raw.githubusercontent.com`. This is of course a result of the command  we ran which downloaded the script from the web server before injecting it into memory.
+We can see that PowerShell is performing a DNS request for the FQDN `raw.githubusercontent.com`. This is of course a result of the command we ran which downloaded the script from the web server before injecting it into memory.
 
 And so take a moment to think of what this means - when an attacker uses a stager, and as is mostly the case that stager then initially goes out to a web server to retrieve another script, there will be DNS footprint. Thus DNS, for this reason and others we'll discuss in the future, is always an important dimension to dig into when threat hunting C2. 
 
@@ -1370,12 +1386,11 @@ Next we can see some events (`ID 10`) where `powershell.exe` is accessing `lsass
 
 {{< figure src="/img/image087.png" title="" class="custom-figure" >}}
 
-
 LSASS, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. Given its involvment in security and authentication it's probably no great shock to learn that malware LOVES abusing this process. It is involved in a myriad of attack types - credential dumping, pass-the-hash, pass-the-ticket, access token creation/manipulation etc. 
 
 We can see in the log entry the GrantedAccess field is set to `0x1000`, which corresponds to `PROCESS_QUERY_LIMITED_INFORMATION`. This means the accessing process has requested or been granted the ability to query certain information from the LSASS process. Such information might include the process's existence, its execution state, the contents of its image file (read-only), etc. Given the context, this log could indicate potential malicious activity, such as an attempt to dump credentials from LSASS or a reconnaissance move before further exploitation. 
 
-And then finally we see two events with `ID 1`, the first is another crucial piece of evidence indicative of malware activity. 
+And then finally we see two events with `ID 1`, the first of which is another crucial piece of evidence indicative of malware activity. 
 
 {{< figure src="/img/image088.png" title="" class="custom-figure" >}}
 
@@ -1444,7 +1459,7 @@ Immediately after this we can see another log entry with the same time stamp tha
 
 Remember when we looked at everything at the start and we noticed how all the entries come in pairs? Well, this is what we are looking at here - the second half of the pair. I won't repeat this for the remainder of this analysis, but you'll notice if you go through it by yourself that every single PowerShell ScriptBlock log entry will be followed by another like this that simply says `prompt`.
 
-So what's going on here? Well whenever you interact with PowerShell, it actually performs a magical sleigt-of-hand. Think of when you yourself have a PowerShell terminal open - you see the prompt, you run a command, it executes, and then once again you see the prompt, ready for you to enter the subsequent command.
+So what's going on here? Well whenever you interact with PowerShell, it actually performs a magical sleight-of-hand. Think of when you yourself have a PowerShell terminal open - you see the prompt, you run a command, it executes, and then once again you see the prompt, ready for you to enter the subsequent command.
 
 IMAGE HERE OF WHAT YOU MEAN
 
@@ -1454,7 +1469,7 @@ So this is perfectly normal and expect to always see it - for every PowerShell c
 
 So moving on to the rest of the log entries we'll notice some other commands we ran. First there is the `ps` command we used to get the process ID for `rufus.exe`. However, since as I mentioned before this is not expected to occur in an actual attack we can ignore this.
 
-We then see the log entry for the script that actually injected the malicious DLL into `rufus.exe`, again something we would expect to see in an actual attack. 
+We then see the log entry for the command that actually injected the malicious DLL into `rufus.exe`, again something we would expect to see in an actual attack. 
 
 {{< figure src="/img/image093.png" title="" class="custom-figure" >}}
 
@@ -1575,6 +1590,10 @@ In case you wanted to learn more about Sysmon's ins and outs [see this talk](htt
 
 
 
+
+
+
+
 # TRAFFIC ANALYSIS
 # Introduction
 
@@ -1602,19 +1621,49 @@ Here we only simulated an initial comprmoise, we did not really maintain a long 
 
 
 
+# FOR NOW REDO PCAP SO CLEANER
+
+
+Ok our bew pcap has 584
+first things of  interest seem to be 58 +59 - DNS query for the web server
+we can look into second one and we can see that the ip for the URL was 185.199.108.133
+
+then we see a whole series of convos between our IP and that IP, making connection, checking certs (TLS) etc
+
+then 116 we can see ARP asking for IP of attacker, clearly now scipt has been injected and malware seeking to make conneciton back 
+
+117 we can see response
+
+then from 118 on we can see long convo between the two - victim and attacker 
+
+let's follow convo see what's intersrting
+
+- immediately what do we see? PE header - magic bytes + DOS stub
+- then about 1/3 of way in we see what looks like a series of runtime errors
+
+
+https://www.first.org/resources/papers/conference2010/cummings-slides.pdf
+
+we see some strings, google it above 
+can we save it and search it with YARA rule?? 
+
+no, no positive hits with YARA
+
+for now, let's abandon this since sidetrack
+
+we can see it in course, find interesting, but say outside of scopt
 
 
 
 
+we create a new folder, this is where output will go
+we navigate to folder
+we run the command
+[full path to zeek] -r [full path to pcap]
 
+analyst@analyst:~/Desktop/zeeklogs$ /opt/zeek/bin/zeek -r ~/Desktop/new_capture.pcapng 
 
-
-
-
-
-
-
-
+when we do this it generates 6 logs
 
 
 
