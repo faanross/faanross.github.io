@@ -129,11 +129,9 @@ Now that you have your hypervisor up and running the next thing we need to do is
 So please go ahead and download the following 3 iso's:
 * For the victim we'll use [Windows 10 Enterprise Evaluation 32-bit](https://info.microsoft.com/ww-landing-windows-10-enterprise.html). Note that MS will want you to register (it's free), so do so to download the iso OR [click here](https://techcommunity.microsoft.com/t5/windows-11/accessing-trials-and-kits-for-windows/m-p/3361125) to go to a Microsoft Tech Community post with direct download links. 
 * For the attacker we'll use [Kali Linux](https://www.kali.org/get-kali/#kali-installer-images).
-* For post-mortem analysis we'll be using [Ubuntu Linux Focal Fossa](https://releases.ubuntu.com/focal/). The reason being is in future courses we'll be using RITA, which, as of writing, runs best on *Focal Fossa*. 
+* For post-mortem analysis we'll be using [Ubuntu Linux Focal Fossa](https://releases.ubuntu.com/focal/). The reason being is in future courses we'll be using *RITA*, which, as of writing, runs best on *Focal Fossa*. 
 
-Once you've successfully download all three iso images we are ready to proceed. 
-
-Ok so at this point if you have your hosted hypervisor installed, and all three iso's are downloaded we are ready to proceed.
+Once you've successfully downloaded all three iso images we are ready to proceed. 
 
 # 1.5 VM 1: WINDOWS 10 AKA "THE VICTIM" 
 
@@ -145,7 +143,7 @@ Ok so at this point if you have your hosted hypervisor installed, and all three 
 2. Choose `Typical (recommended)`, then click `Next`. 
 3. Then select `I will install the operating system later` and hit `Next`.
 
-{{< figure src="/img/image001.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image001.png" title="">}}
 
 4. Select `Microsoft Windows`, and under Version select `Windows 10`. 
 5. Here you are free to call the machine whatever you'd like, in my case I am calling it `Victim`. 
