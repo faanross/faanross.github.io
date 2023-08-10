@@ -4,12 +4,12 @@ date: 2023-07-12T02:01:58+05:30
 description: "In this beginner-friendly practical course we'll learn how to threat hunt standard DLL-injected C2 implants. We'll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings."
 tags: [threat_hunting, C2, dll_injection_attacks]
 author: "faan|ross"
-draft: true
+draft: false
 ---
 
 *** 
 
-# Hello friend, so glad you could make it.
+# HELLO FRIEND, SO GLAD YOU COULD MAKE IT.
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
 
@@ -27,29 +27,41 @@ The main thing I want you to know about this course is that ***we will learn by 
 
 `(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
-I will interject with theory when and where necessary, as well as provide extensive references in each associated section. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand.
+I will interject with theory when and where necessary, as well as provide references in each associated section. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that needs not be linear - the goal is to learn as much, and have as much fun as possible. Act accordingly. 
 
 {{< figure src="/img/brentleave.gif" title="" class="custom-figure" >}}
 
-As mentioned in the opening line - this is the first course in an ongoing series I have intentionally labelled ***always-evolving***. By this I mean perpetual evolution both as it relates to our approach, as well as our setup. Our approach - the specific tools and techniques we employ - will not only diversify in upcoming courses, but indeed we'll also get to gain a deeper sense of mastery of all the core threat hunting tools. And we'll continue to add to our virtualized setup, meaning in each subsequent course we'll spend some time in the beginning to fine tune our network with the goal of becoming increasingly representative of "real-world" situations. 
+As mentioned in the opening line - this is the first course in an ongoing series I have intentionally labelled ***always-evolving***. By this I mean perpetual evolution both as it relates to our approach, as well as our setup. Our approach - the specific tools and techniques we employ - will not only diversify in upcoming courses, but indeed we'll also gain a deeper sense of mastery of all the core threat hunting tools. And we'll continue to add to our virtualized setup, meaning in each subsequent course we'll spend some time in the beginning to fine tune our network with the goal of becoming increasingly representative of real-world situations. 
 
 All to say: I see this whole series of courses on threat hunting as a journey where you and I will learn together. As we get better, it's natural that we not only feel able to handle more complexity - but indeed we'll desire to do so. I'm going to do my best to progressively structure it in such a manner as to optimize the relationship between our skill and the challenge on offer. 
 
-But for now, since this is our first course, we'll begin our journey at the start.
+But for now, since this is our first course, we'll start our journey at the very beginning.
 
 {{< figure src="/img/begins.gif" title="" class="custom-figure" >}}
 
 Threat Hunting is not typically seen as an "entry-level" cybersecurity discipline, probably because in a certain sense it is a layer of abstraction woven from other, more "fundamental", layers of abstraction. I have however `created this course specifically with the beginner in mind`. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient information so that you can follow along not only with what we are doing, but crucially, ***why we are doing it***.
 
-Further, I also believe in the merit of a top-down learning approach - instead of mastering all the fundamental fields of knowledge, start with the final application and then work your way back to understand the reason for their inclusion. All this to say - `if you are beginner and you are curious about Threat Hunting then you are in the right place`. I can promise that if you venture along by the end of our journey many so-called "advanced" topics will appear in a whole new light since you've established a connection between the concept and the actual application. 
+{{< figure src="/img/karpathy.png" title="" class="custom-figure" >}}
+
+I am a huge believer in this approach to learning outlined above by the wonderful [Andrej Karpathy](https://twitter.com/karpathy). This course is built on this approach - instead of mastering every single foundational discipline that converge as Threat Hunting, we will be learning on-demand. That's to say we'll start with the final application, and then work our way back to understand the reason for their inclusion. So the fat is trimmed - we'll learn what we need, when we need to understand why we're doing what we're doing. 
+
+Enough with the abstractions, all this to say - `if you are beginner and you are curious about Threat Hunting then you are in the right place`. I can promise that if you venture along, by the end of our journey many so-called "advanced" topics will appear in a whole new light since you've established a connection between the concept and its actual application. 
 
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
-`This first course is focused on threat hunting standard DLL-injected C2 implants.`
+Finally I do want to add that I myself am an `eternal student` and always learning. Creating these courses are part of my own pedagogical process, and as such it's possible, even perhaps probable, that I will make mistakes. Mistakes themselves of course represent the opportunity for further education - but only if we become aware of them. So if there's anything here you are unsure about, or simply flat-out disagree with `PLEASE` feel free to reach out and share this with me so that everyone can potentially benefit from improved understanding. You can send me a message on Twitter [here](https://twitter.com/faanross), or feel free to email me [here](mailto:moi@faanross.com).
+
+***
+
+# COURSE OUTLINE
+
+`Here's a quick overview of the entire course:` 
+| # | Header 2 | Header 3 |
+|----------|----------|----------|
+| 1 | Row1Col2 | Row1Col3 |
+| 1.2 | Row2Col2 | Row2Col3 |
 
 
-
-Here's a quick overview of the entire course: 
 1. **Setting up our Virtual Environment**
     - Introduction
 3. **Performing the Attack**
@@ -63,33 +75,32 @@ Here's a quick overview of the entire course:
     - subsections
 8. **Post-Mortem Forensics: Log Analysis**
     - subsections
-9. **Post-Mortem Forensics: Traffic Analysis**
-    - subsections
+
 10. **Report write-up**
     - subsections
 11. **List of all references**
 12. **Cheat Sheets**
 
-Finally I do want to add that I myself am an `eternal student` and always learning. Creating these courses are part of my own pedagogical process, and as such it's possible, even perhaps probable, that I will make some mistakes. Mistakes themselves of course represent the opportunity for further education - but only if we become aware of them. So if there's anything here you are unsure about, or simply flat-out disagree with `PLEASE` feel free to reach out and share this with me so that everyone can potentially benefit from improved understanding. You can send me a message on Twitter [here](https://twitter.com/faanross), of feel free to email me [here](mailto:moi@faanross.com).
-
-So without any further preamble, ***LET'S GET IT***.
+And that's all you need to know, so now, without any further preamble, ***LET'S GET TO IT***.
 
 {{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
 
 ***
 
-# 1. Setting up our Virtual Environment
-# Introduction
+# 1. SETTING UP OUR VIRTUAL ENVIRONMENT
+# 1.1 INTRODUCTION
 
 In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso files, then we'll install the operating systems, and finally we'll configure them.
 
-# Requirements
+# 1.2 REQUIREMENTS
 
 {{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
 
-I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can finagle your way to getting the same results by adapting the process, then I salute you for that is the *way of the hacker*. 
+I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can get the same results by adapting the process, then please do so. After all - this is the *way of the hacker*. 
 
-As mentioned above, we'll have 3 VMs, however, at any one moment there will only be a `maximum of 2 VMs running`. For each of these VMs I recommend the following broad system resources:
+{{< figure src="/img/thehacker.gif" title="" class="custom-figure" >}}
+
+As mentioned above, we'll create 3 VMs in total, however, at any one moment there will only be a `maximum of 2 VMs running concurrently`. For each of these VMs I recommend the following system resources:
 - min 2 (ideally 4) CPU cores
 - min 4 (ideally 8) GB RAM
 - around 60 GB HD space (allocated)
@@ -101,20 +112,24 @@ So based on this, that is roughly 2x the above + resources for your actual host 
 
 {{< figure src="/img/beefcake.gif" title="" class="custom-figure" >}}
 
-I understand this is beefy, but consider:
-- You don't have to use a single system to run the entire VLAN - you could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that. Or mini-pcs, or refurbished clients - really for a few hundred dollars you could more than easily be equipped to run a small network. I don't want to sound insensitive to a few 100 dollars, but I'm gonna level with you: if you want to learn cybersecurity then there is no better investment than having localized resources to create virtual simulations. 
-- In case you don't want to invest up-front but don't mind paying some running costs: You can also use a service like [Linode](https://www.linode.com) and simply rent compute via the cloud. In other words you'll rent a system in the cloud and run the VM on that. 
+Now I understand this requirement is rather beefy, but consider:
+- You don't have to use a single system to run the entire VLAN - you could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that. Or mini-pcs, or refurbished clients - really for a few hundred dollars you could more than easily be equipped to run a small network. I don't want to sound insensitive to a few 100 dollars, but I'm gonna level with you: `if you want to learn cybersecurity then there is no better investment than having localized resources to create virtual simulations`. 
+- In case you don't want to invest up-front but don't mind paying some running costs: You can also use a service like [Linode](https://www.linode.com) and simply rent compute via the cloud. You can then install your VMs on that, and have access to them for as long as you care to foot the bill.
 
-Finally I want to mention that everything we will use is completely free. This course ain't upselling a full course, and every piece of software is freely available. The only exception has free alternatives, and I'm about to discuss that with you right now. 
+Finally I want to mention that beyond the hardware, `everything we will use is completely free`. This course ain't upselling a full course, and every piece of software is freely available. The sole exception has free alternatives, which I'm about to discuss that with you right now. 
 
-# Hosted (type 2) Hypervisor
-So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like Inception - it allows us to create machines within our machine. 
+# 1.3 HOSTED HYPERVISOR
+So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like Inception - it allows us to create systems within our systems. 
 
 {{< figure src="/img/inception.gif" title="" class="custom-figure" >}}
 
-For this course I'll be using [VMWare Workstation](https://store-us.vmware.com/workstation_buy_dual) which as of writing costs around $200. However you could also do it with either [VMWare Player](https://www.vmware.com/ca/products/workstation-player.html), or [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads), both of which are free. 
+For this course I'll be using [VMWare Workstation](https://store-us.vmware.com/workstation_buy_dual), which as of writing costs around $200. However you could also do it with either [VMWare Player](https://www.vmware.com/ca/products/workstation-player.html), or [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads), both of which are free. 
 
-Note that some of the details of the setup might be slightly different if you choose to use either of the free options, and if that occurs then it'll be up to you to figure that out. Google, ChatGPT, StackExchange etc. 
+I've used both `VMWare Player` and `VirtualBox` in the past, they mostly work well but running into some issues from time-to-time should not be completely unexpected. That being said, the problems I encountered were all, in hindsight, opportunities to learn. Frustrating - heck yes. Enriching - sure. 
+
+Since I switched over to `VMWare Workstation` my experience has been significantly more stable, so if you do have the money and are committed to this path as a career I would definitely consider getting it. That being said I don't wanna come across as some corporate shill, so really the choice is totally up to you.
+
+Note that if you decide to not use `VMWare Workstation` then some of the details of the setup might be different. When that occurs it'll be up to you to figure out how to adapt it for your situation -  Google, ChatGPT, StackExchange etc. Again, use the opportunities when things don't happen exactly "as they should" to learn. As a wise Roman emperor once said - ***The impediment to action advances action. What stands in the way becomes the way.*** 
 
 `So at this point please take a moment to download and install the hypervisor of your choice.`
 And if you've never (ever) used any hypervisor before then you might want to find an introductory tutorial to simply orient yourself with regards to the basic interface and functionality. 
@@ -123,20 +138,24 @@ Once your hypervisor is installed and you feel at least a modicum of comfort in 
 
 {{< figure src="/img/pleasego.gif" title="" class="custom-figure" >}}
 
-# Virtual Machine Images (iso files)
+# 1.4 VM IMAGES
 
-Please download the following three iso's:
-* for the victim we'll use [Windows 10 Enterprise Evaluation 32-bit](https://info.microsoft.com/ww-landing-windows-10-enterprise.html)
+Now that you have your hypervisor up and running the next thing we need to do is install our actual virtual machines. There are a few ways to do this, you can for example simply download the entire VM and simply import it into your hypervisor. This does usually mean that the file you'll be downloading will be quite large, so we'll opt for another approach - using iso files. You can think of an iso file simply as a "virtual copy" of the installation disc. So instead of importing the completed VM, we will be installing the VM ourselves using the iso. 
+
+So please go ahead and download the following 3 iso's:
+* for the victim we'll use [Windows 10 Enterprise Evaluation 32-bit](https://info.microsoft.com/ww-landing-windows-10-enterprise.html). Note that MS will want you to register (it's free), so do so to download the iso OR [click here](https://techcommunity.microsoft.com/t5/windows-11/accessing-trials-and-kits-for-windows/m-p/3361125) to go to a Microsoft Tech Community post with direct download links. 
 * for the attacker we'll use [Kali Linux](https://www.kali.org/get-kali/#kali-installer-images)
 * for post-mortem analysis we'll be using [Ubuntu Linux 20.04 Focal Fossa](https://releases.ubuntu.com/focal/). Just note here the actual edition 20.04 is important since we'll run RITA on it, which, as of writing, runs best on Focal Fossa.
 
+Once you've successfully download all three iso images we are ready to proceed. 
+
 Ok so at this point if you have your hosted hypervisor installed, and all three iso's are downloaded we are ready to proceed.
 
-# VM 1: Windows 10 aka "The Victim" 
+# 1.5 VM 1: WINDOWS 10 AKA "THE VICTIM" 
 
 {{< figure src="/img/screamdrew.gif" title="" class="custom-figure" >}}
  
-# Installation
+# 1.5.1 INSTALLATION
 
 1. In VMWare Workstation goto `File` -> New Virtual Machine. 
 2. Choose `Typical (recommended)`, then click `Next`. 
@@ -153,32 +172,29 @@ Ok so at this point if you have your hosted hypervisor installed, and all three 
 
 8. Under `Memory` (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
-10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Windows 10 iso file.
+10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Windows 10 iso file. 
+11. Once done click `OK` on the bottom to exit out of the Hardware options dialog box. 
 
-{{< figure src="/img/image003.png" title="" class="custom-figure" >}}
+You should now see your VM in your Library (left hand column), select it and then click on `Power on this virtual machine`. If you don't see a Library column on the left simply hit `F9` which toggles its visibility.
 
-You should now see your VM in your Library (left hand column), select it and then click on `Power on this virtual machine`.
-
-{{< figure src="/img/image004.png" title="" class="custom-figure" >}}
-
-Wait a short while and then you should see a Windows Setup window. Choose your desired language etc, select Next and then click on Install Now. Select ‘I accept the license terms’ and click Next. Next select ‘Custom: Install Windows only (advanced)’, and then select your virtual HD and click Next.
+Wait a short while and then you should see a Windows Setup window. Choose your desired language et cetera, select `Next` and then click on `Install Now`. Select `I accept the license terms` and click `Next`. Next select `Custom: Install Windows only (advanced)`, and then select your virtual HD and click Next.
 
 {{< figure src="/img/image005.png" title="" class="custom-figure" >}}
 
-Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the License Agreement (if you dare!). Now once you reach the Sign in page don’t fill anything in, rather select ‘Domain join instead’ in the bottom left corner.
+Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the `License Agreement` (if you dare - ***mwhahaha!***). Now once you reach the `Sign in` page don’t fill anything in, rather select `Domain join instead` in the bottom left corner.
 
 {{< figure src="/img/image006.png" title="" class="custom-figure" >}}
 
-Choose any username and password, in my case it'll be the highly original choice of `User` and `password`, feel free to choose something else. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it. Turn off all the privacy settings (below), and for Cortana select `Not Now`.
+Choose any username and password, in my case it'll be the highly original choice of `User` and `password`. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it - randomly hitting the keyboard a few times will do just fine. Turn off all the privacy settings (below), and for `Cortana` select `Not Now`.
 
 {{< figure src="/img/image007.png" title="" class="custom-figure" >}}
 
-Windows will now finalize installation + configuration, this could take a few minutes, whereafter you will see your Desktop.
+Windows will now finalize installation + configuration, this could take a few minutes, whereafter you will see your desktop.
 
-# VMWare Tools
-Next we'll install VMWare Tools which will ensure our VMs screen resolution assumes that of our actual monitor, but more importantly it also gives us the ability to copy and paste between the host and the VM. 
+# 1.5.2 VMWARE TOOLS
+Next we'll install VMWare Tools which for our purposes does two things. First, it ensure that our VMs screen resolution assumes that of our actual monitor, but more importantly it also gives us the ability to copy and paste between the host and the VM. 
 
-So just to be sure, at this point you should be staring at a Windows desktop. Now in the VMWare menu bar click `VM` and then `Install VMWare Tools`. If you open explorer (in the VM) you should now see a D: drive. 
+So just to be sure, at this point you should be staring at a Windows desktop. Now in the VMWare menu bar click `VM` and then `Install VMWare Tools`. If you open `Explorer` (in the VM) you should now see a `D:` drive. 
 
 {{< figure src="/img/image008.png" title="" class="custom-figure" >}}
 
