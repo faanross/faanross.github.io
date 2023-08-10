@@ -143,7 +143,7 @@ Once you've successfully downloaded all three iso images we are ready to proceed
 2. Choose `Typical (recommended)`, then click `Next`. 
 3. Then select `I will install the operating system later` and hit `Next`.
 
-{{< figure src="/img/image001.png" title="">}}
+{{< figure src="/img/image001.png" title="" class="custom-figure" >}}
 
 4. Select `Microsoft Windows`, and under Version select `Windows 10`. 
 5. Here you are free to call the machine whatever you'd like, in my case I am calling it `Victim`. 
