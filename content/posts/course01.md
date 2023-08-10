@@ -114,23 +114,25 @@ Since I switched over to `VMWare Workstation` my experience has been significant
 
 {{< figure src="/img/makechoice.gif" title="" class="custom-figure" >}}
 
-Note that if you decide to not use `VMWare Workstation` then some of the details of the setup might be different. When that occurs it'll be up to you to figure out how to adapt it for your situation -  Google, ChatGPT, StackExchange etc. Again, use the opportunities when things don't happen exactly "as they should" to learn. As a wise Roman emperor once said - ***The impediment to action advances action. What stands in the way becomes the way.*** 
+Note that if you decide to not use `VMWare Workstation` then some of the details of the setup might be different. When that occurs it'll be up to you to figure out how to adapt it for your situation - Google, ChatGPT, StackExchange, common sense etc. Again, use the opportunities when things don't happen exactly "as they should" to learn. As a wise emperor once said - ***The impediment to action advances action. What stands in the way becomes the way.*** 
 
 `So at this point please take a moment to download and install the hypervisor of your choice.`
-And if you've never (ever) used any hypervisor before then you might want to find an introductory tutorial to simply orient yourself with regards to the basic interface and functionality. 
 
-Once your hypervisor is installed and you feel at least a modicum of comfort in interacting with it you can proceed...
+Once that's done with feel free to proceed...
 
 {{< figure src="/img/pleasego.gif" title="" class="custom-figure" >}}
 
 # 1.4 VM IMAGES
 
-Now that you have your hypervisor up and running the next thing we need to do is install our actual virtual machines. There are a few ways to do this, you can for example simply download the entire VM and simply import it into your hypervisor. This does usually mean that the file you'll be downloading will be quite large, so we'll opt for another approach - using iso files. You can think of an iso file simply as a "virtual copy" of the installation disc. So instead of importing the completed VM, we will be installing the VM ourselves using the iso. 
+Now that you have your hypervisor up and running the next thing we need to do is install our actual virtual machines. There are a few ways to do this, you can for example simply download the entire VM and simply import it into your hypervisor. This does usually mean that the file you'll be downloading will be quite large, so we'll opt for another approach - using iso files. You can think of an iso file simply as a "virtual copy" of the installation disc. So instead of importing the completed VM, we will be installing the VM ourselves using the iso image. 
 
 So please go ahead and download the following 3 iso's:
-* for the victim we'll use [Windows 10 Enterprise Evaluation 32-bit](https://info.microsoft.com/ww-landing-windows-10-enterprise.html). Note that MS will want you to register (it's free), so do so to download the iso OR [click here](https://techcommunity.microsoft.com/t5/windows-11/accessing-trials-and-kits-for-windows/m-p/3361125) to go to a Microsoft Tech Community post with direct download links. 
-* for the attacker we'll use [Kali Linux](https://www.kali.org/get-kali/#kali-installer-images)
-* for post-mortem analysis we'll be using [Ubuntu Linux 20.04 Focal Fossa](https://releases.ubuntu.com/focal/). Just note here the actual edition 20.04 is important since we'll run RITA on it, which, as of writing, runs best on Focal Fossa.
+* For the victim we'll use [Windows 10 Enterprise Evaluation 32-bit](https://info.microsoft.com/ww-landing-windows-10-enterprise.html). Note that MS will want you to register (it's free), so do so to download the iso OR [click here](https://techcommunity.microsoft.com/t5/windows-11/accessing-trials-and-kits-for-windows/m-p/3361125) to go to a Microsoft Tech Community post with direct download links. 
+* For the attacker we'll use [Kali Linux](https://www.kali.org/get-kali/#kali-installer-images).
+* For post-mortem analysis we'll be using [Ubuntu Linux](https://releases.ubuntu.com). Feel free to use *Jammy Jellyfish* or *Focal Fossa*, it makes little difference. 
+
+
+(https://releases.ubuntu.com/focal/). Just note here the actual edition 20.04 is important since we'll run RITA on it, which, as of writing, runs best on Focal Fossa.
 
 Once you've successfully download all three iso images we are ready to proceed. 
 
