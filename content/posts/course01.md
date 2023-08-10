@@ -23,17 +23,17 @@ The main thing I want you to know about this course is that ***we will learn by 
 
 `(2)` Then, instead of using prepackaged data we'll generate data by performing the attack ourselves. We'll use the *Metasploit* framework along with a *Powersploit* DLL-injection script to connect back from the victim to a *Meterpreter* handler. We'll then simulate a few rudimentary actions such as data exfiltration etc. 
 
-`(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. We'll initially perform two rounds of live analysis - first using only Windows native tools to check the vitals, and then using *Process Hacker* we'll prod deeper into memory. 
+`(3)` We'll then perform the actual threat hunt. We'll initially perform two rounds of live analysis - first using only Windows native tools to check the vitals, and then using *Process Hacker* we'll prod deeper into the memory. 
 
 In the post-mortem analysis we'll cover memory (*Volatility3*), log analysis (*Sysmon* + *PowerShell ScriptBlock*), before wrapping things up with an abbreviated traffic analysis (*WireShark*). 
 
-`(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
+`(4)` Finally we'll crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
 I will interject with theory when and where necessary, as well as provide references in each associated section. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that need not be linear - the goal is to learn, and have as much fun as possible. `Act accordingly`. 
 
 {{< figure src="/img/brentleave.gif" title="" class="custom-figure" >}}
 
-Threat Hunting is not typically seen as an "entry-level" cybersecurity discipline, probably because it is a layer of abstraction woven from other, more *fundamental*, layers of abstraction. It is not a house built from bricks, but a neighbourhood built from houses. 
+Threat hunting is not typically viewed as an "entry-level" cybersecurity discipline, probably because it is a layer of abstraction woven from other, more *fundamental*, layers of abstraction. It is not a house built from bricks, but a neighbourhood built from houses. 
 
 I have however created this course `specifically with the beginner in mind`. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient foundational information so that you can follow along not only with what we are doing, but crucially, ***why we are doing it***.
 
@@ -45,9 +45,9 @@ All this to say - `if you are beginner and you are curious about threat hunting 
 
 {{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
 
-Finally I do want to add that I myself am an `eternal student` and always learning. As this course (hopefully) may play some role in your journey of understanding, so of course it is part of my own. As such it's *highly* likely I will make mistakes. 
+Finally I do want to add that I myself am an `eternal student` and always learning. As this course (hopefully) may play some role in your journey of understanding, so of course it has played such a role in my own. As such it's *highly* likely I will make mistakes. 
 
-Mistakes themselves of course represent the potential for further understanding - but only if we become aware of them. So if there's anything here you are unsure about, or simply flat-out disagree with `PLEASE` feel free to reach out and share this with me so that everyone can potentially benefit. You can connect with me on Twitter [here](https://twitter.com/faanross), or feel free to email me [here](mailto:moi@faanross.com).
+Mistakes themselves of course represent the potential for further understanding - but only if we become aware of them. So if there's anything here you are unsure about, or simply flat-out disagree with ***please*** feel free to reach out and share this with me so that everyone can potentially benefit. You can connect with me on [Twitter](https://twitter.com/faanross), or feel free to [email me](mailto:moi@faanross.com).
 
 {{< figure src="/img/jake_learn.gif" title="" class="custom-figure" >}}
 
