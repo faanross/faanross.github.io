@@ -23,11 +23,9 @@ The main thing I want you to know about this course is that ***we will learn by 
 
 `(2)` Then, instead of using prepackaged data we'll generate data by performing the attack ourselves. We'll use the *metasploit* framework along with a *powersploit* DLL-injection script to connect back from the victim to a *meterpreter* handler. We'll then simulate a few rudimentary actions such as data exfiltration etc. 
 
-`(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. We'll initially perform two rounds of live analysis - first only using Windows native tools, and then using *Process Hacker*. 
+`(3)` We'll then perform the actual threat hunt, gathering data through multiple facets of both live and post-mortem analysis. We'll initially perform two rounds of live analysis - first using only Windows native tools to check the vitals, and then using *Process Hacker* we'll prod deeper into memory. In the post-mortem analysis we'll cover memory (*Volatility3*), log analysis (*Sysmon* + *PowerShell ScriptBlock*), before wrapping things up with an abbreviated traffic analysis (*WireShark*). 
 
-
-
-`(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
+`(4)` Finally we'll learn how to crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. I
 
 I will interject with `theory when and where necessary`, as well as provide `references in each associated section`. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that need not be linear - the goal is to learn, and have as much fun as possible. `Act accordingly`. 
 
