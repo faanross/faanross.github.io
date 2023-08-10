@@ -80,6 +80,7 @@ ul > li::before {
 img {
   border: 3px solid #ececec;
   max-width: 100%;
+  width: auto;
 }
 
 figure {
@@ -89,9 +90,6 @@ figure {
   max-width: 100%;
 }
 
-figure img {
-  max-height: 500px;
-}
 
 @media screen and (min-width: 600px) {
   figure {
