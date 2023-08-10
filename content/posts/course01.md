@@ -99,10 +99,10 @@ Now I understand this requirement is rather beefy, but consider:
 - You don't have to use a single system to run the entire VLAN - you could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that. Or mini-pcs, or refurbished clients - really for a few hundred dollars you could more than easily be equipped to run a small network. I don't want to sound insensitive to a few 100 dollars, but I'm gonna level with you: `if you want to learn cybersecurity then there is no better investment than having localized resources to create virtual simulations`. 
 - In case you don't want to invest up-front but don't mind paying some running costs: You can also use a service like [Linode](https://www.linode.com) and simply rent compute via the cloud. You can then install your VMs on that, and have access to them for as long as you care to foot the bill.
 
-Finally I want to mention that beyond the hardware, `everything we will use is completely free`. This course ain't upselling a full course, and every piece of software is freely available. The sole exception has free alternatives, which I'm about to discuss that with you right now. 
+Finally I want to mention that beyond the hardware, `everything we will use is completely free`. This course ain't upselling a full course, and every piece of software is freely available. The sole exception has free alternatives, which I'm about to discuss with you right now. 
 
 # 1.3 HOSTED HYPERVISOR
-So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like Inception - it allows us to create systems within our systems. 
+So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like *Inception* - it allows us to create systems within our systems. 
 
 {{< figure src="/img/inception.gif" title="" class="custom-figure" >}}
 
