@@ -129,10 +129,7 @@ Now that you have your hypervisor up and running the next thing we need to do is
 So please go ahead and download the following 3 iso's:
 * For the victim we'll use [Windows 10 Enterprise Evaluation 32-bit](https://info.microsoft.com/ww-landing-windows-10-enterprise.html). Note that MS will want you to register (it's free), so do so to download the iso OR [click here](https://techcommunity.microsoft.com/t5/windows-11/accessing-trials-and-kits-for-windows/m-p/3361125) to go to a Microsoft Tech Community post with direct download links. 
 * For the attacker we'll use [Kali Linux](https://www.kali.org/get-kali/#kali-installer-images).
-* For post-mortem analysis we'll be using [Ubuntu Linux](https://releases.ubuntu.com). Feel free to use *Jammy Jellyfish* or *Focal Fossa*, it makes little difference. 
-
-
-(https://releases.ubuntu.com/focal/). Just note here the actual edition 20.04 is important since we'll run RITA on it, which, as of writing, runs best on Focal Fossa.
+* For post-mortem analysis we'll be using [Ubuntu Linux Focal Fossa](https://releases.ubuntu.com/focal/). The reason being is in future courses we'll be using RITA, which, as of writing, runs best on *Focal Fossa*. 
 
 Once you've successfully download all three iso images we are ready to proceed. 
 
