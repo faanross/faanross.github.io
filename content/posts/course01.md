@@ -108,9 +108,11 @@ So in the off-chance you don't know: a hosted (type 2) hypervisor is the softwar
 
 For this course I'll be using [VMWare Workstation](https://store-us.vmware.com/workstation_buy_dual), which as of writing costs around $200. However you could also do it with either [VMWare Player](https://www.vmware.com/ca/products/workstation-player.html), or [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads), both of which are free. 
 
-I've used both `VMWare Player` and `VirtualBox` in the past, they mostly work well but running into some issues from time-to-time should not be completely unexpected. That being said, the problems I encountered were all, in hindsight, opportunities to learn. Frustrating - heck yes. Enriching - sure. 
+I've used both `VMWare Player` and `VirtualBox` in the past, they mostly work well but running into some issues from time-to-time should not be completely unexpected. That being said, the problems I encountered were all, in hindsight, opportunities to learn. Frustrating - *feck yesh*. Enriching - sure. 
 
 Since I switched over to `VMWare Workstation` my experience has been significantly more stable, so if you do have the money and are committed to this path as a career I would definitely consider getting it. That being said I don't wanna come across as some corporate shill, so really the choice is totally up to you.
+
+{{< figure src="/img/makechoice.gif" title="" class="custom-figure" >}}
 
 Note that if you decide to not use `VMWare Workstation` then some of the details of the setup might be different. When that occurs it'll be up to you to figure out how to adapt it for your situation -  Google, ChatGPT, StackExchange etc. Again, use the opportunities when things don't happen exactly "as they should" to learn. As a wise Roman emperor once said - ***The impediment to action advances action. What stands in the way becomes the way.*** 
 
