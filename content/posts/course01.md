@@ -186,15 +186,23 @@ Right-click on your VM and select `Settings`. In the list on the LHS select `Dis
 
 Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
-# 1.5.3 Deep disable MS Defender
+# 1.5.3 Deep disable MS Defender + Updates
 
 I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. You see, Windows thinks of you as a younger sibling - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your entire OS if you so desired.) 
 
 {{< figure src="/img/winlin.png" title="" class="custom-figure" >}}
 
-And just so you know why it is we're doing this:
-- We are disabling Defender so that the AV won't interfere with us attacking the system. Now you might think well this represents an unrealistic situation since in real-life we'll always have our AV running. Thing is, this is a simulation - we are simulating an actual attack. Yes the AV might pick up on our mischievous escapades here since we are using very well-known and widely-used malware (Metasploit mainly). But, if you are being attacked by an actual threat actor worth their salt they likely won't be using something so familiar as default Metasploit modules - they will likely be capable of using analogous but obfuscated technologies that your AV will not pick up on.
-- As for updates, we disable this because sometimes we can spend all this time configuring and setting things up and then one day we boot our VM up, Windows does it's whole automatic update schpiel, and suddenly things are broken. This is thus simply to support the stability of our long-term use of this VM. 
+And just so you know why it is we're doing this...
+
+We are disabling Defender so that the AV won't interfere with us attacking the system. Now you might think well this represents an unrealistic situation since in real-life we'll always have our AV running. Thing is, this is a simulation - we are simulating an actual attack. 
+
+Yes, the AV might pick up on our mischievous escapades here since we are using a well-known and widely-used malware framework. But, if you are being attacked by an actual threat actor worth their salt they likely won't be using something so common. It's not that much of a stretch to assume they will be capable of using analogous technologies that our AV will not pick up on. Thus, by turning off Defender this is what we are simulating. 
+
+And as for updates, we disable this because sometimes we can spend all this time configuring and setting things up and then one day we boot up our VM up, Windows does it's whole automatic update schpiel, and suddenly things are broken. This is thus a small time investment to hedge against extreme potential frustration. *So worth it*. 
+
+{{< figure src="/img/do_it_now.gif" title="" class="custom-figure" >}}
+
+simply to support the stability of our long-term use of this VM. 
 
 1. **Disable Tamper Protection**
     1. Hit the `Start` icon, then select the `Settings` icon.
