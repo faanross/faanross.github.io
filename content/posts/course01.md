@@ -188,7 +188,7 @@ Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
 # 1.5.3 Deep disable MS Defender + Updates
 
-I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. You see, Windows thinks of you as a younger sibling - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your entire OS if you so desired.) 
+I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. You see, Windows thinks of you as a younger sibling - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your OS kernel if you so desired.) 
 
 {{< figure src="/img/winlin.png" title="" class="custom-figure" >}}
 
@@ -282,7 +282,7 @@ Once your system has restarted in `Safe mode`...
     4. Double-click the new `AUOptions` key and change its value to `2`. Click `OK` - see image below.
     5. Close Registry Editor.
 
-{{< figure src="/img/image016.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image016.png" title="" class="custom-figure-2" >}}
 
 9. **Leave Safe Mode**
     1. All that's left to do is get back into our regular Windows environment.
@@ -292,17 +292,17 @@ Once your system has restarted in `Safe mode`...
     5. Deselect `Safe boot`, hit `Apply`, hit `OK`.
     6. Hit `Restart`.
 
-And that, I can promise you, is by far the most boring part of this entire course. But the good news is that this is potentially the last time you have to do it. *Ever*. This is because we can not convert this VM to a template and clone it indefinitely in the future. 
+And that, I can promise you, is by far the most boring part of this entire course. But the good news is that this is potentially the last time you have to do it. *Ever*. This is because we can now convert this VM to a template and clone it indefinitely in the future. 
 
-But before that, let's setup all the awesome tools we'll be using in this course. 
+But before we learn to do that, let's setup all the awesome tools we'll be using in this course. 
 
 # 1.5.4. Sysmon 
 
-You should now be back in the normal Windows environment looking at your desktop. Let' set up `Sysmon` - a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
+You should now be back in the normal Windows environment looking at your desktop. Let's set up `Sysmon` - a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
 
+Before we get installing `Sysmon` there's just one thing you need to know - in addition to downloading the actual `Sysmon` file we also need a config file. One day when you get to *that* level you can even create your own config file, which will allow you to make it behave exactly how you want it to. 
 
-
-Before we get installing Sysmon there's just one thing you need to know - in addition to downloading the actual Sysmon file we also need a config file. One day when you get to *that* level you can even create your own config file, which will allow you to make it behave exactly how you want it to. But for now, since we are decidedly not yet there, let's download and use one made by some really smart people. Of late  I have heard a few trusted sources, included [Eric Conrad](https://www.ericconrad.com) prefer [this version from Neo23x0](https://github.com/bakedmuffinman/Neo23x0-sysmon-config) whose authors included another blue team giant, [Florian Roth](https://twitter.com/cyb3rops?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor). 
+But for now, since we are decidedly not yet there, let's download and use one made by some really smart people. Of late  I have heard a few trusted sources, included [Eric Conrad](https://www.ericconrad.com) prefer [this version from Neo23x0](https://github.com/bakedmuffinman/Neo23x0-sysmon-config) whose authors included another blue team giant, [Florian Roth](https://twitter.com/cyb3rops?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor). 
 
 So first download the config file (which is in xml format) from the link above, then [go here to download Sysmon](https://download.sysinternals.com/files/Sysmon.zip). You should now have two zip files - the config you downloaded from Github, as well as the Sysmon zip file. Extract the Sysmon file, the contents should look as follows:
 
