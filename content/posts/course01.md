@@ -11,7 +11,7 @@ draft: false
 # NOTE THIS IS CURRENTLY STILL WIP, THE REASON IT'S A PUBLIC DRAFT IS LONG AND CONVOLUTED SO JUST TRUST ME. ANYHOO - DO AS YOU WISH. 
 
 ***
-# HELLO FRIEND, SO GLAD YOU COULD MAKE IT.
+# Hello friend, so glad you could make it.
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
 
@@ -55,7 +55,7 @@ Mistakes themselves of course represent the potential for further understanding 
 
 ***
 
-# COURSE OUTLINE
+# Course Outline
 
 `Here's a quick overview of the entire course:` 
 | # | ***Topic*** |
@@ -69,17 +69,17 @@ Mistakes themselves of course represent the potential for further understanding 
 
 ***
 
-# 1. SETTING UP OUR VIRTUAL ENVIRONMENT
+# 1. Setting Up Our Virtual Environment
 
 {{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
 
-# 1.1 INTRODUCTION
+# 1.1. Introduction
 
 In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we'll perform some configurations as well as install extra software.
 
 {{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
 
-# 1.2 REQUIREMENTS
+# 1.2. Requirements
 
 I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can get the same results by adapting the process, then please do so. After all - this is the *way of the hacker*. 
 
@@ -103,7 +103,7 @@ Now I understand this requirement is rather beefy, but consider:
 
 Finally I want to mention that beyond the hardware, `everything we will use is completely free`. This course ain't upselling a full course, and every piece of software is freely available. The sole exception has free alternatives, which I'm about to discuss with you right now. 
 
-# 1.3 HOSTED HYPERVISOR
+# 1.3. Hosted Hypervisor
 So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like *Inception* - it allows us to create systems within our systems. 
 
 {{< figure src="/img/inception.gif" title="" class="custom-figure" >}}
@@ -124,7 +124,7 @@ Once that's done with feel free to proceed...
 
 {{< figure src="/img/pleasego.gif" title="" class="custom-figure-2" >}}
 
-# 1.4 VM IMAGES
+# 1.4. VM Images
 
 Now that you have your hypervisor up and running the next thing we need to do is install our actual virtual machines. There are a few ways to do this, you can for example simply download the entire VM and simply import it into your hypervisor. This does usually mean that the file you'll be downloading will be quite large, so we'll opt for another approach - using iso files. You can think of an iso file simply as a "virtual copy" of the installation disc. So instead of importing the completed VM, we will be installing the VM ourselves using the iso image. 
 
@@ -135,11 +135,11 @@ So please go ahead and download the following 3 iso's:
 
 Once you've successfully downloaded all three iso images we are ready to proceed. 
 
-# 1.5 VM 1: WINDOWS 10 AKA "THE VICTIM" 
+# 1.5. VM 1: Windows 10 aka "The Victim" 
 
 {{< figure src="/img/screamdrew.gif" title="" class="custom-figure" >}}
  
-# 1.5.1 INSTALLATION
+# 1.5.1. Installation
 
 1. In VMWare Workstation goto `File` -> New Virtual Machine. 
 2. Choose `Typical (recommended)`, then click `Next`. 
@@ -171,7 +171,7 @@ Choose any username and password, in my case it'll be the highly original choice
 
 Windows will now finalize installation + configuration, this could take a few minutes, whereafter you will see your desktop.
 
-# 1.5.2 VMWARE TOOLS
+# 1.5.2. VMWare Tools
 Next we'll install VMWare Tools which for our purposes does two things. First, it ensure that our VMs screen resolution assumes that of our actual monitor, but more importantly it also gives us the ability to copy and paste between the host and the VM. 
 
 So just to be sure, at this point you should be staring at a Windows desktop. Now in the VMWare menu bar click `VM` and then `Install VMWare Tools`. If you open `Explorer` (in the VM) you should now see a `D:` drive. 
@@ -186,7 +186,7 @@ Right-click on your VM and select `Settings`. In the list on the LHS select `Dis
 
 Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
-# 1.5.3 Deep disable MS Defender + Updates
+# 1.5.3. Deep disable MS Defender + Updates
 
 I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. You see, Windows thinks of you as a younger sibling - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your OS kernel if you so desired.) 
 
@@ -408,7 +408,7 @@ That's it! You should now see both `Victim Template` and `Victim01` in your libr
 
 The bad news - we still have two VMs to install. The good news - they will require minimal-to-no configuration, so at this point we're about 80% done with our VM setup. So let's get it done.
 
-# VM 2: Kali Linux aka "The Attacker" 
+# 1.6. VM 2: Kali Linux aka "The Attacker" 
 {{< figure src="/img/attacker.gif" title="" class="custom-figure" >}}
 
 We'll be using Kali Linux to simulate the attacker. The great thing about Kali Linux is that everything we'll need comes pre-packaged, so we just have to install the actual operating system. 
@@ -417,9 +417,6 @@ We'll be using Kali Linux to simulate the attacker. The great thing about Kali L
 2. `Typical (recommended)` and hit `Next`. 
 3. `I will install the operating system later` and hit `Next`.
 4. Select `Linux`, and under Version select `Debian 11.x 64-bit`. (Note: Kali Linux is built on top of Debian Linux).
-
-{{< figure src="/img/image023.png" title="" class="custom-figure-2" >}}
-
 5. Again call the machine whatever you'd like, in my case I am calling it `Hacker`. 
 6. Increase the Maximum disk size to 60 GB and select `Split virtual disk into multiple files`. 
 7. Then on the final screen click on `Customize Hardware`.
@@ -455,10 +452,11 @@ And that's it for our attacker machine - feel free to repeat the Template-Clonin
 
 
 
-# VM 3: Ubuntu Linux 20.04 aka "The Analyst" 
-{{< figure src="/img/analysis.gif" title="" class="custom-figure" >}}
+# 1.7. VM 3: Ubuntu Linux 20.04 aka "The Analyst" 
+# 1.7.1. Installation
+{{< figure src="/img/analysis.gif" title="" class="custom-figure-3" >}}
 
-And now finally we'll set up our Ubuntu VM, afterwards we'll install RITA (incl Zeek), and Volatility. 
+And now finally we'll set up our Ubuntu VM.
 
 1. In VMWare hit `File` > `New Virtual Machine...`
 2. `Typical (recommended)` and hit `Next`. 
@@ -470,35 +468,33 @@ And now finally we'll set up our Ubuntu VM, afterwards we'll install RITA (incl 
 8. Under `Memory` I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Ubuntu Linux 20.04 iso image. Make sure `Connect at power on` is enabled.
-11. And again for `Network Adapter` we'll keep it as either `NAT` or `Bridged` for now. Click `Close` then `Finish`.
+Click `Close` then `Finish`.
 
 So now let's get to actually installing it:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
 2. Select `Try or Install Ubuntu`.
 3. Once it boots up the GUI, select `Install Ubuntu`.
-
-{{< figure src="/img/image027.png" title="" class="custom-figure" >}}
-
 4. Select your keyboard and language, hit `Continue`.
-5. Keep `Normal Installation` selected, unselect `Download updates while installing Ubuntu`.
-
-{{< figure src="/img/image028.png" title="" class="custom-figure" >}}
-
+5. Keep `Normal Installation` selected, deselect `Download updates while installing Ubuntu`.
 6. Keep `Erase disk and install Ubuntu` selected, then hit `Install Now`. 
 7. For the popup asking if you want to `Write the changes to disks?`, hit `Continue`.
 8. Choose a timezone and hit `Continue`.
 9. Now fill in your name and desired credentials, I'll be using `analyst` and `password`.
 10. When it's complete you can power the system off. Go into settings, under `CD/DVD (SATA)` disable `Connect at power on`.
 11. Then goto `Display`, disable `Stretch mode`.
-12. Hit `OK`, start the VM up once again, log in.
+12. Hit `OK`, start the VM up once again, and log in.
 
 `NOTE: A few moments after logging in and answer Ubuntu's questions you'll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.`
 
-{{< figure src="/img/image029.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image029.png" title="" class="custom-figure-2" >}}
 
-OK, that's it and now finally we'll install RITA, Zeek, and Volatility.
+OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next course. So feel free to skip this, or just get it done with now so that in the next course everything is good-to-go.
 
-# RITA + Zeek
+# 1.7.2. Install Software
+
+
+
+
 
 Here's the cool thing about RITA: it will automatically install Zeek (and MariaDB btw) when you install it. Even better, it actually makes alterations to the standard Zeek config which will serve us even better - I'll discuss the exact details of this and why it's important when we get to that section in our course. For now let's get to installing.
 
@@ -508,7 +504,7 @@ Here's the cool thing about RITA: it will automatically install Zeek (and MariaD
 
 {{< figure src="/img/image030.png" title="" class="custom-figure" >}}
 
-# Volatility
+# 1.Volatility
 
 Similarly to RITA we'll install Volatility by downloading/cloning the repo.
 1. Either download the zip file from the repo [here](https://github.com/volatilityfoundation/volatility3), or run the command below from terminal to clone the repo
