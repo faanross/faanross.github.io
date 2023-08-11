@@ -272,7 +272,7 @@ Once your system has restarted in `Safe mode`...
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdNisSvc`
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdFilter`
 
-{{< figure src="/img/image015.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image015.png" title="" class="custom-figure-3" >}}
 
 8. **Disable Updates via Registry**
     1. Still in `Registry Editor` let's navigate to the following:
@@ -282,7 +282,7 @@ Once your system has restarted in `Safe mode`...
     4. Double-click the new `AUOptions` key and change its value to `2`. Click `OK` - see image below.
     5. Close Registry Editor.
 
-{{< figure src="/img/image016.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image016.png" title="" class="custom-figure-3" >}}
 
 9. **Leave Safe Mode**
     1. All that's left to do is get back into our regular Windows environment.
@@ -298,17 +298,19 @@ But before we learn to do that, let's setup all the awesome tools we'll be using
 
 # 1.5.4. Sysmon 
 
-You should now be back in the normal Windows environment looking at your desktop. Let's set up `Sysmon` - a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
+You should now be back in the normal Windows environment looking at your desktop. Let's set up ***Sysmon*** - a simple, free, Microsoft-owned program that will *dramatically* improve our logging ability. 
 
-Before we get installing `Sysmon` there's just one thing you need to know - in addition to downloading the actual `Sysmon` file we also need a config file. One day when you get to *that* level you can even create your own config file, which will allow you to make it behave exactly how you want it to. 
+{{< figure src="/img/lumberjack.gif" title="" class="custom-figure" >}}
+
+Before we install ***Sysmon*** there's just one thing you need to know - in addition to downloading ***Sysmon*** itself, we also need a config file. One day when you get to *that* level you can even create your own config file, which will allow you to make it behave exactly how you want it to. 
 
 But for now, since we are decidedly not yet there, let's download and use one made by some really smart people. Of late  I have heard a few trusted sources, included [Eric Conrad](https://www.ericconrad.com) prefer [this version from Neo23x0](https://github.com/bakedmuffinman/Neo23x0-sysmon-config) whose authors included another blue team giant, [Florian Roth](https://twitter.com/cyb3rops?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor). 
 
-So first download the config file (which is in xml format) from the link above, then [go here to download Sysmon](https://download.sysinternals.com/files/Sysmon.zip). You should now have two zip files - the config you downloaded from Github, as well as the Sysmon zip file. Extract the Sysmon file, the contents should look as follows:
+So first download the [config file](https://github.com/bakedmuffinman/Neo23x0-sysmon-config), then [go here to download Sysmon](https://download.sysinternals.com/files/Sysmon.zip). You should now have two zip files - the config you downloaded from Github, as well as the ***Sysmon*** zip file. Extract the ***Sysmon*** archive, the contents should look as follows:
 
-{{< figure src="/img/image017.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image017.png" title="" class="custom-figure-3" >}}
 
-Now also extract the zip file containing the config. Inside of the folder rename `sysmonconfig-export.xml` to `sysmonconfig.xml`. Now simply cut (or copy) the file and paste it in the folder containing `Sysmon`. 
+Now also extract the zip file containing the config. Inside of the folder rename `sysmonconfig-export.xml` to `sysmonconfig.xml`. Now simply cut (or copy) the file and paste it in the folder containing ***Sysmon***. 
 
 Great, everything is set up so now we can install it with a simple command. Open command prompt as administrator and navigate to the folder containing `Sysmon` and the config file - in my case it is `c:\Users\User\Downloads\Sysmon`. Run the following command:
 
@@ -1236,7 +1238,7 @@ That being the case let's move on to the log analysis. For this we'll once again
 
 So the time has come for us to get into some LOGGING...
 
-{{< figure src="/img/lumberjack.gif" title="" class="custom-figure" >}}
+
 
 Now typically we might think of logging as belonging more to the realm of the SOC than a threat hunter. That's because, at least in the way that modern logging practices operate, logging is not seen as something directly approachable by a human operator. Why? Well because of the ***insane*** amount of data involved. It's not unusual for enterprises to generate millions of log events in their SIEM *daily*, and thus it's completly infeasible for a threat hunter to start poking around looking for bread crumbs. We think of logging has something that we feed into the SIEM, and then wait for an alert to act on - i.e. the work of a SOC. 
 
