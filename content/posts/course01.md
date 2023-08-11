@@ -552,24 +552,26 @@ Yeah it's time for all this installing and configuring to pay off - let's we kic
 ***
 
 # 2. Performing the Attack 
-# Introduction 
+# 2.1. Introduction 
 Why are we performing the attack ourselves? Why didn't I just do it, export all the requisite artifacts, and share this with you? Why am I making you go through this rigmarole - is it simply that I am cruel?
 
 {{< figure src="/img/cruel.gif" title="" class="custom-figure" >}}
 
 Nah. The reason is pretty simple - I have a deep sense of conviction that one can only truly "get" defense if you equally "get" offense. If I just black box that entire process and give you the data, then once we start hunting everything is abstract. The commands we ran, the files we used, the techniques we employed etc are all just ideas.So then, when you learn to threat hunt these artifacts that exists solely as ideas it'll mostly be memorization - if X happens then I do Y.
 
-But, if instead you do the attack first and learn everything involved by doing it yourself, it does not exist as an abstract idea but as a concrete experience. I think then when you perform the threat hunt, because you have a connection to these things you are hunting, well then you learn less through memorization and more through understanding. 
+But, if instead you do the attack first and learn by doing it yourself, it does not exist as an abstract idea but as a concrete experience. I think then when you perform the threat hunt, because you have a connection to these things you are hunting, well then you learn less through memorization and more through understanding. 
 
 {{< figure src="/img/cereal.gif" title="" class="custom-figure" >}}
 
 So let's jump into a bit of theory that will help us understand just what we are getting up to once we perform the actual attack, which will follow immediately afterwards.
 
-# Theory
-# what is a DLL?
-As succinct as possible, a DLL is a file containing shared code. It's not a program or an executable in and of itself, rather a DLL is in essence a collection of functions and data that can be used by other programs. 
+# 2.2. Theory
+# 2.2.1. What is a DLL?
+A DLL is a file containing shared code. It's not a program or an executable in and of itself, rather a DLL is in essence a collection of functions and data that can be used by other programs. Hence the name being Dynamic Link ***Library***.
 
-So think of a DLL as a communal resource: let's say you have 4 programs running and they all want to use a common function - let's say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they'll instead access a DLL that contains the function to minimize gui windows instead. So when you click on the minimize icon and that program needs the code to know how to behave, it does not get instructions from its own program code, rather it pulls it from the appropriate DLL with some help from the Windows API. 
+{{< figure src="/img/library.gif" title="" class="custom-figure" >}}
+
+So think of a DLL as a virtual communal resource: let's say you have 4 programs running and they all want to use a common function - let's say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they'll instead access a DLL that contains the function to minimize gui windows instead. So when you click on the minimize icon and that program needs the code to know how to behave, it does not get instructions from its own program code, rather it pulls it from the appropriate DLL with some help from the Windows API. 
 
 Thus any program you run will constantly call on different DLLs to get access to a wide-variety of common (and often critical) functions and data.
 
