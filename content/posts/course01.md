@@ -312,33 +312,35 @@ So first download the [config file](https://github.com/bakedmuffinman/Neo23x0-sy
 
 Now also extract the zip file containing the config. Inside of the folder rename `sysmonconfig-export.xml` to `sysmonconfig.xml`. Now simply cut (or copy) the file and paste it in the folder containing ***Sysmon***. 
 
-Great, everything is set up so now we can install it with a simple command. Open command prompt as administrator and navigate to the folder containing `Sysmon` and the config file - in my case it is `c:\Users\User\Downloads\Sysmon`. Run the following command:
+Great, everything is set up so now we can install it with a simple command. Open command prompt as administrator and navigate to the folder containing ***Sysmon*** and the config file - in my case it is `c:\Users\User\Downloads\Sysmon`. Run the following command:
 
 ```
 Sysmon.exe -accepteula -i
 ```
 
-This is what a successful installation will look like
+This is what a successful installation will look like:
 
 {{< figure src="/img/image018.png" title="" class="custom-figure" >}}
 
-Now let's just validate that it's running. First type `powershell` so we change over into a PS shell, then run the command `Get-Service sysmon`. In the image below we can see it is running - we are good to go!
+Now let's just validate that it's running. In the command prompt run the command `powershell` so we change over into a PS shell. Then, run the command `Get-Service sysmon`. In the image below we can see it is running - we are good to go!
 
 {{< figure src="/img/image019.png" title="" class="custom-figure" >}}
 
-That's it for Sysmon, now let's enable PowerShell logging. 
+That's it for Sysmon, now let's enable PowerShell ScriptBlock logging. 
 
-# PowerShell Logging
+# 1.5.5. PowerShell ScriptBlock Logging
 
-For security purposes, another quick and easy proverbial switch we can flip is enabling PowerShell logging. This is great because one specific type of PowerShell logs (`ScriptBlock`) will record exactly what command was run in PowerShell. As we know, in-line with the `Living off the Land` paradigm, modern adversaries LOVE abusing PowerShell; and so the ability to see  exactly what commands were run is obviously a huge boon. 
+For security purposes, another quick and easy switch we can flip is enabling PowerShell logging. This is great because one specific type of PowerShell logs (`ScriptBlock`) will record exactly what command was run in PowerShell. As we know, in-line with the `Living off the Land` paradigm, modern adversaries LOVE abusing PowerShell. It should this be clear why having logs of commands that were run in PowerShell could potentially be of huge benefit to us. 
 
-Something to be aware of is that there are a few types of PowerShell logging: Module, ScriptBlock, Operational, Transcription, Core, and Protected Event. For the purposes of this course we will only be activating `ScriptBlock`, as well as `Operational`. While activating the former tells PowerShell to log the commands, we also need to activate `Operational` so that the system is able to properly save the logs. 
+Something to be aware of is that there are a few types of PowerShell logging: Module, ScriptBlock, Operational, Transcription, Core, and Protected Event. For the purposes of this course we will be activating `ScriptBlock`, as well as `Operational`. While activating the former tells PowerShell to log the commands, we also need to activate `Operational` so that the system is able to properly save the logs. 
 
-NOTE: This entire process could be performed in the GUI using `Group Policy Editor`, we will however be performing it via PowerShell command line. You should **always** prefer this method to using the GUI. Not simply to look cool, nay, there is a very good practical reason for this.
+NOTE: This entire process could be performed in the GUI using `Group Policy Editor`, we will however be performing it via PowerShell command line. You should ***always*** prefer this method to using the GUI when it comes to enabling logs. Not simply to look cool, nay, there is a very good practical reason for this.
 
-Imagine for a moment you needed to activate this feature on 1000 stations. You could either do so by logging into each station individually and interacting with the `gpedit` GUI interface, which would likely take you a few days working at a ferocious pace like an automaton for 1000 stations. Alternatively, you could run a single command from a domain controller, which would take less than a minute for 1000 stations. 
+{{< figure src="/img/verycool.gif" title="" class="custom-figure" >}}
 
-This is an admittedly dramatic way of saying that performing administrative tasks using PowerShell commands scales well, while flipping GUI toggles does not scale at all. So invest your time early on learning the methods that don't break down the moment you need to do it at scale, it's so worth it. 
+Imagine for a moment you needed to activate this feature on 1000 stations. You could either do so by logging into each station individually and interacting with the `gpedit` GUI interface, which would likely take you a few days working at a ferocious pace for all 1000 stations. Alternatively, you could run a single command from a domain controller, which would take less than a minute for any amount of stations. 
+
+This is an admittedly dramatic way of saying that performing administrative tasks using PowerShell commands scales well, while flipping GUI toggles does not scale at all. So invest your time early on learning the methods that won't break down the moment you need to do it at scale, it's so worth it. 
 
 {{< figure src="/img/worth.gif" title="" class="custom-figure" >}}
 
