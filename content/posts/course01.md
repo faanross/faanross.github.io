@@ -180,7 +180,7 @@ So just to be sure, at this point you should be staring at a Windows desktop. No
 
 Double-click the drive, hit `Yes` when asked if we want this app to make changes to the device. Hit `Next`, select `Typical` and hit `Next`. Finally hit `Install` and then once done `Finish`. You'll need to restart your system for the changes to take effect, but we'll shut it down since we need to change a setting. So hit the Windows icon, Power icon, and then select `Shut Down`.
 
-Right-click on your VM and select `Settings`. In the list on the LHS select `Display`, which should be right at the bottom. On the bottom - deselect `Automatically adjust user interface size in the virtual machine`, as well as `Strech mode`, it should now look like this:
+Right-click on your VM and select `Settings`. In the list on the LHS select `Display`, which should be right at the bottom. On the bottom - deselect `Automatically adjust user interface size in the virtual machine`, as well as `Stretch mode`, it should now look like this:
 
 {{< figure src="/img/image009.png" title="" class="custom-figure" >}}
 
@@ -200,9 +200,7 @@ Yes, the AV might pick up on our mischievous escapades here since we are using a
 
 And as for updates, we disable this because sometimes we can spend all this time configuring and setting things up and then one day we boot up our VM up, Windows does it's whole automatic update schpiel, and suddenly things are broken. This is thus a small time investment to hedge against extreme potential frustration. *So worth it*. 
 
-{{< figure src="/img/do_it_now.gif" title="" class="custom-figure" >}}
-
-simply to support the stability of our long-term use of this VM. 
+{{< figure src="/img/do_it_now.gif" title="" class="custom-figure" >}} 
 
 1. **Disable Tamper Protection**
     1. Hit the `Start` icon, then select the `Settings` icon.
