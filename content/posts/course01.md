@@ -145,14 +145,14 @@ Once you've successfully downloaded all three iso images we are ready to proceed
 2. Choose `Typical (recommended)`, then click `Next`. 
 3. Then select `I will install the operating system later` and hit `Next`.
 
-{{< figure src="/img/image001.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image001.png" title="" class="custom-figure-2" >}}
 
 4. Select `Microsoft Windows`, and under Version select `Windows 10`. 
 5. Here you are free to call the machine whatever you'd like, in my case I am calling it `Victim`. 
 6. Select 60 GB and `Split virtual disk into multiple files`. 
 7. Then on the final screen click on `Customize Hardware`.
 
-{{< figure src="/img/image002.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image002.png" title="" class="custom-figure-2" >}}
 
 8. Under `Memory` (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
@@ -165,7 +165,7 @@ Wait a short while and then you should see a Windows Setup window. Choose your d
 
 Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the `License Agreement` (if you dare - ***mwhahaha!***). Now once you reach the `Sign in` page don’t fill anything in, rather select `Domain join instead` in the bottom left-hand corner.
 
-{{< figure src="/img/image006a.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image006a.png" title="" class="custom-figure-2" >}}
 
 Choose any username and password, in my case it'll be the highly original choice of `User` and `password`. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it - randomly hitting the keyboard a few times will do just fine. Turn off all the privacy settings, and for `Cortana` select `Not Now`.
 
@@ -176,13 +176,13 @@ Next we'll install VMWare Tools which for our purposes does two things. First, i
 
 So just to be sure, at this point you should be staring at a Windows desktop. Now in the VMWare menu bar click `VM` and then `Install VMWare Tools`. If you open `Explorer` (in the VM) you should now see a `D:` drive. 
 
-{{< figure src="/img/image008.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image008.png" title="" class="custom-figure-2" >}}
 
 Double-click the drive, hit `Yes` when asked if we want this app to make changes to the device. Hit `Next`, select `Typical` and hit `Next`. Finally hit `Install` and then once done `Finish`. You'll need to restart your system for the changes to take effect, but we'll shut it down since we need to change a setting. So hit the Windows icon, Power icon, and then select `Shut Down`.
 
 Right-click on your VM and select `Settings`. In the list on the LHS select `Display`, which should be right at the bottom. On the bottom - deselect `Automatically adjust user interface size in the virtual machine`, as well as `Stretch mode`, it should now look like this:
 
-{{< figure src="/img/image009.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image009.png" title="" class="custom-figure-2" >}}
 
 Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
