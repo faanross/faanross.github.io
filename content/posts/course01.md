@@ -259,8 +259,10 @@ Almost there! We just need to boot into Safe Mode to make some final adjustments
     
 {{< figure src="/img/image014.png" title="" class="custom-figure" >}}
 
+Once your system has restarted in `Safe mode`...
+
 7. **Disable Defender via Registry**
-    1. Open the Run dialog box by pressing Win+R.
+    1. Open the `Run` dialog box by pressing Win+R.
     2. Write `regedit` and hit enter, this should bring up the `Registry Editor`.
     3. Below you will see a list of 6 keys. For each of these keys you will follow the same process: once the key is selected find the `Start` value in the RHS, double-click, change the value to `4` and hit `OK` - see image below.
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `Sense`
