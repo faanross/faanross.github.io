@@ -65,6 +65,21 @@ Mistakes themselves of course represent the potential for further understanding 
 | 1.2 | Requirements |
 | 1.3 | Hosted Hypervisor |
 | 1.4 | VM Images |
+| 1.5 | VM 1: Windows 10 aka "The Victim" |
+| 1.5.1 | Installation |
+| 1.5.2 | VMWare Tools |
+| 1.5.3 | Deep disable MS Defender + Updates |
+| 1.5.4 | Sysmon |
+| 1.5.5 | PowerShell ScriptBlock Logging |
+| 1.5.6 | Install Software |
+| 1.5.7 | Creating a Template |
+| 1.6 | VM 2: Kali Linux aka "The Attacker" |
+| 1.7 | VM 3: Ubuntu Linux 20.04 aka "The Analyst" |
+| 1.7.1 | Installation |
+| 1.7.2 | Install Software |
+| 2 | `Performing the Attack` | 
+
+
 
 
 ***
@@ -493,12 +508,12 @@ So now let's install Focal Fossa:
 OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next one. So feel free to skip this, or just get it done with now so that next time everything is gtg.
 
 # 1.7.2. Install Software
-# 1.7.2.1. Volatility3
+# Volatility3
 1. Either download the zip file from the repo [here](https://github.com/volatilityfoundation/volatility3), or run the command below from terminal to clone the repo:
 ```
 git clone https://github.com/volatilityfoundation/volatility3.git
 ```
-2. Next we'll need to install `pip`, which is a package manager for Python (***Volatility*** is written in Python). We'll do this so we can install all the required package dependencies. Run the following commands:
+2. Next we'll need to install ***pip***, which is a package manager for ***Python*** (***Volatility*** is written in ***Python***). We'll do this so we can install all the required package dependencies. Run the following commands:
 ```
 sudo apt update
 sudo apt install python3-pip
@@ -508,7 +523,7 @@ sudo apt install python3-pip
 pip3 install -r requirements.txt
 ```
 
-# 1.7.2.2. WireShark
+# WireShark
 1. Run the following command to update the packet repository cache:
 ```
 sudo apt update
@@ -518,44 +533,27 @@ sudo apt update
 sudo apt install wireshark
 ```
 
-# 1.7.2.3. RITA (Optional)
+# RITA (Optional)
 
 Here's the cool thing about installing ***RITA***: when we do so it will also automatically install ***Zeek***, which is another amazing tool for traffic analysis we'll be using in the future. 
 
 1. Goto the [RITA Github repo](https://github.com/activecm/rita).
 2. Scroll down to `Install` and follow the instructions using the `install.sh` script. During installation you will be asked a few questions, answer `y` and hit enter each time. 
-3. Let's check the version of RITA to ensure installation was successful. First close your terminal and reopen and then run the commands seen in image below, you should get similar results. 
+3. Let's check the version of RITA to ensure installation was successful. First close your terminal, reopen, and then run the commands seen in image below. You should get similar results. 
 
 {{< figure src="/img/image030.png" title="" class="custom-figure" >}}
 
+OK. Do you know what time it is? 
 
-
-
-4. We're done, feel free to shut down your Ubuntu VM as we won't be using it for some time. 
-
-OK. Do you know what time it is? Yeah it's time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let's get it!
+Yeah it's time for all this installing and configuring to pay off - let's we kick things off by performing the attack! Let's get it!
 
 {{< figure src="/img/strangelove.gif" title="" class="custom-figure" >}}
-
-
-
-
-
-
-
-
-# 1.Volatility
-
-
-
-
-
 
 ***
 
 # 2. Performing the Attack 
 # Introduction 
-Why are we performing the attack ourselves? Why didn't I just do it, export all the requisite artifacts, and share this with you? Why did I make you go through this rigmorale - is it simply that I am cruel?
+Why are we performing the attack ourselves? Why didn't I just do it, export all the requisite artifacts, and share this with you? Why did I make you go through this rigmarole - is it simply that I am cruel?
 
 {{< figure src="/img/cruel.gif" title="" class="custom-figure" >}}
 
