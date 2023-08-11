@@ -204,7 +204,7 @@ And as for updates, we disable this because sometimes we can spend all this time
 
 1. **Disable Tamper Protection**
     1. Hit the `Start` icon, then select the `Settings` icon.
-    2. Select **`Update & Security `**.
+    2. Select `Update & Security `.
     3. In LHS column, select `Windows Security`, then click `Open Windows Security`.
     4. A new window will pop up. Click on `Virus & threat protection`.
     5. Scroll down to the heading that says `Virus & threat protection settings` and click on `Manage settings`.
@@ -216,10 +216,10 @@ And as for updates, we disable this because sometimes we can spend all this time
     
 2. **Disable the Windows Update service**
     1. Open the Run dialog box by pressing Win+R.
-    2. Type **`services.msc`** and press Enter.
-    3. In the Services list, find **`Windows Update`**, and double-click it.
-    4. In the Windows Update Properties (Local Computer) window, under the **`General`** tab, in the **`Startup type:`** dropdown menu, select **`Disabled`** - see image below.
-    5. Click **`Apply`** and then **`OK`**.
+    2. Type `services.msc` and press Enter.
+    3. In the Services list, find `Windows Update`, and double-click it.
+    4. In the Windows Update Properties (Local Computer) window, under the `General` tab, in the `Startup type:` dropdown menu, select `Disabled` - see image below.
+    5. Click `Apply` and then `OK`.
     
  {{< figure src="/img/image011.png" title="" class="custom-figure-2" >}}
 
@@ -278,25 +278,27 @@ Once your system has restarted in `Safe mode`...
     1. Still in `Registry Editor` let's navigate to the following:
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SOFTWARE` > `Microsoft` > `Windows` > `CurrentVersion` > `WindowsUpdate` > `Auto Update`
     2. Right-click the `Auto Update` key, select `New`, and then click `DWORD (32-bit) Value`.
-    3. Name the new key **`AUOptions`** and press Enter.
-    4. Double-click the new **`AUOptions`** key and change its value to **`2`**. Click **`OK`** - see image below.
+    3. Name the new key `AUOptions` and press Enter.
+    4. Double-click the new `AUOptions` key and change its value to `2`. Click `OK` - see image below.
     5. Close Registry Editor.
 
 {{< figure src="/img/image016.png" title="" class="custom-figure" >}}
 
 9. **Leave Safe Mode**
     1. All that's left to do is get back into our regular Windows environment.
-    2. Open the Run dialog box by pressing Win+R.
+    2. Open the `Run` dialog box by pressing Win+R.
     3. Write `msconfig` and hit enter.
     4. Select `Boot` tab.
     5. Deselect `Safe boot`, hit `Apply`, hit `OK`.
     6. Hit `Restart`.
 
-And that, I can promise you, is by far the most boring part of this entire course. But I did it on purpose - this is very important if you are going to start simulating attacks and threat hunting on your own system. And the cool thing is now that we've done it we'll also learn how to create templates + clones in bit, meaning hence forth when you want a victim Windows 10 VM you can simply clone this one with a few clicks instead of going through that entire process again. But before that, let's setup all the awesome tools we'll be using in this course. 
+And that, I can promise you, is by far the most boring part of this entire course. But the good news is that this is potentially the last time you have to do it. *Ever*. This is because we can not convert this VM to a template and clone it indefinitely in the future. 
 
-# Sysmon 
+But before that, let's setup all the awesome tools we'll be using in this course. 
 
-You should now be back in the normal Windows environment looking at your Desktop. Let' set up `Sysmon` - a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
+# 1.5.4. Sysmon 
+
+You should now be back in the normal Windows environment looking at your desktop. Let' set up `Sysmon` - a simple, free, Microsoft-owned program that will DRAMATICALLY improve our logging ability. 
 
 
 
