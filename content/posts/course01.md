@@ -344,7 +344,7 @@ This is an admittedly dramatic way of saying that performing administrative task
 
 {{< figure src="/img/worth.gif" title="" class="custom-figure" >}}
 
-So open up PowerShell as an administrator and run the following commands.
+Open PowerShell as an administrator:
 1. First we'll set the execution policy to allow us to make the changes:
 ```
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine
@@ -362,27 +362,31 @@ New-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\PowerShell\Scri
 wevtutil sl "Microsoft-Windows-PowerShell/Operational" /e:true
 ```
 
-# Install Software
+# 1.5.6. Install Software
 
-And now finally we'll install four programs:
-- We'll use **Process Hacker** for live memory forensics 
-- We'll use **winpmem** to create a memory dump for post-mortem memory forensics 
-- We'll use **Wireshark** to generate a pcap for egress analysis
+And now we'll install three programs:
+- We'll use **Process Hacker** for live memory forensics. 
+- We'll use **winpmem** to create a memory dump for post-mortem memory forensics. 
+- We'll use **Wireshark** to generate a pcap for traffic analysis.
 
-You can download [Process Hacker here](https://processhacker.sourceforge.io/downloads.php). Once downloaded go ahead and install.
+You can download [Process Hacker here](https://processhacker.sourceforge.io/downloads.php). Once downloaded go ahead and install it.
 
 You can download the latest release of [winpmem here](https://github.com/Velocidex/WinPmem/releases). Since its a portable executable there is no installation required, just download the `.exe` file and place it on the desktop. 
 
-And finally the `WireShark` setup file can be [downloaded from here](https://2.na.dl.wireshark.org/win32/Wireshark-win32-3.6.15.exe). Once downloaded run Setup, just keep all options per default, nothing fancy required. 
+And finally the `WireShark` setup file can be [downloaded from here](https://2.na.dl.wireshark.org/win32/Wireshark-win32-3.6.15.exe). Once downloaded run setup, just keep all options per default, nothing fancy required. 
 
-That's it friend. We are done with BY FAR the heaviest lifting in terms of VM setup - the next two will be a breeze. But before we get to that there's one very simple thing we can do that will make our lives much easier in the future - turning this VM into a template for cloning.
+That's it friend. We are done with BY FAR the heaviest lifting in terms of VM setup - the remaining two will comparatively be a breeze. But before we get to that there's one very simple thing we can do that will make our lives much easier in the future - turning this VM into a template for cloning.
 
-# Creating a Template 
+# 1.5.7. Creating a Template 
+
+So why do we want to do this again? Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same "victim" system for any project or course we can simply clone it as many times as we want. 
 
 {{< figure src="/img/mememe.gif" title="" class="custom-figure" >}}
 
-So why do we want to do this? Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same "victim" system for any project or course we can simply clone it. Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in under a minute. This is also useful if we ever "mess up" the VM, we can just come back to this starting point where the machine is fresh, but all our configurations and software are as required. 
+Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in a few seconds. This is also useful if we ever "mess up" the VM, we can just come back to this starting point.
 
+
+So just follow along with these few simple steps:
 1. First shut down the VM.
 2. In VMWare you should see the library pane on the LHS listing our VM. If you don't, hit `F9`, or go to `View` > `Customize` > `Library`.
 3. Right-click on our VM (`Victim`), select `Snapshot` > `Take Snapshot`.
@@ -392,12 +396,9 @@ So why do we want to do this? Well by turning this VM we just created into a tem
 7. Go down to the bottom and select `Advanced`.
 8. Select `Enable Template mode (to be used for cloning)`, hit `OK`.
 
-{{< figure src="/img/image021.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image021.png" title="" class="custom-figure-3" >}}
 
 9. Note you might want to rename this VM to something like `Victim Template`, so we are aware this is the template that we should not be using, but rather use for cloning. You can do this under `Settings` > `Options` > `General`.
-
-{{< figure src="/img/image022.png" title="" class="custom-figure" >}}
-
 10. Now let's create our first clone which we will actually be using in the course. Right-click on `Victim Template`, select `Manage` > `Clone`. Hit `Next`.
 11. We'll select the snapshot we created and hit `Next`. 
 12. Keep selection as `Create a linked clone` and hit `Next`. 
@@ -410,14 +411,14 @@ The bad news - we still have two VMs to install. The good news - they will requi
 # VM 2: Kali Linux aka "The Attacker" 
 {{< figure src="/img/attacker.gif" title="" class="custom-figure" >}}
 
-We'll be using Kali Linux to simulate the adversary. The great thing about Kali Linux is that everything we'll need comes pre-packaged, so we just have to install the actual operating system. 
+We'll be using Kali Linux to simulate the attacker. The great thing about Kali Linux is that everything we'll need comes pre-packaged, so we just have to install the actual operating system. 
 
 1. In VMWare hit `File` > `New Virtual Machine...`
 2. `Typical (recommended)` and hit `Next`. 
 3. `I will install the operating system later` and hit `Next`.
 4. Select `Linux`, and under Version select `Debian 11.x 64-bit`. (Note: Kali Linux is built on top of Debian Linux).
 
-{{< figure src="/img/image023.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image023.png" title="" class="custom-figure-2" >}}
 
 5. Again call the machine whatever you'd like, in my case I am calling it `Hacker`. 
 6. Increase the Maximum disk size to 60 GB and select `Split virtual disk into multiple files`. 
@@ -425,35 +426,34 @@ We'll be using Kali Linux to simulate the adversary. The great thing about Kali 
 8. Under `Memory` I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Kali Linux iso image.
-11. And again for `Network Adapter` we'll keep it as either `NAT` or `Bridged` for now. Click `Close` then `Finish`.
+
+{{< figure src="/img/kali.gif" title="" class="custom-figure-2" >}}
 
 So now let's get to actually installing it:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
 2. Select `Graphical Install`.
 3. Select language, country etc.
 4. Choose any `Hostname`, leave `Domain name` blank, for Full name and username I chose `hacker`.
-5. Create a password, again though OBVIOUSLY not a suggested real-world practice, in these simulations I tend to simply use `password` since it minimizes any administrative friction. 
+5. Create a password, again though OBVIOUSLY not a suggested real-world practice, in these simulations I tend to simply use `password` since it minimizes any operational friction. 
 6. Choose a timezone.
 7. Next select `Guided - use entire disk` and hit `Continue`.
 8. The only disk should be selected, hit `Continue`.
 9. Keep `All files in one partition (recommended for new users)`, hit `Continue`.
 10. Keep `Finish partitioning and write changes to disk`, hit `Continue`.
 11. Select `Yes` and `Continue`.
-12. In `Software selection` keep the default selection and hit `Continue`. Kali will now start installing, just be aware this can take a few minutes, probably around 5 to 10. 
-
-{{< figure src="/img/image024.png" title="" class="custom-figure" >}}
-
+12. In `Software selection` keep the default selection and hit `Continue`. Kali will now start installing, just be aware this can take a few minutes, probably around 5 to 10.
 13. Next it'll ask you about installing a GRUB boot loader, keep it selected as `Yes` and hit `Continue`. 
 14. Select `/dev/sda` and hit `Continue`. More installing... 
-
-{{< figure src="/img/image025.png" title="" class="custom-figure" >}}
-
 15. Finally it will inform us it's complete, we can hit `Continue` causing the system to reboot into Kali Linux. Enter your username and password and hit `Log In`.
 16. Let's shut down the VM, then right-click on it in the library and select `Settings`. Under `Display` deselect `Stretch mode` and hit `OK`.
 
-{{< figure src="/img/image026.png" title="" class="custom-figure" >}}
-
 And that's it for our attacker machine - feel free to repeat the Template-Cloning process we performed for our Windows 10 VM if you so desire.
+
+
+
+
+
+
 
 # VM 3: Ubuntu Linux 20.04 aka "The Analyst" 
 {{< figure src="/img/analysis.gif" title="" class="custom-figure" >}}
@@ -468,7 +468,6 @@ And now finally we'll set up our Ubuntu VM, afterwards we'll install RITA (incl 
 6. Increase the Maximum disk size to 60 GB and select `Split virtual disk into multiple files`. 
 7. Then on the final screen click on `Customize Hardware`.
 8. Under `Memory` I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
-- NOTE: Keep in mind that you will never run more than 2 VMs at the same time (Victim + Hacker), this VM will always only run by itself after the simulated attack. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Ubuntu Linux 20.04 iso image. Make sure `Connect at power on` is enabled.
 11. And again for `Network Adapter` we'll keep it as either `NAT` or `Bridged` for now. Click `Close` then `Finish`.
