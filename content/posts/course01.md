@@ -161,11 +161,10 @@ You should now see your VM in your Library (left hand column), select it and the
 
 Wait a short while and then you should see a Windows Setup window. Choose your desired language et cetera, select `Next` and then click on `Install Now`. Select `I accept the license terms` and click `Next`. Next select `Custom: Install Windows only (advanced)`, and then select your virtual HD and click Next.
 
-{{< figure src="/img/image005.png" title="" class="custom-figure" >}}
-
 Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the `License Agreement` (if you dare - ***mwhahaha!***). Now once you reach the `Sign in` page don’t fill anything in, rather select `Domain join instead` in the bottom left-hand corner.
 
 {{< figure src="/img/image006.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image006a.png" title="" class="custom-figure" >}}
 
 Choose any username and password, in my case it'll be the highly original choice of `User` and `password`. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it - randomly hitting the keyboard a few times will do just fine. Turn off all the privacy settings, and for `Cortana` select `Not Now`.
 
