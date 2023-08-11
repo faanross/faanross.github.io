@@ -470,7 +470,7 @@ And now finally we'll set up our Ubuntu VM.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Ubuntu Linux 20.04 iso image. Make sure `Connect at power on` is enabled.
 Click `Close` then `Finish`.
 
-{{< figure src="/img/fossa.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/fossa.gif" title="" class="custom-figure-2" >}}
 
 So now let's install Focal Fossa:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
@@ -488,9 +488,9 @@ So now let's install Focal Fossa:
 
 `NOTE: A few moments after logging in and answer Ubuntu's questions you'll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.`
 
-{{< figure src="/img/image029.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image029.png" title="" class="custom-figure-2" >}}
 
-OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next course. So feel free to skip this, or just get it done with now so that in the next course everything is gtg.
+OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next one. So feel free to skip this, or just get it done with now so that next time everything is gtg.
 
 # 1.7.2. Install Software
 # 1.7.2.1. Volatility3
@@ -503,10 +503,34 @@ git clone https://github.com/volatilityfoundation/volatility3.git
 sudo apt update
 sudo apt install python3-pip
 ```
-3. Once that's complete we can install our package dependencies. Open a terminal and navigate to where you installed/cloned Volatility. Now simply run the following command:
+3. Once that's complete we can install our package dependencies. Open a terminal and navigate to where you cloned ***Volatility***. Now simply run the following command:
 ```
 pip3 install -r requirements.txt
 ```
+
+# 1.7.2.2. WireShark
+1. Run the following command to update the packet repository cache:
+```
+sudo apt update
+```
+2. Now run the following command to install ***WireShark***:
+```
+sudo apt install wireshark
+```
+
+# 1.7.2.3. RITA (Optional)
+
+Here's the cool thing about installing ***RITA***: when we do so it will also automatically install ***Zeek***, which is another amazing tool for traffic analysis we'll be using in the future. 
+
+1. Goto the [RITA Github repo](https://github.com/activecm/rita).
+2. Scroll down to `Install` and follow the instructions using the `install.sh` script. During installation you will be asked a few questions, answer `y` and hit enter each time. 
+3. Let's check the version of RITA to ensure installation was successful. First close your terminal and reopen and then run the commands seen in image below, you should get similar results. 
+
+{{< figure src="/img/image030.png" title="" class="custom-figure" >}}
+
+
+
+
 4. We're done, feel free to shut down your Ubuntu VM as we won't be using it for some time. 
 
 OK. Do you know what time it is? Yeah it's time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let's get it!
@@ -519,14 +543,6 @@ OK. Do you know what time it is? Yeah it's time for all this installing and conf
 
 
 
-
-Here's the cool thing about RITA: it will automatically install Zeek (and MariaDB btw) when you install it. Even better, it actually makes alterations to the standard Zeek config which will serve us even better - I'll discuss the exact details of this and why it's important when we get to that section in our course. For now let's get to installing.
-
-1. Goto the [RITA Github repo](https://github.com/activecm/rita).
-2. Scroll down to `Install` and follow the instructions using the `install.sh` script. During installation you will be asked a few questions, answer `y` and hit enter each time. 
-3. Let's check the version of RITA to ensure installation was successful. First close your terminal and reopen and then run the commands seen in image below, you should get similar results. 
-
-{{< figure src="/img/image030.png" title="" class="custom-figure" >}}
 
 # 1.Volatility
 
