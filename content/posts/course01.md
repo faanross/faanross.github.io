@@ -25,7 +25,7 @@ The main thing I want you to know about this course is that ***we will learn by 
 
 `(3)` We'll then perform the actual threat hunt. We'll initially perform two rounds of live analysis - first using only Windows native tools to check the vitals, and then using *Process Hacker* we'll prod deeper into the memory. 
 
-In the post-mortem analysis we'll cover memory (*Volatility3*), log analysis (*Sysmon* + *PowerShell ScriptBlock*), before wrapping things up with an abbreviated traffic analysis (*WireShark*). 
+In the post-mortem analysis we'll look at the memory dump(*Volatility3*) and perform log analysis (*Sysmon* + *PowerShell ScriptBlock*) before wrapping things up with an abbreviated traffic analysis (*WireShark*). 
 
 `(4)` Finally we'll crystallize all our insights in a report so we can effectively communicate our findings to the greater cybersecurity ecosystem. 
 
@@ -163,13 +163,11 @@ Wait a short while and then you should see a Windows Setup window. Choose your d
 
 {{< figure src="/img/image005.png" title="" class="custom-figure" >}}
 
-Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the `License Agreement` (if you dare - ***mwhahaha!***). Now once you reach the `Sign in` page don’t fill anything in, rather select `Domain join instead` in the bottom left corner.
+Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the `License Agreement` (if you dare - ***mwhahaha!***). Now once you reach the `Sign in` page don’t fill anything in, rather select `Domain join instead` in the bottom left-hand corner.
 
 {{< figure src="/img/image006.png" title="" class="custom-figure" >}}
 
-Choose any username and password, in my case it'll be the highly original choice of `User` and `password`. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it - randomly hitting the keyboard a few times will do just fine. Turn off all the privacy settings (below), and for `Cortana` select `Not Now`.
-
-{{< figure src="/img/image007.png" title="" class="custom-figure" >}}
+Choose any username and password, in my case it'll be the highly original choice of `User` and `password`. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it - randomly hitting the keyboard a few times will do just fine. Turn off all the privacy settings, and for `Cortana` select `Not Now`.
 
 Windows will now finalize installation + configuration, this could take a few minutes, whereafter you will see your desktop.
 
@@ -188,11 +186,11 @@ Right-click on your VM and select `Settings`. In the list on the LHS select `Dis
 
 Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
-# Deep disable MS Defender + Windows updates
+# 1.5.3 Deep disable MS Defender
 
 I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. You see, Windows thinks of you as a younger sibling - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your entire OS if you so desired.) 
 
-{{< figure src="/img/winlin.jpeg" title="" class="custom-figure" >}}
+{{< figure src="/img/winlin.png" title="" class="custom-figure" >}}
 
 And just so you know why it is we're doing this:
 - We are disabling Defender so that the AV won't interfere with us attacking the system. Now you might think well this represents an unrealistic situation since in real-life we'll always have our AV running. Thing is, this is a simulation - we are simulating an actual attack. Yes the AV might pick up on our mischievous escapades here since we are using very well-known and widely-used malware (Metasploit mainly). But, if you are being attacked by an actual threat actor worth their salt they likely won't be using something so familiar as default Metasploit modules - they will likely be capable of using analogous but obfuscated technologies that your AV will not pick up on.
