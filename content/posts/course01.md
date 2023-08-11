@@ -9,6 +9,8 @@ draft: false
 
 *** 
 # NOTE THIS IS CURRENTLY STILL WIP, THE REASON IT'S A PUBLIC DRAFT IS LONG AND CONVOLUTED SO JUST TRUST ME. ANYHOO - DO AS YOU WISH. 
+
+***
 # HELLO FRIEND, SO GLAD YOU COULD MAKE IT.
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure" >}}
@@ -49,7 +51,7 @@ Finally I do want to add that I myself am an `eternal student` and always learni
 
 Mistakes themselves of course represent the potential for further understanding - but only if we become aware of them. So if there's anything here you are unsure about, or simply flat-out disagree with ***please*** feel free to reach out and share this with me so that everyone can potentially benefit. You can connect with me on [Twitter](https://twitter.com/faanross), or feel free to [email me](mailto:moi@faanross.com).
 
-{{< figure src="/img/jake_learn.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/falcor.gif" title="" class="custom-figure" >}}
 
 ***
 
@@ -75,9 +77,9 @@ Mistakes themselves of course represent the potential for further understanding 
 
 In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we'll perform some configurations as well as install extra software.
 
-# 1.2 REQUIREMENTS
-
 {{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
+
+# 1.2 REQUIREMENTS
 
 I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can get the same results by adapting the process, then please do so. After all - this is the *way of the hacker*. 
 
