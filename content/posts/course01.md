@@ -122,7 +122,7 @@ Note that if you decide to not use `VMWare Workstation` then some of the details
 
 Once that's done with feel free to proceed...
 
-{{< figure src="/img/pleasego.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/pleasego.gif" title="" class="custom-figure-2" >}}
 
 # 1.4 VM IMAGES
 
@@ -238,8 +238,6 @@ And as for updates, we disable this because sometimes we can spend all this time
     2. In the RHS double-click on `Configure Automatic Updates`.
     3. Select `Disabled`, then click `Apply` and `OK`.
 
-{{< figure src="/img/image013.png" title="" class="custom-figure" >}}
-
 5. **Disable Defender via Registry**
     1. In the search bar on the bottom type `cmd`.
     2. On the top left, right under `Best match` you should see `Command Prompt`.
@@ -252,7 +250,7 @@ And as for updates, we disable this because sometimes we can spend all this time
 Almost there! We just need to boot into Safe Mode to make some final adjustments to the registry and then we are good to go.
 
 6. **Reboot system in Safe Mode**
-    1. Open the Run dialog box by pressing Win+R.
+    1. Open the `Run` dialog box by pressing Win+R.
     2. Write `msconfig` and hit enter.
     3. Select the `Boot` tab.
     4. Under `Boot options` select `Safe boot`, ensure `Minimal` is selected - see image below. 
