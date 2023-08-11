@@ -470,7 +470,9 @@ And now finally we'll set up our Ubuntu VM.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Ubuntu Linux 20.04 iso image. Make sure `Connect at power on` is enabled.
 Click `Close` then `Finish`.
 
-So now let's get to actually installing it:
+{{< figure src="/img/fossa.gif" title="" class="custom-figure-3" >}}
+
+So now let's install Focal Fossa:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
 2. Select `Try or Install Ubuntu`.
 3. Once it boots up the GUI, select `Install Ubuntu`.
@@ -486,11 +488,33 @@ So now let's get to actually installing it:
 
 `NOTE: A few moments after logging in and answer Ubuntu's questions you'll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.`
 
-{{< figure src="/img/image029.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image029.png" title="" class="custom-figure-3" >}}
 
-OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next course. So feel free to skip this, or just get it done with now so that in the next course everything is good-to-go.
+OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next course. So feel free to skip this, or just get it done with now so that in the next course everything is gtg.
 
 # 1.7.2. Install Software
+# 1.7.2.1. Volatility3
+1. Either download the zip file from the repo [here](https://github.com/volatilityfoundation/volatility3), or run the command below from terminal to clone the repo:
+```
+git clone https://github.com/volatilityfoundation/volatility3.git
+```
+2. Next we'll need to install `pip`, which is a package manager for Python (***Volatility*** is written in Python). We'll do this so we can install all the required package dependencies. Run the following commands:
+```
+sudo apt update
+sudo apt install python3-pip
+```
+3. Once that's complete we can install our package dependencies. Open a terminal and navigate to where you installed/cloned Volatility. Now simply run the following command:
+```
+pip3 install -r requirements.txt
+```
+4. We're done, feel free to shut down your Ubuntu VM as we won't be using it for some time. 
+
+OK. Do you know what time it is? Yeah it's time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let's get it!
+
+{{< figure src="/img/strangelove.gif" title="" class="custom-figure" >}}
+
+
+
 
 
 
@@ -506,25 +530,10 @@ Here's the cool thing about RITA: it will automatically install Zeek (and MariaD
 
 # 1.Volatility
 
-Similarly to RITA we'll install Volatility by downloading/cloning the repo.
-1. Either download the zip file from the repo [here](https://github.com/volatilityfoundation/volatility3), or run the command below from terminal to clone the repo
-```
-git clone https://github.com/volatilityfoundation/volatility3.git
-```
-2. Next we'll need to install `pip`, which is a package manager for Python (Volatility is written in Python). We'll do this so we can install all the required package dependencies. Run the following commands:
-```
-sudo apt update
-sudo apt install python3-pip
-```
-3. Once that's complete we can install our package dependencies. Open a terminal and navigate to where you installed/cloned Volatility. Now simply run the following command:
-```
-pip3 install -r requirements.txt
-```
-4. We're done, feel free to shut down your Ubuntu VM as we won't be using it for some time. 
 
-OK. Do you know what time it is? Yeah it's time for all this installing and configuring to pay off - and we kick things off by emulating the attacker! Let's get it!
 
-{{< figure src="/img/strangelove.gif" title="" class="custom-figure" >}}
+
+
 
 ***
 
