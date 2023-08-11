@@ -212,7 +212,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     7. Note that Windows will warn you and ask if you want to allow this app to make changes to the device, hit `Yes`.
     8. All 4 toggle settings should now be disabled.
 
-{{< figure src="/img/image010.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image010.png" title="" class="custom-figure-2" >}}
     
 2. **Disable the Windows Update service**
     1. Open the Run dialog box by pressing Win+R.
@@ -221,7 +221,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     4. In the Windows Update Properties (Local Computer) window, under the **`General`** tab, in the **`Startup type:`** dropdown menu, select **`Disabled`** - see image below.
     5. Click **`Apply`** and then **`OK`**.
     
- {{< figure src="/img/image011.png" title="" class="custom-figure" >}}
+ {{< figure src="/img/image011.png" title="" class="custom-figure-2" >}}
 
 3. **Disable Defender via Group Policy Editor**
     1. Open the Run dialog box by pressing Win+R.
@@ -231,7 +231,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     5. In the new window on the top left select `Enabled` - see image below. 
     6. First hit `Apply` then `OK`.
 
- {{< figure src="/img/image012.png" title="" class="custom-figure" >}}
+ {{< figure src="/img/image012.png" title="" class="custom-figure-2" >}}
 
 4. **Disable Updates via Group Policy Editor**
     1. Still in `Local Group Policy Editor`, navigate to: `Computer Configuration` > `Administrative Templates` > `Windows Components` > `Windows Update`.
@@ -257,7 +257,7 @@ Almost there! We just need to boot into Safe Mode to make some final adjustments
     5. Hit `Apply` first, the `OK`.
     6. Select `Restart`.
     
-{{< figure src="/img/image014.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image014.png" title="" class="custom-figure-2" >}}
 
 Once your system has restarted in `Safe mode`...
 
@@ -272,7 +272,7 @@ Once your system has restarted in `Safe mode`...
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdNisSvc`
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdFilter`
 
-{{< figure src="/img/image015.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image015.png" title="" class="custom-figure-2" >}}
 
 8. **Disable Updates via Registry**
     1. Still in `Registry Editor` let's navigate to the following:
