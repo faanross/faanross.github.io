@@ -561,7 +561,7 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 
 But, if instead you do the attack first and learn by doing it yourself, it does not exist as an abstract idea but as a concrete experience. I think then when you perform the threat hunt, because you have a connection to these things you are hunting, well then you learn less through memorization and more through understanding. 
 
-{{< figure src="/img/cereal.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/cereal.gif" title="" class="custom-figure-3" >}}
 
 So let's jump into a bit of theory that will help us understand just what we are getting up to once we perform the actual attack, which will follow immediately afterwards.
 
@@ -569,38 +569,46 @@ So let's jump into a bit of theory that will help us understand just what we are
 # 2.2.1. What is a DLL?
 A DLL is a file containing shared code. It's not a program or an executable in and of itself, rather a DLL is in essence a collection of functions and data that can be used by other programs. Hence the name being Dynamic Link ***Library***.
 
-{{< figure src="/img/library.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/library.gif" title="" class="custom-figure-3" >}}
 
-So think of a DLL as a virtual communal resource: let's say you have 4 programs running and they all want to use a common function - let's say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they'll instead access a DLL that contains the function to minimize gui windows instead. So when you click on the minimize icon and that program needs the code to know how to behave, it does not get instructions from its own program code, rather it pulls it from the appropriate DLL with some help from the Windows API. 
+So think of a DLL as a virtual communal resource: suppose you have 4 programs running and they all want to use a common function - let's say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they'll instead access a DLL that contains the function to minimize gui windows instead. 
+
+So when you click on the minimize icon and that program needs the code to know how to behave, it does not get instructions from its own program code, rather it pulls it from the appropriate DLL with some help from the Windows API. 
 
 Thus any program you run will constantly call on different DLLs to get access to a wide-variety of common (and often critical) functions and data.
 
-# what is a classical DLL-injection?
+# 2.2.2. What is a DLL-Injection Attack?
 So keeping what I just mentioned in mind - that any running program is accessing a variety of code from various DLLs at any time - what then is a DLL-injection attack? Well in a normal environment we have legit programs accessing code from legit DLLs. 
 
 With a DLL-injection attack an attacker enters into the population of legitimate DLLs a malicious one, that is a DLL that contains the code the attacker wants executed. Once the malicious DLL is ready, the attacker then basically tricks a legitimate app into loading it into its memory space and then executing it. Thus a DLL injection is a way to get another program to run your code, instead of creating a program specifically to do so. 
 
-Threat actors love injecting DLLs for two main reasons. First, injected code runs with the same privileges and the legitimate process - meaning potentially elevated. Second, doing so makes it, in general, much harder to detect. There's no longer an opportunity to find a "smoking gun" .exe file, rather to find anything malicious we need to peer beneath the processes at an arguably more convoluted level of abstraction. 
+{{< figure src="/img/trick.gif" title="" class="custom-figure" >}}
 
-So that's DLL injection in a nutshell, but what then is *standard* DLL-injection? Well there are a few ways in which to achieve the process I described above, of which standard is one such way. What distinguishes it is that the malicious DLL is first written to the victim's disk before being loaded. This can quite obviously considered a design flaw that makes our lives as threat hunters easier since disk-based fingerprints are not ephemeral. 
+Threat actors love injecting DLLs for two main reasons. First, injected code runs with the same privileges as the legitimate process - meaning potentially elevated. Second, doing so makes it, in general, harder to detect. There's no longer an opportunity to find a "smoking gun" .exe file, rather to find anything malicious we need to peer beneath the processes at an arguably more convoluted level of abstraction. 
+
+{{< figure src="/img/invisible.gif" title="" class="custom-figure-3" >}}
+
+So that's DLL injection in a nutshell, but what then is *standard* DLL-injection? Well there are a few ways in which to achieve the process I described above, of which standard is one such way. What distinguishes it is that the malicious DLL is first written to the victim's disk before being injected. This can obviously be considered a design flaw since it will create residual IOCs on the disk which, compared to memory, is non-ephemeral. 
 
 As a side-note: the thus logical evolutionary improvement on standard DLL-injections are *reflective loading* DLL-injections. Instead of writing the malicious DLL to disk, they inject it directly into memory thereby increasing the volatility of any evidence. But hold that thought until our next course, where we'll be covering it.
 
-{{< figure src="/img/hold.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/hold.gif" title="" class="custom-figure-2" >}}
 
-# What is a Command and Control (C2) Stager, Server, and Payload?
+# 2.2.3. What is a Command and Control (C2) Stager, Server, and Payload?
 
-Let's start by sketching a scenario of how many typical attacks play out these days. An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the so-called *"urgent invoice"* attached to the email. 
+Let's start by sketching a scenario of how a typical attack might play out in 2023. An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the so-called *"urgent invoice"* attached to the malicious email. 
 
 {{< figure src="/img/drevil.gif" title="" class="custom-figure" >}}
 
-Opening this attachment executes a tiny program called a `stager`. A stager, though not inherently malicious, "sets the stage" by performing a specific task: it reaches out to a designated address, often a web server owned by the hacker, to download + execute another piece of code.
+Opening this attachment executes a tiny program called a `stager`. A stager, though not inherently malicious, "sets the stage" by typically performing one specific task. Once launched the stager will reach out to a designated address (often a web server owned by the hacker) to download + execute another piece of code.
 
-This new code properly establishes the attacker's presence on the victim's system. It acts as a "gateway," allowing the attacker to execute commands on the victim's system from their own. And this system, the one they use to execute commands on that of the victim, is what we call the `C2 Server`. 
+This new code, depending on its exact *modus operandi*, goes by a few names: most commonly its referred to as a `payload` or `implant`. And briefly: the reason this stepped method is utilized instead of simply attaching the payload directly to the email is to avoid detection. Not only then is the initial attachment much smaller (since its a simple script with a single function), but it also does not contain any malicious code, thereby reducing the probability of generating an alert. 
 
-And finally the code the stager downloaded, allowing the C2 server to establish its control on the victim's system, is called a `payload`, though depending on the exact context as well as framework may be called an `implant` (a more generic term), or a `beacon`. The latter is reserved for the type of implants used by for example Cobalt Strike which do not maintain a continuous, persistent network connection (which can raise suspicion), but instead performs a high latency, asynchronous periodic "check in". 
+{{< figure src="/img/beavis.gif" title="" class="custom-figure" >}}
 
-# References
+So the employee opened an attachment to an email, which launched a stager, which in turn downloaded a payload. This payload now will connect back to the attacker's system to establish a connection to the victim's system. But it not only creates the connection, but also serves as a "gateway". That's to say it allows the attacker to execute commands on the victim's system from their own. And this system, the one the attacker uses to execute commands on that of the victim, is what we call the `C2 Server`. 
+
+# 2.2.4. Further Reading
 
 So though admittedly the previous sections is a somewhat shallow overview of these complex terms, I do think this does suffice for the purposes of moving ahead with the practical component of our course. However in case you wanted to understand it to a greater depth, here are my top picks for this topic:
 
@@ -611,7 +619,7 @@ So though admittedly the previous sections is a somewhat shallow overview of the
 [Advanced Attack Detection | William Burgess +  Matt Wakins](https://www.youtube.com/watch?v=ihElrBBJQo8)
 
 
-# ATTACK!
+# 2.3. ATTACK!
 
 Finally! Let's get at it... 
 
