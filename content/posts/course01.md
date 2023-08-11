@@ -553,15 +553,17 @@ Yeah it's time for all this installing and configuring to pay off - let's we kic
 
 # 2. Performing the Attack 
 # Introduction 
-Why are we performing the attack ourselves? Why didn't I just do it, export all the requisite artifacts, and share this with you? Why did I make you go through this rigmarole - is it simply that I am cruel?
+Why are we performing the attack ourselves? Why didn't I just do it, export all the requisite artifacts, and share this with you? Why am I making you go through this rigmarole - is it simply that I am cruel?
 
 {{< figure src="/img/cruel.gif" title="" class="custom-figure" >}}
 
-Nah. The reason is pretty simple - I have a deep sense of conviction in the idea that you can only truly "get" defense if you equally "get" offense. If I just black box that entire process then once we start hunting everything is abstract - the commands we ran, the files we used, the techniques we employed etc are all just ideas. So when you then learn to threat hunt these things that exists as nothing more than ideas for you, then you'll most be memorizing - if X happens then I do Y.
+Nah. The reason is pretty simple - I have a deep sense of conviction that one can only truly "get" defense if you equally "get" offense. If I just black box that entire process and give you the data, then once we start hunting everything is abstract. The commands we ran, the files we used, the techniques we employed etc are all just ideas.So then, when you learn to threat hunt these artifacts that exists solely as ideas it'll mostly be memorization - if X happens then I do Y.
 
-But, if instead you do the attack first and learn everything involved by doing it yourself, it does not exist as an abstract idea but as a concrete experience. I think then when you perform the threat hunt, because you have a connection to these things you are hunting (since you created them), well then you learn less through memorization and more through understanding. At least this has been my experience as well as that of many, *much* smarter people than myself. 
+But, if instead you do the attack first and learn everything involved by doing it yourself, it does not exist as an abstract idea but as a concrete experience. I think then when you perform the threat hunt, because you have a connection to these things you are hunting, well then you learn less through memorization and more through understanding. 
 
-So let's jump into a bit of theory that will help us understand just what we are getting up to once we get to the actual attack, which will follow immediately afterwards.
+{{< figure src="/img/cereal.gif" title="" class="custom-figure" >}}
+
+So let's jump into a bit of theory that will help us understand just what we are getting up to once we perform the actual attack, which will follow immediately afterwards.
 
 # Theory
 # what is a DLL?
