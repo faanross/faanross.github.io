@@ -621,6 +621,21 @@ So though admittedly the previous sections is a somewhat shallow overview of the
 
 # 2.3. ATTACK!
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Finally! The time has come to give it our best shot... 
 
 {{< figure src="/img/attack_kip.gif" title="" class="custom-figure" >}}
@@ -629,19 +644,22 @@ Finally! The time has come to give it our best shot...
 1. Fire up both your Windows 10 and Kali VMs.
 2. On our Kali VM - open a terminal and run `ip a` so we can see what the ip address is. Write this down, we'll be using it a few times during the generation of our stager and handler. You can see mine below is **192.168.230.155** NOTE: Yours will be different!
 
-{{< figure src="/img/image032.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image032.png" title="" class="custom-figure" >}}
 
 3. Now go to the Windows VM. Open an administrative PowerShell terminal. Run `ipconfig` so we also have the ip of the victim - write this down. 
 
 {{< figure src="/img/image033.png" title="" class="custom-figure-3" >}}
 
-4. And now, though it's not really required, I just like to ping the Kali VM from this same terminal just to make sure the two VMs are connecting to one another on the local network. Obviously if this fails you will have to go back and troubleshoot.
+4. And now, though it's not really required, I like to ping the Kali VM from this same terminal just to make sure the two VMs are connecting to one another on the local network. Obviously if this fails you will have to go back and troubleshoot.
 
 {{< figure src="/img/image034.png" title="" class="custom-figure-3" >}}
 
 5. Next we'll create a simple text file on the victim's desktop which will basically emulate the "nuclear codes" the threat actor is after. Right-click on the desktop, `New` > `Text document`, give it a name and add some generic content. 
 
 {{< figure src="/img/image035.png" title="" class="custom-figure-3" >}}
+
+
+
 
 
 

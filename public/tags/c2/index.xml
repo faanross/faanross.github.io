@@ -9,15 +9,14 @@
     <copyright>| hack the planet</copyright>
     <lastBuildDate>Wed, 12 Jul 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://athul.github.io/archie/tags/c2/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Threat Hunting Standard Dll-Injected C2 Implants (Practical Course)</title>
-      <link>https://athul.github.io/archie/posts/post-1/</link>
+      <title>Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course)</title>
+      <link>https://athul.github.io/archie/posts/course01/</link>
       <pubDate>Wed, 12 Jul 2023 02:01:58 +0530</pubDate>
       
-      <guid>https://athul.github.io/archie/posts/post-1/</guid>
-      <description>Hello friend, so glad you could make it. This is the first in an ongoing + always-evolving series on threat hunting.
-NOTE: FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE
+      <guid>https://athul.github.io/archie/posts/course01/</guid>
+      <description>NOTE THIS IS CURRENTLY STILL WIP, THE REASON IT&amp;rsquo;S A PUBLIC DRAFT IS LONG AND CONVOLUTED SO JUST TRUST ME. ANYHOO - DO AS YOU WISH. Hello friend, so glad you could make it. This is the first in an ongoing + always-evolving series on threat hunting.
 The main thing I want you to know about this course is that we will learn by doing.
-(1) We&amp;rsquo;ll start off by creating + configuring our own virtual network, including systems for both the victim and attacker. (2) Then, instead of using prepackaged data, we&amp;rsquo;ll perform the attack ourselves.</description>
+(1) We&amp;rsquo;ll start off by creating + configuring our own virtual network, including systems for the victim, attacker, and analyst.</description>
     </item>
     
   </channel>
