@@ -155,8 +155,8 @@ header .main {
 }
 h1, h2, h3, h4, h5, h6 {
   font-size: 1.2rem;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   /* margin-top: 2em; */
 }
 
