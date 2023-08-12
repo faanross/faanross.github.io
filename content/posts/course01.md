@@ -656,7 +656,7 @@ Finally! The time has come to give it our best shot...
 
 {{< figure src="/img/image035.png" title="" class="custom-figure-3" >}}
 
-**Great now let's generate our stager and transfer it over to the victim.** 
+# 2.3.2. Generate + Transfer Stager
 1. On our Kali VM open your terminal.
 2. We are going to run the command below, which will generate a payload for us using `msfvenom`, a standalone app that is part of the Metasploit framework. 
 ```
@@ -719,7 +719,7 @@ python3 -m http.server 8008
 
 - So now that we have our handler listening for a callback we can go back to our Windows VM to run the code. 
 
-**Preparing Our Injection Script**
+# 2.3.3. Preparing Our Injection Script
 
 Next we need to perform a bit of Macgyvering...
 
