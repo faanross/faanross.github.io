@@ -618,6 +618,7 @@ So though admittedly the previous sections is a somewhat shallow overview of the
 
 [Advanced Attack Detection | William Burgess +  Matt Wakins](https://www.youtube.com/watch?v=ihElrBBJQo8)
 
+***
 
 # 2.3. ATTACK!
 
@@ -640,7 +641,7 @@ Finally! The time has come to give it our best shot...
 
 {{< figure src="/img/attack_kip.gif" title="" class="custom-figure" >}}
 
-**Let's first set everything up.**
+**First, let's put all the pieces into place.**
 1. Fire up both your Windows 10 and Kali VMs.
 2. On our Kali VM - open a terminal and run `ip a` so we can see what the ip address is. Write this down, we'll be using it a few times during the generation of our stager and handler. You can see mine below is **192.168.230.155** NOTE: Yours will be different!
 
