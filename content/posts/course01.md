@@ -574,8 +574,10 @@ But, if instead you do the attack first and learn by doing it yourself, it does 
 
 So let's jump into a bit of theory that will help us understand just what we are getting up to once we perform the actual attack, which will follow immediately afterwards.
 
+***
+
 # 2.2. Theory
-# 2.2.1. What is a DLL?
+{{< heading 2 "no-top-margin" "2.2.1. What is a DLL?" >}}
 A DLL is a file containing shared code. It's not a program or an executable in and of itself, rather a DLL is in essence a collection of functions and data that can be used by other programs. Hence the name being Dynamic Link ***Library***.
 
 {{< figure src="/img/library.gif" title="" class="custom-figure-3" >}}

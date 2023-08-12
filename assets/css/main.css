@@ -326,8 +326,8 @@ color: whitesmoke ;
 
 /* table */
 table {
-  margin-top: 30px; 
-  margin-bottom: 30px;
+  margin-top: 20px; 
+  margin-bottom: 40px;
   border-spacing: 0;
   border-collapse: collapse;
 }
@@ -386,4 +386,6 @@ table td{
   height: auto;     
 }
 
-
+.no-top-margin {
+  margin-top: 0px !important;
+}
