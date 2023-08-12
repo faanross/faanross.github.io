@@ -54,7 +54,7 @@ Mistakes themselves of course represent the potential for further understanding 
 {{< figure src="/img/falcor.gif" title="" class="custom-figure" >}}
 
 ***
-
+***
 # Course Outline
 
 `Here's a quick overview of the entire course:` 
@@ -83,7 +83,7 @@ Mistakes themselves of course represent the potential for further understanding 
 
 
 ***
-
+***
 # 1. Setting Up Our Virtual Environment
 
 {{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
@@ -93,6 +93,8 @@ Mistakes themselves of course represent the potential for further understanding 
 In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we'll perform some configurations as well as install extra software.
 
 {{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
+
+***
 
 # 1.2. Requirements
 
@@ -118,6 +120,8 @@ Now I understand this requirement is rather beefy, but consider:
 
 Finally I want to mention that beyond the hardware, `everything we will use is completely free`. This course ain't upselling a full course, and every piece of software is freely available. The sole exception has free alternatives, which I'm about to discuss with you right now. 
 
+***
+
 # 1.3. Hosted Hypervisor
 So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like *Inception* - it allows us to create systems within our systems. 
 
@@ -139,6 +143,8 @@ Once that's done with feel free to proceed...
 
 {{< figure src="/img/pleasego.gif" title="" class="custom-figure-2" >}}
 
+***
+
 # 1.4. VM Images
 
 Now that you have your hypervisor up and running the next thing we need to do is install our actual virtual machines. There are a few ways to do this, you can for example simply download the entire VM and simply import it into your hypervisor. This does usually mean that the file you'll be downloading will be quite large, so we'll opt for another approach - using iso files. You can think of an iso file simply as a "virtual copy" of the installation disc. So instead of importing the completed VM, we will be installing the VM ourselves using the iso image. 
@@ -149,6 +155,8 @@ So please go ahead and download the following 3 iso's:
 * For post-mortem analysis we'll be using [Ubuntu Linux Focal Fossa](https://releases.ubuntu.com/focal/). The reason being is in future courses we'll be using *RITA*, which, as of writing, runs best on *Focal Fossa*. 
 
 Once you've successfully downloaded all three iso images we are ready to proceed. 
+
+***
 
 # 1.5. VM 1: Windows 10 aka "The Victim" 
 
@@ -423,6 +431,8 @@ That's it! You should now see both `Victim Template` and `Victim01` in your libr
 
 The bad news - we still have two VMs to install. The good news - they will require minimal-to-no configuration, so at this point we're about 80% done with our VM setup. So let's get it done.
 
+***
+
 # 1.6. VM 2: Kali Linux aka "The Attacker" 
 {{< figure src="/img/attacker.gif" title="" class="custom-figure" >}}
 
@@ -461,7 +471,7 @@ So now let's get to actually installing it:
 
 And that's it for our attacker machine - feel free to repeat the Template-Cloning process we performed for our Windows 10 VM if you so desire.
 
-
+***
 
 
 
