@@ -54,7 +54,6 @@ Mistakes themselves of course represent the potential for further understanding 
 {{< figure src="/img/falcor.gif" title="" class="custom-figure" >}}
 
 ***
-***
 # Course Outline
 
 `Here's a quick overview of the entire course:` 
