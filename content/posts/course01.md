@@ -719,31 +719,17 @@ python3 -m http.server 8008
 
 - So now that we have our handler listening for a callback we can go back to our Windows VM to run the code. 
 
-# 2.3.3. Preparing Our Injection Script
+# 2.3.3. Hit The Record Button
 
-Next we need to perform a bit of Macgyvering...
+Alright, since we are now literally about to pull the trigger, let's hit the record button.
 
-{{< figure src="/img/macgyver.gif" title="" class="custom-figure" >}}
+First off we want to start capturing our packet capture using `WireShark`. In the search bar write `WireShark` and open it. Under `Capture` you will see the available interfaces, in my case the one we want is called `Ethernet0` - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names, only one should have little spikes representing actual network traffic, the rest are likely all flat. It's the active one, ie the one with traffic, we want - see image below.Once you've identified it, simply double-click on it, this then starts the recording. 
 
-Here's the thing - to perform the injection we need another script which will get an actual process to inject `evil.dll` into its memory space. By far the most common and effective script to perform this is called [`Invoke-DllInjection.ps1`.](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
+{{< figure src="/img/image036.png" title="" class="custom-figure" >}}
 
-Usually in order to run this next attack we'll use a PowerShell command to download the script [directly from the original github repo](https://github.com/PowerShellMafia/PowerSploit) and inject it directly into memory. The unfortunate thing is that this incredible artifact has not been updated in a few years, and since it's also been archived it's unlikely it ever will. 
+One other thing, right before we start our attack I also want to clear both logs we activated - `Sysmon` and `PowerShell ScriptBlock`. You see since we've enabled it, it's likely recorded a bunch of events completely irrelevant to our interest here. So we'll clear them and start anew so our final capture is spared all this noise. 
 
-The code as it currently stands on the original repo is however broken, at least when I tried it (in multiple configurations). The good news though is I found a simple fix and have updated the script which is now being hosted on [my github repo here](https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1).
-
-And thus, just so you are aware, we are going to download and inject into memory the script from my personal Github repo but **in no way whatsoever do I want to appear as taking any credit/ownership for it**. The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to refer to them if you want. 
-
-
-
-
-
-everything is setup, so we are ready to run or first attack command. 
-
-
-
-6. Next we want to start capturing our packet capture using `WireShark`. In the search bar write `WireShark` and open it. Under `Capture` you will see the available interfaces, in my case the one we want is called `Ethernet0` - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names, only one should have little spikes representing actual network traffic, the rest are likely all flat. It's the active one, ie the one with traffic, we want - see image below. Once you've identified it, simply double-click on it, this then starts the recording. 
-
-7. And now finally, right before we start our attack I also want to clear both logs we activated - Sysmon and PowerShell ScriptBlock. You see since we've enabled it, it's likely recorded a bunch of events completely irrelevant to our interest here. So we'll clear them and start a new so our final capture is undiluted. Open a PowerShell terminal as admin, and then run the following commands.
+Open a PowerShell terminal as admin, and then run the following two commands:
 ```
 wevtutil cl "Microsoft-Windows-Sysmon/Operational”
 ```
@@ -751,7 +737,25 @@ wevtutil cl "Microsoft-Windows-Sysmon/Operational”
 wevtutil cl "Microsoft-Windows-PowerShell/Operational"
 ```
 
-{{< figure src="/img/image036.png" title="" class="custom-figure" >}}
+# 2.3.4. Preparing Our Injection Script
+
+Next we need to perform a bit of *Macgyvering*...
+
+{{< figure src="/img/macgyver.gif" title="" class="custom-figure" >}}
+
+So above in `2.3.2` we created the malicious DLL (`evil.dll`). But of course, now we need a script to actually inject the DLL into a running process. One of the most popular scripts to do perform this is called [Invoke-DllInjection.ps1.](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
+
+The code as it currently stands on the original repo is however broken, at least when I tried it (in multiple configurations). The script has not been updated in a few years, and since it's also been archived it's unlikely it ever will be - the original authors have since moved on to bigger things. 
+
+The good news though is I found a simple fix and have updated the script which is now being hosted on [my github repo here](https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1).
+
+And thus, just so you are aware, we are going to download and inject into memory the script directly from my personal Github repo but **in no way whatsoever do I want to appear as taking any credit/ownership for it**. The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to refer to them if you want. 
+
+
+
+
+
+everything is setup, so we are ready to run or first attack command. 
 
 
 
