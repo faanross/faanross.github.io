@@ -905,14 +905,15 @@ The reason to go through these steps rather than just having the initial script 
 Ok friends, thanks for entertaining this little side quest. I do so consciously with the full intent of ensuring you understand the why as much as the how. For now however let's move onto the first phase of our actual threat hunt - live analysis using native windows tools.
 
 ***
+***
 
-# LIVE ANALYSIS: NATIVE WINDOWS TOOLS
-# Introduction
-So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick and dirty means to get a finger on the pulse, meaning they'll give us a broad overview of some important indicators while at the same time being limited in the depth of information.
+# 3. Live Analysis: Native Windows Tools
+# 3.1. Introduction
+So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they'll give us a broad overview of some important indicators while at the same time being limited in the depth of information.
 
-So if we have at our disposal better tools, ie tools that can provide more information, why bother? I'm of the belief (inspired by one the greats, [John Strand](https://twitter.com/strandjs)), that even if there are better tools availalbe you should *also* be able to do a basic analysis with the native Windows tools. 
+So if we have at our disposal better tools, ie tools that can provide more information, why bother? I'm of the belief (inspired by one the greats, [John Strand](https://twitter.com/strandjs)), that even if there are better tools available you should *also* be able to do a basic analysis with the native Windows tools. 
 
-Tools may change, they come and go, or, you might land in a situation where they are, for whatever reason, unavailable. Knowing how to get a basic read with Windows tools in any situation covers your bases. Think of it as learning how to survive in the outdoors - yes you can always make a fire using a lighter, but there's a good reason to also learn how to make it, however cumbersome, with what's freely available - it might just save your butt in case your lighter fails. 
+Tools may change, they come and go, or, you might land in a situation where they are, for whatever reason, unavailable. Knowing how to get a basic read with Windows tools in any situation covers your bases. Think of it as learning how to survive in the outdoors - yes you can always make a fire using a lighter, but there's a good reason to also learn how to make it, however cumbersome, with what's always available - it might just save your butt in case your lighter fails. 
 
 {{< figure src="/img/survivorman2.gif" title="" class="custom-figure" >}}
 
