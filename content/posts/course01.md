@@ -1045,8 +1045,9 @@ As a simple example - if we find a suspicious process by following this procedur
 6. Memory Permissions
 7. Memory Content
 
-Let's touch on each a little more:
+**Let's explore each a little more:**
 1. ***Parent-Child Relationships***
+
 As we know there exists a tree-like relationship between processes in Windows, meaning an existing process (`Parent`), typically spawn other processes (`Child`). And since in the current age of Living off the Land malware the processes themselves are not inherently suspiocus - after all they are legit processes commonly used by the system - we are more interested in the relationship with Parent and Child. We should always ask: *what spawned what*?
 
 Because often we'll find a parent process that is not suspicious by itself at all, and equally a child process that we'd expect to see running. But the fact that this specific parent spawned that specific child - we'll that's sometimes off. A great example
