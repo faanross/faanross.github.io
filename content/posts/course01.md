@@ -850,13 +850,13 @@ winpmem.exe memdump.raw
 
 OK so let's just hold zoom out and discuss the attack we just performed. At this point, if you have your wits about you, you might, and rightfully so I'll add, be calling **shenanigans** on me. 
 
-{{< figure src="/img/shenanigans.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/shenanigans.gif" title="" class="custom-figure-2" >}}
 
 "Wait", I hear you say, "if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn't it cheating then to be running these commands ahead of that actually happening"? 
 
 Look at the meta: the whole point of establishing C2 on the victim is so we can run commands on it, but we literally just allowed ourselves to freely run commands on the victim so that we can establish C2. We wrote our malicious DLL to disk, injected our DLL-injection script into memory, and ran the script all from the comfort of Imaginationland.
 
-{{< figure src="/img/imagination.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/imagination.gif" title="" class="custom-figure-3" >}}
 
 So then the answer is *yes*. That was cheating - of course. But, it's cheating with a purpose you see, the purpose here being that this is a course on threat hunting. So we stripped the actions of the initial compromise down to its core and for now we've foregone our spearfishing email and VBA macro. We've streamlined the essence of the attack - we're expending less energy in the effort, and yet for our intents have created the same outcome. 
 
@@ -864,7 +864,7 @@ So, we won't be investing our time in completely recreating a realistic simulati
 
 Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual attack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
 
-{{< figure src="/img/focus.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/focus.gif" title="" class="custom-figure-3" >}}
 
 So the remainder of this section will be dedicated to that. I'm very briefly going to review all the main beats to the attack we just performed, thereafter I'll "translate" the actions to a representative real-world counterpart, pointing out specifically which elements we expect to see in an actual attack, and which we don't. 
 
@@ -884,21 +884,21 @@ So the remainder of this section will be dedicated to that. I'm very briefly goi
 {{< figure src="/img/dementors.gif" title="" class="custom-figure" >}}
 
 **OK. Now let's review what an actual attack might have looked like:**
-1. An attacker does some recon/OSINT, discovering info that allows them to craft a very personalized email to a company's head of sales as part of a spearphishing campaign.
+1. An attacker does some recon/OSINT, discovering info that allows them to craft a very personalized email to a company's head of sales as part of a spearphishing attack.
 2. The attacker included in this email a word document labelled "urgent invoice", and by using some masterful social engineering techniques they convince the head of sales to immediately open the document to pay it.
-3. With macros enabled, once the head of sales opens the invoice it runs an embedded VBA macro, which contains the adversary's malicious code. 
+3. Once the head of sales opens the invoice it runs an embedded VBA macro, which contains the adversary's malicious code. 
 4. This code can do many, and even all, of the things we did manually:
     - It can download the malicious DLL.
-    - It can inject the script responsible for performing the attack into memory.
-    - It can also run the actual script.
-5. Note however that the script does not neccessarily do everything as we described above. It might only go and download instructions, which then allow it to perform subsequent steps. There exists here, as in so many areas of cybersecurity, strategic trade-offs. If the initial VBA macro contains all the instructions that's great since it now has less work to do downloading further instructions. Thus risk is minimized from an activity POV (less steps), however it also means the file will be relatively larger, which can increase the risk of being detected (more noticeable). All to say: both approaches are feasible and have been observed in real attacks, it really depends on the overall risk-mitigation strategy selected by the adversary. 
-6. In our simulation we chose a program (rufus.exe) and even opened it ourselves. In an actual attack this highly improbable since it represents unnecessary risk. Rather, the attacker would select a process that is already running to inject into, which could even lead to elevated privileges. Other considerations would also be selecting processes that are less likely to be terminated or restarted. Common targets might include svchost.exe, explorer.exe, or other system processes.
+    - It can download and then inject the script responsible for performing the attack into memory.
+    - It can also execute the actual script.
+5. Note however that the malicious code contained in the initial email will more than likely not do all three things as we described above. As described before, it will likely only act as a *stager* and execute each step in a stepped manner. There exists here, as in so many areas of cybersecurity, strategic trade-offs. 
+6. In our simulation we chose a program (`rufus.exe`) and even opened it ourselves. In an actual attack this highly improbable since it represents unnecessary risk. Rather, the attacker would select a process that is already running to inject into, which could even lead to elevated privileges. Other considerations would also be selecting processes that are less likely to be terminated or restarted. 
 
-So that's basically it - I hope this helps you understand how our attack lead to the same outcomes, but just followed another path to get there in the interest of efficiency.
+I hope this helps you understand how our attack lead to the same outcomes, but just followed another path to get there in the interest of ease and efficiency.
 
-There is one final thing I want to address, another thing that, if you're paying attention you might be wondering why exactly did we do this? If you take a moment to think about it, the initial VBA macro might as well simply just called back to the handler to establish a connection directly. This would have bypassed numerous steps (download + save dll, download + inject script, invoke script), each which represent a potential point of failure or detection. So why go through all this extra effort to get to the same result - a backdoor connection?
+There is one final thing I want to address, another thing that, if you're paying attention you might be wondering why exactly we did this? If you take a moment to think about it, the initial VBA macro might as well simply just called back to the handler to establish a connection directly. This would have bypassed numerous steps (download + save dll, download + inject script, invoke script), each which represent a potential point of failure or detection. So why go through all this extra effort to get to the same result - a backdoor connection?
 
-{{< figure src="/img/satan.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/ninja.gif" title="" class="custom-figure-3" >}}
 
 The reason to go through these steps rather than just having the initial script call back to the handler is all about stealth. Yes our process might involve increased risk, but the end result is a connection mediated by an injected DLL and not an executable, which in general will be harder to detect. So again, this game is all about trade-offs: this process accepts a relatively higher degree of risk during the process of establishing itself on the victim's system, however once established it operates with a relatively lower degree of risk. 
 
