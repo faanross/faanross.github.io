@@ -1054,11 +1054,25 @@ As we know there exists a tree-like relationship between processes in Windows, m
 
 {{< figure src="/img/minime.gif" title="" class="custom-figure" >}}
 
+
+
+
+tk xxx continue here
+
+
+
+
+
+
+
+
+
+
 Because often we'll find a parent process that is not suspicious by itself at all, and equally a child process that we'd expect to see running. But the fact that this specific parent spawned that specific child - we'll that's sometimes off. A great example
 
 Another thing is certain Parent-Child relatipnship will not only inicate that something is suspicious, but also act as a sort of signature implicating the potential malware involved. For example a classical Cobalt Strike Process Tree might look like this:
 
-{{< figure src="/img/image076.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image076.png" title="" class="custom-figure-2" >}}
 
 At the top we can see WMI spawning PowerShell - that itself is pretty uncommon, but used by a variety of malware software. But there's more - PowerShell spawning PowerShell. Again, not a smoking gun but unusual, and something seen with Cobalt Strike. But really the most idiosyncratic property here is the multiple instances of rundll32.exe being spawned. This is a classical Cobalt Strike strategy in action - the use of so-called sacrificial process. Plus the fact that it's rundll32.exe in particular - this is the default setting for Cobalt Strike. It might surprise you but *in situ* it's estimated that about 50% of adversaries never bother changing the default. Which makes one wonder - are they lazy, or are we so bad at detecting even default settings that they don't see the point in even bothering?
 
