@@ -1082,7 +1082,7 @@ This is definitely one of the lowest value indicators - something that's nice to
 
 There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - **UH-OH**. 
 
-{{< figure src="/img/dogjeez.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/dogjeez.gif" title="" class="custom-figure-2" >}}
 
 Or, perhaps we see PowerShell, but it's running from `C:\Windows\Syswow64\...`, which by itself is a completely legitimate directory. But what exactly is its purpose? 
 
@@ -1094,7 +1094,7 @@ So if we saw PowerShell running from that directory, it means that a 32-bit vers
 
 We already saw this in the previous section - for example though running `rundll32.exe` is completely legit, we would expect it to have arguments referencing the exact function and library it's supposed to load. Seeing it nude, well that's strange. 
 
-{{< figure src="/img/dwight-naked.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/dwight-naked.gif" title="" class="custom-figure-2" >}}
 
 Same goes for many other processes - we need thus to understand their function and how they are invoked to be able to determine the legitimacy of the process. 
 
@@ -1102,15 +1102,17 @@ Same goes for many other processes - we need thus to understand their function a
 
 When a DLL is loaded in the traditional way, ie from a disk, the operating system memory-maps the DLL into the process's address space. Memory mapping is a method used by the operating system to load the contents of a file into a process's memory space, which allows the process to access the file's data as if it were directly in memory. The operating system also maintains a mapping table that tracks where each DLL is loaded in memory.
 
-With traditional DLL loading, if you were to look at the start address of the thread executing the DLL, you would see a memory address indicating where the DLL has been loaded in the process's address space.
+{{< figure src="/img/binoculars.gif" title="" class="custom-figure-2" >}}
+
+
+With traditional DLL loading, if you were to look at the start address of the thread executing the DLL, you would see some memory address indicating where the DLL has been loaded in the process's address space.
 
 However, in the case of Reflective DLL Injection, the DLL is loaded into memory manually without the involvement of the operating system's regular DLL-loading mechanisms. The custom loader that comes with the DLL takes care of mapping the DLL into memory, and the DLL never touches the disk. Since the operating system isn't involved in the process, it doesn't maintain a mapping table entry for the DLL, and as such, the start address of the thread executing the DLL isn't available. 
 
-As a result, when you inspect the start address of the thread associated with the injected DLL, it will not show the actual memory address where the DLL is loaded. Instead, it will show `0x0`, which essentially means the address is unknown or not available. This is one of the many ways Reflective DLL Injection can be stealthy and evade detection.
+As a result, when you inspect the start address of the thread associated with the injected DLL, it will not show the actual memory address where the DLL is loaded. Instead, it will show `0x0`, which essentially means the address is unknown or not available - see image below. This is one of the many ways Reflective DLL Injection can be stealthy and evade detection.
 
-Thus this is only for reflective DLL loading!
 
-{{< figure src="/img/image077.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image077.png" title="" class="custom-figure-2" >}}
 
 
 6. ***Memory Permissions***
