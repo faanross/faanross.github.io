@@ -1080,9 +1080,14 @@ This is definitely one of the lowest value indicators - something that's nice to
 
 3. ***Current directory***
 
-There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - uh-oh. 
+There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - UH-OH. 
 
-Or, perhaps we see PowerShell, but it's running from `c:\windows\syswow64\...`, which by itself is a completely legitimate directory. But what's it purpose? Well, this basically means it's 32-bit code that was run. Now 32-bit systems still exist, but the vast majority of systems now are 64-bit. Malware however, still loves to use 32-bit code since it gives it the biggest reach - it can now infect both 32-bit and 64-bit systems. 
+{{< figure src="/img/dogjeez.gif" title="" class="custom-figure-" >}}
+
+Or, perhaps we see PowerShell, but it's running from `C:\Windows\Syswow64\...`, which by itself is a completely legitimate directory. But what's it purpose? 
+
+
+Well, this basically means it's 32-bit code that was run. Now 32-bit systems still exist, but the vast majority of systems now are 64-bit. Malware however, still loves to use 32-bit code since it gives it the biggest reach - it can now infect both 32-bit and 64-bit systems. 
 
 So if we saw PowerShell running from that directory, it's an artifact produced when 32-bit code is run, which requires 32-bit PowerShell. Using this on a modern, 64-bit system is pretty unusual.
 
