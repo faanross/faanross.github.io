@@ -1036,7 +1036,7 @@ Additionally, the process as outlined here may give the impression that it typic
 
 As a simple example - if we find a suspicious process by following this procedure, we might want to pause and have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
 
-{{< figure src="/img/rabbit.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/rabbit.gif" title="" class="custom-figure-2" >}}
 
 **Here's a quick overview of our list:**
 1. Parent-Child Relationships
@@ -1054,29 +1054,23 @@ As we know there exists a tree-like relationship between processes in Windows, m
 
 {{< figure src="/img/minime.gif" title="" class="custom-figure" >}}
 
+We'll often find a parent process that is not suspicious by itself at all, or equally, that viewed in isolation is completely routine. But the fact that this specific parent spawned that specific child - we'll sometimes that's the thing that's off. 
 
+And of course we've already encountered this exact situation in the previous section with neither `rufus.exe` nor `rundll32.exe` being suspicious, but the fact that the former is spawned the latter being unusual. 
 
+Something else worth being aware of is not only may certain parent-child relationships indicate that something is suspicious, but the specifics can act as some sort of signature implying what malware is involved. 
 
-tk xxx continue here
-
-
-
-
-
-
-
-
-
-
-Because often we'll find a parent process that is not suspicious by itself at all, and equally a child process that we'd expect to see running. But the fact that this specific parent spawned that specific child - we'll that's sometimes off. A great example
-
-Another thing is certain Parent-Child relatipnship will not only inicate that something is suspicious, but also act as a sort of signature implicating the potential malware involved. For example a classical Cobalt Strike Process Tree might look like this:
+For example a classical `Cobalt Strike` process tree might look like this:
 
 {{< figure src="/img/image076.png" title="" class="custom-figure-2" >}}
 
-At the top we can see WMI spawning PowerShell - that itself is pretty uncommon, but used by a variety of malware software. But there's more - PowerShell spawning PowerShell. Again, not a smoking gun but unusual, and something seen with Cobalt Strike. But really the most idiosyncratic property here is the multiple instances of rundll32.exe being spawned. This is a classical Cobalt Strike strategy in action - the use of so-called sacrificial process. Plus the fact that it's rundll32.exe in particular - this is the default setting for Cobalt Strike. It might surprise you but *in situ* it's estimated that about 50% of adversaries never bother changing the default. Which makes one wonder - are they lazy, or are we so bad at detecting even default settings that they don't see the point in even bothering?
+At the top we can see WMI spawning PowerShell - that itself is pretty uncommon, but used by a variety of malware software. But there's more - PowerShell spawning PowerShell. Again, not a smoking gun, but unusual, and something seen with Cobalt Strike. 
 
-All this to say - we'll look for unusual Parent-Child Relationships, and we'll do so typically by looking at a `Process Tree` which shows as all processes and their associated relationships. In the discussion above I might have given the impression that these relationships all exist in pairs with a unidirectional relationship. Not so, just as in actual family trees a parent can spawn multiple children, and each of these can in turn spawn multiple children etc. So depending on the exact direction of the relationship, a process may be a parent or a child. 
+But really the most idiosyncratic property here is the multiple instances of `rundll32.exe` being spawned. This is classical Cobalt Strike behavior - the use of so-called ***sacrificial process***. Plus the fact that it's `rundll32.exe` in particular - using this process name is the default setting for Cobalt Strike. It might surprise you but *in situ* it's estimated that about 50% of adversaries never bother changing the default settings. Which makes one wonder - are they lazy, or are we so bad at detecting even default settings that they don't see the point in even bothering?
+
+{{< figure src="/img/thinkabout.gif" title="" class="custom-figure-2" >}}
+
+All this to say - we'll look for unusual parent-child Relationships, and we'll do so typically by looking at a `process tree` which shows as all processes and their associated relationships. In the discussion above I might have given the impression that these relationships all exist in pairs with a unidirectional relationship. Not so, just as in actual family trees a parent can spawn multiple children, and each of these can in turn spawn multiple children etc. So depending on the exact direction of the relationship, any specific process may be a parent or a child. 
 
 2. ***Signature - is it valid + who signed?***
 This is definitely one of the lowest value indicators - something that's nice to help build a case, but by itself, owing to so many potential exceptions, is quite useless. Nevertheless if we see that a process is unsigned, or signed by an untrusted source, we may layer it onto our case. 
