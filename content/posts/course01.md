@@ -1102,7 +1102,7 @@ Same goes for many other processes - we need thus to understand their function a
 
 When a DLL is loaded in the traditional way, ie from a disk, the operating system memory-maps the DLL into the process's address space. Memory mapping is a method used by the operating system to load the contents of a file into a process's memory space, which allows the process to access the file's data as if it were directly in memory. The operating system also maintains a mapping table that tracks where each DLL is loaded in memory.
 
-{{< figure src="/img/binoculars.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/binoculars.gif" title="" class="custom-figure-3" >}}
 
 
 With traditional DLL loading, if you were to look at the start address of the thread executing the DLL, you would see some memory address indicating where the DLL has been loaded in the process's address space.
@@ -1112,19 +1112,20 @@ However, in the case of Reflective DLL Injection, the DLL is loaded into memory 
 As a result, when you inspect the start address of the thread associated with the injected DLL, it will not show the actual memory address where the DLL is loaded. Instead, it will show `0x0`, which essentially means the address is unknown or not available - see image below. This is one of the many ways Reflective DLL Injection can be stealthy and evade detection.
 
 
-{{< figure src="/img/image077.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image077.png" title="" class="custom-figure-3" >}}
 
 
 6. ***Memory Permissions***
 
-One of the most common, well-known heuristics for injected malware is any memory region with RWX permissions. Memory with `RWX` permissions means that code can be written into that region and then subsequently executed. This is a capability that malware often utilizes, as it allows the malware to inject malicious code into a running program and then execute that code. The *vast* majority of legitimate software will not behave in this manner.
+One of the most common, well-known heuristics for injected malware is any memory region with `RWX` permissions. Memory with `RWX` permissions means that code can be written into that region and then subsequently executed. This is a capability that malware often utilizes, as it allows the malware to inject malicious code into a running program and then execute that code. The *vast* majority of legitimate software will not behave in this manner.
 
-But be forewarned - RWX permissions are the tip of the iceberg in this game of looking for anomalies in memory permissions.It’s not the only one but many people stay stuck on it as if it’s the be all and end all.
+{{< figure src="/img/dog-drag" title="" class="custom-figure" >}}
 
-Modern malware authors, knowing `RWX` not only sticks out like a thumb but can easily be prevented using a Write XOR Execute security policy, will have an initial pair of permissions (`RW`), and will then afterwards change permissions to `RX`. 
+But be forewarned - `RWX` permissions are the tip of the iceberg in this game of looking for anomalies in memory permissions.
 
-For now however we will focus only on `RWX`, but of course as we advance we will be looking at `odd pairs` in the future. 
+Modern malware authors, knowing `RWX` not only sticks out like a sore thumb but can easily be detected with a `Write XOR Execute` security policy, might instead create malware to have an initial pair of permissions (`RW`), which will then afterwards change permissions to `RX`. 
 
+I wanted you to be aware of this, but for now we will focus only on `RWX`.
 
 7. ***Memory Content***
 
