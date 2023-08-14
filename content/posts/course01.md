@@ -1082,7 +1082,7 @@ This is definitely one of the lowest value indicators - something that's nice to
 
 There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - UH-OH. 
 
-{{< figure src="/img/dogjeez.gif" title="" class="custom-figure-" >}}
+{{< figure src="/img/dogjeez.gif" title="" class="custom-figure" >}}
 
 Or, perhaps we see PowerShell, but it's running from `C:\Windows\Syswow64\...`, which by itself is a completely legitimate directory. But what's it purpose? 
 
