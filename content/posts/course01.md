@@ -1036,6 +1036,8 @@ Additionally, the process as outlined here may give the impression that it typic
 
 As a simple example - if we find a suspicious process by following this procedure, we might want to pause and have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
 
+{{< figure src="/img/rabbit.gif" title="" class="custom-figure" >}}
+
 **Here's a quick overview of our list:**
 1. Parent-Child Relationships
 2. Signature - is it valid + who signed?
@@ -1048,7 +1050,9 @@ As a simple example - if we find a suspicious process by following this procedur
 **Let's explore each a little more:**
 1. ***Parent-Child Relationships***
 
-As we know there exists a tree-like relationship between processes in Windows, meaning an existing process (`Parent`), typically spawn other processes (`Child`). And since in the current age of Living off the Land malware the processes themselves are not inherently suspiocus - after all they are legit processes commonly used by the system - we are more interested in the relationship with Parent and Child. We should always ask: *what spawned what*?
+As we know there exists a tree-like relationship between processes in Windows, meaning an existing process (`parent`), typically spawns other processes (`child`). And since in the current age of `Living off the Land` malware the processes themselves are not inherently suspicious - after all they are legit processes commonly used by the system - we are more interested in the relationship between processes. We should always ask: *what spawned what*?
+
+{{< figure src="/img/minime.gif" title="" class="custom-figure" >}}
 
 Because often we'll find a parent process that is not suspicious by itself at all, and equally a child process that we'd expect to see running. But the fact that this specific parent spawned that specific child - we'll that's sometimes off. A great example
 
