@@ -846,11 +846,11 @@ winpmem.exe memdump.raw
 
 ***
 
-# Shenanigans! A (honest) review of our attack
+# 2.4. Shenanigans! A (honest) review of our attack
 
 OK so let's just hold zoom out and discuss the attack we just performed. At this point, if you have your wits about you, you might, and rightfully so I'll add, be calling **shenanigans** on me. 
 
-{{< figure src="/img/shenanigans.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/shenanigans.gif" title="" class="custom-figure-3" >}}
 
 "Wait", I hear you say, "if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn't it cheating then to be running these commands ahead of that actually happening"? 
 
@@ -917,15 +917,19 @@ Tools may change, they come and go, or, you might land in a situation where they
 
 {{< figure src="/img/survivorman2.gif" title="" class="custom-figure" >}}
 
-# Theory
+***
+
+# 3.2. Theory
 You will benefit from understanding the [following short theoretical framework on the '3 Modes of Threat Hunting'](https://www.faanross.com/posts/three_modes/). I leave the decision of whether or not to read it up to you, though it will be referenced throughout the remainder of the course. 
 
-# Performing the Analysis
+***
+
+# 3.3. Performing the Analysis
 There are a number of things we can look at when we do a live analyis using the native tools, including: connections, processes, shares, firewall settings, services, accounts, groups, registry keys, scheduled tasks etc.
 
-For this course we will only focus on connections and processes. If you are keen to learn more about how to investigate the other factors I suggest you view [this excellent talk by John Strand](https://www.youtube.com/watch?v=fEip9gl2MTA). A reminder that at this point we are in Threat Hunting Mode 1 - we presume compromise, but have not yet unearthed any confirmation thereof.
+For this course we will only focus on connections and processes. If you are keen to learn more about how to investigate the other factors I suggest you watch [this excellent talk by John Strand](https://www.youtube.com/watch?v=fEip9gl2MTA). 
 
-# Connections
+# 3.3.1. Connections
 Let's run `netstat`, which will display active network connections and listening ports. After all, most malware serves merely as a way for the adversary to ultimately have a connection to the victim's machine to run commands and exfiltrate data.
 
 So open a PowerShell admin terminal on our Windows 10 system and run the following command:
@@ -936,15 +940,18 @@ Note in particular the inclusion of `o` and `b` in our command which will also s
 
 In the results we can immediately see a variety of connections, as well as ports our system is listening on. Let's especially pay attention to `ESTABLISHED` connections.
 
-And we can scroll through the list and then as threat hunters something unusual should stick out to us:
+We scroll through the list and then as threat hunters something unusual should stick out to us:
 
 {{< figure src="/img/image071.png" title="" class="custom-figure" >}}
 
 What exactly is unusual about this? Well even though `rundll32.exe` is a completely legitimate Windows process, it's used to load DLLs. The question then beckons: why exactly is it involved in an outbound connection?
 
-In this case we can see it's connected to another system on our local network, but remember that's only because of our VLAN setup. In an actual attack scenario this would not be the case, meaning we see `rundll32.exe`, a process not known to be involved in creating network connections, now indeed being responsible for establishing a connection to a system outside of our network. 
+In this case we can see it's connected to another system on our local network, but remember that's only because of our VLAN setup. In an actual attack scenario this would not be the case, meaning we see `rundll32.exe`, a process not known to be involved in creating network connections, being responsible for establishing a connection to a system outside of our network. 
 
-In a typical scenario we'd immediately want to know more about this IP. Is it known? Is there a business use case associated with it? Are other systems on the network also connecting to it? Because if the answer to all those questions are no - well then we definitely have something strange on our hands.
+In a typical scenario we'd immediately want to know more about this IP. Is it known? Is there a business use case associated with it? Are other systems on the network also connecting to it? Because if the answer to all those questions are no - well then we definitely have something weird on our hands.
+
+{{< figure src="/img/weirdal.gif" title="" class="custom-figure" >}}
+
 
 So let's use our native Windows tools to learn more about this process. To do so however let's just take note of our PID, as can be seen in the image above mine is `3948`, yours will be different. 
 
