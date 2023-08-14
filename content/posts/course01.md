@@ -1024,9 +1024,7 @@ As these things go, it really behooves us to learn a bit of theory behind what w
 
 # 4.2. Theory
 
-```
-"A traditional anti-virus product might look at my payload when I touch disk or load content in a browser. If I defeat that, I win. Now, the battleground is the functions we use to get our payloads into memory. -Raphael Mudge"
-```
+***"A traditional anti-virus product might look at my payload when I touch disk or load content in a browser. If I defeat that, I win. Now, the battleground is the functions we use to get our payloads into memory. -Raphael Mudge"***
 
 There are a few key properties we want to be on the lookout for when doing live memory analysis with something like `Process Hacker`. But, it's very important to know that there are **NO silver bullets**. There are no hard and fast rules where if we see any of the following we can be 100% sure we're dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.
 
