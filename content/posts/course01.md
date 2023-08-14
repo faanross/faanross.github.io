@@ -1028,13 +1028,15 @@ As these things go, it really behooves us to learn a bit of theory behind what w
 
 There are a few key properties we want to be on the lookout for when doing live memory analysis with something like `Process Hacker`. But, it's very important to know that there are **NO silver bullets**. There are no hard and fast rules where if we see any of the following we can be 100% sure we're dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.
 
-Again we're building a case, and each additional piece of evidence serves to decrease the probability of a false positive. We keep this process up until our self-defined threshold has been reached and we're ready to push the big red button. 
+Again we're building a case, and each additional piece of evidence serves to decrease the probability of a false positive. We keep this process up until our threshold has been reached and we're ready to push the big red button. 
 
-Additionally, the process as outlined here may give the impression that it typically plays out as a strictly linear process. This is not necessarilly the case - instead of going through our list 1-7 below, we could jump around not only on the list itself, but with other techniqes completely. As a casual example - if we find a suspicious process by following this procedure, we might want to pause and 
+{{< figure src="/img/redbutton.gif" title="" class="custom-figure" >}}
 
-have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
+Additionally, the process as outlined here may give the impression that it typically plays out as a strictly linear process. This is not necessarilly the case - instead of going through our list 1-7 below, we could jump around not only on the list itself, but with completely different  techniqes. 
 
-Here's a quick overview of our list:
+As a simple example - if we find a suspicious process by following this procedure, we might want to pause and have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
+
+**Here's a quick overview of our list:**
 1. Parent-Child Relationships
 2. Signature - is it valid + who signed?
 3. Current directory
