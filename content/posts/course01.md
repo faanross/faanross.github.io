@@ -1080,30 +1080,27 @@ This is definitely one of the lowest value indicators - something that's nice to
 
 3. ***Current directory***
 
-There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - UH-OH. 
+There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - **UH-OH**. 
 
-{{< figure src="/img/dogjeez.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/dogjeez.gif" title="" class="custom-figure-3" >}}
 
-Or, perhaps we see PowerShell, but it's running from `C:\Windows\Syswow64\...`, which by itself is a completely legitimate directory. But what's it purpose? 
+Or, perhaps we see PowerShell, but it's running from `C:\Windows\Syswow64\...`, which by itself is a completely legitimate directory. But what exactly is its purpose? 
 
+It essentially indicates that 32-bit code was executed. While 32-bit systems are still in use, the majority of contemporary systems are 64-bit. However, many malware programs prefer using 32-bit code because it offers broader compatibility, allowing them to infect both 32-bit and 64-bit systems.
 
-Well, this basically means it's 32-bit code that was run. Now 32-bit systems still exist, but the vast majority of systems now are 64-bit. Malware however, still loves to use 32-bit code since it gives it the biggest reach - it can now infect both 32-bit and 64-bit systems. 
-
-So if we saw PowerShell running from that directory, it's an artifact produced when 32-bit code is run, which requires 32-bit PowerShell. Using this on a modern, 64-bit system is pretty unusual.
-
-All this to say: the directory can potentially tell us something about the legitimacy of the process
+So if we saw PowerShell running from that directory, it means that a 32-bit version of PowerShell ran on a 64-bit OS, which is not what we expect in ordinary circumstances. 
 
 4. ***Command-line arguments***
 
-We already saw this in the previous section - for example though running `rundll32.exe` is completely legit, we would expect it to have arguments referencing the exact functions and libraries it's supposed to load. Seeing it nude, well that's strange. Same goes for many other processes - we need thus to understand their function and how they are invoked to be able to determine the legitimacy of the process. 
+We already saw this in the previous section - for example though running `rundll32.exe` is completely legit, we would expect it to have arguments referencing the exact function and library it's supposed to load. Seeing it nude, well that's strange. 
 
-Note that 1-4 above are not unique to dll-injections, but can be seen in malware in general. Our final 3 indicators we expect however only to see in relation to dll-injections. 
+{{< figure src="/img/dwight-naked.gif" title="" class="custom-figure-3" >}}
+
+Same goes for many other processes - we need thus to understand their function and how they are invoked to be able to determine the legitimacy of the process. 
 
 5. ***Thread Start Address***
 
-Sure, I'll try to provide some context around the statement.
-
-When a DLL is loaded the traditional way, i.e., from a disk, the operating system memory-maps the DLL into the process's address space. Memory mapping is a method used by the operating system to load the contents of a file into a process's memory space, which allows the process to access the file's data as if it were directly in memory. The operating system also maintains a mapping table that tracks where each DLL is loaded in memory.
+When a DLL is loaded in the traditional way, ie from a disk, the operating system memory-maps the DLL into the process's address space. Memory mapping is a method used by the operating system to load the contents of a file into a process's memory space, which allows the process to access the file's data as if it were directly in memory. The operating system also maintains a mapping table that tracks where each DLL is loaded in memory.
 
 With traditional DLL loading, if you were to look at the start address of the thread executing the DLL, you would see a memory address indicating where the DLL has been loaded in the process's address space.
 
