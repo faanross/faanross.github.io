@@ -1072,22 +1072,24 @@ It might surprise you but *in situ* it's estimated that about 50% of adversaries
 
 {{< figure src="/img/thinkabout.gif" title="" class="custom-figure-3" >}}
 
-All this to say - we'll look for unusual parent-child Relationships, and we'll do so typically by looking at a `process tree` which shows as all processes and their associated relationships. In the discussion above I might have given the impression that these relationships all exist in pairs with a unidirectional relationship. Not so, just as in actual family trees a parent can spawn multiple children, and each of these can in turn spawn multiple children etc. So depending on the exact direction of the relationship, any specific process may be a parent or a child. 
+All this to say - we'll look for unusual parent-child Relationships, and we'll do so typically by looking at a `process tree` which shows as all processes and their associated relationships. In the discussion above I might have given the impression that these relationships all exist in pairs with a unidirectional relationship. Not so, just as in actual family trees a parent can spawn multiple children, and each of these can in turn spawn their own children etc. So depending on the exact direction of the relationship, any specific process may be a parent or a child. 
 
 2. ***Signature - is it valid + who signed?***
 
-This is definitely one of the lowest value indicators - something that's nice to help build a case, but by itself, owing to so many potential exceptions, is quite useless. Nevertheless if we see that a process is unsigned, or signed by an untrusted source, we may layer it onto our case. 
+This is definitely one of the lowest value indicators - something that's nice to help build a case, but by itself, owing to so many potential exceptions, is frankly useless. Nevertheless it is worth being aware of - whether the process is unsigned, or signed by an untrusted source.
 
 3. ***Current directory***
+
 There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - uh-oh. 
 
-Or, perhaps we see powershell, but it's running from `c:\windows\syswow64\...`, which by itself is a completely legitimate directory. But what's it purpose? Well, this basically means it's 32-bit code that was run. Now 32-bit systems still exist, but the vast majority of systems now are 64-bit. Malware however, still loves to use 32-bit code since it gives it the biggest reach - it can now infect both 32-bit and 64-bit systems. 
+Or, perhaps we see PowerShell, but it's running from `c:\windows\syswow64\...`, which by itself is a completely legitimate directory. But what's it purpose? Well, this basically means it's 32-bit code that was run. Now 32-bit systems still exist, but the vast majority of systems now are 64-bit. Malware however, still loves to use 32-bit code since it gives it the biggest reach - it can now infect both 32-bit and 64-bit systems. 
 
 So if we saw PowerShell running from that directory, it's an artifact produced when 32-bit code is run, which requires 32-bit PowerShell. Using this on a modern, 64-bit system is pretty unusual.
 
 All this to say: the directory can potentially tell us something about the legitimacy of the process
 
 4. ***Command-line arguments***
+
 We already saw this in the previous section - for example though running `rundll32.exe` is completely legit, we would expect it to have arguments referencing the exact functions and libraries it's supposed to load. Seeing it nude, well that's strange. Same goes for many other processes - we need thus to understand their function and how they are invoked to be able to determine the legitimacy of the process. 
 
 Note that 1-4 above are not unique to dll-injections, but can be seen in malware in general. Our final 3 indicators we expect however only to see in relation to dll-injections. 
@@ -1110,6 +1112,7 @@ Thus this is only for reflective DLL loading!
 
 
 6. ***Memory Permissions***
+
 One of the most common, well-known heuristics for injected malware is any memory region with RWX permissions. Memory with `RWX` permissions means that code can be written into that region and then subsequently executed. This is a capability that malware often utilizes, as it allows the malware to inject malicious code into a running program and then execute that code. The *vast* majority of legitimate software will not behave in this manner.
 
 But be forewarned - RWX permissions are the tip of the iceberg in this game of looking for anomalies in memory permissions.It’s not the only one but many people stay stuck on it as if it’s the be all and end all.
@@ -1120,6 +1123,7 @@ For now however we will focus only on `RWX`, but of course as we advance we will
 
 
 7. ***Memory Content***
+
 Once we find a memory space with unusual permissions we then also want to check its content for signs of a PE file. Let's have a brief overview of the PE file structure below:
 
 {{< figure src="/img/image078.png" title="" class="custom-figure" >}}
