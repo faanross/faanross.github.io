@@ -856,27 +856,34 @@ OK so let's just hold zoom out and discuss the attack we just performed. At this
 
 Look at the meta: the whole point of establishing C2 on the victim is so we can run commands on it, but we literally just allowed ourselves to freely run commands on the victim so that we can establish C2. We wrote our malicious DLL to disk, injected our DLL-injection script into memory, and ran the script all from the comfort of Imaginationland.
 
-{{< figure src="/img/imagination.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/imagination.gif" title="" class="custom-figure" >}}
 
 So then the answer is *yes*. That was cheating - of course. But, it's cheating with a purpose you see, the purpose here being that this is a course on threat hunting. So we stripped the actions of the initial compromise down to its core and for now we've foregone our spearfishing email and VBA macro. We've streamlined the essence of the attack - we're expending less energy in the effort, and yet for our intents have created the same outcome. 
 
-So, we won't be investing our time in completely recreating a realistic simulation of the intial compromise, *however*, I do think it's very important for us to discuss here what that would look like. We are about to embark on our threat hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual attack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
+So, we won't be investing our time in completely recreating a realistic simulation of the intial compromise, *however*, I do think it's very important for us to discuss here what that would look like. We are about to embark on our threat hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. 
 
-So the remainder of this section will be dedicated to that. I'm very briefly going to review all the main beats to the attack we just performed, thereafter I'll "translate" the actions to their real-world counterpart, pointing out specifically which elements we expect to see in an actual attack, and which we don't. 
+Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual attack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
 
-Here's what we just did in our attack:
+{{< figure src="/img/focus.gif" title="" class="custom-figure" >}}
+
+So the remainder of this section will be dedicated to that. I'm very briefly going to review all the main beats to the attack we just performed, thereafter I'll "translate" the actions to a representative real-world counterpart, pointing out specifically which elements we expect to see in an actual attack, and which we don't. 
+
+**Here's what we just did in our attack:**
 1. We crafted a malicious DLL on our system.
 2. We transferred this DLL over to the victim's system.
 3. We opened a meterpreter handler on our system.
-4. We then downloaded a powershell script from a web server, and injected it into the victim's memory.
-5. We opened a legitimate program (rufus.exe).
-6. We then ran the script we downloaded in #4, causing the malicious dll from #1/2 to be injected into the memory space of #5.
+4. On the victim's sytem we then downloaded a powershell script from a web server, and injected it into memory.
+5. We opened a legitimate program (`rufus.exe`).
+6. We then ran the script we downloaded in #4, causing the malicious dll from #1 to be injected into the memory space of #5.
 7. The injected DLL is executed, calling back to the handler we created in #3, thereby establishing our backdoor connection.
 8. We exfiltrated some data using our meterpreter shell.
 9. We used our meterpreter shell to spawn a command prompt shell.
 10. We ran a simple command in the new shell (whoami).
+11. We closed the connection. 
 
-OK. Now let's review what an actual attack might have looked like, how these same steps and outcomes would more accurately be represented:
+{{< figure src="/img/dementors.gif" title="" class="custom-figure" >}}
+
+**OK. Now let's review what an actual attack might have looked like:**
 1. An attacker does some recon/OSINT, discovering info that allows them to craft a very personalized email to a company's head of sales as part of a spearphishing campaign.
 2. The attacker included in this email a word document labelled "urgent invoice", and by using some masterful social engineering techniques they convince the head of sales to immediately open the document to pay it.
 3. With macros enabled, once the head of sales opens the invoice it runs an embedded VBA macro, which contains the adversary's malicious code. 
