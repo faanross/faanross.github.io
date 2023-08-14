@@ -929,6 +929,8 @@ There are a number of things we can look at when we do a live analyis using the 
 
 For this course we will only focus on connections and processes. If you are keen to learn more about how to investigate the other factors I suggest you watch [this excellent talk by John Strand](https://www.youtube.com/watch?v=fEip9gl2MTA). 
 
+{{< figure src="/img/speech.gif" title="" class="custom-figure" >}}
+
 # 3.3.1. Connections
 Let's run `netstat`, which will display active network connections and listening ports. After all, most malware serves merely as a way for the adversary to ultimately have a connection to the victim's machine to run commands and exfiltrate data.
 
@@ -953,21 +955,21 @@ In a typical scenario we'd immediately want to know more about this IP. Is it kn
 {{< figure src="/img/weirdal.gif" title="" class="custom-figure" >}}
 
 
-So let's use our native Windows tools to learn more about this process. To do so however let's just take note of our PID, as can be seen in the image above mine is `3948`, yours will be different. 
+So let's use our native Windows tools to learn more about this process. To do so  let's just note of our PID, as can be seen in the image above mine is `3948`, yours will be different. 
 
-# Processes
+# 3.3.2. Processes
 
-We want to know more about this process, however we specifically want to know: what command-line options were used to run it, what is it's parent process, and what DLLs are being used by the process.
+Let's learn more about this strange process, specifically: what command-line options were used to run it, what is it's parent process, and what DLLs are being used by the process.
 
-Let's have a look at the DLLs, staying in our PowerShell terminal we run:
+**Let's have a look at the DLLs, staying in our PowerShell terminal we run:**
 ```
 tasklist /m /fi "pid eq 3948"
 ```
-{{< figure src="/img/image072.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image072.png" title="" class="custom-figure-3" >}}
 
 On quick glance nothing seems unusual about this output - no DLL sticks out as being out of placed for `rundll32.exe`. So for now let's move on with the knowledge that we can always circle back and dig deeper if need be. 
 
-Next let's have a look at the Parent Process ID (PPID):
+**Next let's have a look at the Parent Process ID (PPID):**
 ```
 wmic process where processid=3948 get parentprocessid
 ```
@@ -981,9 +983,11 @@ wmic process where processid=6944 get Name
 
 We see thus that the name of the Parent Process, that is the name of the process that spawned `rundll32.exe` is `rufus.exe` - a program used to create bootable thumb drives. 
 
-Now this, on quick glance this too seems unusual - why is this app needing to call `rundll32.exe`? However, since we're not an expert on this program's design, this could potentially be part of its normal operation - we'd have to jump in deeper to understand that.
+On quick glance this too seems unusual - why is this app needing to call `rundll32.exe`? However, since we're not an expert on this program's design, this could potentially be part of its normal operation - we'd have to jump in deeper to understand that.
 
-Let's keep the bigger picture in mind again - we came upon `rundll32.exe` because it created a network connection to an external IP. So in that sense, yes this is very weird - why is a program used to create bootable thumb drives spawning `rundll32.exe` which then creates a network connection? Very sus.
+{{< figure src="/img/sus2.gif" title="" class="custom-figure" >}}
+
+Let's keep the bigger picture in mind again - we came upon `rundll32.exe` because it created a network connection to an external IP. So in that sense, yes this is very weird - why is a program used to create bootable thumb drives spawning `rundll32.exe` which then creates a network connection? 
 
 One final thing here using our native tools, let's have a look at the command-line arguments:
 ```
