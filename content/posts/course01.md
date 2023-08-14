@@ -997,27 +997,36 @@ wmic process where processid=3948 get commandline
 
 We can see the command is nude - no arguments are provided. Well, since again the `rundll32.exe` command is typically used to execute a function in a specific DLL file, you would expect to see it accompanied by arguments specifying the DLL file and function it's supposed to execute. But here it's simply executed by itself, again reinforcing our suspicion that something is amiss. 
 
-# Closing Thoughts
-Again we started with an open mind, spotten an unusual process being involved in a network connection, and then using other native Windows tools learned more about this process. And the more we learned, the more our suspicion was confirmed. We can thus, in reference to the Three Modes of Threat Hunting, confidently say we're now in the second mode - building our case. Let's continue exploring in the realm of processes by digging deeper with `Process Hacker`.
-
 ***
 
-# 6. Live Forensics: Process Hacker 2
-# Introduction
+# 3.4. Closing Thoughts
+Again we started with an open mind, spotten an unusual process being involved in a network connection, and then using other native Windows tools learned more about this process. And the more we learned, the more our suspicion was confirmed:
+- The parent-child relationship is unusual.
+- The need for the parent relationship to ultimately create a network connection is unusual.
+- The fact that the process was ran without command-line arguments was unusual. 
+
+Now that our suspicion is well and truly aroused let's dig in deeper to build our case using `Process Hacker`.
+
+***
+***
+
+# 4. Live Analysis: Process Hacker 
+# 4.1. Introduction
 I explained, hopefully in a somewhat convincing manner, why it's good practice for us to learn how to use the native Windows tools to get an initial, high-level read. But of course these tools are also limited in what information they can provide.
 
 So now let's bring out the big guns and learn all we can.
 
 {{< figure src="/img/guns.gif" title="" class="custom-figure" >}}
 
+As these things go, it really behooves us to learn a bit of theory behind what we're going to look at with the intention of understanding why it is we are looking at these things, and what exactly we will be looking for. 
 
-But alas, as these things go, it really behooves us to learn a bit of theory behind what we're going to look at with the intention of understanding why it is we are looking at these things, and what exactly what we will be looking for. 
+***
 
-Indeed, in matters like these, it is beneficial for us to delve into some theory. This will help us better comprehend what we're about to examine. We aim to understand why we are scrutinizing these things. Furthermore, it's essential to clarify exactly what we will be searching for.
+# 4.2. Theory
 
-# Theory
-
-***"A traditional anti-virus product might look at my payload when I touch disk or load content in a browser. If I defeat that, I win. Now, the battleground is the functions we use to get our payloads into memory. -Raphael Mudge"***
+```
+"A traditional anti-virus product might look at my payload when I touch disk or load content in a browser. If I defeat that, I win. Now, the battleground is the functions we use to get our payloads into memory. -Raphael Mudge"
+```
 
 There are a few key properties we want to be on the lookout for when doing live memory analysis with something like `Process Hacker`. But, it's very important to know that there are **NO silver bullets**. There are no hard and fast rules where if we see any of the following we can be 100% sure we're dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.
 
