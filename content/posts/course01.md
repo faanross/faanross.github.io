@@ -1036,7 +1036,7 @@ Additionally, the process as outlined here may give the impression that it typic
 
 As a simple example - if we find a suspicious process by following this procedure, we might want to pause and have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
 
-{{< figure src="/img/rabbit.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/rabbit.gif" title="" class="custom-figure-3" >}}
 
 **Here's a quick overview of our list:**
 1. Parent-Child Relationships
