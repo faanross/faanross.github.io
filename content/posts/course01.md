@@ -1129,17 +1129,17 @@ I wanted you to be aware of this, but for now we will focus only on `RWX`.
 
 7. ***Memory Content***
 
-Once we find a memory space with unusual permissions we then also want to check its content for signs of a PE file. Let's have a brief overview of the PE file structure below:
+Once we find a memory space with unusual permissions we then also want to check its content for signs of a PE file. Let's quickly have a look at a typical PE file structure:
 
-{{< figure src="/img/image078.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image078.png" title="" class="custom-figure-3" >}}
 
-We can see two things that always stick out: the magic bytes and a vestigial string associated with the `DOS Stub`. Magic bytes are predefined unique values used at the beginning of a file that are used to identify the file format or protocol. For a PE file, we would expect to see the ASCII character `MZ`, or `4D 5A` in hex. 
+We can see two things that always stick out: the magic bytes `MZ` and a vestigial string associated with the `DOS Stub`. Magic bytes are predefined unique values used at the beginning of a file that are used to identify the file format or protocol. For a PE file, we would expect to see the ASCII character `MZ`, or `4D 5A` in hex. 
 
-Then the string `This program cannot be run in DOS mode` is an artifact from an era that some systems only ran DOS. However the string is still kept there for mainly historical reasons. For us in this case however it's a useful thumbprint, informing us we're dealing with a PE file. 
+Then the string `This program cannot be run in DOS mode` is an artifact from an era that some systems only ran DOS. However the string is still kept there, mainly historical reasons. For us in this case however it's a useful thumbprint, informing us we're dealing with a PE file. 
 
-Further, in the rest of the contents we might be able to find some strings that are associated with specific malware. And typically, rather than trudging it manually we can automate the proces s using [YARA](https://github.com/VirusTotal/yara/releases) rules. 
+Further, in the rest of the contents we might be able to find some strings that are associated with specific malware. And typically, rather than trudging it manually we can automate the process using [YARA](https://github.com/VirusTotal/yara/releases) rules. 
 
-For example in below we can see [Yara rules authored by Florian Roth for Cobalt Strike](https://github.com/Neo23x0/signature-base/blob/master/yara/apt_wilted_tulip.yar). The image shows a number of string-based rules it would be looking for - all indications that the PE file is part of a Cobalt Strike attack. 
+For example below we can see [Yara rules authored by Florian Roth for Cobalt Strike](https://github.com/Neo23x0/signature-base/blob/master/yara/apt_wilted_tulip.yar). The image shows a number of string-based rules it would be looking for - all indications that the PE file is part of a Cobalt Strike attack. 
 
 {{< figure src="/img/image079.png" title="" class="custom-figure" >}}
 
