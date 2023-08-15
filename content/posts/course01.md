@@ -1445,21 +1445,28 @@ So, instead of focusing on 100% of the logs to potentially uncover 100% of the a
 
 {{< figure src="/img/ignore.gif" title="" class="custom-figure" >}}
 
+***
+
 # 6.2. A Quick Note
-We will be using the same Windows VM (ie the victim) to perform the log analysis in this section. Note that this is done purely for the sake of convenience. As of my current understanding (please [tell me](mailto:faan@teonan.com) if I'm wrong), there is no simple way to interact with `.evtx` files in Linux, at least not in the GUI. *Yes, yes* I am aware it's very uncool to prefer use of a GUI, *totally* not 1337. But if you'd be so kind, please allow me a momentary expression of nuance: both the command line and GUI have their strengths and weaknesses and better to select the best based on context than to succumb to dogma. 
+We will be using the same Windows VM (ie the victim) to perform the log analysis in this section. Note that this is done purely for the sake of convenience. As of my current understanding (please [tell me](mailto:faan@teonan.com) if I'm wrong), there is no simple way to interact with `.evtx` files in Linux, at least not in the GUI. 
 
+*Yes, yes* - I am well aware it's very uncool to prefer use of a GUI, *totally* not 1337 and stuff. But if you'd be so kind, please allow me a momentary expression of nuance: both the command line and GUI have their strengths and weaknesses and better to select the best based on context than to succumb to dogma. 
 
+{{< figure src="/img/dogma.gif" title="" class="custom-figure-3 >}}
 
-So for now it'll just be simpler to move ahead and used the built-in `Event Viewer` in Windows to work with these files. And, since and since I did not want to create another "non-victim" Windows VM for this one task we're going to be using the same one. But please be aware, unless there is literally no alternative you should never do this in an actual threat hunting scenario.  
+So for now it'll just be simpler to move ahead and used the built-in `Event Viewer` in Windows to work with these files. And since I did not want to create another "non-victim" Windows VM for this one task we're going to be using the same VM. But please be aware, unless there is literally no alternative you should never do this in an actual threat hunting scenario.  
 
 The reason is quite obvious - performing a post-mortem analysis on a compromised system can potentially taint the results. We have no idea how the breach might be impacting our actions and so to ensure the integrity of our data we need to perform it in a secure environment. 
 
-This also why for example certain antimalware software vendors provide versions of their products that can run directly from a bootable CD or USB drive - to ensure a scan that is unaffected by the resident malware. 
+{{< figure src="/img/tainted.gif" title="" class="custom-figure-3 >}}
+
+This also why for example certain antimalware software vendors provide versions of their products that can run directly from a bootable CD or USB drive - to ensure a scan that is unaffected by  resident malware. 
 
 So that cavaeat out of the way, *let's get it on* with Sysmon. 
 
 {{< figure src="/img/getiton.gif" title="" class="custom-figure" >}}
 
+***
 
 # 8.3 SYSMON
 # 8.3.1 INTRODUCTION
@@ -1473,6 +1480,13 @@ Well, without pussyfooting around let me just give it to you straight - `WEL` SU
 In stark contrast, `Sysmon`, created by a literal living legend [Mark Russinovich](https://twitter.com/markrussinovich), takes about 5 minutes to set up and will DRAMATICALLY improve logging as it relates specifically to security events. 
 
 That's really about all you need to know at this point - WEL bad, Sysmon epic. If you wanted to learn more about Sysmon check out Section X further below. 
+
+REFS
+
+
+
+
+
 
 # Log Analysis: SYSMON
 
