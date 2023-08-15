@@ -1297,7 +1297,7 @@ Now that you have a basic idea of the modules we'll be using, let's go on with o
 
 # 5.3. Performing the Analysis
 
-**pslist, pstree, and psinfo**
+# 5.3.1. pslist, pstree, and psinfo
 
 Two of the most common plugs-ins are `pslist` and `pstree`. The former gives us a list of all processes with some key details, `pstree` conversely will also show Parent-Child relationships. Since we've already seen this info multiple times now we'll skip it here, but I wanted be aware that, if for whatever reason you were not able to perform the live analysis, you can gather all the same important process information from the memory dump using `Volatility`.
 
@@ -1312,7 +1312,7 @@ python3 vol.py -f ~/Desktop/memdump.raw windows.pslist
 
 {{< figure src="/img/image062.png" title="" class="custom-figure-2" >}}
 
-**handles**
+# 5.3.2. handles
 
 Now that we've got the PID of our suspicious program we're going to look at its handles. 
 
@@ -1348,7 +1348,7 @@ This key is commonly used to debug applications in Windows. However, it is also 
 
 `MACHINE\SYSTEM\CONTROLSET001\CONTROL\NETWORKPROVIDER\HWORDER and MACHINE\SYSTEM\CONTROLSET001\CONTROL\NETWORKPROVIDER\PROVIDERORDER`: These keys are related to the order in which network providers are accessed in Windows. Modification of these keys may indicate an attempt to intercept or manipulate network connections.
 
-**cmdline**
+# 5.3.3. cmdline
 
 This is one of my favourite modules in Volatility, allowing us to extract command-line arguments of running processes from our memory dump. Here we'll apply it only to the process of interest, but of course keep in mind that we could review the entire available history.
 
@@ -1360,7 +1360,7 @@ python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 
 
 Here we receive the same insight as before, namely that `rundll32.exe` was not provided any arguments when it was invoked from the command line. I'm pointing this out once again so you are aware you can obtain this same information even if you were not able to perform a live analysis. 
 
-**netscan**
+# 5.3.4. netscan
 
 The `netscan` plugin will scan the memory dump looking for any network connections and sockets made by the OS.
 
@@ -1369,13 +1369,11 @@ We can run the scan using the command:
 python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.netscan
 ```
 
+REDO THIS SECTION POINT OUT SAME IP WE FOUND WITH NATIVE TOOLS
 
-NO REDO THIS because we want to see the same ip as we got in native tools section for redundancy purposes. 
+# 5.3.5. malfind
 
-
-**malfind**
-
-`malfind` is the quintessential plugin for, well, finding malware. The plugin will look for suspected inject code, which it determines based on header info - much indeed like we did during our live analysis when we look at the memory space content. 
+`malfind` is the quintessential plugin for, well, finding malware. The plugin will look for suspected inject code, which it determines based on header info - indeed much like we did manually during our live analysis when we look at the memory space content. 
 
 We can run it with:
 ```
