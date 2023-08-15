@@ -1412,45 +1412,40 @@ That being the case let's move on to the log analysis, which is likely going to 
 
 
 
-continue here tk xxx
 
 
 
 
-
-# 8. POST-MORTEM FORENSICS: LOG ANALYSIS
-# 8.1 INTRODUCTION
+# 6. Post-Mortem Forensics: Log Analysis
+# 6.1. Introduction
 
 Now typically we might think of logging as belonging more to the realm of the SOC than a threat hunter. That's because, at least in the way that modern logging practices operate, logging is not seen as something directly approachable by a human operator.
 
 
-{{< figure src="/img/mentat.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/mentat.gif" title="" class="custom-figure-2" >}}
 
 
-What do I mean by this? One consequence of the "endpoint arm's race" that vendors have taken the industry on the last decade or so is the unimaginable scale of the data being generated. It's not unusual for an enterprise to generate millions of log events in their SIEM *daily*, given that, the notion that a person can start prodding around without an "alert filter" seems laughable. 
+What do I mean by this? One consequence of the "endpoint arm's race" that vendors have taken the industry on is the unimaginable scale of the data being generated. It's not unusual for an enterprise to generate millions of log events in their SIEM *daily*. Given that, the notion that a person can start prodding around *sans* "alert filter" seems laughable. 
 
 {{< figure src="/img/needle.gif" title="" class="custom-figure" >}}
 
-Intuitively this "scale incompatibility" admittedly makes sense, however, based on context there is some further nuance to consider. 
+Intuitively, this "scale incompatibility" problem makes sense, however, based on context there is some further nuance to consider. 
 
 First, as I emphasized in my article ["Three Modes of Threat Hunting article"](https://www.faanross.com/posts/three_modes/), log analysis is typically not the best choice for the initial phase of a threat hunt, but it can be a crucial part of the follow-up. Just as we are about to do here, if we already have a sense of limited scope — such as specific processes, time stamps, events, etc. — we need not approach *all* logs; instead, we can focus on a specific set of logs.
 
-But it gets better: even before we apply our own filtering criteria, we won't really ever consider the entire body of potential logs as fair game. 
+But it gets better: before we even apply our own filtering criteria, we won't really ever consider the entire body of potential logs to begin with since most of it is, well... 
 
+{{< figure src="/img/poop.gif" title="" class="custom-figure" >}}
 
+When it comes to threat hunting + log analysis, I think of the approach more akin to the `Pareto Principle`. The Pareto Principle states that in most systems 80% of outputs result from 20% of inputs. 
 
+Contextually applied here - 20% of the logs will account for 80% of potential adverse security events. But in honesty, the proportion here is likely even more extreme - this is a complete guess, but I'd say it's more like ***5% of logs will potentially account for 95% of adverse security events***.
 
+So, instead of focusing on 100% of the logs to potentially uncover 100% of the adverse security events, we'll focus on about 5% of the logs to potentially uncover 95% of the adverse security events. What exactly constitutes that "5%" will become progressively more nuanced as we continue on our journey in future courses, but for now it simply means that we focus on `Sysmon` and `PowerShell ScriptBlock` logs while ignoring WEL completely. 
 
+{{< figure src="/img/ignore.gif" title="" class="custom-figure" >}}
 
-And the second fallacy related to "logs being a SOC-thing" relates to what logs we consider to even begin with. In other words, the specific logs we are interested in, even before we apply selective criteria as explained above, is typically a subset of all potential logs. It seems that, for whatever reason, the industry has settled on a "more is always better" approach when it comes to logging. There is this underlying idea that the more endpoints and the more logs the better security becomes. And so, for good or **bad**, this is what SOCs engage with each day - a literal avalance of logs. 
-
-However when it comes to Threat Hunting and Log Analysis, I view the approach more a kin to the Pareto Principle. The Pareto Principle, also known as the "80-20 rule", states that in most systems 80% of outputs result from 20% of inputs. Contextually applied here, what I mean is that 20% of the logs will account for 80% of potential adverse security events. But in honesty, the proportion here is likely even more extreme - this is a complete guess, but I'd say it's more like ***5% of logs will potentially account for 95% of adverse security events***.
-
-So, instead of focusing on 100% of the logs to potentiually uncover 100% of the adverse security events, we focus on 5% of the logs to potentially uncover 95% of the adverse security events. What exactly constitutes that 5% will become progressively more nuanced as we continue on our journey in future courses, but for now it simply means that we focus on Sysmon and PowerShell ScriptBlock logs and ignore WEL completely. 
-
-So let's go ahead and have a look at each of them in turn starting with Sysmon.  
-
-# 8.2 A QUICK NOTE
+# 6.2. A Quick Note
 We will be using the same Windows VM (ie the victim) to perform the log analysis in this section. Note that this is done purely for the sake of convenience. As of my current understanding (please [tell me](mailto:faan@teonan.com) if I'm wrong), there is no simple way to interact with `.evtx` files in Linux, at least not in the GUI. *Yes, yes* I am aware it's very uncool to prefer use of a GUI, *totally* not 1337. But if you'd be so kind, please allow me a momentary expression of nuance: both the command line and GUI have their strengths and weaknesses and better to select the best based on context than to succumb to dogma. 
 
 
