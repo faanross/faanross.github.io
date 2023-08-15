@@ -1147,7 +1147,7 @@ Finally it's worth being aware of `PE Header Stomping` - a more advanced techniq
 
 PE files *have* to have a header, but since nothing really forces or checks the exact contents of the header, the header could theoretically be anything. And so instead of the header containing some giveaways like we saw above - magic bytes, dos stub artifact, signature strings etc - the malware will overwrite the header with something else to appear legitimate. For now I just wanted you to be aware of this, we'll revisit header stomping first-hand in the future. 
 
-{{< figure src="/img/ramones.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/ramones.gif" title="" class="custom-figure-3" >}}
 
 But for now, that's it for the theory - *allons-y*!
 
@@ -1161,13 +1161,17 @@ Open Process Hacker as admin - ie right-click and select `Run as administrator`.
 
 {{< figure src="/img/image053.png" title="" class="custom-figure" >}}
 
-We can immediately see the same suspicious process and parent we saw in our read using the native tools - there is the legitimate process `rufus`, which spawned the child process `rundll32.exe`.And as we discussed then this is suspicious since we do not expect `rufus`, a program used to create bootable USB drives, to need to call `rundll32.exe`. 
+We can immediately see the same suspicious process and parent we saw in our analysis using native tools - there is the legitimate process `rufus.exe`, which unexpectedly spawned the child process `rundll32.exe`.
 
-But then we see something we forgot to consider in our previous analysis - has `rundll32.exe` itself spawned anything in turn? Here things *really* start getting suspicious - `rundll32.exe` in turned spawned `cmd.exe`. 
+But then we see something else we forgot to consider in our previous analysis - has `rundll32.exe` itself spawned anything in turn? Indeed `rundll32.exe` has in turn spawned `cmd.exe`. 
 
-I mentioned before that `rundll32.exe` is typically used to launch DLLs. Thus there is **very** little reason for us to expect it to be spawning the Windows command line interpreter `cmd.exe`. Now it could be that some amateur developer wrote some janky code that does this as some befuddling workaround, but in honesty even that is a stretch. We're not ringing the alarm bells yet, but we're definitely geared to dig in deeper.
+I mentioned before that `rundll32.exe` is typically used to launch DLLs. There is thus little reason for us to expect it to be spawning the Windows command line interpreter `cmd.exe`. Now it could be that some amateur developer wrote some janky code that does this as some befuddling workaround, but that's steelmanning it to the n-th degree. 
 
-So double-click on the process... 
+{{< figure src="/img/steelman.gif" title="" class="custom-figure" >}}
+
+We're not ringing the alarm bells yet, but we're definitely geared to dig in deeper.
+
+Let's double-click on the process `rundll32.exe`... 
 
 2. Signature - is it valid + who signed?
 
