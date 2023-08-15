@@ -1393,14 +1393,17 @@ This is thus a good reminder that the mere appearance of a process in malfind's 
 
 # 5.4. Final Thoughts
 
-This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform live analysis and only received a memory dump, then this section showed us how we could derive a lot of the same information. Further, even if we did perform the live analysis, we bolster our case when we can come to the same conclusions via another avenue. 
+This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform live analysis and only received a memory dump, then this section showed us how we could derive a lot of the same information. Further, even if we did perform the live analysis, it might still be useful to validate the findings on a system not suspected of being compromised. 
+
+
+we bolster our case when we can come to the same conclusions via another avenue. 
 
 I think this serves as a good introduction to `Volatility` - you now have some sense of how it works, how to use it, and what are the "go to" plug-ins for threat hunting.
 
 {{< figure src="/img/office.gif" title="" class="custom-figure" >}}
 
 
-That being the case let's move on to the log analysis. For this we'll once again use our Windows VM, so in case you turned it off, please turn it back on. 
+That being the case let's move on to the log analysis, which is likely going to be the most substantial journey. For this we'll once again use our Windows VM, so in case you turned it off, please turn it back on. 
 
 ***
 ***
@@ -1415,27 +1418,31 @@ continue here tk xxx
 
 
 
-
-
-
 # 8. POST-MORTEM FORENSICS: LOG ANALYSIS
 # 8.1 INTRODUCTION
 
-So the time has come for us to get into some LOGGING...
+Now typically we might think of logging as belonging more to the realm of the SOC than a threat hunter. That's because, at least in the way that modern logging practices operate, logging is not seen as something directly approachable by a human operator.
+
+
+{{< figure src="/img/mentat.gif" title="" class="custom-figure" >}}
+
+
+What do I mean by this? One consequence of the "endpoint arm's race" that vendors have taken the industry on the last decade or so is the unimaginable scale of the data being generated. It's not unusual for an enterprise to generate millions of log events in their SIEM *daily*, given that, the notion that a person can start prodding around without an "alert filter" seems laughable. 
+
+{{< figure src="/img/needle.gif" title="" class="custom-figure" >}}
+
+Intuitively this "scale incompatibility" admittedly makes sense, however, based on context there is some further nuance to consider. 
+
+First, as I emphasized in my article ["Three Modes of Threat Hunting article"](https://www.faanross.com/posts/three_modes/), log analysis is typically not the best choice for the initial phase of a threat hunt, but it can be a crucial part of the follow-up. Just as we are about to do here, if we already have a sense of limited scope — such as specific processes, time stamps, events, etc. — we need not approach *all* logs; instead, we can focus on a specific set of logs.
+
+But it gets better: even before we apply our own filtering criteria, we won't really ever consider the entire body of potential logs as fair game. 
 
 
 
-Now typically we might think of logging as belonging more to the realm of the SOC than a threat hunter. That's because, at least in the way that modern logging practices operate, logging is not seen as something directly approachable by a human operator. Why? Well because of the ***insane*** amount of data involved. It's not unusual for enterprises to generate millions of log events in their SIEM *daily*, and thus it's completly infeasible for a threat hunter to start poking around looking for bread crumbs. We think of logging has something that we feed into the SIEM, and then wait for an alert to act on - i.e. the work of a SOC. 
 
-But, depending on context, there's two potential fallacies at play in this viewpoint.
 
-First, as I emphasized in my article ["Three Modes of Threat Hunting article"](https://www.faanross.com/posts/three_modes/), though log analysis is indeed an unsuitable choice for the initial phase of a threat hunt, it can be an important emergent line of enquiry once we're investigating a lead. In the initial phase we operate only with presumption, but not yet any concrete suspicion. We are looking for that first indication of something being off, and as such if we were to consider the logs at that point we'd need to consider *all* logs. And logs is never something we approach manually without a strong set of selective criteria. 
-
-So, as we are simulating here, once we have found some evidence that we are interested in we can use that to dramatically reduce the total amount of log events we consider. We can use specific processes, actions, event IDs, dates, times etc derived from our initial set of evidence so that we no longer have to consider the entire body of log events as potentially suspicious, rather based on information we already gathered we can whittle it down dramatically and only focus on events potentially related to the suspicious event. 
 
 And the second fallacy related to "logs being a SOC-thing" relates to what logs we consider to even begin with. In other words, the specific logs we are interested in, even before we apply selective criteria as explained above, is typically a subset of all potential logs. It seems that, for whatever reason, the industry has settled on a "more is always better" approach when it comes to logging. There is this underlying idea that the more endpoints and the more logs the better security becomes. And so, for good or **bad**, this is what SOCs engage with each day - a literal avalance of logs. 
-
-{{< figure src="/img/sisy.gif" title="" class="custom-figure" >}}
 
 However when it comes to Threat Hunting and Log Analysis, I view the approach more a kin to the Pareto Principle. The Pareto Principle, also known as the "80-20 rule", states that in most systems 80% of outputs result from 20% of inputs. Contextually applied here, what I mean is that 20% of the logs will account for 80% of potential adverse security events. But in honesty, the proportion here is likely even more extreme - this is a complete guess, but I'd say it's more like ***5% of logs will potentially account for 95% of adverse security events***.
 
