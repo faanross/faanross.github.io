@@ -1119,7 +1119,7 @@ As a result, when you inspect the start address of the thread associated with th
 
 One of the most common, well-known heuristics for injected malware is any memory region with `RWX` permissions. Memory with `RWX` permissions means that code can be written into that region and then subsequently executed. This is a capability that malware often utilizes, as it allows the malware to inject malicious code into a running program and then execute that code. The *vast* majority of legitimate software will not behave in this manner.
 
-{{< figure src="/img/dog-drag" title="" class="custom-figure" >}}
+{{< figure src="/img/dog-drag.gif" title="" class="custom-figure" >}}
 
 But be forewarned - `RWX` permissions are the tip of the iceberg in this game of looking for anomalies in memory permissions.
 
@@ -1147,13 +1147,17 @@ Finally it's worth being aware of `PE Header Stomping` - a more advanced techniq
 
 PE files *have* to have a header, but since nothing really forces or checks the exact contents of the header, the header could theoretically be anything. And so instead of the header containing some giveaways like we saw above - magic bytes, dos stub artifact, signature strings etc - the malware will overwrite the header with something else to appear legitimate. For now I just wanted you to be aware of this, we'll revisit header stomping first-hand in the future. 
 
+{{< figure src="/img/ramones.gif" title="" class="custom-figure" >}}
+
 But for now, that's it for the theory - *allons-y*!
 
-# Performing the Analysis
+***
 
-Open Process Hacker as admin - ie right-click and select `Run as administrator`. Scroll down until you see `rufus.exe` (or whatever other legitimate process you chose to inject into). Let's go through our 7 indicators and see what results. 
+# 4.3. Performing the Analysis
 
-1. Parent-Child relationships
+Open Process Hacker as admin - ie right-click and select `Run as administrator`. Scroll down until you see `rufus.exe` (or whatever other legitimate process you chose to inject into). Let's go through our 7 indicators.
+
+1. **Parent-Child relationships**
 
 {{< figure src="/img/image053.png" title="" class="custom-figure" >}}
 
