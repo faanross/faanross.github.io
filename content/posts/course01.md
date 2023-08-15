@@ -1468,31 +1468,31 @@ So that cavaeat out of the way, *let's get it on* with Sysmon.
 
 ***
 
-# 8.3 SYSMON
-# 8.3.1 INTRODUCTION
+# 6.3. Sysmon
+# 6.3.1. Theory
 
-So we've installed Sysmon (Section X), enabled it, captured logs with it (Section X), and then exported those logs as a `.evtx` file. But we've not really discussed why we've done any of this. Why don't we simply rely on the default `Windows Event Logs`  (hence forth referred to simply as `WEL`), why go through the additional effort of setting `Sysmon` up?
+So we've installed Sysmon (`1.5.4.`), enabled it, captured logs with it, and then exported those logs as a `.evtx` file (`2.3.6.`). But we've not really discussed why we've done any of this. Why don't we simply rely on the default `Windows Event Logs`  (`WEL`), why go through the additional effort of setting `Sysmon` up?
 
-Well, without pussyfooting around let me just give it to you straight - `WEL` SUCKS. REAL BAD. 
+Well, without pussyfooting around let me just give it to you straight - `WEL SUCKS. REAL BAD.` 
 
 {{< figure src="/img/rubbish.gif" title="" class="custom-figure" >}}
 
-In stark contrast, `Sysmon`, created by a literal living legend [Mark Russinovich](https://twitter.com/markrussinovich), takes about 5 minutes to set up and will DRAMATICALLY improve logging as it relates specifically to security events. 
+In stark contrast, `Sysmon`, created by living legend [Mark Russinovich](https://twitter.com/markrussinovich), takes about 5 minutes to set up and will *dramatically* improve logging as it relates specifically to security events. 
 
-That's really about all you need to know at this point - WEL bad, Sysmon epic. If you wanted to learn more about Sysmon check out Section X further below. 
-
-REFS
+That's really about all you need to know at this point - WEL bad, Sysmon epic. But in case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
 
 
 
 
-
+*** 
 
 # Log Analysis: SYSMON
 
-In case it's off, switch on your Windows VM. I saved the `.evtx` export we performed earlier on the desktop, let's simply double-click on it, which will open it in `Event Viewer`. 
+In case it's off, switch on your Windows VM. I saved the `.evtx` export we performed earlier on the desktop, let's simply double-click on it, which will open it in `Event Viewer`. We can immediately see there are 34 recorded events. 
 
-We can immediately see there are 34 recorded events. If you recall, right before we launched the attack we actually cleared the Sysmon logs. So one would expect right after you clear something you start with 0, but here actually (and with many logging systems), the very act of clearing the log is immediately logged in the new log. This is done for obvious security reasons, and as a consequence we start anew with 2 log entries.
+SHOULD BE AN IMAGE OF THIS HERE TO HELP ORIENT READER. 
+
+If you recall, right before we launched the attack we actually cleared the Sysmon logs. So one would expect right after you clear something you start with 0, but here actually (and with many logging systems), the very act of clearing the log is immediately logged in the new log. This is done for obvious security reasons, and as a consequence we start anew with 2 log entries.
 
 Given this, the entire incident we performed generated 
 
@@ -1616,11 +1616,9 @@ I really want you to take a moment and take in these set of circumstances since 
 NOTE TO SELF: not sure if i remembered to drop the cmd shell from meterpreter when i ran this simulation. redo and double-check! also remember it looks like the process rufus was opened, closed, then opened (maybe you opened a second copy by mistake?), so need to check this too. 
 
 # 8.4 POWERSHELL LOGS
-# 8.4.1 INTRODUCTION
 
-We've now discussed numerous times the major role PowerShell in the modern attacking paradigm known as "Living off the Land" (LoL) attacks. Thus I think it's probably obvious why it would be a huge advantage for us to be able to see records of commands that were run in PowerShell. That being said, let's just jump straight into the logs. 
 
-# 8.4.2 ANALYSIS
+# 8.4.1 ANALYSIS
 
 In Section X.X we exported the PowerShell ScriptBlock logs to dekstop as `xxxx.evtx` - let's go ahead and open it in Event Viewer by double-clicking on the file.
 
@@ -1793,7 +1791,6 @@ no result for MD5 on VT, but yes on joesandbox
 
 
 # REFERENCES (this will be for both)
-In case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
 
 
 
