@@ -1452,7 +1452,7 @@ We will be using the same Windows VM (ie the victim) to perform the log analysis
 
 *Yes, yes* - I am well aware it's very uncool to prefer use of a GUI, *totally* not 1337 and stuff. But if you'd be so kind, please allow me a momentary expression of nuance: both the command line and GUI have their strengths and weaknesses and better to select the best based on context than to succumb to dogma. 
 
-{{< figure src="/img/dogma.gif" title="" class="custom-figure-3 >}}
+{{< figure src="/img/dogma.gif" title="" class="custom-figure-3" >}}
 
 So for now it'll just be simpler to move ahead and used the built-in `Event Viewer` in Windows to work with these files. And since I did not want to create another "non-victim" Windows VM for this one task we're going to be using the same VM. But please be aware, unless there is literally no alternative you should never do this in an actual threat hunting scenario.  
 
