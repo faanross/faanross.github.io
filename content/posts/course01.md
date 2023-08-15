@@ -1289,11 +1289,9 @@ One important thing you have to know before we move ahead is that `Volatility` u
 {{< figure src="/img/plugging-in.gif" title="" class="custom-figure-3" >}}
 
 
-Now that you have a basic idea of the modules we'll be using, let's go on with our actual analysis.
+Now that you have a basic idea of the modules we'll be using, let's continue with our actual analysis.
 
 ***
-
-
 
 # 5.3. Performing the Analysis
 
@@ -1395,15 +1393,30 @@ This is thus a good reminder that the mere appearance of a process in malfind's 
 
 # 5.4. Final Thoughts
 
-This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform a live analysis and only received a memory dump, then this section showed us how we could derive the same (plus some additional) information. Further, even if we did perform the live analysis, we bolster our case when we can come to the same conclusions via another avenue. 
-
-MENTION HERE like alle vidence, the more points yuou have better. in a other case two eye withness tesitmonies beter than 1, 3 better than 2 etc - each strengthens conviction of case. 
+This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform live analysis and only received a memory dump, then this section showed us how we could derive a lot of the same information. Further, even if we did perform the live analysis, we bolster our case when we can come to the same conclusions via another avenue. 
 
 I think this serves as a good introduction to `Volatility` - you now have some sense of how it works, how to use it, and what are the "go to" plug-ins for threat hunting.
+
+{{< figure src="/img/office.gif" title="" class="custom-figure" >}}
+
 
 That being the case let's move on to the log analysis. For this we'll once again use our Windows VM, so in case you turned it off, please turn it back on. 
 
 ***
+***
+
+
+
+
+
+continue here tk xxx
+
+
+
+
+
+
+
 
 # 8. POST-MORTEM FORENSICS: LOG ANALYSIS
 # 8.1 INTRODUCTION
