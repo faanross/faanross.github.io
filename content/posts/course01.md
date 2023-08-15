@@ -1275,9 +1275,9 @@ python -m http.server 8008
 
 # 5.2. Introduction to Volatility
 
-For our post-mortem analysis we'll be using `Volatility V3`. If you'd like to know more [check out its great documentation.](https://volatility3.readthedocs.io/en/latest/)
+For our post-mortem analysis we'll be using `Volatility V3`. If you'd like to know more [check out its excellent documentation.](https://volatility3.readthedocs.io/en/latest/)
 
-One important thing you have to know before we move ahead however is that `Volatility` uses a modular approach. Each time you run it you have to specify a specific `Volatility` plug-in, which performs one specific type of analysis.
+One important thing you have to know before we move ahead is that `Volatility` uses a modular approach. Each time you run it you have to specify a specific plug-in, which performs one specific type of analysis.
 
 So for example here are the plug-ins we'll use and their associated functions:
 - `pslist`, `pstree`, and `psinfo` all provide process info.
@@ -1286,16 +1286,18 @@ So for example here are the plug-ins we'll use and their associated functions:
 - `netscan` displays any network connections and sockets made by the OS.
 - `malfind` looks for inject code.
 
-So let's get to it. 
+Now that you have a basic idea of the modules we'll be using, let's go on with our actual analysis.
+
+***
 
 
 
 
 
-# ANALYSIS
-NOTE TO SELF: need to redo the screenshots, no longer in folder `artifacts`
+# 5.3. Performing the Analysis
 
 **pslist, pstree, and psinfo**
+
 Two of the most common/popular plugs-ins are `pslist` and `pstree`. The former gives us a list of all processes with some key details, `pstree` conversely will also show Parent-Child relationships. Since we've already seen this info multiple times now we'll skip it here, but I wanted be aware that, if for whatever reason you were not able to perform the live analysis, you can gather all the same important process information from the memory dump using `Volatility`.
 
 Let's quickly run `psinfo` to break the ice and remind ourselves of the PID, which we'll need for some of the other plugins.
@@ -1310,6 +1312,7 @@ python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.pslist
 {{< figure src="/img/image062.png" title="" class="custom-figure" >}}
 
 **handles**
+
 Now that we've got the PID of our suspicious program we're going to look at its handles. 
 
 A handle is like a reference that a program uses to access a resource - whether that be files, registry keys, or network connections. When a process wants to access one of these resources, the OS gives it a handle, kind of like a ticket, that the process uses to read from or write to the resource. 
@@ -1343,6 +1346,7 @@ This key is commonly used to debug applications in Windows. However, it is also 
 `MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\PROTOCOL_CATALOG9 and MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\NAMESPACE_CATALOG5`: These keys are related to the Winsock API, which is used by applications to communicate over a network. If the process is interacting with these keys, it could be trying to manipulate network communication, which is a common tactic of malware.
 
 **cmdline**
+
 This is one of my favourite modules in Volatility, allowing us to extract command-line arguments of running processes from our memory dump. Here we'll apply it only to the process of interest, but of course keep in mind that we could review the entire available history.
 
 {{< figure src="/img/image096.png" title="" class="custom-figure" >}}
@@ -1353,6 +1357,7 @@ python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 
 ``` 
 
 **netscan**
+
 The `netscan` plugin will scan the memory dump looking for any network connections and sockets made by the OS.
 
 We can run the scan using the command:
@@ -1369,6 +1374,7 @@ NO REDO THIS because we want to see the same ip as we got in native tools sectio
 Right now I'll defer comment, since we're going to jump into network connections DEEPLY in PART X with `Wireshark`, `Zeek`, and `RITA`. I just wanted you to be aware that you can also use a memory dump to look at network connections if for some reason you don't have a packet capture available.   
 
 **malfind**
+
 `malfind` is the quintessential plugin for, well, finding malware. The plugin will look for suspected inject code, which it determines based on header info - much indeed like we did during our live analysis when we look at the memory space content. 
 
 We can run it with:
@@ -1387,7 +1393,10 @@ We can see that it correctly flagged `rundll32.exe`. However, if we go through t
 
 This is thus a good reminder that the mere appearance of a process in malfind's output is not an unequivocal affirmation of its malicious nature.
 
-**Closing Thoughts**
+***
+
+# 5.4. Final Thoughts
+
 This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform a live analysis and only received a memory dump, then this section showed us how we could derive the same (plus some additional) information. Further, even if we did perform the live analysis, we bolster our case when we can come to the same conclusions via another avenue. 
 
 MENTION HERE like alle vidence, the more points yuou have better. in a other case two eye withness tesitmonies beter than 1, 3 better than 2 etc - each strengthens conviction of case. 
