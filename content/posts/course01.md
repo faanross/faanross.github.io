@@ -1458,7 +1458,7 @@ So for now it'll just be simpler to move ahead and used the built-in `Event View
 
 The reason is quite obvious - performing a post-mortem analysis on a compromised system can potentially taint the results. We have no idea how the breach might be impacting our actions and so to ensure the integrity of our data we need to perform it in a secure environment. 
 
-{{< figure src="/img/tainted.gif" title="" class="custom-figure-3 >}}
+{{< figure src="/img/tainted.gif" title="" class="custom-figure-3" >}}
 
 This also why for example certain antimalware software vendors provide versions of their products that can run directly from a bootable CD or USB drive - to ensure a scan that is unaffected by  resident malware. 
 
