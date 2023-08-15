@@ -1217,6 +1217,8 @@ We immediately see the two clear giveaways that we are dealing with a PE file. W
 
 That's it for our live memory analysis: feel free to exit Process Hacker. Let's discuss our results before moving on to our post-mortem analysis. 
 
+***
+
 # 4.4 Final Thoughts
 Let's briefly review what we learned in this second live analysis using `Process Hacker`.
 
@@ -1255,16 +1257,17 @@ Ok so there are a number of ways we can transfer our files over, and if you have
 1. First download the `Python3` installer for Windows [here](https://www.python.org/downloads/windows/). 
 2. Then run the installer, all default selections.
 3. Once it's done open an administrative `Command Prompt` and navigate to the desktop. 
-4. We can now spawn our **http server**.
+4. We can now create our **http server**.
 ```
 python -m http.server 8008
 ```
-5. You will more than likely receive a Windows Security Alert, click Allow Access.
+5. You will more than likely receive a Windows Security Alert, click `Allow Access`.
 
-{{< figure src="/img/image058.png" title="" class="custom-figure" >}}
-6. Now head on over to your Ubuntu analyst VM and open the browser (FireFox). Navigate to `http://[windows_IP]:8008`, in my case that would be `http://192.168.230.158:8008`.
+{{< figure src="/img/image058.png" title="" class="custom-figure-3" >}}
 
-{{< figure src="/img/image061.png" title="" class="custom-figure" >}}
+6. Now head on over to your Ubuntu analyst VM and open the browser (FireFox). Navigate to `http://windows_IP:windows_port`, in my case that would be `http://192.168.230.158:8008`.
+
+{{< figure src="/img/image061.png" title="" class="custom-figure-2" >}}
 
 7. Go ahead and save each of the files to wherever you want - for simplicity's sake I will be saving them all directly to the desktop once again. 
 
