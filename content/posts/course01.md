@@ -1279,12 +1279,15 @@ For our post-mortem analysis we'll be using `Volatility V3`. If you'd like to kn
 
 One important thing you have to know before we move ahead is that `Volatility` uses a modular approach. Each time you run it you have to specify a specific plug-in, which performs one specific type of analysis.
 
-So for example here are the plug-ins we'll use and their associated functions:
+**So for example here are the plug-ins we'll use and their associated functions:**
 - `pslist`, `pstree`, and `psinfo` all provide process info.
 - `handles` shows us all the handles associated with a specific process.
 - `cmdline` shows  the command prompt history.
 - `netscan` displays any network connections and sockets made by the OS.
 - `malfind` looks for inject code.
+
+{{< figure src="/img/plugging-in.gif" title="" class="custom-figure-3" >}}
+
 
 Now that you have a basic idea of the modules we'll be using, let's go on with our actual analysis.
 
