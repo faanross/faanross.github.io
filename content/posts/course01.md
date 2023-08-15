@@ -1173,33 +1173,38 @@ We're not ringing the alarm bells yet, but we're definitely geared to dig in dee
 
 Let's double-click on the process `rundll32.exe`... 
 
-2. Signature - is it valid + who signed?
+2. **Signature - is it valid + who signed?**
 
-{{< figure src="/img/image054.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image054.png" title="" class="custom-figure-2" >}}
 
-We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of rundll32.exe. Nothing further to concern ourselves with here. 
+We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of `rundll32.exe`. Nothing further to concern ourselves with here. 
 
-3. Current directory
+3. **Current directory**
+
 In the same image we can see the **Current directory**, that is the "working directory" of the process, which is the directory where the process was started from or where it is operating. We can see here that the current directory is the desktop since that's where it was initiated from. 
 
 Now this could happen with legitimate scripts or applications that are using `rundll32.exe` to call a DLL function. However, seeing `rundll32.exe` being called from an unusual location like a user's desktop could be suspicious, particularly if it's coupled with other strange behavior. 
 
-4. Command-line arguments 
+4. **Command-line arguments**
+
 And again in reference to the same image we once more we see that the **Command-line** is `rundll32.exe`. Again, we already saw this before where I discussed why this is suspicous - we expect `rundll32.exe` to be provided with arguments.
 
-5. Thread Start Address
+5. **Thread Start Address**
+
 On the top of the Properties window select `Threads`.
 {{< figure src="/img/image055.png" title="" class="custom-figure" >}}
 We can see under `Start address` that it is mapped, meaning it does exist on disk. So this just tells us that this is not a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as `0x0`.
 
-6. Memory Permissions
+6. **Memory Permissions**
+
 - On the top of the Properties window select `Memory`.
 - Now click once on the `Protection` header to sort it. 
 - Scroll down until you see `RWX` permissions, that is of course if it exists.
 {{< figure src="/img/image056.png" title="" class="custom-figure" >}}
 - And indeed we see the presence of two memory spaces with **Read-Write-Execute** permissions, which as we learned is always suspicious since there are very few legitimate programs that will write to memory and then immediately execute it. 
 
-7. Memory Content
+7. **Memory Content**
+
 - Finally let's double-click on the larger of the two (172 kB) since this typically represents the payload.
 {{< figure src="/img/image057.png" title="" class="custom-figure" >}}
 - And immediately we can see two clear giveaways that we are dealing with a PE file: first we see the magic bytes (`MZ`), and we see the strings we associate with a PE Dos Stub - `This program cannot be run in DOS mode`.
