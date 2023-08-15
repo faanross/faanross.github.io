@@ -1295,28 +1295,28 @@ Now that you have a basic idea of the modules we'll be using, let's go on with o
 
 
 
-
-
 # 5.3. Performing the Analysis
 
 **pslist, pstree, and psinfo**
 
-Two of the most common/popular plugs-ins are `pslist` and `pstree`. The former gives us a list of all processes with some key details, `pstree` conversely will also show Parent-Child relationships. Since we've already seen this info multiple times now we'll skip it here, but I wanted be aware that, if for whatever reason you were not able to perform the live analysis, you can gather all the same important process information from the memory dump using `Volatility`.
+Two of the most common plugs-ins are `pslist` and `pstree`. The former gives us a list of all processes with some key details, `pstree` conversely will also show Parent-Child relationships. Since we've already seen this info multiple times now we'll skip it here, but I wanted be aware that, if for whatever reason you were not able to perform the live analysis, you can gather all the same important process information from the memory dump using `Volatility`.
 
-Let's quickly run `psinfo` to break the ice and remind ourselves of the PID, which we'll need for some of the other plugins.
+Let's quickly run another module, `psinfo`, to break the ice and remind ourselves of the PID, which we'll need for some of the other plugins.
 
 1. Open a terminal and navigate your your main Volatility3 directory, in my case it is `/home/analyst/Desktop/volatility3`.
 2. Let's run our `psinfo` plugin using the following command:
 ```
-python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.pslist 
+python3 vol.py -f ~/Desktop/memdump.raw windows.pslist 
 ```
 3. Scroll down until you see `rundll32.exe` and note it's PID, you can see in my example below it's `5060`, we'll use this for our next plug-in. 
 
-{{< figure src="/img/image062.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image062.png" title="" class="custom-figure-2" >}}
 
 **handles**
 
 Now that we've got the PID of our suspicious program we're going to look at its handles. 
+
+{{< figure src="/img/handles.gif" title="" class="custom-figure-3" >}}
 
 A handle is like a reference that a program uses to access a resource - whether that be files, registry keys, or network connections. When a process wants to access one of these resources, the OS gives it a handle, kind of like a ticket, that the process uses to read from or write to the resource. 
 
