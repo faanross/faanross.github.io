@@ -1183,7 +1183,7 @@ We can see here that it has a valid signature signed by Microsoft, since of cour
 
 In the same image, we can see the **Current directory**, which is the "working directory" of the process. This refers to the directory where the process was started from or where it is currently operating. We can see here that the current directory is the desktop, since that's where it was initiated from. 
 
-{{< figure src="/img/where_you.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/where_you.gif" title="" class="custom-figure-2" >}}
 
 Now this could happen with legitimate scripts or applications that are using `rundll32.exe` to call a DLL function. However, seeing `rundll32.exe` being called from an unusual location like a user's desktop could be suspicious, particularly if it's coupled with other strange behavior. 
 
@@ -1195,7 +1195,7 @@ And again in reference to the same image we once more we see that the **Command-
 
 On the top of the Properties window select the `Threads` tab.
 
-{{< figure src="/img/image055.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image055.png" title="" class="custom-figure-3" >}}
 
 We can see under `Start address` that it is mapped, meaning it does exist on disk. This essentially tells us that this is *not* a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as `0x0`.
 
@@ -1213,30 +1213,37 @@ Finally let's double-click on the larger of the two (172 kB) since this typicall
 
 {{< figure src="/img/image057.png" title="" class="custom-figure" >}}
 
-
-tk xxx cont here
-
-
-
-
-
-And immediately we can see two clear giveaways that we are dealing with a PE file: first we see the magic bytes (`MZ`), and we see the strings we associate with a PE Dos Stub - `This program cannot be run in DOS mode`.
-- So once again it seems suspect. 
+We immediately see the two clear giveaways that we are dealing with a PE file. We can see the magic bytes (`MZ`), and we see the strings we associate with a PE Dos Stub - `This program cannot be run in DOS mode`. Again, another point for "team sus". 
 
 That's it for our live memory analysis: feel free to exit Process Hacker. Let's discuss our results before moving on to our post-mortem analysis. 
 
-# CLOSING THOUGHTS
-Let's quickly review where we are in our simulated threat hunt. We began by using doing a basic live memory analysis using some Windows native tools. Here we discovered an unusual outgoing connection, we then dug deeper into the process responsible for said conneciton (`rundll32.exe`) and learned a few suspicious things. We saw that the process was unexpectedly spawned by another process (`rufus.exe`). Additionally, we noted that the way `rundll32.exe` was invoked from the command line was unusual, as it was devoid of arguments that we would typically expect to see.
+# 4.4 Final Thoughts
+Let's briefly review what we learned in this second live analysis using `Process Hacker`.
 
-We then used `Process Hacker` to reveal even more about `rundll32.exe`. We saw that, in addition to having a suspicious relation to it's parent process (`rufus.exe`), it itself spawned `cmd.exe`, which is *very* unusual. We also learned that it ran from a somewhat suspicious directory, had `RWX` memory space permissions, and ultimately contained a PE file. 
+{{< figure src="/img/review.gif" title="" class="custom-figure-2" >}}
 
-This signifies the end of our ***live analysis***, we'll now proceed with our ***post-mortem analysis***. At this point keep your Windows VM on, shut down your Kali VM, and turn on your Ubuntu VM. 
+We came into this with a few basic breadcrumbs we picked up in our live analysis using the native tools:
+- A process, `rundll32.exe`, created an unusual outbound connection.
+- This process had an unexpected parent process, `rufus.exe`.
+- The process was ran without the command-line arguments we would expect it to have.
+
+This thus then set us off to dig deeper into this unusual process using `Process Hacker`:
+- `rundll32.exe` itself spawned `cmd.exe` - very suspicious.
+- `rundll32.exe` was ran from the desktop - unusual.
+- The process also had `RWX` memory space permissions, which is a big red flag.
+- We saw that the memory content of the `RWX` memory space contained a PE file - again, red flag. 
+
+This signifies the end of our ***live analysis***, ie analysis we perform with the suspicious process still being active. We'll now move onto ***post-mortem analysis*** to see what else we can learn from the suspicious process.
+
+**At this point keep your Windows VM on, shut down your Kali VM, and turn on your Ubuntu VM.** 
 
 ***
+***
 
-# 7. POST-MORTEM FORENSICS: MEMORY
-# HOUSEKEEPING
-First thing's first - we need to transfer the packet capture (`dllattack.pcap`) and memory dump (`memdump.raw`) over to our Ubuntu analyst VM. Now there are a number of ways to do this, and if you have your own method you prefer please do go ahead. I'm going to install `Python3` so we can quickly spin up a simple http server.
+# 5. Post-Mortem Forensics: Memory
+# 5.1. Transferring the Artifacts
+
+First thing's first - we need to transfer the artifacts we produced in `2.3.6` over to our Ubuntu analyst VM. There are a number of ways to do this, and if you have your own method you prefer please do go ahead. I'm going to install `Python3` so we can quickly spin up a simple http server.
 
 Before we start just make sure that both files of interest (`dllattack.pcap` and `memdump.raw`) are in the same directory - in my case both are located on the desktop. 
 
@@ -1259,7 +1266,7 @@ python -m http.server 8008
 
 We'll now start our Post-Mortem Memory Analysis, before that let's briefly discuss the tool we'll be using.
 
-# ANALYSIS (VOLATILITY)
+# introdu
 
 For our post-mortem analysis we'll be using `Volatility V3`. If you'd like to know more [check out its great documentation.](https://volatility3.readthedocs.io/en/latest/)
 
@@ -1274,6 +1281,11 @@ So for example here are the plug-ins we'll use and their associated functions:
 
 So let's get to it. 
 
+
+
+
+
+# ANALYSIS
 NOTE TO SELF: need to redo the screenshots, no longer in folder `artifacts`
 
 **pslist, pstree, and psinfo**
