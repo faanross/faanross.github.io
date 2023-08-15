@@ -1471,7 +1471,7 @@ So that cavaeat out of the way, *let's get it on* with Sysmon.
 # 6.3. Sysmon
 # 6.3.1. Theory
 
-So we've installed Sysmon (`1.5.4.`), enabled it, captured logs with it, and then exported those logs as a `.evtx` file (`2.3.6.`). But we've not really discussed why we've done any of this. Why don't we simply rely on the default `Windows Event Logs`  (`WEL`), why go through the additional effort of setting `Sysmon` up?
+So we've installed Sysmon (`1.5.4.`), enabled it, captured logs with it, and then exported those logs as an `.evtx` file (`2.3.6.`). But we've not really discussed why we've done any of this. Why don't we simply rely on the default `Windows Event Logs`  (`WEL`), why go through the additional effort of setting `Sysmon` up?
 
 Well, without pussyfooting around let me just give it to you straight - `WEL SUCKS. REAL BAD.` 
 
@@ -1479,24 +1479,20 @@ Well, without pussyfooting around let me just give it to you straight - `WEL SUC
 
 In stark contrast, `Sysmon`, created by living legend [Mark Russinovich](https://twitter.com/markrussinovich), takes about 5 minutes to set up and will *dramatically* improve logging as it relates specifically to security events. 
 
-That's really about all you need to know at this point - WEL bad, Sysmon epic. But in case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by one of my favourite SANS instructors (Eric Conrad) on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
-
-
+That's really about all you need to know at this point - WEL bad, Sysmon epic. But in case you wanted to learn more about Sysmon's ins and outs [see this talk](https://www.youtube.com/watch?v=6W6pXp6EojY). And if you really wanted to get in deep, which at some point I recommend you do, see [this playlist](https://www.youtube.com/playlist?list=PLk-dPXV5k8SG26OTeiiF3EIEoK4ignai7) from TrustedSec. Finally here is another great talk by Eric Conrad on [using Sysmon for  Threat Hunting](https://www.youtube.com/watch?v=7dEfKn70HCI).
 
 
 *** 
 
-# Log Analysis: SYSMON
+# 6.3.2. Performing the Analysis
 
 In case it's off, switch on your Windows VM. I saved the `.evtx` export we performed earlier on the desktop, let's simply double-click on it, which will open it in `Event Viewer`. We can immediately see there are 34 recorded events. 
 
 SHOULD BE AN IMAGE OF THIS HERE TO HELP ORIENT READER. 
 
-If you recall, right before we launched the attack we actually cleared the Sysmon logs. So one would expect right after you clear something you start with 0, but here actually (and with many logging systems), the very act of clearing the log is immediately logged in the new log. This is done for obvious security reasons, and as a consequence we start anew with 2 log entries.
+If you recall, right before we launched the attack we actually cleared the Sysmon logs. So one would expect right after you clear something you start with 0, but here the very act of clearing the log is immediately logged in the new log. This is done for obvious security reasons, and as a consequence we start anew with 2 log entries.
 
-Given this, the entire incident we performed generated 
-
-This means of course that the event produced a maximum of 32 event logs. I say a maximum because it's likely something else could have generated a log entry - we'll find out soon enough. 
+This means of course that the actual event produced a maximum of 32 event logs. I say a maximum because it's likely something else could have generated a log entry - we'll find out soon enough. 
 
 Now with logs, especially a small-ish set like we have here, I always like starting off by looking at everything at a high level. Let's see if we can see any interesting trends or patterns. 
 
@@ -1504,27 +1500,26 @@ Now with logs, especially a small-ish set like we have here, I always like start
 
 The first thing we notice is we have a number of different event IDs - `1`, `3`, `5`, `10`, `12`, `13`, and `22`.
 
-Now each of these represent a specific category event. I'm not going to hamstring us by reviewing them all here now, instead if you'd like check this [awesome overview by our friends from Black Hills Infosec](https://www.blackhillsinfosec.com/a-sysmon-event-id-breakdown/). I recommend reviewing each of them briefly, but if not you'll still be able to follow along. 
+Now each of these represent a specific category event. I'm not going to hamstring us by reviewing them all here now, instead if you'd like, check this [awesome overview by our friends from Black Hills Infosec](https://www.blackhillsinfosec.com/a-sysmon-event-id-breakdown/). I recommend reviewing each of them briefly.
 
-So as I said, we can ignore our first two event entries since we know they are related to clearing the logs.
-
-Looking at the `Date and Time` stamp we can also deduce that the next two entries are probably not part of our attack. We can see that they form their own little time cluster, and then starting with the fifth entry(`ID 22: DNS`), we can see a time cluster in which nearly all the events happen. This is likely where the action is, so let's start there. 
+So as I said, we can ignore our first two event entries since we know they are related to clearing the logs. Then, looking at the `Date and Time` stamp and thinking in terms of "event clusters", we can guess that the next two entries are probably not part of our attack. We can see that they form their own little time cluster, and then starting with the fifth entry(`ID 22: DNS`), we can see a time cluster in which nearly all the events happen. This is likely where the action is, so let's start there. 
 
 {{< figure src="/img/image081.png" title="" class="custom-figure" >}}
 
-We can see that PowerShell is performing a DNS request for the FQDN `raw.githubusercontent.com`. This is of course a result of the command we ran which downloaded the script from the web server before injecting it into memory.
+We can see that PowerShell is performing a DNS request for the FQDN `raw.githubusercontent.com`. This is of course a result of the IEX-command we ran which downloaded the script from the web server before injecting it into memory.
 
-And so take a moment to think of what this means - when an attacker uses a stager, and as is mostly the case that stager then initially goes out to a web server to retrieve another script, there will be DNS footprint. Thus DNS, for this reason and others we'll discuss in the future, is always an important dimension to dig into when threat hunting C2. 
+And so take a moment to think of what this means - when an attacker uses a stager, and as is mostly the case that stager then initially goes out to a web server to retrieve another script (ie the payload), there will be DNS footprint. Thus DNS, for this reason and others we'll discuss in the future, is always an important dimension to dig into when threat hunting C2. 
 
-There is a caveat here however - DNS resolution only occurs if the web server the stager reaches out to is specified as a FQDN and not an IP. In the command we ran we instructed it to reach out to `raw.githubusercontent.com` (FQDN), and not for example to `101.14.18.44`, hence DNS resolution and a Sysmon event ID 22 occurred. 
+{{< figure src="/img/bobs.gif" title="" class="custom-figure-3" >}}
 
-From the malware author's POV, there are pro's and cons to taking either approach. I don't have any data to back this up, but if I had to venture a guess I'd say specifiying the server using a FQDN is more common. Regardless - be aware of this. 
+There is a caveat here - DNS resolution only occurs if the web server the stager reaches out to is specified as a FQDN and not an IP. In the command we ran we instructed it to reach out to `raw.githubusercontent.com` (FQDN), and not for example to `101.14.18.44`, hence DNS resolution and a Sysmon event ID 22 occurred. 
 
-The good news though is whether or not the author specified the server using FQDN or IP, we would see the following entry (`ID 3`) regardless. 
+From the malware author's POV, there are pro's and cons to taking either approach. So it's good to be aware that the stager may, or may not, produce a DNS "receipt". What's always going to be present however is what we see in the subsequent entry (`ID 3`).
 
 {{< figure src="/img/image081.png" title="" class="custom-figure" >}}
 
-This entry is a record of the actual network connection between the victim and the server. This is great for us since we can always expect to find such a log entry, and it will provide us with both the IP as well as hostname of the server where the script was pulled from. 
+This entry is a record of the actual network connection between the victim and the server. This is great for us since we can always expect to find such a log entry, and it will provide us with both the IP as well as hostname of the server where the script was pulled from. We can then obviously task someone to reference it in any databases of known malicious IOCs. 
+
 
 Additionally, we can see here that `powershell.exe` is the program responsible for creating the connection. Now if we imagine this was an actual event where a user unwittingly opened a malicious Word document (`.docx`), you might guess that we'd see `winword.exe` instead of `powershell.exe`. But not so - since `winword.exe` cannot itself initiate a socket connection we would indeed most likely see `powershell.exe` (or something else) responsible for the network connection. 
 
