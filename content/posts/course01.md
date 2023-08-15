@@ -1271,11 +1271,9 @@ python -m http.server 8008
 
 7. Go ahead and save each of the files to wherever you want - for simplicity's sake I will be saving them all directly to the desktop once again. 
 
-We'll now start our Post-Mortem Memory Analysis, before that let's briefly discuss the tool we'll be using.
-
 ***
 
-# introdu
+# 5.2. Introduction to Volatility
 
 For our post-mortem analysis we'll be using `Volatility V3`. If you'd like to know more [check out its great documentation.](https://volatility3.readthedocs.io/en/latest/)
 
