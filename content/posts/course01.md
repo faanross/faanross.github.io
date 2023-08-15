@@ -1322,22 +1322,24 @@ A handle is like a reference that a program uses to access a resource - whether 
 
 For threat hunting it's a great idea to look at the handles of any process you consider suspect since it will give us a lot of information about what the process is actually doing. For instance, if a process has a handle to a sensitive file or network connection that it shouldn't have access to, it could be a sign of malicious activity. By examining the handles, we can get a clearer picture of what the suspicious process is up to, helping us to understand its purpose and potentially identify the nature of the threat.
 
-Now to be frank this analysis of handles can be a rather complex endeavour, relying on a deep techincal understanding of the subject. So I'll show how it works, and of course provide some insight on the findings, but be aware that I won't be able to do an exhaustive exploration of this topic as that could be a multi-hour course in and of itself. 
+Now to be frank this analysis of handles can be a rather complex endeavour, relying on a deep technical understanding of the subject. So I'll show how it works, and of course provide some insight on the findings, but be aware that I won't be able to do an exhaustive exploration of this topic as that could be a multi-hour course in and of itself. 
 
 Let's run the `windows.handles` plugin with the following command, including the PID of `rundll32.exe` as we just learned. 
 ```
 python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.handles --pid 5060
 ``` 
 
-We see a large number of output, too much to meaningfully process right now. However what immediately sticks out is `Key` - meaning registry keys. So let's run the same search but utilize `grep` to only see all handles to registry keys:
+We see a large number of output, too much to meaningfully process right now. However what immediately sticks out is `Key` - meaning registry keys. So let's run the same command but utilize `grep` to only see all handles to registry keys:
 ```
 python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.handles --pid 5060 | grep Key
 ``` 
-We can see all the results in the image below:
+We can see  the results in the image below:
 
 {{< figure src="/img/image063.png" title="" class="custom-figure" >}}
 
 Again, as has been the case before: nothing here is inherently indicative of malware. However, in the case where we suspect something of being malware, many of these registry key handles are commonly absed by malware. 
+
+**For example:**
 
 `MACHINE\SOFTWARE\MICROSOFT\WINDOWS NT\CURRENTVERSION\IMAGE FILE EXECUTION OPTIONS`: 
 This key is commonly used to debug applications in Windows. However, it is also used by some malware to intercept the execution of programs. Malware can create a debugger entry for a certain program, and then reroute its execution to a malicious program instead.
@@ -1346,18 +1348,17 @@ This key is commonly used to debug applications in Windows. However, it is also 
 
 `MACHINE\SYSTEM\CONTROLSET001\CONTROL\NETWORKPROVIDER\HWORDER and MACHINE\SYSTEM\CONTROLSET001\CONTROL\NETWORKPROVIDER\PROVIDERORDER`: These keys are related to the order in which network providers are accessed in Windows. Modification of these keys may indicate an attempt to intercept or manipulate network connections.
 
-`MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\PROTOCOL_CATALOG9 and MACHINE\SYSTEM\CONTROLSET001\SERVICES\WINSOCK2\PARAMETERS\NAMESPACE_CATALOG5`: These keys are related to the Winsock API, which is used by applications to communicate over a network. If the process is interacting with these keys, it could be trying to manipulate network communication, which is a common tactic of malware.
-
 **cmdline**
 
 This is one of my favourite modules in Volatility, allowing us to extract command-line arguments of running processes from our memory dump. Here we'll apply it only to the process of interest, but of course keep in mind that we could review the entire available history.
 
-{{< figure src="/img/image096.png" title="" class="custom-figure" >}}
-
-Here we receive the same insight as before, namely that `rundll32.exe` was not provided any arguments when it was invoked from the command line. I'm pointing this out once again so you are aware you can obtain this same information even if you were not able to perform a live analysis. 
 ```
 python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 5060 
 ``` 
+
+{{< figure src="/img/image096.png" title="" class="custom-figure-3" >}}
+
+Here we receive the same insight as before, namely that `rundll32.exe` was not provided any arguments when it was invoked from the command line. I'm pointing this out once again so you are aware you can obtain this same information even if you were not able to perform a live analysis. 
 
 **netscan**
 
@@ -1371,10 +1372,6 @@ python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.netscan
 
 NO REDO THIS because we want to see the same ip as we got in native tools section for redundancy purposes. 
 
-
-
-
-Right now I'll defer comment, since we're going to jump into network connections DEEPLY in PART X with `Wireshark`, `Zeek`, and `RITA`. I just wanted you to be aware that you can also use a memory dump to look at network connections if for some reason you don't have a packet capture available.   
 
 **malfind**
 
