@@ -1243,12 +1243,16 @@ This signifies the end of our ***live analysis***, ie analysis we perform with t
 # 5. Post-Mortem Forensics: Memory
 # 5.1. Transferring the Artifacts
 
-First thing's first - we need to transfer the artifacts we produced in `2.3.6` over to our Ubuntu analyst VM. There are a number of ways to do this, and if you have your own method you prefer please do go ahead. I'm going to install `Python3` so we can quickly spin up a simple http server.
+First thing's first - we need to transfer the artifacts we produced in `2.3.6` over to our Ubuntu analyst VM. 
 
-Before we start just make sure that both files of interest (`dllattack.pcap` and `memdump.raw`) are in the same directory - in my case both are located on the desktop. 
+{{< figure src="/img/review.gif" title="" class="custom-figure-2" >}}
 
-Let's transfer them:
-1. First download the `Python3` installer [here](https://www.python.org/downloads/windows/). 
+But just as a note: we'll only transfer our memory dump and packet capture. We won't transfer our log files - I'll explain exactly why later. 
+
+Ok so there are a number of ways we can transfer our files over, and if you have your own method you prefer please go ahead. I'm going to opt for using `Python3` to quickly spin up a simple http server. For simplicity sake ensure both files (`dllattack.pcap` and `memdump.raw`) are located in the same directory, in my case they are both on the desktop. 
+
+**So let's go ahead and do it:**
+1. First download the `Python3` installer for Windows [here](https://www.python.org/downloads/windows/). 
 2. Then run the installer, all default selections.
 3. Once it's done open an administrative `Command Prompt` and navigate to the desktop. 
 4. We can now spawn our **http server**.
@@ -1265,6 +1269,8 @@ python -m http.server 8008
 7. Go ahead and save each of the files to wherever you want - for simplicity's sake I will be saving them all directly to the desktop once again. 
 
 We'll now start our Post-Mortem Memory Analysis, before that let's briefly discuss the tool we'll be using.
+
+***
 
 # introdu
 
