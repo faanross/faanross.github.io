@@ -1181,33 +1181,46 @@ We can see here that it has a valid signature signed by Microsoft, since of cour
 
 3. **Current directory**
 
-In the same image we can see the **Current directory**, that is the "working directory" of the process, which is the directory where the process was started from or where it is operating. We can see here that the current directory is the desktop since that's where it was initiated from. 
+In the same image, we can see the **Current directory**, which is the "working directory" of the process. This refers to the directory where the process was started from or where it is currently operating. We can see here that the current directory is the desktop, since that's where it was initiated from. 
+
+{{< figure src="/img/where_you.gif" title="" class="custom-figure-3" >}}
 
 Now this could happen with legitimate scripts or applications that are using `rundll32.exe` to call a DLL function. However, seeing `rundll32.exe` being called from an unusual location like a user's desktop could be suspicious, particularly if it's coupled with other strange behavior. 
 
 4. **Command-line arguments**
 
-And again in reference to the same image we once more we see that the **Command-line** is `rundll32.exe`. Again, we already saw this before where I discussed why this is suspicous - we expect `rundll32.exe` to be provided with arguments.
+And again in reference to the same image we once more we see that the **Command-line** is `rundll32.exe`. We already saw this before where I discussed why this is suspicious - we expect `rundll32.exe` to be provided with arguments.
 
 5. **Thread Start Address**
 
-On the top of the Properties window select `Threads`.
-{{< figure src="/img/image055.png" title="" class="custom-figure" >}}
-We can see under `Start address` that it is mapped, meaning it does exist on disk. So this just tells us that this is not a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as `0x0`.
+On the top of the Properties window select the `Threads` tab.
+
+{{< figure src="/img/image055.png" title="" class="custom-figure-2" >}}
+
+We can see under `Start address` that it is mapped, meaning it does exist on disk. This essentially tells us that this is *not* a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as `0x0`.
 
 6. **Memory Permissions**
 
-- On the top of the Properties window select `Memory`.
-- Now click once on the `Protection` header to sort it. 
-- Scroll down until you see `RWX` permissions, that is of course if it exists.
-{{< figure src="/img/image056.png" title="" class="custom-figure" >}}
-- And indeed we see the presence of two memory spaces with **Read-Write-Execute** permissions, which as we learned is always suspicious since there are very few legitimate programs that will write to memory and then immediately execute it. 
+On the top of the Properties window select `Memory`. Now click once on the `Protection` header to sort it. Scroll down until you see `RWX` permissions.
+
+{{< figure src="/img/image056.png" title="" class="custom-figure-3" >}}
+
+Indeed we see the presence of two memory spaces with **Read-Write-Execute** permissions, which as we learned is always suspicious since there are very few legitimate programs that will write to memory and then immediately execute it. 
 
 7. **Memory Content**
 
-- Finally let's double-click on the larger of the two (172 kB) since this typically represents the payload.
+Finally let's double-click on the larger of the two (172 kB) since this typically represents the payload.
+
 {{< figure src="/img/image057.png" title="" class="custom-figure" >}}
-- And immediately we can see two clear giveaways that we are dealing with a PE file: first we see the magic bytes (`MZ`), and we see the strings we associate with a PE Dos Stub - `This program cannot be run in DOS mode`.
+
+
+tk xxx cont here
+
+
+
+
+
+And immediately we can see two clear giveaways that we are dealing with a PE file: first we see the magic bytes (`MZ`), and we see the strings we associate with a PE Dos Stub - `This program cannot be run in DOS mode`.
 - So once again it seems suspect. 
 
 That's it for our live memory analysis: feel free to exit Process Hacker. Let's discuss our results before moving on to our post-mortem analysis. 
