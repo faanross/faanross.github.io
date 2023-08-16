@@ -1619,7 +1619,8 @@ That's it for `Sysmon`, let's jump straight into `PowerShell ScriptBlock` logs a
 
 ***
 
-()
+&nbsp;  
+
 
 # 6.4. PowerShell ScriptBlock
 
