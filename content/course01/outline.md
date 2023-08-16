@@ -1,6 +1,7 @@
 ---
 title: "Course 01 Outline"
 description: "Outline for course 01"
+hideDate: true
 ---
 
 | # | ***Topic*** |
