@@ -5,6 +5,7 @@ description: "In this beginner-friendly practical course we'll learn how to thre
 tags: [threat_hunting, C2, dll_injection_attacks]
 author: "faan|ross"
 draft: false
+type: post
 ---
 
 *** 
