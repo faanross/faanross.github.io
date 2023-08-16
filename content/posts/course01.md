@@ -1569,8 +1569,6 @@ Here we can see the same action as performed in our first entry, ie disabling th
 
 But then why the deletion event preceding this? The most likely reason the malware is doing this is to ensure that by returning the registry key to the default state (which is what deleting it in effect does), it will behave exactly as is expected. In this way it ensures that the system doesn't have an unexpected configuration that could interfere with the malware's actions.
 
-{{< figure src="/img/spark_troll.gif" title="" class="custom-figure-2" >}}
-
 
 This is of course speculation on my part - the only way for us to truly understand the malware author's intention would be to actually reverse it, which is of course literally an entire other discipline in and of itself. 
 
@@ -1586,19 +1584,23 @@ Following this  we see a handful of events with `ID 10`, followed by another ser
 
 We can see they all involve `svchost.exe`, giving us the sense that this might once again be the malware. Fully interpreting and making sense of these event logs is however beyond the scope of this course, so for now we'll pass. 
 
-Next we encounter another DNS resolution entry (`ID 22`), this one is however a little bit more befuddling. 
+Next we encounter another DNS resolution entry (`ID 22`), this one is however a little bit more befuddling than our original DNS log. 
 
-{{< figure src="/img/image086.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image086.png" title="" class="custom-figure-3" >}}
 
-Here we can see `svchost.exe` (let's still assume this is the malware) is doing a DNS query for  DESKTOP-UKJG356. This is however the name of the very host it currently compromised. So why would malware do this - why would it do a DNS resolution to find the ip of the host it has currently infected? Well, there are several potential reasons. One possible explanation is that it is doing internal fingerprint, it might also for example be testing network connectivity to check whether it is in a sandboxed environment - in which case it will alter its behaviour. These are again educated guesses, and as was the case above we'll have to dig into its guts to really understand what it's intention is.
+Here we can see `svchost.exe` (let's still assume this is the malware) is doing a DNS query for  DESKTOP-UKJG356. This is however the name of the very host it currently compromised. So why would malware do this - why would it do a DNS resolution to find the ip of the host it has currently infected? 
+
+Well, there are several potential reasons. One possible explanation is that it is doing internal fingerprinting, it might also for example be testing network connectivity to check whether it is in a sandboxed environment - in which case it will alter its behaviour. These are again educated guesses, and as was the case above we'll have to dig into its guts to really understand what it's intention is.
 
 Next we can see some events (`ID 10`) where `powershell.exe` is accessing `lsass.exe`.
 
 {{< figure src="/img/image087.png" title="" class="custom-figure" >}}
 
-LSASS, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. Given its involvment in security and authentication it's probably no great shock to learn that malware LOVES abusing this process. It is involved in a myriad of attack types - credential dumping, pass-the-hash, pass-the-ticket, access token creation/manipulation etc. 
+`LSASS`, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. Given its involvment in security and authentication it's probably no great shock to learn that hackers LOVE abusing this process. It is involved in a myriad of attack types - credential dumping, pass-the-hash, pass-the-ticket, access token creation/manipulation etc. 
 
-We can see in the log entry the GrantedAccess field is set to `0x1000`, which corresponds to `PROCESS_QUERY_LIMITED_INFORMATION`. This means the accessing process has requested or been granted the ability to query certain information from the LSASS process. Such information might include the process's existence, its execution state, the contents of its image file (read-only), etc. Given the context, this log could indicate potential malicious activity, such as an attempt to dump credentials from LSASS or a reconnaissance move before further exploitation. 
+{{< figure src="/img/troll.gif" title="" class="custom-figure-3" >}}
+
+We can see in the log entry the GrantedAccess field is set to `0x1000`, which corresponds to `PROCESS_QUERY_LIMITED_INFORMATION`. This means the accessing process has requested or been granted the ability to query certain information from the `LSASS` process. Such information might include the process's existence, its execution state, the contents of its image file (read-only), etc. Given the context, this log could indicate potential malicious activity, such as an attempt to dump credentials from `LSASS` or a reconnaissance move before further exploitation. 
 
 And then finally we see two events with `ID 1`, the first of which is another crucial piece of evidence indicative of malware activity. 
 
