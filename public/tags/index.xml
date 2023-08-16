@@ -7,29 +7,11 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>| hack the planet</copyright>
-    <lastBuildDate>Wed, 26 Jul 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://athul.github.io/archie/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>theory</title>
-      <link>https://athul.github.io/archie/tags/theory/</link>
-      <pubDate>Wed, 26 Jul 2023 02:01:58 +0530</pubDate>
-      
-      <guid>https://athul.github.io/archie/tags/theory/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>threat_hunting</title>
-      <link>https://athul.github.io/archie/tags/threat_hunting/</link>
-      <pubDate>Wed, 26 Jul 2023 02:01:58 +0530</pubDate>
-      
-      <guid>https://athul.github.io/archie/tags/threat_hunting/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Sat, 12 Aug 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://athul.github.io/archie/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C2</title>
       <link>https://athul.github.io/archie/tags/c2/</link>
-      <pubDate>Wed, 12 Jul 2023 02:01:58 +0530</pubDate>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/tags/c2/</guid>
       <description></description>
@@ -38,9 +20,27 @@
     <item>
       <title>dll_injection_attacks</title>
       <link>https://athul.github.io/archie/tags/dll_injection_attacks/</link>
-      <pubDate>Wed, 12 Jul 2023 02:01:58 +0530</pubDate>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/tags/dll_injection_attacks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>threat_hunting</title>
+      <link>https://athul.github.io/archie/tags/threat_hunting/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/tags/threat_hunting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>theory</title>
+      <link>https://athul.github.io/archie/tags/theory/</link>
+      <pubDate>Wed, 26 Jul 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/tags/theory/</guid>
       <description></description>
     </item>
     

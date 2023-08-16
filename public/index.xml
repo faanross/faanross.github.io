@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>| hack the planet</copyright>
-    <lastBuildDate>Wed, 26 Jul 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://athul.github.io/archie/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 12 Aug 2023 02:01:58 +0530</lastBuildDate><atom:link href="https://athul.github.io/archie/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course)</title>
+      <link>https://athul.github.io/archie/posts/course01/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/posts/course01/</guid>
+      <description>NOTE THIS IS CURRENTLY STILL WIP, THE REASON IT&amp;rsquo;S A PUBLIC DRAFT IS LONG AND CONVOLUTED SO JUST TRUST ME. ANYHOO - DO AS YOU WISH. Hello friend, so glad you could make it. This is the first in an ongoing + always-evolving series on threat hunting.
+The main thing I want you to know about this course is that we will learn by doing.
+(1) We&amp;rsquo;ll start off by creating + configuring our own virtual network, including systems for the victim, attacker, and analyst.</description>
+    </item>
+    
     <item>
       <title>About</title>
       <link>https://athul.github.io/archie/about/</link>
@@ -31,23 +42,21 @@ INTRODUCTION Threat hunting, by its literal definition, is predicated on a singl
     </item>
     
     <item>
-      <title>Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course)</title>
-      <link>https://athul.github.io/archie/posts/course01/</link>
-      <pubDate>Wed, 12 Jul 2023 02:01:58 +0530</pubDate>
-      
-      <guid>https://athul.github.io/archie/posts/course01/</guid>
-      <description>NOTE THIS IS CURRENTLY STILL WIP, THE REASON IT&amp;rsquo;S A PUBLIC DRAFT IS LONG AND CONVOLUTED SO JUST TRUST ME. ANYHOO - DO AS YOU WISH. Hello friend, so glad you could make it. This is the first in an ongoing + always-evolving series on threat hunting.
-The main thing I want you to know about this course is that we will learn by doing.
-(1) We&amp;rsquo;ll start off by creating + configuring our own virtual network, including systems for the victim, attacker, and analyst.</description>
-    </item>
-    
-    <item>
       <title></title>
       <link>https://athul.github.io/archie/archives/</link>
       <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
       
       <guid>https://athul.github.io/archie/archives/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>Course 01 Outline</title>
+      <link>https://athul.github.io/archie/course01/outline/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/outline/</guid>
+      <description># Topic 1 Setting Up Your Virtual Environment 1.1 Introduction 1.2 Requirements 1.3 Hosted Hypervisor 1.4 VM Images 1.5 VM 1: Windows 10 aka &amp;ldquo;The Victim&amp;rdquo; 1.5.1 Installation 1.5.2 VMWare Tools 1.5.3 Deep disable MS Defender + Updates 1.5.4 Sysmon 1.5.5 PowerShell ScriptBlock Logging 1.5.6 Install Software 1.5.7 Creating a Template 1.6 VM 2: Kali Linux aka &amp;ldquo;The Attacker&amp;rdquo; 1.7 VM 3: Ubuntu Linux 20.04 aka &amp;ldquo;The Analyst&amp;rdquo; 1.7.1 Installation 1.</description>
     </item>
     
   </channel>

@@ -54,29 +54,12 @@ Mistakes themselves of course represent the potential for further understanding 
 {{< figure src="/img/falcor.gif" title="" class="custom-figure" >}}
 
 ***
+
+&nbsp;  
+
 # Course Outline
 
-`Here's a quick overview of the entire course:` 
-| # | ***Topic*** |
-|----------|----------|
-| 1 | `Setting Up Your Virtual Environment` | 
-| 1.1 | Introduction |
-| 1.2 | Requirements |
-| 1.3 | Hosted Hypervisor |
-| 1.4 | VM Images |
-| 1.5 | VM 1: Windows 10 aka "The Victim" |
-| 1.5.1 | Installation |
-| 1.5.2 | VMWare Tools |
-| 1.5.3 | Deep disable MS Defender + Updates |
-| 1.5.4 | Sysmon |
-| 1.5.5 | PowerShell ScriptBlock Logging |
-| 1.5.6 | Install Software |
-| 1.5.7 | Creating a Template |
-| 1.6 | VM 2: Kali Linux aka "The Attacker" |
-| 1.7 | VM 3: Ubuntu Linux 20.04 aka "The Analyst" |
-| 1.7.1 | Installation |
-| 1.7.2 | Install Software |
-| 2 | `Performing the Attack` | 
+[Here's a quick overview of the entire course:](https://www.faanross.com/course01/outline/)
 
 
 
@@ -1696,6 +1679,8 @@ And that actually concludes our logging analysis. Let's take our time to unpack 
 
 ***
 
+&nbsp;  
+
 # 6.5. Final Thoughts
 
 Up until this section we had gathered *a lot* of evidence confirming something suspicious was going on, however we did not really know many specifics of the attack. 
@@ -1720,16 +1705,37 @@ We essentually only had three critical pieces of info - the name of the suspicio
 
 
 
-Additionally, the logs provided us with exact timestamps for many major events which can be very useful in the incident response process. 
+Additionally, the logs provided us with exact timestamps for many major events, which can be very useful in the incident response process. 
 
 So I think it's clear just how useful log analysis can be in a threat hunt. Once we've narrowed down our target via memory analysis we can learn much more about the event and mechanisms involved in the actual compromise by jumping into select logs. 
 
+This leaves us with one final domain in which to investigate our target - the realm of packets. 
+
 ***
 ***
 
+&nbsp;  
+
+# 7. Post-Mortem Forensics: Traffic Analysis
+# 7.1. Introduction
 
 
 
+
+Hunting in the realm of traffic can be extremely challenging given the scale, hwoever it's also the one domain where, however difficult, the answer is always sure to be found.
+
+Why? Well as once again Chris Benson likes to say: it's the one place malware cannot hide. Malware can find incredivbly sophistiaceted ways to obscure its presence in memory, it can find creative ways to avoid/delete logging, but it has to generate packets. And if it does not generate packets, it means it is not communicating. 
+
+
+ is in some respect 
+
+... truth - 
+
+As Chris Benson like 
+
+
+
+talk about why abbrevuiated
 
 
 
