@@ -14,7 +14,115 @@
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/course01/outline/</guid>
-      <description># Topic 1 Setting Up Your Virtual Environment 1.1 Introduction 1.2 Requirements 1.3 Hosted Hypervisor 1.4 VM Images 1.5 VM 1: Windows 10 aka &amp;ldquo;The Victim&amp;rdquo; 1.5.1 Installation 1.5.2 VMWare Tools 1.5.3 Deep disable MS Defender + Updates 1.5.4 Sysmon 1.5.5 PowerShell ScriptBlock Logging 1.5.6 Install Software 1.5.7 Creating a Template 1.6 VM 2: Kali Linux aka &amp;ldquo;The Attacker&amp;rdquo; 1.7 VM 3: Ubuntu Linux 20.04 aka &amp;ldquo;The Analyst&amp;rdquo; 1.7.1 Installation 1.</description>
+      <description>Return to course page
+# Topic 0 Pre-Course Banter 1 Setting Up Your Virtual Environment 1.1 Introduction 1.2 Requirements 1.3 Hosted Hypervisor 1.4 VM Images 1.5 VM 1: Windows 10 aka &amp;ldquo;The Victim&amp;rdquo; 1.5.1 Installation 1.5.2 VMWare Tools 1.5.3 Deep disable MS Defender + Updates 1.5.4 Sysmon 1.5.5 PowerShell ScriptBlock Logging 1.5.6 Install Software 1.5.7 Creating a Template 1.6 VM 2: Kali Linux aka &amp;ldquo;The Attacker&amp;rdquo; 1.7 VM 3: Ubuntu Linux 20.</description>
+    </item>
+    
+    <item>
+      <title>Section 0: Pre-Course Banter</title>
+      <link>https://athul.github.io/archie/course01/prebanter/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/prebanter/</guid>
+      <description>| Return to Course Overview | Proceed to Section 1 |
+Threat hunting is not typically viewed as an &amp;ldquo;entry-level&amp;rdquo; cybersecurity discipline, probably because it is a layer of abstraction woven from other, more fundamental, layers of abstraction. It is not a house built from bricks, but a neighborhood built from houses.
+I have however created this course specifically with the beginner in mind. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient foundational information so that you can follow along not only with what we are doing, but crucially, why we are doing it.</description>
+    </item>
+    
+    <item>
+      <title>Section 1: Setting Up Our Virtual Environment</title>
+      <link>https://athul.github.io/archie/course01/01_settingup/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/01_settingup/</guid>
+      <description>| Return to Course Overview | Proceed to Section 2 |
+x
+x
+| Return to Course Overview | Proceed to Section 2 |</description>
+    </item>
+    
+    <item>
+      <title>Section 2: Performing the Attack</title>
+      <link>https://athul.github.io/archie/course01/02_attack/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/02_attack/</guid>
+      <description>| Return to Course Overview | Proceed to Section 3 |
+x
+x
+| Return to Course Overview | Proceed to Section 3 |</description>
+    </item>
+    
+    <item>
+      <title>Section 3: Live Analysis - Native Windows Tools</title>
+      <link>https://athul.github.io/archie/course01/03_live_native/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/03_live_native/</guid>
+      <description>| Return to Course Overview | Proceed to Section 4 |
+x
+x
+| Return to Course Overview | Proceed to Section 4 |</description>
+    </item>
+    
+    <item>
+      <title>Section 4: Live Analysis - Process Hacker</title>
+      <link>https://athul.github.io/archie/course01/04_live_hacker/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/04_live_hacker/</guid>
+      <description>| Return to Course Overview | Proceed to Section 5 |
+x
+x
+| Return to Course Overview | Proceed to Section 5 |</description>
+    </item>
+    
+    <item>
+      <title>Section 5: Post-Mortem Forensics - Memory</title>
+      <link>https://athul.github.io/archie/course01/05_post_memory/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/05_post_memory/</guid>
+      <description>| Return to Course Overview | Proceed to Section 6 |
+x
+x
+| Return to Course Overview | Proceed to Section 6 |</description>
+    </item>
+    
+    <item>
+      <title>Section 6: Post-Mortem Forensics - Log Analysis</title>
+      <link>https://athul.github.io/archie/course01/06_post_logs/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/06_post_logs/</guid>
+      <description>| Return to Course Overview | Proceed to Section 7 |
+x
+x
+| Return to Course Overview | Proceed to Section 7 |</description>
+    </item>
+    
+    <item>
+      <title>Section 7: Post-Mortem Forensics - Traffic Analysis</title>
+      <link>https://athul.github.io/archie/course01/07_post_traffic/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/07_post_traffic/</guid>
+      <description>| Return to Course Overview | Proceed to Section 8 |
+x
+x
+| Return to Course Overview | Proceed to Section 8 |</description>
+    </item>
+    
+    <item>
+      <title>Section 8: Course Review</title>
+      <link>https://athul.github.io/archie/course01/08_review/</link>
+      <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
+      
+      <guid>https://athul.github.io/archie/course01/08_review/</guid>
+      <description>| Return to Course Overview |
+x
+x
+| Return to Course Overview |</description>
     </item>
     
     <item>

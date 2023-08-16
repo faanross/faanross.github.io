@@ -39,9 +39,17 @@ I will interject with theory when and where necessary, as well as provide refere
 # Course Outline
 
 - [0. Pre-Course Banter](https://www.faanross.com/course01/prebanter/)
-- [0. Pre-Course Banter](https://www.faanross.com/course01/prebanter/)
+- [1. Setting Up Our Virtual Environment](https://www.faanross.com/course01/01_settingup/)
+- [2. Performing the Attack](https://www.faanross.com/course01/02_attack/)
+- [3. Live Analysis - Native Windows Tools](https://www.faanross.com/course01/03_live_native/)
+- [4. Live Analysis - Process Hacker](https://www.faanross.com/course01/04_live_hacker/)
+- [5. Post-Mortem Forensics - Memory](https://www.faanross.com/course01/05_post_memory/)
+- [6. Post-Mortem Forensics - Log Analysis](https://www.faanross.com/course01/06_post_logs/)
+- [7. Post-Mortem Forensics - Traffic Analysis](https://www.faanross.com/course01/07_post_traffic/)
+- [8. Course Review](https://www.faanross.com/course01/08_course_review/)
 
 
+If you'd like to see a detailed overview of the the entire course [click here](https://www.faanross.com/course01/outline/)
 
 
 ***
@@ -50,7 +58,7 @@ I will interject with theory when and where necessary, as well as provide refere
 
 # Course Outline
 
-[Here's a quick overview of the entire course:](https://www.faanross.com/course01/outline/)
+[Here's a quick overview of the entire course:]()
 
 
 
