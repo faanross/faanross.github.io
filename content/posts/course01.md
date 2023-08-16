@@ -1620,48 +1620,48 @@ That's it for `Sysmon`, let's jump straight into `PowerShell ScriptBlock` logs a
 
 ***
 
-# 8.4 POWERSHELL LOGS
+# 6.4. PowerShell ScriptBlock
 
+# 6.4.1. Analysis
 
-# 8.4.1 ANALYSIS
+In Section `2.3.6` we exported the PowerShell ScriptBlock logs to desktop, let's now go ahead and open it in `Event Viewer` by double-clicking on the file.
 
-In Section X.X we exported the PowerShell ScriptBlock logs to dekstop as `xxxx.evtx` - let's go ahead and open it in Event Viewer by double-clicking on the file.
+HERE SHOW IMAGE OF OVERVIEW
 
 We can immediately see that 15 events were logged in total. As was the case with Sysmon, the first two entries are artifacts from clearing the logs immediately prior to running our attack. Thus in total our attack resulted in 13 log entries. 
-
-NOTE: There are actually 17. The first two are from the rest, next two are from me querying amount of log entries - so let's ignore those completely here, we will rerun without doing it. 
-
-NOTE: Once again, as was the case above, am unsure whether I actually ran the cmd drop so have to redo and double-check.
 
 So again let's first look at everything on a high-level to see what patterns we can identify, a few things immediately stand out.
 
 {{< figure src="/img/image089.png" title="" class="custom-figure" >}}
 
-First, we can see that all the entries are assigned the lowest warning level (`Verbose`) with a single expection that is categorized as a `Warning`. Let's make a note to scrutinise this when we get to that entry.
+First, we can see that all the entries are assigned the lowest warning level (`Verbose`) with a single expection that is categorized as `Warning`. Let's make a note to scrutinise this when we get to that entry.
 
-NOTE TO SELF: The times between sysmon and powershell do not match so we def have to redo both and capture times at same time. in fact need to redo thing entirely according to instructions layed out here so we can be sure everything is sync'ed in terms of date time etc. 
-
-The next obvious thing we can see is that every single event ID is the exact same - `4104`. This may seem strange but is actually expected - PowerShell script block logging is indeed associated with Event `ID 4104` in Windows systems. This event ID is specific to script block logging and records the execution of PowerShell commands or scripts.
+The next obvious thing we can see is that every single event ID is the exact same - `4104`. This may seem strange but is actually expected - PowerShell ScriptBlock logging is indeed associated with Event `ID 4104`. 
 
 And then one final observation: look at the date and time stamps. Do you notice anything peculiar? 
 
-It seems to me that almost all the entries (for but a single exception) come in pairs - that is each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there. Ok great so now that we've spotted some interesting patterns let's just go ahead and jump right in.
+{{< figure src="/img/twins.gif" title="" class="custom-figure-3" >}}
 
-Note that as was the case with Sysmon, the first two entries are artifacts created when we cleared the log. We can once again skip these. 
+It seems that almost all the entries come in pairs - that is each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there. 
 
-In the third entry then we can immediately see the log related to our PowerShell command that went to download the injection script from the web server and injected it into memory. 
+
+Ok great so now that we've spotted some interesting patterns let's just go ahead and jump right in. Note that as was the case with Sysmon, the first two entries are artifacts created when we cleared the log. We can once again skip these. 
+
+In the third entry then we can immediately see the log related to our PowerShell command that went to download the injection script from the web server and loaded it into memory. 
 
 {{< figure src="/img/image090.png" title="" class="custom-figure" >}}
 
 This is worth taking note of since in a "real-world" attack scenario we would expect something similar to run from the stager. 
 
-Right after this we have the only entry with an assigned level of `Warning` (the highest in this specific sample), so let's see what the deal is.
+Right after this we have the only entry with an assigned level of `Warning` (the highest in our set), so let's see what the deal is.
 
 {{< figure src="/img/image091.png" title="" class="custom-figure" >}}
 
 Note the entire log entry is too large to reproduce here in its entirety, but it should immediately become clear what we're looking at here - the actual contents of the script we just downloaded and injected into memory!
 
-So when we ran the preceding IEX command, it downloaded the script from the provided URL and injected it directly in memory. Since PowerShell ScriptBlock logging is enabled, the entire content of the downloaded script is logged as a separate entry. This is awesome for us since, again, if this was an actual attack it means we'd be able to see the actual script content that was downloaded and injected into memory. 
+So when we ran the preceding IEX command, it downloaded the script from the provided FQDN and injected it directly into memory. Since PowerShell ScriptBlock logging is enabled, the content of the downloaded script itself is logged as a separate entry. 
+
+This is awesome for us since, again, if this was an actual attack it means we'd not only have a log telling us a script was downloaded + injected, but indeed it would relay the very content of the script itself!  
 
 Immediately after this we can see another log entry with the same time stamp that simply says `prompt`.
 
@@ -1669,29 +1669,62 @@ Immediately after this we can see another log entry with the same time stamp tha
 
 Remember when we looked at everything at the start and we noticed how all the entries come in pairs? Well, this is what we are looking at here - the second half of the pair. I won't repeat this for the remainder of this analysis, but you'll notice if you go through it by yourself that every single PowerShell ScriptBlock log entry will be followed by another like this that simply says `prompt`.
 
-So what's going on here? Well whenever you interact with PowerShell, it actually performs a magical sleight-of-hand. Think of when you yourself have a PowerShell terminal open - you see the prompt, you run a command, it executes, and then once again you see the prompt, ready for you to enter the subsequent command.
+So what's going on here? Well, whenever you interact with PowerShell, it actually performs a magical sleight-of-hand. Think of when you yourself have a PowerShell terminal open - you see the prompt, you run a command, it executes, and then afterwards once again you see the prompt so you can enter a subsequent command.
+
+{{< figure src="/img/moment.gif" title="" class="custom-figure" >}}
+
 
 IMAGE HERE OF WHAT YOU MEAN
 
-So it seems to us as the observer that once the command we ran is complete PowerShell just magically drops back into the prompt, as if it is the default state to which PowerShell just returns to automatically each time. But this is actually not so. When we run a command PowerShell executes it and then, unbeknownst to us, it runs another function in the background called `prompt`. It's that what creates the `PS C:\>` that you see before entering any command.
+So it seems to us as the observer that once the command we ran is completed PowerShell just magically drops back into the prompt, as if it is the default state to which it just returns to automatically each time. But this is actually not so. When we run a command PowerShell executes it and then, unbeknownst to us, it runs another function in the background called `prompt`. It's that what creates the `PS C:\>` that you see before entering any command.
 
-So this is perfectly normal and expect to always see it - for every PowerShell command that runs, it will be followed by a `prompt` log. 
+So this is perfectly normal and expect to always see it - for every PowerShell command that runs, it will be followed by a `prompt` log, which is simply PowerShell creating a new prompt for us. 
 
-So moving on to the rest of the log entries we'll notice some other commands we ran. First there is the `ps` command we used to get the process ID for `rufus.exe`. However, since as I mentioned before this is not expected to occur in an actual attack we can ignore this.
+So moving on to the rest of the log entries we'll notice some other commands we ran. First there is the `ps` command we used to get the process ID for `rufus.exe`. However, since as I mentioned before this is not expected to occur in an actual attack, we can ignore it.
 
-We then see the log entry for the command that actually injected the malicious DLL into `rufus.exe`, again something we would expect to see in an actual attack. 
+We then see the log entry for the command that injected the malicious DLL into `rufus.exe`, again something we would expect to see in an actual attack. 
 
 {{< figure src="/img/image093.png" title="" class="custom-figure" >}}
 
-This is then followed by two other entries with the exact same time-stamp, containing commands we did not explicitly run. However, as the time stamp is the exact same, we can assume they resulted from the command we ran (`Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll`).
+This is then followed by two other entries with the exact same timestamp, containing commands we did not explicitly run. However, as the timestamp is the exact same, we can assume they resulted from the command we ran (`Invoke-DllInjection -ProcessID 3468 -Dll C:\Users\User\Desktop\evil.dll`).
 
 {{< figure src="/img/image094.png" title="" class="custom-figure" >}}
 
-So what might be happening here? There entries are likely related to the process of interacting with or analyzing assemblies, possibly as part of the DLL injection procedure. My best guess is that the script blocks might be inspecting certain properties of assemblies to determine whether they meet specific criteria. As was the case before, this is not really a rabbit hole that will offer much value for us here and now, so let's move ahead. 
+So what might be happening here? There entries are likely related to the process of interacting with or analyzing assemblies, possibly as part of the DLL injection procedure. My best guess is that the script blocks might be inspecting certain properties of assemblies to determine whether they meet specific criteria. As was the case before, this is not really a rabbit hole that we are equipped to go down at this point, so let's move ahead. 
 
-The final entry is more of the same, so for now that's that. Let's jump into the `Closing THoughts` where we'll zoom out and review exactly what we learned with our log analysis.  
+And that actually concludes our logging analysis. Let's take our time to unpack everything we've learned here in `Final Thoughts`
 
-# CLOSING THOUGHTS
+
+***
+
+# 6.5. Final Thoughts
+
+Up until this section we had gathered *a lot* of evidence confirming something suspicious was going on, however we did not really know many specifics 
+
+
+
+
+
+
+So up until this point, though our analysis provided a lot of confirmation that something suspiocuios was going on, we essentually only had three critical pieces of info - the name of the suspicious process (rundll32.exe), the name of the parent process that spawned it (rufus.exe), and the ip address it connected to (ie poetnailyy the ip of the attacker, C2 server). 
+
+
+D. post-mortem sysmon
+- we learned the URL, IP, and hostname of the web server the stager reached out to download a script
+- we learned that the malware manipualted the DisableAntiSpyware registry keys.
+- we learned that malware accessed lsass.exe, indicating some credentials were potentially compromised
+- we learned the malware launched raserver.exe with the /offerraupdate flag, creating another potential backdoor.
+
+E. post-mortem powershell
+- we see the actual command that was run by the "stager" to donwload the script from the web server
+- also, crucially, we learned the actual contents of the dll-injection script taht was downloaded by the stager
+- we see the command actually used to inject the script into rufus.exe, from here we will also learn the id/location of the malicious dll
+
+
+
+
+
+
 
 So here's a quick recap of everything we've learned in our investigation thus far.
 
