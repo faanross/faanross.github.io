@@ -1533,7 +1533,7 @@ We can ignore the next 2 entries (`smartscreen.exe, ID 1`, `consent.exe, ID 1`),
 - svchost.exe `ID 10`,
 - vds.exe `ID 1`
 
-{{< figure src="/img/interesting.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/interesting.gif" title="" class="custom-figure-2" >}}
 
 We then encounter a series of three **very interesting** logs - `ID 13`, `ID 12`, `ID 13`. These are really awesome since, as you'll soon see, they give us insight into an inner workings of the malware.
 
@@ -1541,7 +1541,7 @@ The first of the three entries (`ID 13`) is shown below.
 
 {{< figure src="/img/image082.png" title="" class="custom-figure-3" >}}
 
-So we immediately see that `rufus.exe`, a program that supposedly is used for the sole purpose of creating bootable USB drives, has modified a Windows registry key. This is obvs quite strange, even more so if we look at the name of the actual key we can see it ends with `DisableAntiSpyware`. 
+We can see that `rufus.exe`, a program that supposedly is used for the sole purpose of creating bootable USB drives, has modified a Windows registry key. This is obviously quite strange, even more so if we look at the name of the actual key we can see it ends with `DisableAntiSpyware`. 
 
 Further, we can see the value has been set to 1 (`DWORD (0x00000001)`). Now a value of 1 actually means 'enable', but since the registry key `DisableAntiSpyware` is a double negative, by enabling it you are in effect disabling the actual antispyware function.
 
@@ -1549,17 +1549,19 @@ So of course this was not `rufus.exe`, but the malware that's injected into it p
 
 The next log entry (`ID 12`) indicates that a deletion event has occurred on a registry key.
 
-{{< figure src="/img/image083.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image083.png" title="" class="custom-figure-3" >}}
 
-We can see the registry key has the same name as above (`DisableAntiSpyware`), *but*, critically, we have to pay attention to the full paths of the *TargetObject*. The first one is located under `HKU\...`, while the one here is located under `HKLM\...`. `HKU` stands for ***HKEY_USERS***, and `HKLM` stands for ***HKEY_LOCAL_MACHINE***. These are two major registry hive keys in the Windows Registry.
+We can see the registry key has the same name as above (`DisableAntiSpyware`), *but*, critically, we have to pay attention to the full path of the *TargetObject*. The first one is located under `HKU\...`, while the one here is located under `HKLM\...`. `HKU` stands for ***HKEY_USERS***, and `HKLM` stands for ***HKEY_LOCAL_MACHINE***. These are two major registry hive keys in the Windows Registry.
 
-What you should also know is that the HKU hive contains configuration information for Windows user profiles on the computer, whereas the HKLM hive contains configuration data that is used by all users on the computer. In other words the first one deals with the specific user, the second deals with the entire system. 
+What you should also know is that the `HKU` hive contains configuration information for Windows user profiles on the computer, whereas the `HKLM` hive contains configuration data that is used by all users on the computer. In other words the first one deals with the specific user, the second deals with the entire system. 
 
 Further, we can also see that instead of `rufus.exe` performing the actions here, it is performed by `svchost.exe`. In case you were not aware this is a legitimate Windows process, and further, it being co-opted for nefarious purposes by malware is quite common. That's because hackers LOVE abusing `svchost.exe` for a slew of reasons - its ubiquity, anonymity, persistence, stealth and potential for gaining elevated privileges. 
 
-And in fact it seems this might be the primary reason for the malware switching processes - changes to `HKLM`  require elevated privileges because they affect the entire system, not just a single user. The `svchost.exe` process was running with System privileges (the highest level of privilege), which allowed it to modify the system-wide key.
+{{< figure src="/img/brent.gif" title="" class="custom-figure-3" >}}
 
-Ok before we fully get stuck into this let's review the last entry since we need to see the entire picture before we are able to make complete sense of it. 
+And in fact it seems this might be the primary reason for the malware switching processes - changes to `HKLM` require elevated privileges because they affect the entire system, not just a single user. The `svchost.exe` process was running with system privileges (the highest level of privilege), which allowed it to modify the system-wide key.
+
+Ok before we fully get stuck into this let's review the last entry since we need to see the entire picture before we can attempt to make sense of it. 
 
 {{< figure src="/img/image084.png" title="" class="custom-figure" >}}
 
