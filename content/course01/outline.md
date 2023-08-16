@@ -1,6 +1,6 @@
 ---
-title: "Course 01 Outline"
-description: "Outline for course 01"
+title: "Outline: Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants"
+description: ""
 hideDate: true
 ---
 
