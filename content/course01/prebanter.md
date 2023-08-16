@@ -28,6 +28,8 @@ Mistakes themselves of course represent the potential for further understanding 
 
 {{< figure src="/img/falcor.gif" title="" class="custom-figure" >}}
 
+&nbsp;  
+
 ***
 
 `|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 1](https://www.faanross.com/course01/01_settingup/) `|`
