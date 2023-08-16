@@ -3,15 +3,13 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Section 7: Post-Mortem Forensics - Traffic Analysis - faan|ross</title><link rel="icon" type="image/x-icon" href=/favicon.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="| Return to Course Overview | Proceed to Section 8 |
-x
-x
-| Return to Course Overview | Proceed to Section 8 |" />
+7. Post-Mortem Forensics: Traffic Analysis 7.1. Introduction Hunting in the realm of traffic can be extremely challenging given the scale, hwoever it&rsquo;s also the one domain where, however difficult, the answer is always sure to be found.
+Why? Well as once again Chris Benson likes to say: it&rsquo;s the one place malware cannot hide. Malware can find incredivbly sophistiaceted ways to obscure its presence in memory, it can find creative ways to avoid/delete logging, but it has to generate packets." />
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Section 7: Post-Mortem Forensics - Traffic Analysis" />
 <meta property="og:description" content="| Return to Course Overview | Proceed to Section 8 |
-x
-x
-| Return to Course Overview | Proceed to Section 8 |" />
+7. Post-Mortem Forensics: Traffic Analysis 7.1. Introduction Hunting in the realm of traffic can be extremely challenging given the scale, hwoever it&rsquo;s also the one domain where, however difficult, the answer is always sure to be found.
+Why? Well as once again Chris Benson likes to say: it&rsquo;s the one place malware cannot hide. Malware can find incredivbly sophistiaceted ways to obscure its presence in memory, it can find creative ways to avoid/delete logging, but it has to generate packets." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://athul.github.io/archie/course01/07_post_traffic/" /><meta property="article:section" content="course01" />
 <meta property="article:published_time" content="2023-08-12T02:01:58+05:30" />
@@ -19,9 +17,8 @@ x
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Section 7: Post-Mortem Forensics - Traffic Analysis"/>
 <meta name="twitter:description" content="| Return to Course Overview | Proceed to Section 8 |
-x
-x
-| Return to Course Overview | Proceed to Section 8 |"/>
+7. Post-Mortem Forensics: Traffic Analysis 7.1. Introduction Hunting in the realm of traffic can be extremely challenging given the scale, hwoever it&rsquo;s also the one domain where, however difficult, the answer is always sure to be found.
+Why? Well as once again Chris Benson likes to say: it&rsquo;s the one place malware cannot hide. Malware can find incredivbly sophistiaceted ways to obscure its presence in memory, it can find creative ways to avoid/delete logging, but it has to generate packets."/>
 <script src="https://athul.github.io/archie/js/feather.min.js"></script>
 	
 	
@@ -107,8 +104,84 @@ x
 			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/08_review/">Proceed to Section 8</a> <code>|</code></p>
 <hr>
 <p> </p>
-<p>x</p>
-<p>x</p>
+<h1 id="7-post-mortem-forensics-traffic-analysis">7. Post-Mortem Forensics: Traffic Analysis</h1>
+<h1 id="71-introduction">7.1. Introduction</h1>
+<p>Hunting in the realm of traffic can be extremely challenging given the scale, hwoever it&rsquo;s also the one domain where, however difficult, the answer is always sure to be found.</p>
+<p>Why? Well as once again Chris Benson likes to say: it&rsquo;s the one place malware cannot hide. Malware can find incredivbly sophistiaceted ways to obscure its presence in memory, it can find creative ways to avoid/delete logging, but it has to generate packets. And if it does not generate packets, it means it is not communicating.</p>
+<p>is in some respect</p>
+<p>&hellip; truth -</p>
+<p>As Chris Benson like</p>
+<p>talk about why abbrevuiated</p>
+<h1 id="traffic-analysis">TRAFFIC ANALYSIS</h1>
+<h1 id="introduction">Introduction</h1>
+<p>traffic analyssius one of most powerful ways to do threat hunting
+but like every tool has strenghts and weaknesses</p>
+<p>our specific investaition here, analyzing ane vent that was basicalkly only the initiiaal foothold, its weakness.</p>
+<p>For Traffic Analysis cIntroductyion
+LIMITATION of traffic in this scenarion</p>
+<ul>
+<li>mention here that it&rsquo;s strength not really as much as others in deteceting intiail actions. Traffic is not great for finding individual actions, it&rsquo;s great for finding emergent patterns (time, session size etc), usually the longer period the better.</li>
+</ul>
+<p>Here we only simulated an initial comprmoise, we did not really maintain a long perdio (1 day +) etc, communciating with server, sharing data etc. So</p>
+<ul>
+<li>
+<p>first do the Threat Hunting Level 1 course</p>
+</li>
+<li>
+<p>then do the Chris Benton traffic analysis</p>
+</li>
+<li>
+<p>Let&rsquo;s first rerun attack (remember to drop cmd etc)</p>
+</li>
+<li>
+<p>redo pcap with just that</p>
+</li>
+<li>
+<p>then let&rsquo;s do threat hunting level 1, other vid courses teaching about c2 in traffic logs etc.</p>
+</li>
+</ul>
+<h1 id="for-now-redo-pcap-so-cleaner">FOR NOW REDO PCAP SO CLEANER</h1>
+<p>Ok our bew pcap has 584
+first things of  interest seem to be 58 +59 - DNS query for the web server
+we can look into second one and we can see that the ip for the URL was 185.199.108.133</p>
+<p>then we see a whole series of convos between our IP and that IP, making connection, checking certs (TLS) etc</p>
+<p>then 116 we can see ARP asking for IP of attacker, clearly now scipt has been injected and malware seeking to make conneciton back</p>
+<p>117 we can see response</p>
+<p>then from 118 on we can see long convo between the two - victim and attacker</p>
+<p>let&rsquo;s follow convo see what&rsquo;s intersrting</p>
+<ul>
+<li>immediately what do we see? PE header - magic bytes + DOS stub</li>
+<li>then about 1/3 of way in we see what looks like a series of runtime errors</li>
+</ul>
+<p><a href="https://www.first.org/resources/papers/conference2010/cummings-slides.pdf">https://www.first.org/resources/papers/conference2010/cummings-slides.pdf</a></p>
+<p>we see some strings, google it above
+can we save it and search it with YARA rule??</p>
+<p>no, no positive hits with YARA</p>
+<p>for now, let&rsquo;s abandon this since sidetrack</p>
+<p>we can see it in course, find interesting, but say outside of scopt</p>
+<p>we create a new folder, this is where output will go
+we navigate to folder
+we run the command
+[full path to zeek] -r [full path to pcap]</p>
+<p>analyst@analyst:~/Desktop/zeeklogs$ /opt/zeek/bin/zeek -r ~/Desktop/new_capture.pcapng</p>
+<p>when we do this it generates 6 logs</p>
+<p>+++++++++++++++++++++++++++++++++++</p>
+<p>First, build a case mode UII</p>
+<p>Second, Pareto Principle logging.</p>
+<ul>
+<li>
+<p>mention this one usualyl more realm of SOC/SIEM and not Forensics, which usually more focus of threat hutning.</p>
+</li>
+<li>
+<p>Likely one of the thoughts underpinning this attitude is that logs are grunt-work, mountains of nothing that needs to be sifted through, mountains so huge its completly beyond the scope of humams, and so SIEMs not only CAN do it, but are better than humans in it.</p>
+</li>
+<li>
+<p>but that is true for the general appraco to logs. But what we are speaking of here is a much specific way of looking at logs - limitiing the type of logs we look at. Additioarnlly, logs depending on the PHASE. See below - logs might not be a great place to start in Phase 1, but for example can be perfect for Phase 2. Sicne you already more or less know what you are looking for, makes the volume manageable, esp considering we&rsquo;re likely only interested in Sysmon, Powershell, and a highly select WEL IDs.</p>
+</li>
+</ul>
+<p>ULTIMATELY, Phase 1 should focus on where they cannot hide - meaning memory and packets. Every where else, disk, logs, etc they can hide. but they can never hide from memory/packets = memory when they are at rest/use, packets when they are in transit.</p>
+<p>Ok so now as we go ahead, remember we have no idea of the attack, we don&rsquo;t know a DLL injected attack has happened, since that was &ldquo;evil ash&rdquo; doing it. Meaning we are in Phase 1, and then thios I might not mention but for own sanity - at end of live analysis II (PE Hacker), we can then switch over to Phase II.</p>
+<p>Will be using same VM here, victim, in practice we would bnever do this,.</p>
 <p> </p>
 <hr>
 <p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/08_review/">Proceed to Section 8</a> <code>|</code></p>
