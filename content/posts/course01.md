@@ -1520,12 +1520,16 @@ From the malware author's POV, there are pro's and cons to taking either approac
 
 This entry is a record of the actual network connection between the victim and the server. This is great for us since we can always expect to find such a log entry, and it will provide us with both the IP as well as hostname of the server where the script was pulled from. We can then obviously task someone to reference it in any databases of known malicious IOCs. 
 
-
 Additionally, we can see here that `powershell.exe` is the program responsible for creating the connection. Now if we imagine this was an actual event where a user unwittingly opened a malicious Word document (`.docx`), you might guess that we'd see `winword.exe` instead of `powershell.exe`. But not so - since `winword.exe` cannot itself initiate a socket connection we would indeed most likely see `powershell.exe` (or something else) responsible for the network connection. 
 
-Further, on a "regular" user's station we'd mostly expect to see outside network connections created by the browser, email client, and a variety of Windows processes (backend communcation with MS). We would not however, in most situations, expect to see `powershell.exe` creating them. Note there are *many* potential exception to this, and of course if the system belongs to an administrator etc then this would be quite normal. 
+Further, on a "regular" user's station we'd mostly expect to see outside network connections created by the browser, email client, and a variety of Windows processes (backend communcation with MS). We would not however, in most situations, expect to see `powershell.exe` creating them. Note there are *many* potential exception to this, and of course if the system belongs to an administrator then this would be quite normal. 
 
-NOTE TO MYSELF: It seems to me I opened rufus (perhaps two copies), since there is immediately a 1 (create), 5 (terminate), and then again a 1. So for now I will ignore the first pair of 1 and 5, as if they do not exist. However absolutely have to verify this!
+
+
+
+
+
+
 
 We can ignore the next 2 entries (`smartscreen.exe` `ID 1`, `consent.exe` `ID 1`), but immediately after we can see the process creation for `rufus.exe`. As I mentioned earlier - since an actual attacker will almost certainly inject into an existing process this log is pragmatically irrelevant. 
 
