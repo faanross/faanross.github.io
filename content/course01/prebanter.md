@@ -4,6 +4,13 @@ description: ""
 date: 2023-08-12T02:01:58+05:30
 ---
 
+[Return to Course Overview](https://www.faanross.com/posts/course01/)
+[Proceed to Section 1](https://www.faanross.com/course01/01_settingup/)
+
+[Return to Course Overview](https://www.faanross.com/posts/course01/)|[Proceed to Section 1](https://www.faanross.com/course01/01_settingup/)
+
+[Return to Course Overview](https://www.faanross.com/posts/course01/) | [Proceed to Section 1](https://www.faanross.com/course01/01_settingup/)
+
 Threat hunting is not typically viewed as an "entry-level" cybersecurity discipline, probably because it is a layer of abstraction woven from other, more *fundamental*, layers of abstraction. It is not a house built from bricks, but a neighborhood built from houses. 
 
 I have however created this course `specifically with the beginner in mind`. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient foundational information so that you can follow along not only with what we are doing, but crucially, ***why we are doing it***.

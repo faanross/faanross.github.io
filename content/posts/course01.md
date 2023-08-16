@@ -39,7 +39,7 @@ I will interject with theory when and where necessary, as well as provide refere
 # Course Outline
 
 - [0. Pre-Course Banter](https://www.faanross.com/course01/prebanter/)
-
+- [0. Pre-Course Banter](https://www.faanross.com/course01/prebanter/)
 
 
 
