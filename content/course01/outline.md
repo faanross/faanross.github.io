@@ -6,8 +6,10 @@ date: 2023-08-12T02:01:58+05:30
 
 [Return to course page](https://www.faanross.com/posts/course01/)
 
-| 1 | `Setting Up Your Virtual Environment` | 
+| # | ***Topic*** |
 |----------|----------|
+| 0 | `Pre-Course Banter` | 
+| 1 | `Setting Up Your Virtual Environment` | 
 | 1.1 | Introduction |
 | 1.2 | Requirements |
 | 1.3 | Hosted Hypervisor |
