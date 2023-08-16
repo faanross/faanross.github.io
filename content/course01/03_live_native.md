@@ -2,6 +2,7 @@
 title: "Section 3: Live Analysis - Native Windows Tools"
 description: ""
 date: 2023-08-12T02:01:58+05:30
+type: course
 ---
 
 

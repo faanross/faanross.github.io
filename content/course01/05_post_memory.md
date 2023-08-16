@@ -2,6 +2,7 @@
 title: "Section 5: Post-Mortem Forensics - Memory"
 description: ""
 date: 2023-08-12T02:01:58+05:30
+type: course
 ---
 
 

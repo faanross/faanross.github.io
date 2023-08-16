@@ -2,6 +2,7 @@
 title: "Section 0: Pre-Course Banter"
 description: ""
 date: 2023-08-12T02:01:58+05:30
+type: course
 ---
 
 `|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 1](https://www.faanross.com/course01/01_settingup/) `|`

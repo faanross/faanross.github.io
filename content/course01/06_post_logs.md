@@ -2,6 +2,7 @@
 title: "Section 6: Post-Mortem Forensics - Log Analysis"
 description: ""
 date: 2023-08-12T02:01:58+05:30
+type: course
 ---
 
 

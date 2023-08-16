@@ -2,6 +2,7 @@
 title: "Section 1: Setting Up Our Virtual Environment"
 description: ""
 date: 2023-08-12T02:01:58+05:30
+type: course
 ---
 
 
