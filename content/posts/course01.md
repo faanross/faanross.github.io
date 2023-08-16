@@ -1569,7 +1569,6 @@ Here we can see the same action as performed in our first entry, ie disabling th
 
 But then why the deletion event preceding this? The most likely reason the malware is doing this is to ensure that by returning the registry key to the default state (which is what deleting it in effect does), it will behave exactly as is expected. In this way it ensures that the system doesn't have an unexpected configuration that could interfere with the malware's actions.
 
-
 This is of course speculation on my part - the only way for us to truly understand the malware author's intention would be to actually reverse it, which is of course literally an entire other discipline in and of itself. 
 
 That being the case this is where our speculation on this matter will remain, we will however be jumping into the amazing world of malware analysis in the future. As a threat hunter you are not expected to be an absolute wizard at it, but your abilities as a hunter will expand dramatrically if you add a basic understanding of this tool to your kit. 
@@ -1644,7 +1643,6 @@ And then one final observation: look at the date and time stamps. Do you notice 
 
 It seems that almost all the entries come in pairs - that is each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there. 
 
-
 Ok great so now that we've spotted some interesting patterns let's just go ahead and jump right in. Note that as was the case with Sysmon, the first two entries are artifacts created when we cleared the log. We can once again skip these. 
 
 In the third entry then we can immediately see the log related to our PowerShell command that went to download the injection script from the web server and loaded it into memory. 
@@ -1674,8 +1672,6 @@ So what's going on here? Well, whenever you interact with PowerShell, it actuall
 {{< figure src="/img/moment.gif" title="" class="custom-figure" >}}
 
 
-IMAGE HERE OF WHAT YOU MEAN
-
 So it seems to us as the observer that once the command we ran is completed PowerShell just magically drops back into the prompt, as if it is the default state to which it just returns to automatically each time. But this is actually not so. When we run a command PowerShell executes it and then, unbeknownst to us, it runs another function in the background called `prompt`. It's that what creates the `PS C:\>` that you see before entering any command.
 
 So this is perfectly normal and expect to always see it - for every PowerShell command that runs, it will be followed by a `prompt` log, which is simply PowerShell creating a new prompt for us. 
@@ -1699,136 +1695,29 @@ And that actually concludes our logging analysis. Let's take our time to unpack 
 
 # 6.5. Final Thoughts
 
-Up until this section we had gathered *a lot* of evidence confirming something suspicious was going on, however we did not really know many specifics 
+Up until this section we had gathered *a lot* of evidence confirming something suspicious was going on, however we did not really know many specifics of the attack. 
 
+We essentually only had three critical pieces of info - the name of the suspicious process (`rundll32.exe`), the name of the parent process that spawned it (`rufus.exe`), and the ip address it connected to (ie potentially the ip of the attacker, C2 server). But in this section we saw the great depth of information we can learn from analysing Sysmon and PowerShell ScriptBlock logs. 
 
+**Using Sysmon we learned:**
+- The URL, IP, and hostname of the web server the stager reached out to download the injection script.
+- The malware manipulated the `DisableAntiSpyware` registry keys.
+- The malware accessed `lsass.exe`, indicating some credentials were potentially compromised.
+- The malware launched `raserver.exe` with the `/offerraupdate` flag, creating another potential backdoor.
 
+**Using PowerShell ScriptBlock we learned:**
+- The actual command that was used by the "stager" to donwload the script from the web server and inject it into memory.
+- Crucially, we learned the actual contents of the dll-injection script.
+- Which command was actually used to inject the script into `rufus.exe`, from here we will also learn the id/location of the malicious dll
 
+Additionally, the logs provided us with exact timestamps for many major events which can be very useful in the incident response process. 
 
+So I think it's clear just how useful log analysis can be in a threat hunt. Once we've narrowed down our target via memory analysis we can learn much more about the event and mechanisms involved in the actual compromise by jumping into select logs. 
 
-So up until this point, though our analysis provided a lot of confirmation that something suspiocuios was going on, we essentually only had three critical pieces of info - the name of the suspicious process (rundll32.exe), the name of the parent process that spawned it (rufus.exe), and the ip address it connected to (ie poetnailyy the ip of the attacker, C2 server). 
-
-
-D. post-mortem sysmon
-- we learned the URL, IP, and hostname of the web server the stager reached out to download a script
-- we learned that the malware manipualted the DisableAntiSpyware registry keys.
-- we learned that malware accessed lsass.exe, indicating some credentials were potentially compromised
-- we learned the malware launched raserver.exe with the /offerraupdate flag, creating another potential backdoor.
-
-E. post-mortem powershell
-- we see the actual command that was run by the "stager" to donwload the script from the web server
-- also, crucially, we learned the actual contents of the dll-injection script taht was downloaded by the stager
-- we see the command actually used to inject the script into rufus.exe, from here we will also learn the id/location of the malicious dll
-
-
-
-
-
-
-
-So here's a quick recap of everything we've learned in our investigation thus far.
-
-In our live analysis using native Windows tools we learned that:
-- there was an outbound network connection mediated by `rundll32.exe`
-- we 
-
-
-
-- the main point here is really to lay out:
-
-- what did we know when we arrived here based on memory analysis?
-- what did we then learn from Sysmon.
-- what did we then leanr from PowerShell
-
-Remember redundancy is good - like many eyewitness accounts, each helps to strengthen the convicion of our case. 
-
-Based on how we would expect an actual attack to occur, let's look at some of the most important Sysmon logs and what we learned from them.
-
-DNS 22 - the stager reaching out to a web server to download the script, keep in mind ojnly with a FQDN so might not appear. 
-
-Net Connection 3 - we can see powrshell.exe creating connection to web server. This is somethjing we'd alwayus expect to see, whether script used a FQDN or IP. Additionally we'd
-
-Registry Change 3 - erc... 
-
-
-
-
-
-
-- the first two represent us clearing the log
-- 3 + 4 accessing processes windows doing its thing
-
-now 5th one is the dns query, here is where things start getting interesting
-this one is related to our IEX command - since it needs to go to a FQDN (raw.githubusercontent.com), it needs to use DNS.
-
-{{< figure src="/img/image067.png" title="" class="custom-figure" >}}
-
-6 is then establishing a network connection (ID 3), obvs sicne we just ran DNS we get the IP, establish a connection with the server hosting the script
-
-{{< figure src="/img/image068.png" title="" class="custom-figure" >}}
-
-7 is smartscreen
-
-8 is explorer opening rufus, 9 is rufus closing, 10 is consent.exe, 11 again rufus opening
-
-12 is vdsldr.exe, 13 is lsass, so is 14, 15 is vds.exe, 
-
-16 is a big one = 13 (Registry value set)
-we can see rufus is changing a registru
-
-{{< figure src="/img/image069.png" title="" class="custom-figure" >}}
-
-This registry key appears to be related to the Windows Defender's Group Policy settings. More specifically, the "DisableAntiSpyware" at the end suggests that this policy might control whether the anti-spyware component of Windows Defender is enabled or disabled.
-
-Breaking down the registry key:
-
-- "HKU" stands for HKEY_USERS, which contains the configuration data for all the user profiles on the computer.
-
-- "S-1-5-21-3300832437-63900680-1611145449-1001" is the Security Identifier (SID) for a specific user account on the system.
-
-- "SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects" is where Group Policy Objects settings are stored.
-
-- "{F1BFD3AE-2A88-41A2-989E-39817E08E286}Machine" identifies a specific Group Policy Object.
-
-- "Software\Policies\Microsoft\Windows Defender\DisableAntiSpyware" points to the policy controlling the anti-spyware feature of Windows Defender.
-
-The Sysmon event ID 13 is associated with Registry Value Set operations. If you are seeing this in a Sysmon event, it suggests that this registry key value was modified. 
-
-If the value of "DisableAntiSpyware" is set to 1, it means that the anti-spyware component of Windows Defender has been disabled for the user associated with the SID. If it's 0, then the feature is enabled. 
-
-Please note that modifying this value could have significant security implications, as it would disable part of the built-in protection of the Windows system. If this change was not intended, it might be a sign of a security breach or malware attempting to lower system defenses.
-
-The "Details DWORD (0x00000001)" indicates that the value of the registry key was set to "1". In the context of the "DisableAntiSpyware" key, this means that the anti-spyware component of Windows Defender has been disabled for the user account associated with the given Security Identifier (SID). 
-
-It's also worth noting that this operation seems to be associated with the "rufus-4.1_x86.exe" executable, which is a utility used to create bootable USB drives. It's unusual for such a utility to interact with Windows Defender settings in this way. If this activity was not expected or initiated by a trusted user, it could potentially indicate a security issue, such as a breach or malware activity.
-
-So this might suggest to us that when the script ran in dll injected into rufus, one of the very first thing it does is change this registry key to deactivate the feature, likely in an attempt to avoid detection
-
-Alos observer around 2:04:38 everything happening at same time - moment injetion occurred
-
-this then follows with 12 and 13, could be that svchost is trying to fix things again?
-- will need to follow up and ask ChatGPT now being a moron
-
-we then see a whole host of 10 - svchost, lsass - no need to worry about that for now
-
-we then enter into event IDs 1 - a number of process creations.
-all related to taskhostw.exe
-for ex svchost.exe -k netsvcs -p
-svchost.exe: This is the Service Host process, which is used to host multiple Windows operating system services. Each svchost.exe instance can run one or more services, and Windows uses multiple instances of svchost.exe to separate different services from each other.
-
--k: This flag is used to specify the service group that this instance of svchost.exe will host. In this case, the group is netsvcs, which is a group of important network-related services in Windows.
-
-then ffwd to the end, the final event log is process creation of rundll32.exe
-
-{{< figure src="/img/image070.png" title="" class="custom-figure" >}}
-
-let's see here if imphash has any hits?
-no result for MD5 on VT, but yes on joesandbox
-
+***
 ***
 
 
-# REFERENCES (this will be for both)
 
 
 
