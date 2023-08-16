@@ -1702,6 +1702,9 @@ Up until this section we had gathered *a lot* of evidence confirming something s
 
 We essentually only had three critical pieces of info - the name of the suspicious process (`rundll32.exe`), the name of the parent process that spawned it (`rufus.exe`), and the ip address it connected to (ie potentially the ip of the attacker, C2 server). But in this section we saw the great depth of information we can learn from analysing Sysmon and PowerShell ScriptBlock logs. 
 
+{{< figure src="/img/learn.gif" title="" class="custom-figure" >}}
+
+
 **Using Sysmon we learned:**
 - The URL, IP, and hostname of the web server the stager reached out to download the injection script.
 - The malware manipulated the `DisableAntiSpyware` registry keys.
@@ -1712,6 +1715,10 @@ We essentually only had three critical pieces of info - the name of the suspicio
 - The actual command that was used by the "stager" to donwload the script from the web server and inject it into memory.
 - Crucially, we learned the actual contents of the dll-injection script.
 - Which command was actually used to inject the script into `rufus.exe`, from here we will also learn the id/location of the malicious dll
+
+{{< figure src="/img/pinkfloyd.gif" title="" class="custom-figure" >}}
+
+
 
 Additionally, the logs provided us with exact timestamps for many major events which can be very useful in the incident response process. 
 
