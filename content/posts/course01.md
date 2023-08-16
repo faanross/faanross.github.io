@@ -924,7 +924,7 @@ You will benefit from understanding the [following short theoretical framework o
 
 ***
 
-# 3.3. Performing the Analysis
+# 3.3. Analysis
 There are a number of things we can look at when we do a live analyis using the native tools, including: connections, processes, shares, firewall settings, services, accounts, groups, registry keys, scheduled tasks etc.
 
 For this course we will only focus on connections and processes. If you are keen to learn more about how to investigate the other factors I suggest you watch [this excellent talk by John Strand](https://www.youtube.com/watch?v=fEip9gl2MTA). 
@@ -1153,7 +1153,7 @@ But for now, that's it for the theory - *allons-y*!
 
 ***
 
-# 4.3. Performing the Analysis
+# 4.3. Analysis
 
 Open Process Hacker as admin - ie right-click and select `Run as administrator`. Scroll down until you see `rufus.exe` (or whatever other legitimate process you chose to inject into). Let's go through our 7 indicators.
 
@@ -1293,7 +1293,7 @@ Now that you have a basic idea of the modules we'll be using, let's continue wit
 
 ***
 
-# 5.3. Performing the Analysis
+# 5.3. Analysis
 
 # 5.3.1. pslist, pstree, and psinfo
 
@@ -1484,7 +1484,7 @@ That's really about all you need to know at this point - WEL bad, Sysmon epic. B
 
 *** 
 
-# 6.3.2. Performing the Analysis
+# 6.3.2. Analysis
 
 In case it's off, switch on your Windows VM. I saved the `.evtx` export we performed earlier on the desktop, let's simply double-click on it, which will open it in `Event Viewer`. We can immediately see there are 34 recorded events. 
 
@@ -1608,17 +1608,17 @@ And then finally we see two events with `ID 1`, the first of which is another cr
 
 Here we can see the Windows Remote Assistance COM Server executable (`raserver.exe`) has been launched. This tool is used for remote assistance, which allows someone to connect to this machine remotely to assist with technical issues.
 
-The flag `/offerraupdate` used in the CommandLine for `raserver.exe` suggests that it was started to accept unsolicited Remote Assistance invitations. This allows remote users to connect without needing an invitation. This Remote Assistance tool can provide an attacker with a remote interactive command-line or GUI access, similar to Remote Desktop, which can be used to interact with the system and potentially exfiltrate data. 
+The flag `/offerraupdate` used in the CommandLine for `raserver.exe` suggests that it was started to accept unsolicited Remote Assistance invitations. This allows remote users to connect without needing an invitation. This Remote Assistance tool can provide an attacker with a remote interactive command-line or GUI access, similar to `Remote Desktop`, which can be used to interact with the system and potentially exfiltrate data. 
 
-And then in the last event log we can see our old friend `rundll32.exe` - the suspicious process we first encountered way back when we looked at unusual network connections. This was of course what set us down this path of threat hunting in the first place. 
+And then in the last event log we can see our old friend `rundll32.exe` - the suspicious process we first encountered way back in the beginning when we looked at unusual network connections. This was of course what set us down this path of threat hunting in the first place. 
 
 {{< figure src="/img/image088.png" title="" class="custom-figure" >}}
 
 And we learn the same things we've seen now a couple of times in our memory forensics analysis - the process was invoked without arguments, the process was started from an unusual location (desktop), and that the parent process is `rufus.exe`.
 
-I really want you to take a moment and take in these set of circumstances since they are really all, taken together, indicative of a standard dll-injection attack. 
+That's it for `Sysmon`, let's jump straight into `PowerShell ScriptBlock` logs and then we'll discuss all the results in unison. 
 
-NOTE TO SELF: not sure if i remembered to drop the cmd shell from meterpreter when i ran this simulation. redo and double-check! also remember it looks like the process rufus was opened, closed, then opened (maybe you opened a second copy by mistake?), so need to check this too. 
+***
 
 # 8.4 POWERSHELL LOGS
 
