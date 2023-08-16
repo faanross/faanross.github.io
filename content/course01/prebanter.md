@@ -8,8 +8,6 @@ date: 2023-08-12T02:01:58+05:30
 
 ***
 
-&nbsp;  
-
 Threat hunting is not typically viewed as an "entry-level" cybersecurity discipline, probably because it is a layer of abstraction woven from other, more *fundamental*, layers of abstraction. It is not a house built from bricks, but a neighborhood built from houses. 
 
 I have however created this course `specifically with the beginner in mind`. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient foundational information so that you can follow along not only with what we are doing, but crucially, ***why we are doing it***.
@@ -27,8 +25,6 @@ Finally I do want to add that I myself am an `eternal student` and always learni
 Mistakes themselves of course represent the potential for further understanding - but only if we become aware of them. So if there's anything here you are unsure about, or simply flat-out disagree with ***please*** feel free to reach out and share this with me so that everyone can potentially benefit. You can connect with me on [Twitter](https://twitter.com/faanross), or feel free to [email me](mailto:moi@faanross.com).
 
 {{< figure src="/img/falcor.gif" title="" class="custom-figure" >}}
-
-&nbsp;  
 
 ***
 
