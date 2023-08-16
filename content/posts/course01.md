@@ -1569,9 +1569,14 @@ Here we can see the same action as performed in our first entry, ie disabling th
 
 But then why the deletion event preceding this? The most likely reason the malware is doing this is to ensure that by returning the registry key to the default state (which is what deleting it in effect does), it will behave exactly as is expected. In this way it ensures that the system doesn't have an unexpected configuration that could interfere with the malware's actions.
 
-This is of course speculation on my part - the only way for us to truly understand what this malware is doing so we can start getting a clear picture of the malware author's intention would be to actually reverse it, which is of course literally an entire other discipline in and of itself. That being the case this is where our speculation on this matter will remain, we will however be jumping into the amazing world of malware analysis in the future. As a threat hunter you are not expected to be an absolute wizard at it, but your abilities as a hunter will expand dramatrically if you add a basic understanding of this tool to your kit. 
+{{< figure src="/img/spark_troll.gif" title="" class="custom-figure-2" >}}
 
-But for now, let's toodle on. 
+
+This is of course speculation on my part - the only way for us to truly understand the malware author's intention would be to actually reverse it, which is of course literally an entire other discipline in and of itself. 
+
+That being the case this is where our speculation on this matter will remain, we will however be jumping into the amazing world of malware analysis in the future. As a threat hunter you are not expected to be an absolute wizard at it, but your abilities as a hunter will expand dramatrically if you add a basic understanding of this tool to your kit. 
+
+But for now, let's move on. 
 
 {{< figure src="/img/silly_walk.gif" title="" class="custom-figure" >}}
 
