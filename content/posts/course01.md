@@ -1516,33 +1516,30 @@ There is a caveat here - DNS resolution only occurs if the web server the stager
 
 From the malware author's POV, there are pro's and cons to taking either approach. So it's good to be aware that the stager may, or may not, produce a DNS "receipt". What's always going to be present however is what we see in the subsequent entry (`ID 3`).
 
-{{< figure src="/img/image081.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image081.png" title="" class="custom-figure-3" >}}
 
 This entry is a record of the actual network connection between the victim and the server. This is great for us since we can always expect to find such a log entry, and it will provide us with both the IP as well as hostname of the server where the script was pulled from. We can then obviously task someone to reference it in any databases of known malicious IOCs. 
 
 Additionally, we can see here that `powershell.exe` is the program responsible for creating the connection. Now if we imagine this was an actual event where a user unwittingly opened a malicious Word document (`.docx`), you might guess that we'd see `winword.exe` instead of `powershell.exe`. But not so - since `winword.exe` cannot itself initiate a socket connection we would indeed most likely see `powershell.exe` (or something else) responsible for the network connection. 
 
-Further, on a "regular" user's station we'd mostly expect to see outside network connections created by the browser, email client, and a variety of Windows processes (backend communcation with MS). We would not however, in most situations, expect to see `powershell.exe` creating them. Note there are *many* potential exception to this, and of course if the system belongs to an administrator then this would be quite normal. 
+Further, on a "regular" user's station we'd mostly expect to see outside network connections created by the browser, email client, and a variety of Windows processes (backend communcation with MS). We would not however, in most situations, expect to see `powershell.exe` creating them. Note there are potential exception to this, and of course if the system belongs to an administrator then this would be quite normal. 
 
+{{< figure src="/img/itcrowd.gif" title="" class="custom-figure" >}}
 
+We can ignore the next 2 entries (`smartscreen.exe, ID 1`, `consent.exe, ID 1`), but immediately after that we see the process creation for `rufus.exe`. As I mentioned earlier - since an actual attacker will almost certainly inject into an existing process this log is pragmatically irrelevant. 
 
-
-
-
-
-
-We can ignore the next 2 entries (`smartscreen.exe` `ID 1`, `consent.exe` `ID 1`), but immediately after we can see the process creation for `rufus.exe`. As I mentioned earlier - since an actual attacker will almost certainly inject into an existing process this log is pragmatically irrelevant. 
-
-We then again encounter a few Windows services we can ignore for now:
+**We then again encounter a few other Windows services we can also ignore for now:**
 - vdsldr.exe `ID 1`, 
 - svchost.exe `ID 10`,
 - vds.exe `ID 1`
 
-We then encounter a series of three **very interesting** logs - `ID 13`, `ID 12`, `ID 13`. These are really awesome since, as you'll soon see, they give us insight into an inner workings of the malware that even us as "the attacker", were not aware of.
+{{< figure src="/img/interesting.gif" title="" class="custom-figure-3" >}}
+
+We then encounter a series of three **very interesting** logs - `ID 13`, `ID 12`, `ID 13`. These are really awesome since, as you'll soon see, they give us insight into an inner workings of the malware.
 
 The first of the three entries (`ID 13`) is shown below. 
 
-{{< figure src="/img/image082.png" title="" class="custom-figure" >}}
+{{< figure src="/img/image082.png" title="" class="custom-figure-3" >}}
 
 So we immediately see that `rufus.exe`, a program that supposedly is used for the sole purpose of creating bootable USB drives, has modified a Windows registry key. This is obvs quite strange, even more so if we look at the name of the actual key we can see it ends with `DisableAntiSpyware`. 
 
