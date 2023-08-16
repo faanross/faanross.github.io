@@ -22,22 +22,22 @@ type: post
 
 The main thing I want you to know about this course is that ***we will learn by doing***. 
 
-`Set up`
+`| Set up |`
 We'll start off by creating + configuring our own virtual network, including VMs for the victim, attacker, and analyst. 
 
-`Attack`
+`| Attack |`
 Then, instead of using prepackaged data we'll generate data by performing the attack ourselves. We'll use *Metasploit* and *Powersploit* to perform a standard DLL-injection attack. Once we have C2 established we'll simulate a few rudimentary actions such as data exfiltration.
 
-`Live Analysis`
+`| Live Analysis |`
 We'll then perform the actual threat hunt. We'll initially perform two rounds of live analysis - first using only Windows native tools to *check the vitals*, and then using *Process Hacker* we'll dig deeper into the memory. 
 
-`Post-mortem Analysis`
+`| Post-mortem Analysis |`
 In the post-mortem analysis we'll look at the memory dump(*Volatility3*) and perform log analysis (*Sysmon* + *PowerShell ScriptBlock*), before wrapping things up with an abbreviated traffic analysis (*WireShark*). 
 
-`Review`
+`| Review |`
 Finally we'll crystallize all our insights so we can both reinforce what we've learned, as well as learn how to effectively communicate our findings to the greater cybersecurity ecosystem. 
 
-`Theory + References`
+`| Theory + References |`
 I will interject with theory when and where necessary, as well as provide references. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that need not be linear - the goal is to learn, and have as much fun as possible. `Act accordingly`. 
 
 {{< figure src="/img/brent.gif" title="" class="custom-figure" >}}
@@ -56,6 +56,10 @@ I will interject with theory when and where necessary, as well as provide refere
 
 
 If you'd like to see a detailed overview of the the entire course [click here](https://www.faanross.com/course01/outline/)
+
+{{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
+
+&nbsp; 
 
 ***
 

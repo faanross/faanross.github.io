@@ -12,9 +12,8 @@ type: course
 
 &nbsp;  
 
-# 1. Setting Up Our Virtual Environment
 
-{{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
+
 
 # 1.1. Introduction
 
