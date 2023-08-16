@@ -10,7 +10,6 @@ type: post
 
 *** 
 
-&nbsp; 
 
 # Hello friend, so glad you could make it.
 
