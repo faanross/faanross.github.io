@@ -337,13 +337,13 @@ table {
 table th{
   padding: 6px 13px;
   border: 1px solid #dfe2e5;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 table td{
   padding: 6px 13px;
   border: 1px solid #dfe2e5;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .custom-figure {
