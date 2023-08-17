@@ -6,7 +6,7 @@ type: course
 ---
 
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 2](https://www.faanross.com/course01/02_attack/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 0](https://www.faanross.com/course01/prebanter) `|` [Proceed to Section 2](https://www.faanross.com/course01/02_attack/) `|`
 
 ***
 
@@ -499,4 +499,4 @@ Yeah it's time for all this installing and configuring to pay off - let's kick t
 
 ***
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 2](https://www.faanross.com/course01/02_attack/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 0](https://www.faanross.com/course01/prebanter) `|` [Proceed to Section 2](https://www.faanross.com/course01/02_attack/) `|`
