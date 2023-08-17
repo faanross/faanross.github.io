@@ -13,7 +13,7 @@ type: course
 &nbsp;  
 
 
-{{< figure src="/img/thehacker.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/thehacker.gif" title="" class="custom-figure" >}}
 
 # 1.1. Introduction
 
@@ -29,7 +29,7 @@ In this section we'll set up the three VMs we'll need for the course - Windows 1
 
 I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can get the same results by adapting the process, then please do so. After all - this is the *way of the hacker*. 
 
-{{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/tripleram.gif" title="" class="custom-figure" >}}
 
 As mentioned above, we'll create 3 VMs in total, however, at any one moment there will only be a `maximum of 2 VMs running concurrently`. For each of these VMs I recommend the following system resources:
 - min 2 (ideally 4) CPU cores
@@ -41,7 +41,7 @@ So based on this, that is roughly 2x the above + resources for your actual host 
 - 16 GB RAM (32+ even better)
 - 200 GB free HD space
 
-{{< figure src="/img/beefcake.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/beefcake.gif" title="" class="custom-figure" >}}
 
 Now I understand this requirement is rather beefy, but consider:
 - You don't have to use a single system to run the entire VLAN - you could create an actual physical network, for ex with a Raspberry Pi cluster, and run the VMs on that. Or mini-pcs, or refurbished clients - really for a few hundred dollars you could more than easily be equipped to run a small network. I don't want to sound insensitive to a few 100 dollars, but I'm gonna level with you: `if you want to learn cybersecurity then there is no better investment than having localized resources to create virtual simulations`. 
@@ -57,7 +57,7 @@ Finally I want to mention that beyond the hardware, `everything we will use is c
 # 1.3. Hosted Hypervisor
 So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like *Inception* - it allows us to create systems within our systems. 
 
-{{< figure src="/img/inception.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/inception.gif" title="" class="custom-figure" >}}
 
 For this course I'll be using [VMWare Workstation](https://store-us.vmware.com/workstation_buy_dual), which as of writing costs around $200. However you could also do it with either [VMWare Player](https://www.vmware.com/ca/products/workstation-player.html), or [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads), both of which are free. 
 
@@ -65,7 +65,7 @@ I've used both `VMWare Player` and `VirtualBox` in the past, they mostly work we
 
 Since I switched over to `VMWare Workstation` my experience has been significantly more stable, so if you do have the money and are committed to this path as a career I would definitely consider getting it. That being said I don't wanna come across as some corporate shill, so really the choice is totally up to you.
 
-{{< figure src="/img/makechoice.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/makechoice.gif" title="" class="custom-figure" >}}
 
 Note that if you decide to not use `VMWare Workstation` then some of the details of the setup might be different. When that occurs it'll be up to you to figure out how to adapt it for your situation - Google, ChatGPT, StackExchange, common sense etc. Again, use the opportunities when things don't happen exactly "as they should" to learn. As a wise emperor once said - ***The impediment to action advances action. What stands in the way becomes the way.*** 
 
@@ -73,7 +73,7 @@ Note that if you decide to not use `VMWare Workstation` then some of the details
 
 Once that's done with feel free to proceed...
 
-{{< figure src="/img/pleasego.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/gif/pleasego.gif" title="" class="custom-figure-2" >}}
 
 ***
 
@@ -96,7 +96,7 @@ Once you've successfully downloaded all three iso images we are ready to proceed
 
 # 1.5. VM 1: Windows 10 aka "The Victim" 
 
-{{< figure src="/img/screamdrew.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/screamdrew.gif" title="" class="custom-figure" >}}
  
 # 1.5.1. Installation
 
@@ -104,14 +104,14 @@ Once you've successfully downloaded all three iso images we are ready to proceed
 2. Choose `Typical (recommended)`, then click `Next`. 
 3. Then select `I will install the operating system later` and hit `Next`.
 
-{{< figure src="/img/image001.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image001.png" title="" class="custom-figure-2" >}}
 
 4. Select `Microsoft Windows`, and under Version select `Windows 10`. 
 5. Here you are free to call the machine whatever you'd like, in my case I am calling it `Victim`. 
 6. Select 60 GB and `Split virtual disk into multiple files`. 
 7. Then on the final screen click on `Customize Hardware`.
 
-{{< figure src="/img/image002.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image002.png" title="" class="custom-figure-2" >}}
 
 8. Under `Memory` (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
