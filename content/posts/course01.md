@@ -1,8 +1,8 @@
 ---
 title: "Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course)"
 date: 2023-08-12T02:01:58+05:30
-description: "In this beginner-friendly practical course we'll learn how to threat hunt standard DLL-injected C2 implants. We'll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings."
-tags: [threat_hunting, C2, dll_injection_attacks]
+description: "In this beginner-friendly practical course we'll learn how to threat hunt standard DLL-injected C2 implants. We'll set up our own virtual environment, perform the attack, and then perform our threat hunting analysis."
+tags: [threat_hunting, C2, dll_injection]
 author: "faan|ross"
 draft: false
 type: post
@@ -12,7 +12,7 @@ type: post
 
 # Hello friend, so glad you could make it.
 
-{{< figure src="/img/poe.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/gif/poe.gif" title="" class="custom-figure-3" >}}
 
 `This is the first in an ongoing + always-evolving series on threat hunting.`
 
@@ -36,9 +36,9 @@ In the post-mortem analysis we'll look at the memory dump(*Volatility3*) and per
 Finally we'll crystallize all our insights so we can both reinforce what we've learned, as well as learn how to effectively communicate our findings to the greater cybersecurity ecosystem. 
 
 `| Theory + References |`
-I will interject with theory when and where necessary, as well as provide references. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that need not be linear - the goal is to learn, and have as much fun as possible. `Act accordingly`. 
+I will interject with theory when and where necessary, as well as provide references. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that need not be linear - the goal is to learn, and have as much fun as possible. ***Act accordingly***. 
 
-{{< figure src="/img/brent.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/brent.gif" title="" class="custom-figure" >}}
 
 # Course Outline
 
@@ -61,11 +61,63 @@ I will interject with theory when and where necessary, as well as provide refere
 [8. Course Review](https://www.faanross.com/course01/08_review/)
 
 
-If you'd like to see a detailed overview of the the entire course [click here](https://www.faanross.com/course01/outline/)
+&nbsp; 
 
-If your're ready to move ahead to our ***Pre-Course Banter*** [click here](https://www.faanross.com/course01/prebanter/)
+***
 
-{{< figure src="/img/randy01.gif" title="" class="custom-figure" >}}
+&nbsp; 
+
+# Course Outline
+
+- [0. Pre-Course Banter](https://www.faanross.com/course01/prebanter/)
+
+- [1. Setting Up Our Virtual Environment](https://www.faanross.com/course01/01_settingup/)
+
+- [2. Performing the Attack](https://www.faanross.com/course01/02_attack/)
+
+- [3. Live Analysis - Native Windows Tools](https://www.faanross.com/course01/03_live_native/)
+
+- [4. Live Analysis - Process Hacker](https://www.faanross.com/course01/04_live_hacker/)
+
+- [5. Post-Mortem Forensics - Memory](https://www.faanross.com/course01/05_post_memory/)
+
+- [6. Post-Mortem Forensics - Log Analysis](https://www.faanross.com/course01/06_post_logs/)
+
+- [7. Post-Mortem Forensics - Traffic Analysis](https://www.faanross.com/course01/07_post_traffic/)
+
+- [8. Course Review](https://www.faanross.com/course01/08_review/)
+
+&nbsp; 
+
+***
+
+&nbsp; 
+
+| # | ***Section*** |
+|----------|----------|
+| 0 | [0. Pre-Course Banter](https://www.faanross.com/course01/prebanter/) | 
+| 1 | [1. Setting Up Our Virtual Environment](https://www.faanross.com/course01/01_settingup/) | 
+| 2 | [2. Performing the Attack](https://www.faanross.com/course01/02_attack/) | 
+| 3 | [3. Live Analysis - Native Windows Tools](https://www.faanross.com/course01/03_live_native/) | 
+| 4 | [4. Live Analysis - Process Hacker](https://www.faanross.com/course01/04_live_hacker/) | 
+| 5 | [5. Post-Mortem Forensics - Memory](https://www.faanross.com/course01/05_post_memory/) | 
+| 6 | [6. Post-Mortem Forensics - Log Analysis](https://www.faanross.com/course01/06_post_logs/) | 
+| 7 | [7. Post-Mortem Forensics - Traffic Analysis](https://www.faanross.com/course01/07_post_traffic/) | 
+| 8 | [8. Course Review](https://www.faanross.com/course01/08_review/) | 
+
+
+
+
+
+
+
+
+
+If you'd like to see a detailed overview of the the entire course [click here](https://www.faanross.com/course01/outline/).
+
+If your're ready to move ahead to our ***Pre-Course Banter*** [click here](https://www.faanross.com/course01/prebanter/).
+
+{{< figure src="/img/gif/randy01.gif" title="" class="custom-figure" >}}
 
 &nbsp; 
 

@@ -14,9 +14,10 @@
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/posts/course01/</guid>
-      <description>NOTE THIS IS CURRENTLY STILL WIP, THE REASON IT&amp;rsquo;S A PUBLIC DRAFT IS LONG AND CONVOLUTED SO JUST TRUST ME. ANYHOO - DO AS YOU WISH. Hello friend, so glad you could make it. This is the first in an ongoing + always-evolving series on threat hunting.
+      <description>Hello friend, so glad you could make it. This is the first in an ongoing + always-evolving series on threat hunting.
 The main thing I want you to know about this course is that we will learn by doing.
-Set up We&amp;rsquo;ll start off by creating + configuring our own virtual network, including VMs for the victim, attacker, and analyst.</description>
+| Set up | We&amp;rsquo;ll start off by creating + configuring our own virtual network, including VMs for the victim, attacker, and analyst.
+| Attack | Then, instead of using prepackaged data we&amp;rsquo;ll generate data by performing the attack ourselves.</description>
     </item>
     
     <item>

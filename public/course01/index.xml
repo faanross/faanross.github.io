@@ -36,7 +36,8 @@ I have however created this course specifically with the beginner in mind. What 
       
       <guid>https://athul.github.io/archie/course01/01_settingup/</guid>
       <description>| Return to Course Overview | Proceed to Section 2 |
-1. Setting Up Our Virtual Environment 1.1. Introduction In this section we&amp;rsquo;ll set up the three VMs we&amp;rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&amp;rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&amp;rsquo;ll perform some configurations as well as install extra software.</description>
+1.1. Introduction In this section we&amp;rsquo;ll set up the three VMs we&amp;rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&amp;rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&amp;rsquo;ll perform some configurations as well as install extra software.
+1.2. Requirements I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area.</description>
     </item>
     
     <item>
@@ -102,8 +103,8 @@ What do I mean by this? One consequence of the &amp;ldquo;endpoint arm&amp;rsquo
       
       <guid>https://athul.github.io/archie/course01/07_post_traffic/</guid>
       <description>| Return to Course Overview | Proceed to Section 8 |
-7. Post-Mortem Forensics: Traffic Analysis 7.1. Introduction Hunting in the realm of traffic can be extremely challenging given the scale, hwoever it&amp;rsquo;s also the one domain where, however difficult, the answer is always sure to be found.
-Why? Well as once again Chris Benson likes to say: it&amp;rsquo;s the one place malware cannot hide. Malware can find incredivbly sophistiaceted ways to obscure its presence in memory, it can find creative ways to avoid/delete logging, but it has to generate packets.</description>
+7.1. Introduction In many respects, the realm of network packets is the ultimate domain for threat hunting. It is the only place where malware cannot hide, especially if it intends to communicate. Thus, even if malicious traffic is buried under an avalanche of legitimate traffic, one thing is for sure: the malware&amp;rsquo;s communication is always present, somewhere.
+Traffic analysis is an absolutely integral part of threat hunting, playing a major role in nearly every aspect—whether you are searching for initial evidence or seeking to build a case.</description>
     </item>
     
     <item>
@@ -113,7 +114,7 @@ Why? Well as once again Chris Benson likes to say: it&amp;rsquo;s the one place 
       
       <guid>https://athul.github.io/archie/course01/08_review/</guid>
       <description>| Return to Course Overview |
-x
+first thing create comparison image
 x
 | Return to Course Overview |</description>
     </item>

@@ -3,11 +3,13 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Section 1: Setting Up Our Virtual Environment - faan|ross</title><link rel="icon" type="image/x-icon" href=/favicon.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="| Return to Course Overview | Proceed to Section 2 |
-1. Setting Up Our Virtual Environment 1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software." />
+1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software.
+1.2. Requirements I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area." />
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Section 1: Setting Up Our Virtual Environment" />
 <meta property="og:description" content="| Return to Course Overview | Proceed to Section 2 |
-1. Setting Up Our Virtual Environment 1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software." />
+1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software.
+1.2. Requirements I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://athul.github.io/archie/course01/01_settingup/" /><meta property="article:section" content="course01" />
 <meta property="article:published_time" content="2023-08-12T02:01:58+05:30" />
@@ -15,7 +17,8 @@
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Section 1: Setting Up Our Virtual Environment"/>
 <meta name="twitter:description" content="| Return to Course Overview | Proceed to Section 2 |
-1. Setting Up Our Virtual Environment 1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software."/>
+1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software.
+1.2. Requirements I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area."/>
 <script src="https://athul.github.io/archie/js/feather.min.js"></script>
 	
 	
@@ -23,7 +26,7 @@
 	
 
 	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.ed21e2343a948b7213db7c2893a1b95027c5acaafa446a8586de799d014fce06.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.e569700d4e6d27fd2c68492689e8e273c071eeb76aab9d6a323b5a3306999487.css" />
 		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://athul.github.io/archie/css/dark.191767dd42068cd77e23d5f95ccc0becc0e7105decd65e1405e5695f242e2b3c.css"   />
 	
 
@@ -101,19 +104,16 @@
 			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/02_attack/">Proceed to Section 2</a> <code>|</code></p>
 <hr>
 <p> </p>
-<h1 id="1-setting-up-our-virtual-environment">1. Setting Up Our Virtual Environment</h1>
-<figure class="custom-figure"><img src="/img/randy01.gif"/>
+<figure class="custom-figure"><img src="/img/thehacker.gif"/>
 </figure>
 
 <h1 id="11-introduction">1.1. Introduction</h1>
 <p>In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software.</p>
-<figure class="custom-figure"><img src="/img/tripleram.gif"/>
-</figure>
-
 <hr>
+<p> </p>
 <h1 id="12-requirements">1.2. Requirements</h1>
 <p>I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. <em><strong>AT ALL.</strong></em> So I&rsquo;ll provide an overview of what we&rsquo;ll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can get the same results by adapting the process, then please do so. After all - this is the <em>way of the hacker</em>.</p>
-<figure class="custom-figure"><img src="/img/thehacker.gif"/>
+<figure class="custom-figure"><img src="/img/tripleram.gif"/>
 </figure>
 
 <p>As mentioned above, we&rsquo;ll create 3 VMs in total, however, at any one moment there will only be a <code>maximum of 2 VMs running concurrently</code>. For each of these VMs I recommend the following system resources:</p>
@@ -138,6 +138,7 @@
 </ul>
 <p>Finally I want to mention that beyond the hardware, <code>everything we will use is completely free</code>. This course ain&rsquo;t upselling a full course, and every piece of software is freely available. The sole exception has free alternatives, which I&rsquo;m about to discuss with you right now.</p>
 <hr>
+<p> </p>
 <h1 id="13-hosted-hypervisor">1.3. Hosted Hypervisor</h1>
 <p>So in the off-chance you don&rsquo;t know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It&rsquo;s kinda like <em>Inception</em> - it allows us to create systems within our systems.</p>
 <figure class="custom-figure"><img src="/img/inception.gif"/>
@@ -156,6 +157,7 @@
 </figure>
 
 <hr>
+<p> </p>
 <h1 id="14-vm-images">1.4. VM Images</h1>
 <p>Now that you have your hypervisor up and running the next thing we need to do is install our actual virtual machines. There are a few ways to do this, you can for example simply download the entire VM and simply import it into your hypervisor. This does usually mean that the file you&rsquo;ll be downloading will be quite large, so we&rsquo;ll opt for another approach - using iso files. You can think of an iso file simply as a &ldquo;virtual copy&rdquo; of the installation disc. So instead of importing the completed VM, we will be installing the VM ourselves using the iso image.</p>
 <p>So please go ahead and download the following 3 iso&rsquo;s:</p>
@@ -166,6 +168,7 @@
 </ul>
 <p>Once you&rsquo;ve successfully downloaded all three iso images we are ready to proceed.</p>
 <hr>
+<p> </p>
 <h1 id="15-vm-1-windows-10-aka-the-victim">1.5. VM 1: Windows 10 aka &ldquo;The Victim&rdquo;</h1>
 <figure class="custom-figure"><img src="/img/screamdrew.gif"/>
 </figure>
@@ -455,6 +458,7 @@
 <p>That&rsquo;s it! You should now see both <code>Victim Template</code> and <code>Victim01</code> in your library.</p>
 <p>The bad news - we still have two VMs to install. The good news - they will require minimal-to-no configuration, so at this point we&rsquo;re about 80% done with our VM setup. So let&rsquo;s get it done.</p>
 <hr>
+<p> </p>
 <h1 id="16-vm-2-kali-linux-aka-the-attacker">1.6. VM 2: Kali Linux aka &ldquo;The Attacker&rdquo;</h1>
 <figure class="custom-figure"><img src="/img/attacker.gif"/>
 </figure>
@@ -496,6 +500,7 @@
 </ol>
 <p>And that&rsquo;s it for our attacker machine - feel free to repeat the Template-Cloning process we performed for our Windows 10 VM if you so desire.</p>
 <hr>
+<p> </p>
 <h1 id="17-vm-3-ubuntu-linux-2004-aka-the-analyst">1.7. VM 3: Ubuntu Linux 20.04 aka &ldquo;The Analyst&rdquo;</h1>
 <h1 id="171-installation">1.7.1. Installation</h1>
 <figure class="custom-figure-3"><img src="/img/analysis.gif"/>

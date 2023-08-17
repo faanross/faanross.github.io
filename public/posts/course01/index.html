@@ -2,17 +2,17 @@
 <html><head lang="en">
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course) - faan|ross</title><link rel="icon" type="image/x-icon" href=/favicon.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="In this beginner-friendly practical course we&#39;ll learn how to threat hunt standard DLL-injected C2 implants. We&#39;ll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings." />
+	<meta name="description" content="In this beginner-friendly practical course we&#39;ll learn how to threat hunt standard DLL-injected C2 implants. We&#39;ll set up our own virtual environment, perform the attack, and then perform our threat hunting analysis." />
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course)" />
-<meta property="og:description" content="In this beginner-friendly practical course we&#39;ll learn how to threat hunt standard DLL-injected C2 implants. We&#39;ll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings." />
+<meta property="og:description" content="In this beginner-friendly practical course we&#39;ll learn how to threat hunt standard DLL-injected C2 implants. We&#39;ll set up our own virtual environment, perform the attack, and then perform our threat hunting analysis." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://athul.github.io/archie/posts/course01/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-08-12T02:01:58+05:30" />
 <meta property="article:modified_time" content="2023-08-12T02:01:58+05:30" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Threat Hunting for Beginners: Hunting Standard Dll-Injected C2 Implants (Practical Course)"/>
-<meta name="twitter:description" content="In this beginner-friendly practical course we&#39;ll learn how to threat hunt standard DLL-injected C2 implants. We&#39;ll set up our own virtual environment, perform the attack, perform our threat hunting analysis, as well as write a report on our findings."/>
+<meta name="twitter:description" content="In this beginner-friendly practical course we&#39;ll learn how to threat hunt standard DLL-injected C2 implants. We&#39;ll set up our own virtual environment, perform the attack, and then perform our threat hunting analysis."/>
 <script src="https://athul.github.io/archie/js/feather.min.js"></script>
 	
 	
@@ -20,7 +20,7 @@
 	
 
 	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.ed21e2343a948b7213db7c2893a1b95027c5acaafa446a8586de799d014fce06.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.e569700d4e6d27fd2c68492689e8e273c071eeb76aab9d6a323b5a3306999487.css" />
 		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://athul.github.io/archie/css/dark.191767dd42068cd77e23d5f95ccc0becc0e7105decd65e1405e5695f242e2b3c.css"   />
 	
 
@@ -96,43 +96,126 @@
 
 		<section class="body">
 			<hr>
-<h1 id="note-this-is-currently-still-wip-the-reason-its-a-public-draft-is-long-and-convoluted-so-just-trust-me-anyhoo---do-as-you-wish">NOTE THIS IS CURRENTLY STILL WIP, THE REASON IT&rsquo;S A PUBLIC DRAFT IS LONG AND CONVOLUTED SO JUST TRUST ME. ANYHOO - DO AS YOU WISH.</h1>
-<hr>
 <h1 id="hello-friend-so-glad-you-could-make-it">Hello friend, so glad you could make it.</h1>
-<figure class="custom-figure-3"><img src="/img/poe.gif"/>
+<figure class="custom-figure-3"><img src="/img/gif/poe.gif"/>
 </figure>
 
 <p><code>This is the first in an ongoing + always-evolving series on threat hunting.</code></p>
 <!-- raw HTML omitted -->
 <p>The main thing I want you to know about this course is that <em><strong>we will learn by doing</strong></em>.</p>
-<p><code>Set up</code>
+<p><code>| Set up |</code>
 We&rsquo;ll start off by creating + configuring our own virtual network, including VMs for the victim, attacker, and analyst.</p>
-<p><code>Attack</code>
+<p><code>| Attack |</code>
 Then, instead of using prepackaged data we&rsquo;ll generate data by performing the attack ourselves. We&rsquo;ll use <em>Metasploit</em> and <em>Powersploit</em> to perform a standard DLL-injection attack. Once we have C2 established we&rsquo;ll simulate a few rudimentary actions such as data exfiltration.</p>
-<p><code>Live Analysis</code>
+<p><code>| Live Analysis |</code>
 We&rsquo;ll then perform the actual threat hunt. We&rsquo;ll initially perform two rounds of live analysis - first using only Windows native tools to <em>check the vitals</em>, and then using <em>Process Hacker</em> we&rsquo;ll dig deeper into the memory.</p>
-<p><code>Post-mortem Analysis</code>
+<p><code>| Post-mortem Analysis |</code>
 In the post-mortem analysis we&rsquo;ll look at the memory dump(<em>Volatility3</em>) and perform log analysis (<em>Sysmon</em> + <em>PowerShell ScriptBlock</em>), before wrapping things up with an abbreviated traffic analysis (<em>WireShark</em>).</p>
-<p><code>Review</code>
+<p><code>| Review |</code>
 Finally we&rsquo;ll crystallize all our insights so we can both reinforce what we&rsquo;ve learned, as well as learn how to effectively communicate our findings to the greater cybersecurity ecosystem.</p>
-<p><code>Theory + References</code>
-I will interject with theory when and where necessary, as well as provide references. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that need not be linear - the goal is to learn, and have as much fun as possible. <code>Act accordingly</code>.</p>
-<figure class="custom-figure"><img src="/img/brent.gif"/>
+<p><code>| Theory + References |</code>
+I will interject with theory when and where necessary, as well as provide references. If something is unclear I encourage you to take a sojourn in the spirit of returning with an improved understanding of our topic at hand. This is after all a journey that need not be linear - the goal is to learn, and have as much fun as possible. <em><strong>Act accordingly</strong></em>.</p>
+<figure class="custom-figure"><img src="/img/gif/brent.gif"/>
 </figure>
 
 <h1 id="course-outline">Course Outline</h1>
+<p><a href="https://www.faanross.com/course01/prebanter/">0. Pre-Course Banter</a></p>
+<p><a href="https://www.faanross.com/course01/01_settingup/">1. Setting Up Our Virtual Environment</a></p>
+<p><a href="https://www.faanross.com/course01/02_attack/">2. Performing the Attack</a></p>
+<p><a href="https://www.faanross.com/course01/03_live_native/">3. Live Analysis - Native Windows Tools</a></p>
+<p><a href="https://www.faanross.com/course01/04_live_hacker/">4. Live Analysis - Process Hacker</a></p>
+<p><a href="https://www.faanross.com/course01/05_post_memory/">5. Post-Mortem Forensics - Memory</a></p>
+<p><a href="https://www.faanross.com/course01/06_post_logs/">6. Post-Mortem Forensics - Log Analysis</a></p>
+<p><a href="https://www.faanross.com/course01/07_post_traffic/">7. Post-Mortem Forensics - Traffic Analysis</a></p>
+<p><a href="https://www.faanross.com/course01/08_review/">8. Course Review</a></p>
+<p> </p>
+<hr>
+<p> </p>
+<h1 id="course-outline-1">Course Outline</h1>
 <ul>
-<li><a href="https://www.faanross.com/course01/prebanter/">0. Pre-Course Banter</a></li>
-<li><a href="https://www.faanross.com/course01/01_settingup/">1. Setting Up Our Virtual Environment</a></li>
-<li><a href="https://www.faanross.com/course01/02_attack/">2. Performing the Attack</a></li>
-<li><a href="https://www.faanross.com/course01/03_live_native/">3. Live Analysis - Native Windows Tools</a></li>
-<li><a href="https://www.faanross.com/course01/04_live_hacker/">4. Live Analysis - Process Hacker</a></li>
-<li><a href="https://www.faanross.com/course01/05_post_memory/">5. Post-Mortem Forensics - Memory</a></li>
-<li><a href="https://www.faanross.com/course01/06_post_logs/">6. Post-Mortem Forensics - Log Analysis</a></li>
-<li><a href="https://www.faanross.com/course01/07_post_traffic/">7. Post-Mortem Forensics - Traffic Analysis</a></li>
-<li><a href="https://www.faanross.com/course01/08_review/">8. Course Review</a></li>
+<li>
+<p><a href="https://www.faanross.com/course01/prebanter/">0. Pre-Course Banter</a></p>
+</li>
+<li>
+<p><a href="https://www.faanross.com/course01/01_settingup/">1. Setting Up Our Virtual Environment</a></p>
+</li>
+<li>
+<p><a href="https://www.faanross.com/course01/02_attack/">2. Performing the Attack</a></p>
+</li>
+<li>
+<p><a href="https://www.faanross.com/course01/03_live_native/">3. Live Analysis - Native Windows Tools</a></p>
+</li>
+<li>
+<p><a href="https://www.faanross.com/course01/04_live_hacker/">4. Live Analysis - Process Hacker</a></p>
+</li>
+<li>
+<p><a href="https://www.faanross.com/course01/05_post_memory/">5. Post-Mortem Forensics - Memory</a></p>
+</li>
+<li>
+<p><a href="https://www.faanross.com/course01/06_post_logs/">6. Post-Mortem Forensics - Log Analysis</a></p>
+</li>
+<li>
+<p><a href="https://www.faanross.com/course01/07_post_traffic/">7. Post-Mortem Forensics - Traffic Analysis</a></p>
+</li>
+<li>
+<p><a href="https://www.faanross.com/course01/08_review/">8. Course Review</a></p>
+</li>
 </ul>
-<p>If you&rsquo;d like to see a detailed overview of the the entire course <a href="https://www.faanross.com/course01/outline/">click here</a></p>
+<p> </p>
+<hr>
+<p> </p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th><em><strong>Section</strong></em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><a href="https://www.faanross.com/course01/prebanter/">0. Pre-Course Banter</a></td>
+</tr>
+<tr>
+<td>1</td>
+<td><a href="https://www.faanross.com/course01/01_settingup/">1. Setting Up Our Virtual Environment</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="https://www.faanross.com/course01/02_attack/">2. Performing the Attack</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="https://www.faanross.com/course01/03_live_native/">3. Live Analysis - Native Windows Tools</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="https://www.faanross.com/course01/04_live_hacker/">4. Live Analysis - Process Hacker</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="https://www.faanross.com/course01/05_post_memory/">5. Post-Mortem Forensics - Memory</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="https://www.faanross.com/course01/06_post_logs/">6. Post-Mortem Forensics - Log Analysis</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="https://www.faanross.com/course01/07_post_traffic/">7. Post-Mortem Forensics - Traffic Analysis</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="https://www.faanross.com/course01/08_review/">8. Course Review</a></td>
+</tr>
+</tbody>
+</table>
+<p>If you&rsquo;d like to see a detailed overview of the the entire course <a href="https://www.faanross.com/course01/outline/">click here</a>.</p>
+<p>If your&rsquo;re ready to move ahead to our <em><strong>Pre-Course Banter</strong></em> <a href="https://www.faanross.com/course01/prebanter/">click here</a>.</p>
+<figure class="custom-figure"><img src="/img/gif/randy01.gif"/>
+</figure>
+
+<p> </p>
 <hr>
 
 		</section>
@@ -147,7 +230,7 @@ I will interject with theory when and where necessary, as well as provide refere
 					
 					<li><a href="/tags/c2">C2</a></li>
 					
-					<li><a href="/tags/dll_injection_attacks">dll_injection_attacks</a></li>
+					<li><a href="/tags/dll_injection">dll_injection</a></li>
 					
 				</ul>
 			</nav>

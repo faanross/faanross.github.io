@@ -369,7 +369,7 @@ table td{
   display: block;
   margin-left: auto;
   margin-right: auto;
-  max-width: 40%;  
+  max-width: 20%;  
   width: auto;     
   height: auto;     
 }
@@ -383,7 +383,7 @@ table td{
   display: block;
   margin-left: auto;
   margin-right: auto;
-  max-width: 70%;  
+  max-width: 30%;  
   width: auto;     
   height: auto;     
 }
@@ -391,3 +391,44 @@ table td{
 .no-top-margin {
   margin-top: 0px !important;
 }
+
+.custom-figure-4 img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 40%;  
+  width: auto;     
+  height: auto;     
+}
+
+.no-top-margin {
+  margin-top: 0px !important;
+}
+
+.custom-figure-6 img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 60%;  
+  width: auto;     
+  height: auto;     
+}
+
+.no-top-margin {
+  margin-top: 0px !important;
+}
+
+.custom-figure-8 img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80%;  
+  width: auto;     
+  height: auto;     
+}
+
+.no-top-margin {
+  margin-top: 0px !important;
+}
+
+
