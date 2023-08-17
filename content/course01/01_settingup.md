@@ -13,21 +13,23 @@ type: course
 &nbsp;  
 
 
-
+{{< figure src="/img/thehacker.gif" title="" class="custom-figure" >}}
 
 # 1.1. Introduction
 
 In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we'll perform some configurations as well as install extra software.
 
-{{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
+
 
 ***
+
+&nbsp; 
 
 # 1.2. Requirements
 
 I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can get the same results by adapting the process, then please do so. After all - this is the *way of the hacker*. 
 
-{{< figure src="/img/thehacker.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/tripleram.gif" title="" class="custom-figure" >}}
 
 As mentioned above, we'll create 3 VMs in total, however, at any one moment there will only be a `maximum of 2 VMs running concurrently`. For each of these VMs I recommend the following system resources:
 - min 2 (ideally 4) CPU cores
@@ -48,6 +50,9 @@ Now I understand this requirement is rather beefy, but consider:
 Finally I want to mention that beyond the hardware, `everything we will use is completely free`. This course ain't upselling a full course, and every piece of software is freely available. The sole exception has free alternatives, which I'm about to discuss with you right now. 
 
 ***
+
+&nbsp; 
+
 
 # 1.3. Hosted Hypervisor
 So in the off-chance you don't know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It's kinda like *Inception* - it allows us to create systems within our systems. 
@@ -72,6 +77,8 @@ Once that's done with feel free to proceed...
 
 ***
 
+&nbsp; 
+
 # 1.4. VM Images
 
 Now that you have your hypervisor up and running the next thing we need to do is install our actual virtual machines. There are a few ways to do this, you can for example simply download the entire VM and simply import it into your hypervisor. This does usually mean that the file you'll be downloading will be quite large, so we'll opt for another approach - using iso files. You can think of an iso file simply as a "virtual copy" of the installation disc. So instead of importing the completed VM, we will be installing the VM ourselves using the iso image. 
@@ -84,6 +91,8 @@ So please go ahead and download the following 3 iso's:
 Once you've successfully downloaded all three iso images we are ready to proceed. 
 
 ***
+
+&nbsp; 
 
 # 1.5. VM 1: Windows 10 aka "The Victim" 
 
@@ -360,6 +369,8 @@ The bad news - we still have two VMs to install. The good news - they will requi
 
 ***
 
+&nbsp; 
+
 # 1.6. VM 2: Kali Linux aka "The Attacker" 
 {{< figure src="/img/attacker.gif" title="" class="custom-figure" >}}
 
@@ -399,6 +410,8 @@ So now let's get to actually installing it:
 And that's it for our attacker machine - feel free to repeat the Template-Cloning process we performed for our Windows 10 VM if you so desire.
 
 ***
+
+&nbsp; 
 
 # 1.7. VM 3: Ubuntu Linux 20.04 aka "The Analyst" 
 # 1.7.1. Installation
