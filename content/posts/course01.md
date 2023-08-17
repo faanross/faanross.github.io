@@ -10,7 +10,6 @@ type: post
 
 *** 
 
-
 # Hello friend, so glad you could make it.
 
 {{< figure src="/img/poe.gif" title="" class="custom-figure-3" >}}

@@ -12,7 +12,7 @@ type: course
 
 &nbsp;  
 
-x
+first thing create comparison image
 
 x
 

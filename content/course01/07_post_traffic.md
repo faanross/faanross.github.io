@@ -12,64 +12,35 @@ type: course
 
 &nbsp;  
 
-
-
-
-
-# 7. Post-Mortem Forensics: Traffic Analysis
 # 7.1. Introduction
 
+In many respects, the realm of network packets is the ultimate domain for threat hunting. It is the only place where malware cannot hide, especially if it intends to communicate. Thus, even if malicious traffic is buried under an avalanche of legitimate traffic, one thing is for sure: the malware's communication is always present, somewhere.
 
-Hunting in the realm of traffic can be extremely challenging given the scale, hwoever it's also the one domain where, however difficult, the answer is always sure to be found.
+Traffic analysis is an absolutely integral part of threat hunting, playing a major role in nearly every aspect—whether you are searching for initial evidence or seeking to build a case. Accessing packets directly using tools like WireShark/Tshark, or employing specialized software such as Zeek/RITA, provides incredible opportunities for threat hunters.
 
-Why? Well as once again Chris Benson likes to say: it's the one place malware cannot hide. Malware can find incredivbly sophistiaceted ways to obscure its presence in memory, it can find creative ways to avoid/delete logging, but it has to generate packets. And if it does not generate packets, it means it is not communicating. 
+In this course, however, we are only going to touch on it lightly. The reason for this approach is straightforward: we have simulated a very specific phase of being compromised. We emulated a stager reaching out to establish a C2 connection, and even though we briefly touched on some other actions, we severed the connection shortly after it was created.
 
+In other words, we actually performed the initial exploitation (i.e., creating the connection), but we largely skipped the 'post-exploitation' phase. Beyond all the details, the major difference between these two phases often relates to duration: while initial exploitation is typically brief, post-exploitation can last weeks, months, or even years.
 
- is in some respect 
+So here's the thing: traffic analysis is fundamentally about discerning patterns. But meaningful patterns generally emerge over time. For example, let’s say a C2 beacon reaches back to the C2 server once an hour. If you only had a one-hour packet capture, you would expect to see only a single callback, which is obviously not a pattern. Conversely, if you had a one-week packet capture, you could expect to see close to 150 callback packets, likely forming a discernible trend in terms of packet size and duration between sends.
 
-... truth - 
+All this to say: although traffic analysis is incredibly important for threat hunting, due to the specific nature of the attack we emulated here, it isn't an ideal match in this context. Nonetheless, I wanted to introduce it in a rudimentary sense in this course so that you have some exposure to what can be expected regarding an initial exploitation, even if it's minimal. Rest assured that in a future course, we will delve much deeper into traffic analysis, particularly to help identify unwanted persistent connections.
 
-As Chris Benson like 
+# 7.2. Analysis
 
+**So let's have a quick look at what's going on in the packet capture.** Open your Ubuntu VM, open WireShark, and then open the packet capture we transferred over in Section `5.1`. 
 
+{{< figure src="/img/image097.png" title="" class="custom-figure" >}}
 
-talk about why abbrevuiated
+We can see that in the brief amount of time we ran the capture for a total of 584 packets were captured. In case you are completely new to this: we can expect *a lot* of these to be completly unrelated to our attack. Even if you are not even interacting with your system it typically generates a lot of packets via ordinary backend operations.
 
+So, our next step would now be to find which packets are related to the emulated attack. 
 
+Scrolling down, in my capture we can see around packet 58 there is a DNS request for `raw.githubusercontent.com`.
 
-
-
-# TRAFFIC ANALYSIS
-# Introduction
-
-traffic analyssius one of most powerful ways to do threat hunting
-but like every tool has strenghts and weaknesses
-
-our specific investaition here, analyzing ane vent that was basicalkly only the initiiaal foothold, its weakness. 
+{{< figure src="/img/image098.png" title="" class="custom-figure" >}}
 
 
-For Traffic Analysis cIntroductyion
-LIMITATION of traffic in this scenarion
-- mention here that it's strength not really as much as others in deteceting intiail actions. Traffic is not great for finding individual actions, it's great for finding emergent patterns (time, session size etc), usually the longer period the better.
-
-Here we only simulated an initial comprmoise, we did not really maintain a long perdio (1 day +) etc, communciating with server, sharing data etc. So
-
-
-- first do the Threat Hunting Level 1 course
-- then do the Chris Benton traffic analysis
-
-
-
-- Let's first rerun attack (remember to drop cmd etc)
-- redo pcap with just that
-- then let's do threat hunting level 1, other vid courses teaching about c2 in traffic logs etc.
-
-
-
-# FOR NOW REDO PCAP SO CLEANER
-
-
-Ok our bew pcap has 584
 first things of  interest seem to be 58 +59 - DNS query for the web server
 we can look into second one and we can see that the ip for the URL was 185.199.108.133
 
