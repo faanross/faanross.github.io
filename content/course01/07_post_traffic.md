@@ -36,104 +36,37 @@ We can see that in the brief amount of time we ran the capture for a total of 58
 
 So, our next step would now be to find which packets are related to the emulated attack. 
 
-Scrolling down, in my capture we can see around packet 58 there is a DNS request for `raw.githubusercontent.com`.
+Scrolling down, in my capture we can see around packet 58 + 59 there is a DNS request + response for `raw.githubusercontent.com`.
 
 {{< figure src="/img/image098.png" title="" class="custom-figure" >}}
 
+This is of course where the initial IEX command (representing our stager) reached out to that specific web server to download the injection script. Double-click on the second packet (the response), then in packet details select `Domain Name System (response)`, and then `Answer`. 
 
-first things of  interest seem to be 58 +59 - DNS query for the web server
-we can look into second one and we can see that the ip for the URL was 185.199.108.133
+{{< figure src="/img/image099.png" title="" class="custom-figure" >}}
 
-then we see a whole series of convos between our IP and that IP, making connection, checking certs (TLS) etc
+Here we can see the IPs the FQDN resolves to - again, in an actual attack we can immediately run this IOC to see for example what other systems connected to it, is it present on any threat intelligence blacklists etc. 
 
-then 116 we can see ARP asking for IP of attacker, clearly now scipt has been injected and malware seeking to make conneciton back 
+Immediately after the DNS we can see the conversation taking place between our system and the web server - first the certificates are being authenticated, then an encrypted (TLS) exchange takes place. This is likely the actual injection script being downloaded. Since it is encrypted we cannot easily view the contents, however we already saw that the entire script that was download is accessible via PowerShell ScriptBlock logs. 
 
-117 we can see response
+{{< figure src="/img/image100.png" title="" class="custom-figure" >}}
 
-then from 118 on we can see long convo between the two - victim and attacker 
+And then, around packet 118, we can see the connection being established between our system and the attacker. 
 
-let's follow convo see what's intersrting
+{{< figure src="/img/image101.png" title="" class="custom-figure" >}}
 
-- immediately what do we see? PE header - magic bytes + DOS stub
-- then about 1/3 of way in we see what looks like a series of runtime errors
+This represents a few hundred packets. In these cases, the easiest way to get a feel for what is being exchanged is to right-click on any packet (part of this series), then select `Follow`, `TCP Stream`. This shows the entire stream of contents that was exchanged. 
 
+{{< figure src="/img/image102.png" title="" class="custom-figure" >}}
 
-https://www.first.org/resources/papers/conference2010/cummings-slides.pdf
+Right at the top we see something interesting and familiar - the magic bytes and the dos stub! This should thus give us a good hint at what we are looking at here. For the rest we can see most of the content is encrypted/obfuscated, but here and there we do see some clear text appearing.
 
-we see some strings, google it above 
-can we save it and search it with YARA rule?? 
+{{< figure src="/img/image103.png" title="" class="custom-figure" >}}
 
-no, no positive hits with YARA
+There are thus many interesting questions we can ask based on what we are witnessing here, which may lead us to find out what mechanisms the malware is employing. Without getting into it too deeply, as a simple example when I Google the term `Copyright 1995-1996 Mark Adler` (which appears in the stream), we immediately find out this is due to `zlib` being included in the code. Thus it's likely the payload is being compressed or obfuscated using `zlib`, which itself is of course completely legitimate data compression software. 
 
-for now, let's abandon this since sidetrack
+In any case, these are simply speculative musings. As I've said before - we'll wait till a future course before peering under the malware hood. 
 
-we can see it in course, find interesting, but say outside of scopt
-
-
-
-
-we create a new folder, this is where output will go
-we navigate to folder
-we run the command
-[full path to zeek] -r [full path to pcap]
-
-analyst@analyst:~/Desktop/zeeklogs$ /opt/zeek/bin/zeek -r ~/Desktop/new_capture.pcapng 
-
-when we do this it generates 6 logs
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-+++++++++++++++++++++++++++++++++++
-
-
-
-
-First, build a case mode UII
-
-
-Second, Pareto Principle logging.
-
-
-
-
-
-
-
-
-
-
-
-
-- mention this one usualyl more realm of SOC/SIEM and not Forensics, which usually more focus of threat hutning.
-- Likely one of the thoughts underpinning this attitude is that logs are grunt-work, mountains of nothing that needs to be sifted through, mountains so huge its completly beyond the scope of humams, and so SIEMs not only CAN do it, but are better than humans in it. 
-
-- but that is true for the general appraco to logs. But what we are speaking of here is a much specific way of looking at logs - limitiing the type of logs we look at. Additioarnlly, logs depending on the PHASE. See below - logs might not be a great place to start in Phase 1, but for example can be perfect for Phase 2. Sicne you already more or less know what you are looking for, makes the volume manageable, esp considering we're likely only interested in Sysmon, Powershell, and a highly select WEL IDs. 
-
-
-ULTIMATELY, Phase 1 should focus on where they cannot hide - meaning memory and packets. Every where else, disk, logs, etc they can hide. but they can never hide from memory/packets = memory when they are at rest/use, packets when they are in transit. 
-
-
-Ok so now as we go ahead, remember we have no idea of the attack, we don't know a DLL injected attack has happened, since that was "evil ash" doing it. Meaning we are in Phase 1, and then thios I might not mention but for own sanity - at end of live analysis II (PE Hacker), we can then switch over to Phase II.
-
-
-
-
-Will be using same VM here, victim, in practice we would bnever do this,.
+That being the case, this is where we'll end our traffic analysis - short and sweet. As I said, the idea here was just to give you some idea of what it entails. Rest assured that in a future course you will get *much* more acquainted with this powerful modality. 
 
 
 &nbsp;  
