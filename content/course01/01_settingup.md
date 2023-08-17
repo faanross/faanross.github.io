@@ -111,7 +111,7 @@ Once you've successfully downloaded all three iso images we are ready to proceed
 6. Select 60 GB and `Split virtual disk into multiple files`. 
 7. Then on the final screen click on `Customize Hardware`.
 
-{{< figure src="/img/course01/image002.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/course01/image002.png" title="" class="custom-figure-2" >}}
 
 8. Under `Memory` (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
@@ -124,7 +124,7 @@ Wait a short while and then you should see a Windows Setup window. Choose your d
 
 Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the `License Agreement` (if you dare - ***mwhahaha!***). Now once you reach the `Sign in` page don’t fill anything in, rather select `Domain join instead` in the bottom left-hand corner.
 
-{{< figure src="/img/image006a.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image006a.png" title="" class="custom-figure-2" >}}
 
 Choose any username and password, in my case it'll be the highly original choice of `User` and `password`. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it - randomly hitting the keyboard a few times will do just fine. Turn off all the privacy settings, and for `Cortana` select `Not Now`.
 
@@ -135,13 +135,13 @@ Next we'll install VMWare Tools which for our purposes does two things. First, i
 
 So just to be sure, at this point you should be staring at a Windows desktop. Now in the VMWare menu bar click `VM` and then `Install VMWare Tools`. If you open `Explorer` (in the VM) you should now see a `D:` drive. 
 
-{{< figure src="/img/image008.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image008.png" title="" class="custom-figure-2" >}}
 
 Double-click the drive, hit `Yes` when asked if we want this app to make changes to the device. Hit `Next`, select `Typical` and hit `Next`. Finally hit `Install` and then once done `Finish`. You'll need to restart your system for the changes to take effect, but we'll shut it down since we need to change a setting. So hit the Windows icon, Power icon, and then select `Shut Down`.
 
 Right-click on your VM and select `Settings`. In the list on the LHS select `Display`, which should be right at the bottom. On the bottom - deselect `Automatically adjust user interface size in the virtual machine`, as well as `Stretch mode`, it should now look like this:
 
-{{< figure src="/img/image009.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image009.png" title="" class="custom-figure-2" >}}
 
 Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
@@ -149,7 +149,7 @@ Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
 I call this 'deep disable' because simply toggling off the switches in `Settings` won't actually fully disable Defender and Updates. You see, Windows thinks of you as a younger sibling - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your OS kernel if you so desired.) 
 
-{{< figure src="/img/winlin.png" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/winlin.png" title="" class="custom-figure" >}}
 
 And just so you know why it is we're doing this...
 
@@ -159,7 +159,7 @@ Yes, the AV might pick up on our mischievous escapades here since we are using a
 
 And as for updates, we disable this because sometimes we can spend all this time configuring and setting things up and then one day we boot up our VM up, Windows does it's whole automatic update schpiel, and suddenly things are broken. This is thus a small time investment to hedge against extreme potential frustration. *So worth it*. 
 
-{{< figure src="/img/do_it_now.gif" title="" class="custom-figure" >}} 
+{{< figure src="/img/gif/do_it_now.gif" title="" class="custom-figure" >}} 
 
 1. **Disable Tamper Protection**
     1. Hit the `Start` icon, then select the `Settings` icon.
@@ -171,7 +171,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     7. Note that Windows will warn you and ask if you want to allow this app to make changes to the device, hit `Yes`.
     8. All 4 toggle settings should now be disabled.
 
-{{< figure src="/img/image010.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image010.png" title="" class="custom-figure-2" >}}
     
 2. **Disable the Windows Update service**
     1. Open the Run dialog box by pressing Win+R.
@@ -180,7 +180,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     4. In the Windows Update Properties (Local Computer) window, under the `General` tab, in the `Startup type:` dropdown menu, select `Disabled` - see image below.
     5. Click `Apply` and then `OK`.
     
- {{< figure src="/img/image011.png" title="" class="custom-figure-2" >}}
+ {{< figure src="/img/course01/image011.png" title="" class="custom-figure-2" >}}
 
 3. **Disable Defender via Group Policy Editor**
     1. Open the Run dialog box by pressing Win+R.
@@ -190,7 +190,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     5. In the new window on the top left select `Enabled` - see image below. 
     6. First hit `Apply` then `OK`.
 
- {{< figure src="/img/image012.png" title="" class="custom-figure-2" >}}
+ {{< figure src="/img/course01/image012.png" title="" class="custom-figure-2" >}}
 
 4. **Disable Updates via Group Policy Editor**
     1. Still in `Local Group Policy Editor`, navigate to: `Computer Configuration` > `Administrative Templates` > `Windows Components` > `Windows Update`.
@@ -216,7 +216,7 @@ Almost there! We just need to boot into Safe Mode to make some final adjustments
     5. Hit `Apply` first, the `OK`.
     6. Select `Restart`.
     
-{{< figure src="/img/image014.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image014.png" title="" class="custom-figure-2" >}}
 
 Once your system has restarted in `Safe mode`...
 
@@ -231,7 +231,7 @@ Once your system has restarted in `Safe mode`...
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdNisSvc`
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdFilter`
 
-{{< figure src="/img/image015.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/course01/image015.png" title="" class="custom-figure-3" >}}
 
 8. **Disable Updates via Registry**
     1. Still in `Registry Editor` let's navigate to the following:
@@ -241,7 +241,7 @@ Once your system has restarted in `Safe mode`...
     4. Double-click the new `AUOptions` key and change its value to `2`. Click `OK` - see image below.
     5. Close Registry Editor.
 
-{{< figure src="/img/image016.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/course01/image016.png" title="" class="custom-figure-3" >}}
 
 9. **Leave Safe Mode**
     1. All that's left to do is get back into our regular Windows environment.
@@ -259,7 +259,7 @@ But before we learn to do that, let's setup all the awesome tools we'll be using
 
 You should now be back in the normal Windows environment looking at your desktop. Let's set up ***Sysmon*** - a simple, free, Microsoft-owned program that will *dramatically* improve our logging ability. 
 
-{{< figure src="/img/lumberjack.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/lumberjack.gif" title="" class="custom-figure" >}}
 
 Before we install ***Sysmon*** there's just one thing you need to know - in addition to downloading ***Sysmon*** itself, we also need a config file. One day when you get to *that* level you can even create your own config file, which will allow you to make it behave exactly how you want it to. 
 
@@ -267,7 +267,7 @@ But for now, since we are decidedly not yet there, let's download and use one ma
 
 So first download the [config file](https://github.com/bakedmuffinman/Neo23x0-sysmon-config), then [go here to download Sysmon](https://download.sysinternals.com/files/Sysmon.zip). You should now have two zip files - the config you downloaded from Github, as well as the ***Sysmon*** zip file. Extract the ***Sysmon*** archive, the contents should look as follows:
 
-{{< figure src="/img/image017.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/course01/image017.png" title="" class="custom-figure-3" >}}
 
 Now also extract the zip file containing the config. Inside of the folder rename `sysmonconfig-export.xml` to `sysmonconfig.xml`. Now simply cut (or copy) the file and paste it in the folder containing ***Sysmon***. 
 
@@ -279,11 +279,11 @@ Sysmon.exe -accepteula -i
 
 This is what a successful installation will look like:
 
-{{< figure src="/img/image018.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image018.png" title="" class="custom-figure" >}}
 
 Now let's just validate that it's running. In the command prompt run the command `powershell` so we change over into a PS shell. Then, run the command `Get-Service sysmon`. In the image below we can see it is running - we are good to go!
 
-{{< figure src="/img/image019.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image019.png" title="" class="custom-figure" >}}
 
 That's it for Sysmon, now let's enable PowerShell ScriptBlock logging. 
 
@@ -295,13 +295,13 @@ Something to be aware of is that there are a few types of PowerShell logging: Mo
 
 NOTE: This entire process could be performed in the GUI using `Group Policy Editor`, we will however be performing it via PowerShell command line. You should ***always*** prefer this method to using the GUI when it comes to enabling logs. Not simply to look cool, nay, there is a very good practical reason for this.
 
-{{< figure src="/img/verycool.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/verycool.gif" title="" class="custom-figure" >}}
 
 Imagine for a moment you needed to activate this feature on 1000 stations. You could either do so by logging into each station individually and interacting with the `gpedit` GUI interface, which would likely take you a few days working at a ferocious pace for all 1000 stations. Alternatively, you could run a single command from a domain controller, which would take less than a minute for any amount of stations. 
 
 This is an admittedly dramatic way of saying that performing administrative tasks using PowerShell commands scales well, while flipping GUI toggles does not scale at all. So invest your time early on learning the methods that won't break down the moment you need to do it at scale, it's so worth it. 
 
-{{< figure src="/img/worth.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/worth.gif" title="" class="custom-figure" >}}
 
 Open PowerShell as an administrator:
 1. First we'll set the execution policy to allow us to make the changes:
@@ -340,7 +340,7 @@ That's it friend. We are done with BY FAR the heaviest lifting in terms of VM se
 
 So why do we want to do this again? Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same "victim" system for any project or course we can simply clone it as many times as we want. 
 
-{{< figure src="/img/mememe.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/mememe.gif" title="" class="custom-figure" >}}
 
 Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in a few seconds. This is also useful if we ever "mess up" the VM, we can just come back to this starting point.
 
@@ -355,7 +355,7 @@ So just follow along with these few simple steps:
 7. Go down to the bottom and select `Advanced`.
 8. Select `Enable Template mode (to be used for cloning)`, hit `OK`.
 
-{{< figure src="/img/image021.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/course01/image021.png" title="" class="custom-figure-3" >}}
 
 9. Note you might want to rename this VM to something like `Victim Template`, so we are aware this is the template that we should not be using, but rather use for cloning. You can do this under `Settings` > `Options` > `General`.
 10. Now let's create our first clone which we will actually be using in the course. Right-click on `Victim Template`, select `Manage` > `Clone`. Hit `Next`.
@@ -372,7 +372,7 @@ The bad news - we still have two VMs to install. The good news - they will requi
 &nbsp; 
 
 # 1.6. VM 2: Kali Linux aka "The Attacker" 
-{{< figure src="/img/attacker.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/attacker.gif" title="" class="custom-figure" >}}
 
 We'll be using Kali Linux to simulate the attacker. The great thing about Kali Linux is that everything we'll need comes pre-packaged, so we just have to install the actual operating system. 
 
@@ -387,7 +387,7 @@ We'll be using Kali Linux to simulate the attacker. The great thing about Kali L
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Kali Linux iso image.
 
-{{< figure src="/img/kali.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/gif/kali.gif" title="" class="custom-figure-2" >}}
 
 So now let's get to actually installing it:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
@@ -415,7 +415,7 @@ And that's it for our attacker machine - feel free to repeat the Template-Clonin
 
 # 1.7. VM 3: Ubuntu Linux 20.04 aka "The Analyst" 
 # 1.7.1. Installation
-{{< figure src="/img/analysis.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/gif/analysis.gif" title="" class="custom-figure-3" >}}
 
 And now finally we'll set up our Ubuntu VM.
 
@@ -431,7 +431,7 @@ And now finally we'll set up our Ubuntu VM.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Ubuntu Linux 20.04 iso image. Make sure `Connect at power on` is enabled.
 Click `Close` then `Finish`.
 
-{{< figure src="/img/fossa.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/gif/fossa.gif" title="" class="custom-figure-6" >}}
 
 So now let's install Focal Fossa:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
@@ -449,7 +449,7 @@ So now let's install Focal Fossa:
 
 `NOTE: A few moments after logging in and answer Ubuntu's questions you'll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.`
 
-{{< figure src="/img/image029.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image029.png" title="" class="custom-figure-2" >}}
 
 OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next one. So feel free to skip this, or just get it done with now so that next time everything is gtg.
 
@@ -487,13 +487,13 @@ Here's the cool thing about installing ***RITA***: when we do so it will also au
 2. Scroll down to `Install` and follow the instructions using the `install.sh` script. During installation you will be asked a few questions, answer `y` and hit enter each time. 
 3. Let's check the version of RITA to ensure installation was successful. First close your terminal, reopen, and then run the commands seen in image below. You should get similar results. 
 
-{{< figure src="/img/image030.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image030.png" title="" class="custom-figure" >}}
 
 OK. Do you know what time it is? 
 
 Yeah it's time for all this installing and configuring to pay off - let's kick things off by performing the attack!
 
-{{< figure src="/img/strangelove.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/strangelove.gif" title="" class="custom-figure" >}}
 
 &nbsp;  
 
