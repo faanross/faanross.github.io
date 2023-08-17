@@ -12,7 +12,7 @@ type: post
 
 # Hello friend, so glad you could make it.
 
-{{< figure src="/img/gif/poe.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/gif/poe.gif" title="" class="custom-figure-8" >}}
 
 `This is the first in an ongoing + always-evolving series on threat hunting.`
 
