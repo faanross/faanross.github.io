@@ -12,6 +12,7 @@ type: course
 
 &nbsp;  
 
+{{< figure src="/img/gif/office_sp.gif" title="" class="custom-figure" >}}
 
 # 3. Live Analysis: Native Windows Tools
 # 3.1. Introduction
@@ -25,10 +26,14 @@ Tools may change, they come and go, or, you might land in a situation where they
 
 ***
 
+&nbsp;  
+
 # 3.2. Theory
 You will benefit from understanding the [following short theoretical framework on the '3 Modes of Threat Hunting'](https://www.faanross.com/posts/three_modes/). I leave the decision of whether or not to read it up to you, though it will be referenced throughout the remainder of the course. 
 
 ***
+
+&nbsp;  
 
 # 3.3. Analysis
 There are a number of things we can look at when we do a live analyis using the native tools, including: connections, processes, shares, firewall settings, services, accounts, groups, registry keys, scheduled tasks etc.
@@ -71,7 +76,7 @@ Let's learn more about this strange process, specifically: what command-line opt
 ```
 tasklist /m /fi "pid eq 3948"
 ```
-{{< figure src="/img/image072.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image072.png" title="" class="custom-figure" >}}
 
 On quick glance nothing seems unusual about this output - no DLL sticks out as being out of placed for `rundll32.exe`. So for now let's move on with the knowledge that we can always circle back and dig deeper if need be. 
 
@@ -105,16 +110,16 @@ We can see the command is nude - no arguments are provided. Well, since again th
 
 ***
 
+&nbsp;  
+
 # 3.4. Closing Thoughts
-Again we started with an open mind, spotten an unusual process being involved in a network connection, and then using other native Windows tools learned more about this process. And the more we learned, the more our suspicion was confirmed:
+So we started with an open mind, spotted an unusual process being involved in a network connection, and then using other native Windows tools learned more about this process. And the more we learned, the more our suspicion was confirmed:
 - The parent-child relationship is unusual.
 - The need for the parent relationship to ultimately create a network connection is unusual.
 - The fact that the process was ran without command-line arguments was unusual. 
 
 Now that our suspicion is well and truly aroused let's dig in deeper to build our case using `Process Hacker`.
 
-***
-***
 
 &nbsp;  
 
