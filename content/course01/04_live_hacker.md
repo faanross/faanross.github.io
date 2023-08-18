@@ -183,7 +183,7 @@ Let's double-click on the process `rundll32.exe`...
 
 2. **Signature - is it valid + who signed?**
 
-{{< figure src="/img/image054.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image054.png" title="" class="custom-figure-6" >}}
 
 We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of `rundll32.exe`. Nothing further to concern ourselves with here. 
 
@@ -191,7 +191,7 @@ We can see here that it has a valid signature signed by Microsoft, since of cour
 
 In the same image, we can see the **Current directory**, which is the "working directory" of the process. This refers to the directory where the process was started from or where it is currently operating. We can see here that the current directory is the desktop, since that's where it was initiated from. 
 
-{{< figure src="/img/where_you.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/where_you.gif" title="" class="custom-figure-6" >}}
 
 Now this could happen with legitimate scripts or applications that are using `rundll32.exe` to call a DLL function. However, seeing `rundll32.exe` being called from an unusual location like a user's desktop could be suspicious, particularly if it's coupled with other strange behavior. 
 
@@ -203,7 +203,7 @@ And again in reference to the same image we once more we see that the **Command-
 
 On the top of the Properties window select the `Threads` tab.
 
-{{< figure src="/img/image055.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image055.png" title="" class="custom-figure-6" >}}
 
 We can see under `Start address` that it is mapped, meaning it does exist on disk. This essentially tells us that this is *not* a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as `0x0`.
 
@@ -211,7 +211,7 @@ We can see under `Start address` that it is mapped, meaning it does exist on dis
 
 On the top of the Properties window select `Memory`. Now click once on the `Protection` header to sort it. Scroll down until you see `RWX` permissions.
 
-{{< figure src="/img/image056.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image056.png" title="" class="custom-figure-6" >}}
 
 Indeed we see the presence of two memory spaces with **Read-Write-Execute** permissions, which as we learned is always suspicious since there are very few legitimate programs that will write to memory and then immediately execute it. 
 
@@ -232,7 +232,7 @@ That's it for our live memory analysis: feel free to exit Process Hacker. Let's 
 # 4.4 Final Thoughts
 Let's briefly review what we learned in this second live analysis using `Process Hacker`.
 
-{{< figure src="/img/review.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/review.gif" title="" class="custom-figure-6" >}}
 
 We came into this with a few basic breadcrumbs we picked up in our live analysis using the native tools:
 - A process, `rundll32.exe`, created an unusual outbound connection.
