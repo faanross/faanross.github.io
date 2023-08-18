@@ -5,20 +5,18 @@ date: 2023-08-12T02:01:58+05:30
 type: course
 ---
 
-
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 7](https://www.faanross.com/course01/07_post_traffic/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 5](https://www.faanross.com/course01/05_post_memory/) `|` [Proceed to Section 7](https://www.faanross.com/course01/07_post_traffic/) `|`
 
 ***
 
 &nbsp;  
 
+{{< figure src="/img/mentat.gif" title="" class="custom-figure-6" >}}
+
 # 6. Post-Mortem Forensics: Log Analysis
 # 6.1. Introduction
 
 Now typically we might think of logging as belonging more to the realm of the SOC than a threat hunter. That's because, at least in the way that modern logging practices operate, logging is not seen as something directly approachable by a human operator.
-
-
-{{< figure src="/img/mentat.gif" title="" class="custom-figure-2" >}}
 
 
 What do I mean by this? One consequence of the "endpoint arm's race" that vendors have taken the industry on is the unimaginable scale of the data being generated. It's not unusual for an enterprise to generate millions of log events in their SIEM *daily*. Given that, the notion that a person can start prodding around *sans* "alert filter" seems laughable. 
@@ -43,26 +41,30 @@ So, instead of focusing on 100% of the logs to potentially uncover 100% of the a
 
 ***
 
+&nbsp;  
+
 # 6.2. A Quick Note
 We will be using the same Windows VM (ie the victim) to perform the log analysis in this section. Note that this is done purely for the sake of convenience. As of my current understanding (please [tell me](mailto:faan@teonan.com) if I'm wrong), there is no simple way to interact with `.evtx` files in Linux, at least not in the GUI. 
 
 *Yes, yes* - I am well aware it's very uncool to prefer use of a GUI, *totally* not 1337 and stuff. But if you'd be so kind, please allow me a momentary expression of nuance: both the command line and GUI have their strengths and weaknesses and better to select the best based on context than to succumb to dogma. 
 
-{{< figure src="/img/dogma.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/dogma.gif" title="" class="custom-figure-8" >}}
 
 So for now it'll just be simpler to move ahead and used the built-in `Event Viewer` in Windows to work with these files. And since I did not want to create another "non-victim" Windows VM for this one task we're going to be using the same VM. But please be aware, unless there is literally no alternative you should never do this in an actual threat hunting scenario.  
 
 The reason is quite obvious - performing a post-mortem analysis on a compromised system can potentially taint the results. We have no idea how the breach might be impacting our actions and so to ensure the integrity of our data we need to perform it in a secure environment. 
 
-{{< figure src="/img/tainted.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/tainted.gif" title="" class="custom-figure-38" >}}
 
 This also why for example certain antimalware software vendors provide versions of their products that can run directly from a bootable CD or USB drive - to ensure a scan that is unaffected by  resident malware. 
 
-So that cavaeat out of the way, *let's get it on* with Sysmon. 
+So that caveat out of the way, *let's get it on* with Sysmon. 
 
 {{< figure src="/img/getiton.gif" title="" class="custom-figure" >}}
 
 ***
+
+&nbsp;  
 
 # 6.3. Sysmon
 # 6.3.1. Theory
@@ -79,6 +81,8 @@ That's really about all you need to know at this point - WEL bad, Sysmon epic. B
 
 
 *** 
+
+&nbsp;  
 
 # 6.3.2. Analysis
 
@@ -106,13 +110,13 @@ We can see that PowerShell is performing a DNS request for the FQDN `raw.githubu
 
 And so take a moment to think of what this means - when an attacker uses a stager, and as is mostly the case that stager then initially goes out to a web server to retrieve another script (ie the payload), there will be DNS footprint. Thus DNS, for this reason and others we'll discuss in the future, is always an important dimension to dig into when threat hunting C2. 
 
-{{< figure src="/img/bobs.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/bobs.gif" title="" class="custom-figure-6" >}}
 
 There is a caveat here - DNS resolution only occurs if the web server the stager reaches out to is specified as a FQDN and not an IP. In the command we ran we instructed it to reach out to `raw.githubusercontent.com` (FQDN), and not for example to `101.14.18.44`, hence DNS resolution and a Sysmon event ID 22 occurred. 
 
 From the malware author's POV, there are pro's and cons to taking either approach. So it's good to be aware that the stager may, or may not, produce a DNS "receipt". What's always going to be present however is what we see in the subsequent entry (`ID 3`).
 
-{{< figure src="/img/image081.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image081.png" title="" class="custom-figure-8" >}}
 
 This entry is a record of the actual network connection between the victim and the server. This is great for us since we can always expect to find such a log entry, and it will provide us with both the IP as well as hostname of the server where the script was pulled from. We can then obviously task someone to reference it in any databases of known malicious IOCs. 
 
@@ -129,13 +133,13 @@ We can ignore the next 2 entries (`smartscreen.exe, ID 1`, `consent.exe, ID 1`),
 - svchost.exe `ID 10`,
 - vds.exe `ID 1`
 
-{{< figure src="/img/interesting.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/interesting.gif" title="" class="custom-figure-8" >}}
 
 We then encounter a series of three **very interesting** logs - `ID 13`, `ID 12`, `ID 13`. These are really awesome since, as you'll soon see, they give us insight into an inner workings of the malware.
 
 The first of the three entries (`ID 13`) is shown below. 
 
-{{< figure src="/img/image082.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image082.png" title="" class="custom-figure-8" >}}
 
 We can see that `rufus.exe`, a program that supposedly is used for the sole purpose of creating bootable USB drives, has modified a Windows registry key. This is obviously quite strange, even more so if we look at the name of the actual key we can see it ends with `DisableAntiSpyware`. 
 
@@ -145,7 +149,7 @@ So of course this was not `rufus.exe`, but the malware that's injected into it p
 
 The next log entry (`ID 12`) indicates that a deletion event has occurred on a registry key.
 
-{{< figure src="/img/image083.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image083.png" title="" class="custom-figure-8" >}}
 
 We can see the registry key has the same name as above (`DisableAntiSpyware`), *but*, critically, we have to pay attention to the full path of the *TargetObject*. The first one is located under `HKU\...`, while the one here is located under `HKLM\...`. `HKU` stands for ***HKEY_USERS***, and `HKLM` stands for ***HKEY_LOCAL_MACHINE***. These are two major registry hive keys in the Windows Registry.
 
@@ -153,7 +157,7 @@ What you should also know is that the `HKU` hive contains configuration informat
 
 Further, we can also see that instead of `rufus.exe` performing the actions here, it is performed by `svchost.exe`. In case you were not aware this is a legitimate Windows process, and further, it being co-opted for nefarious purposes by malware is quite common. That's because hackers LOVE abusing `svchost.exe` for a slew of reasons - its ubiquity, anonymity, persistence, stealth and potential for gaining elevated privileges. 
 
-{{< figure src="/img/brent.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/1979.gif" title="" class="custom-figure-8" >}}
 
 And in fact it seems this might be the primary reason for the malware switching processes - changes to `HKLM` require elevated privileges because they affect the entire system, not just a single user. The `svchost.exe` process was running with system privileges (the highest level of privilege), which allowed it to modify the system-wide key.
 
@@ -181,7 +185,7 @@ We can see they all involve `svchost.exe`, giving us the sense that this might o
 
 Next we encounter another DNS resolution entry (`ID 22`), this one is however a little bit more befuddling than our original DNS log. 
 
-{{< figure src="/img/image086.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image086.png" title="" class="custom-figure" >}}
 
 Here we can see `svchost.exe` (let's still assume this is the malware) is doing a DNS query for  DESKTOP-UKJG356. This is however the name of the very host it currently compromised. So why would malware do this - why would it do a DNS resolution to find the ip of the host it has currently infected? 
 
@@ -193,7 +197,7 @@ Next we can see some events (`ID 10`) where `powershell.exe` is accessing `lsass
 
 `LSASS`, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. Given its involvment in security and authentication it's probably no great shock to learn that hackers LOVE abusing this process. It is involved in a myriad of attack types - credential dumping, pass-the-hash, pass-the-ticket, access token creation/manipulation etc. 
 
-{{< figure src="/img/troll.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/troll.gif" title="" class="custom-figure-8" >}}
 
 We can see in the log entry the GrantedAccess field is set to `0x1000`, which corresponds to `PROCESS_QUERY_LIMITED_INFORMATION`. This means the accessing process has requested or been granted the ability to query certain information from the `LSASS` process. Such information might include the process's existence, its execution state, the contents of its image file (read-only), etc. Given the context, this log could indicate potential malicious activity, such as an attempt to dump credentials from `LSASS` or a reconnaissance move before further exploitation. 
 
@@ -238,7 +242,7 @@ The next obvious thing we can see is that every single event ID is the exact sam
 
 And then one final observation: look at the date and time stamps. Do you notice anything peculiar? 
 
-{{< figure src="/img/twins.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/twins.gif" title="" class="custom-figure-8" >}}
 
 It seems that almost all the entries come in pairs - that is each timestamp occurs in multiples of two's. Let's be sure to also see what's happening there. 
 
@@ -298,7 +302,7 @@ And that actually concludes our logging analysis. Let's take our time to unpack 
 
 Up until this section we had gathered *a lot* of evidence confirming something suspicious was going on, however we did not really know many specifics of the attack. 
 
-We essentually only had three critical pieces of info - the name of the suspicious process (`rundll32.exe`), the name of the parent process that spawned it (`rufus.exe`), and the ip address it connected to (ie potentially the ip of the attacker, C2 server). But in this section we saw the great depth of information we can learn from analysing Sysmon and PowerShell ScriptBlock logs. 
+We essentially only had three critical pieces of info - the name of the suspicious process (`rundll32.exe`), the name of the parent process that spawned it (`rufus.exe`), and the ip address it connected to (ie potentially the ip of the attacker, C2 server). But in this section we saw the great depth of information we can learn from analyzing Sysmon and PowerShell ScriptBlock logs. 
 
 {{< figure src="/img/learn.gif" title="" class="custom-figure" >}}
 
@@ -324,13 +328,8 @@ So I think it's clear just how useful log analysis can be in a threat hunt. Once
 
 This leaves us with one final domain in which to investigate our target - the realm of packets. 
 
-***
-***
-
-&nbsp;  
-
 &nbsp;  
 
 ***
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 7](https://www.faanross.com/course01/07_post_traffic/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 5](https://www.faanross.com/course01/05_post_memory/) `|` [Proceed to Section 7](https://www.faanross.com/course01/07_post_traffic/) `|`

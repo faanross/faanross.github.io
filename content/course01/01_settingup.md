@@ -12,7 +12,7 @@ type: course
 
 &nbsp;  
 
-
+# Section 1: Setting Up Our Virtual Environment
 {{< figure src="/img/gif/thehacker.gif" title="" class="custom-figure" >}}
 
 # 1.1. Introduction
