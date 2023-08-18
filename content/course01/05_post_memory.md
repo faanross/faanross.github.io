@@ -6,7 +6,7 @@ type: course
 ---
 
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 6](https://www.faanross.com/course01/06_post_logs/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 4](https://www.faanross.com/course01/04_live_hacker/) `|` [Proceed to Section 6](https://www.faanross.com/course01/06_post_logs/) `|`
 
 ***
 
@@ -181,4 +181,4 @@ That being the case let's move on to the log analysis, which is likely going to 
 
 ***
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 6](https://www.faanross.com/course01/06_post_logs/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 4](https://www.faanross.com/course01/04_live_hacker/) `|` [Proceed to Section 6](https://www.faanross.com/course01/06_post_logs/) `|`
