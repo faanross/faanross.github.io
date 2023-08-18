@@ -363,11 +363,8 @@ The reason to go through these steps rather than just having the initial script 
 Ok friends, thanks for entertaining this little side quest. I do so consciously with the full intent of ensuring you understand the why as much as the how. For now however let's move onto the first phase of our actual threat hunt - live analysis using native windows tools.
 
 ***
-***
-
 
 &nbsp;  
 
-***
 
 `|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 1](https://www.faanross.com/course01/01_settingup) `|` [Proceed to Section 3](https://www.faanross.com/course01/03_live_native/) `|`

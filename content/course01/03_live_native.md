@@ -6,7 +6,7 @@ type: course
 ---
 
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 4](https://www.faanross.com/course01/04_live_hacker/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 2](https://www.faanross.com/course01/02_attack/) `|` [Proceed to Section 4](https://www.faanross.com/course01/04_live_hacker/) `|`
 
 ***
 
@@ -120,4 +120,4 @@ Now that our suspicion is well and truly aroused let's dig in deeper to build ou
 
 ***
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 4](https://www.faanross.com/course01/04_live_hacker/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 2](https://www.faanross.com/course01/02_attack/) `|` [Proceed to Section 4](https://www.faanross.com/course01/04_live_hacker/) 
