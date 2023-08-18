@@ -28,6 +28,8 @@ So let's jump into a bit of theory that will help us understand just what we are
 
 ***
 
+&nbsp;  
+
 # 2.2. Theory
 # 2.2.1. What is a DLL?
 
@@ -83,6 +85,8 @@ So though admittedly the previous sections is a somewhat shallow overview of the
 [Advanced Attack Detection | William Burgess +  Matt Wakins](https://www.youtube.com/watch?v=ihElrBBJQo8)
 
 ***
+
+&nbsp;  
 
 # 2.3. ATTACK!
 
@@ -297,6 +301,8 @@ winpmem.exe memdump.raw
 ```
 
 ***
+
+&nbsp;  
 
 # 2.4. Shenanigans! A (honest) review of our attack
 
