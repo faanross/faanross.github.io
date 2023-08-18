@@ -346,6 +346,8 @@ table td{
   font-size: 15px;
 }
 
+
+
 .custom-figure {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -359,6 +361,8 @@ table td{
   width: auto;     
   height: auto;     
 }
+
+
 
 .custom-figure-2 {
   margin-top: 30px;
@@ -379,6 +383,10 @@ table td{
   margin-bottom: 30px;
 }
 
+
+
+
+
 .custom-figure-3 img {
   display: block;
   margin-left: auto;
@@ -388,8 +396,12 @@ table td{
   height: auto;     
 }
 
-.no-top-margin {
-  margin-top: 0px !important;
+
+
+
+.custom-figure-4 {
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .custom-figure-4 img {
@@ -401,8 +413,11 @@ table td{
   height: auto;     
 }
 
-.no-top-margin {
-  margin-top: 0px !important;
+
+
+.custom-figure-6 {
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .custom-figure-6 img {
@@ -414,9 +429,11 @@ table td{
   height: auto;     
 }
 
-.no-top-margin {
-  margin-top: 0px !important;
+.custom-figure-8 {
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
+
 
 .custom-figure-8 img {
   display: block;

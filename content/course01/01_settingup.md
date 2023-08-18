@@ -65,8 +65,6 @@ I've used both `VMWare Player` and `VirtualBox` in the past, they mostly work we
 
 Since I switched over to `VMWare Workstation` my experience has been significantly more stable, so if you do have the money and are committed to this path as a career I would definitely consider getting it. That being said I don't wanna come across as some corporate shill, so really the choice is totally up to you.
 
-{{< figure src="/img/gif/makechoice.gif" title="" class="custom-figure" >}}
-
 Note that if you decide to not use `VMWare Workstation` then some of the details of the setup might be different. When that occurs it'll be up to you to figure out how to adapt it for your situation - Google, ChatGPT, StackExchange, common sense etc. Again, use the opportunities when things don't happen exactly "as they should" to learn. As a wise emperor once said - ***The impediment to action advances action. What stands in the way becomes the way.*** 
 
 `So at this point please take a moment to download and install the hypervisor of your choice.`
