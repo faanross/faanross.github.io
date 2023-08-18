@@ -338,7 +338,7 @@ That's it friend. We are done with BY FAR the heaviest lifting in terms of VM se
 
 So why do we want to do this again? Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same "victim" system for any project or course we can simply clone it as many times as we want. 
 
-{{< figure src="/img/gif/mememe.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/mememe2.gif" title="" class="custom-figure" >}}
 
 Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in a few seconds. This is also useful if we ever "mess up" the VM, we can just come back to this starting point.
 
@@ -385,7 +385,7 @@ We'll be using Kali Linux to simulate the attacker. The great thing about Kali L
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Kali Linux iso image.
 
-{{< figure src="/img/gif/kali.gif" title="" class="custom-figure-8" >}}
+{{< figure src="/img/gif/kali.gif" title="" class="custom-figure-6" >}}
 
 So now let's get to actually installing it:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
@@ -413,7 +413,7 @@ And that's it for our attacker machine - feel free to repeat the Template-Clonin
 
 # 1.7. VM 3: Ubuntu Linux 20.04 aka "The Analyst" 
 # 1.7.1. Installation
-{{< figure src="/img/gif/analysis.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/gif/analysis.gif" title="" class="custom-figure-8" >}}
 
 And now finally we'll set up our Ubuntu VM.
 

@@ -6,7 +6,7 @@ type: course
 ---
 
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 3](https://www.faanross.com/course01/03_live_native/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 1](https://www.faanross.com/course01/01_settingup) `|` [Proceed to Section 3](https://www.faanross.com/course01/03_live_native/) `|`
 
 ***
 
@@ -364,4 +364,4 @@ Ok friends, thanks for entertaining this little side quest. I do so consciously 
 
 ***
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 3](https://www.faanross.com/course01/03_live_native/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 1](https://www.faanross.com/course01/01_settingup) `|` [Proceed to Section 3](https://www.faanross.com/course01/03_live_native/) `|`
