@@ -12,6 +12,7 @@ type: course
 
 &nbsp;  
 
+{{< figure src="/img/koko.gif" title="" class="custom-figure" >}}
 
 # 5. Post-Mortem Forensics: Memory
 # 5.1. Transferring the Artifacts

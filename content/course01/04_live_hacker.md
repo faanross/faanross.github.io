@@ -6,11 +6,13 @@ type: course
 ---
 
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 5](https://www.faanross.com/course01/05_post_memory/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 3](https://www.faanross.com/course01/03_live_native/) `|` [Proceed to Section 5](https://www.faanross.com/course01/05_post_memory/) `|`
 
 ***
 
 &nbsp;  
+
+{{< figure src="/img/gif/carrey_hack.gif" title="" class="custom-figure" >}}
 
 # 4. Live Analysis: Process Hacker 
 # 4.1. Introduction
@@ -23,6 +25,8 @@ So now let's bring out the big guns and learn all we can.
 As these things go, it really behooves us to learn a bit of theory behind what we're going to look at with the intention of understanding why it is we are looking at these things, and what exactly we will be looking for. 
 
 ***
+
+&nbsp;  
 
 # 4.2. Theory
 
@@ -38,7 +42,7 @@ Additionally, the process as outlined here may give the impression that it typic
 
 As a simple example - if we find a suspicious process by following this procedure, we might want to pause and have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
 
-{{< figure src="/img/rabbit.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/rabbit.gif" title="" class="custom-figure-6" >}}
 
 **Here's a quick overview of our list:**
 1. Parent-Child Relationships
@@ -64,7 +68,7 @@ Something else worth being aware of is not only may certain parent-child relatio
 
 For example a classical `Cobalt Strike` process tree might look like this:
 
-{{< figure src="/img/image076.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image076.png" title="" class="custom-figure-6" >}}
 
 At the top we can see WMI spawning PowerShell - that itself is pretty uncommon, but used by a variety of malware software. But there's more - PowerShell spawning PowerShell. Again, not a smoking gun, but unusual, and something seen with Cobalt Strike. 
 
@@ -72,7 +76,7 @@ But really the most idiosyncratic property here is the multiple instances of `ru
 
 It might surprise you but *in situ* it's estimated that about 50% of adversaries never bother changing the default settings. Which makes one wonder - are they lazy, or are we so bad at detecting even default settings that they don't see the point in even bothering?
 
-{{< figure src="/img/thinkabout.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/thinkabout.gif" title="" class="custom-figure-8" >}}
 
 All this to say - we'll look for unusual parent-child Relationships, and we'll do so typically by looking at a `process tree` which shows as all processes and their associated relationships. In the discussion above I might have given the impression that these relationships all exist in pairs with a unidirectional relationship. Not so, just as in actual family trees a parent can spawn multiple children, and each of these can in turn spawn their own children etc. So depending on the exact direction of the relationship, any specific process may be a parent or a child. 
 
@@ -84,7 +88,7 @@ This is definitely one of the lowest value indicators - something that's nice to
 
 There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of `svchost.exe` running from `C:\Windows\System32`, it ran from `C:\Temp` - **UH-OH**. 
 
-{{< figure src="/img/dogjeez.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/dogjeez.gif" title="" class="custom-figure-6" >}}
 
 Or, perhaps we see PowerShell, but it's running from `C:\Windows\Syswow64\...`, which by itself is a completely legitimate directory. But what exactly is its purpose? 
 
@@ -96,7 +100,7 @@ So if we saw PowerShell running from that directory, it means that a 32-bit vers
 
 We already saw this in the previous section - for example though running `rundll32.exe` is completely legit, we would expect it to have arguments referencing the exact function and library it's supposed to load. Seeing it nude, well that's strange. 
 
-{{< figure src="/img/dwight-naked.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/dwight-naked.gif" title="" class="custom-figure-8" >}}
 
 Same goes for many other processes - we need thus to understand their function and how they are invoked to be able to determine the legitimacy of the process. 
 
@@ -104,7 +108,7 @@ Same goes for many other processes - we need thus to understand their function a
 
 When a DLL is loaded in the traditional way, ie from a disk, the operating system memory-maps the DLL into the process's address space. Memory mapping is a method used by the operating system to load the contents of a file into a process's memory space, which allows the process to access the file's data as if it were directly in memory. The operating system also maintains a mapping table that tracks where each DLL is loaded in memory.
 
-{{< figure src="/img/binoculars.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/binoculars.gif" title="" class="custom-figure-8" >}}
 
 
 With traditional DLL loading, if you were to look at the start address of the thread executing the DLL, you would see some memory address indicating where the DLL has been loaded in the process's address space.
@@ -114,7 +118,7 @@ However, in the case of Reflective DLL Injection, the DLL is loaded into memory 
 As a result, when you inspect the start address of the thread associated with the injected DLL, it will not show the actual memory address where the DLL is loaded. Instead, it will show `0x0`, which essentially means the address is unknown or not available - see image below. This is one of the many ways Reflective DLL Injection can be stealthy and evade detection.
 
 
-{{< figure src="/img/image077.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image077.png" title="" class="custom-figure-8" >}}
 
 
 6. ***Memory Permissions***
@@ -133,7 +137,7 @@ I wanted you to be aware of this, but for now we will focus only on `RWX`.
 
 Once we find a memory space with unusual permissions we then also want to check its content for signs of a PE file. Let's quickly have a look at a typical PE file structure:
 
-{{< figure src="/img/image078.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image078.png" title="" class="custom-figure-8" >}}
 
 We can see two things that always stick out: the magic bytes `MZ` and a vestigial string associated with the `DOS Stub`. Magic bytes are predefined unique values used at the beginning of a file that are used to identify the file format or protocol. For a PE file, we would expect to see the ASCII character `MZ`, or `4D 5A` in hex. 
 
@@ -149,11 +153,13 @@ Finally it's worth being aware of `PE Header Stomping` - a more advanced techniq
 
 PE files *have* to have a header, but since nothing really forces or checks the exact contents of the header, the header could theoretically be anything. And so instead of the header containing some giveaways like we saw above - magic bytes, dos stub artifact, signature strings etc - the malware will overwrite the header with something else to appear legitimate. For now I just wanted you to be aware of this, we'll revisit header stomping first-hand in the future. 
 
-{{< figure src="/img/ramones.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/ramones.gif" title="" class="custom-figure-6" >}}
 
 But for now, that's it for the theory - *allons-y*!
 
 ***
+
+&nbsp;  
 
 # 4.3. Analysis
 
@@ -220,6 +226,8 @@ We immediately see the two clear giveaways that we are dealing with a PE file. W
 That's it for our live memory analysis: feel free to exit Process Hacker. Let's discuss our results before moving on to our post-mortem analysis. 
 
 ***
+
+&nbsp;  
 
 # 4.4 Final Thoughts
 Let's briefly review what we learned in this second live analysis using `Process Hacker`.
