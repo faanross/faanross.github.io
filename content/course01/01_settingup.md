@@ -73,7 +73,7 @@ Note that if you decide to not use `VMWare Workstation` then some of the details
 
 Once that's done with feel free to proceed...
 
-{{< figure src="/img/gif/pleasego.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/gif/pleasego.gif" title="" class="custom-figure-6" >}}
 
 ***
 
@@ -104,14 +104,14 @@ Once you've successfully downloaded all three iso images we are ready to proceed
 2. Choose `Typical (recommended)`, then click `Next`. 
 3. Then select `I will install the operating system later` and hit `Next`.
 
-{{< figure src="/img/course01/image001.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image001.png" title="" class="custom-figure-6" >}}
 
 4. Select `Microsoft Windows`, and under Version select `Windows 10`. 
 5. Here you are free to call the machine whatever you'd like, in my case I am calling it `Victim`. 
 6. Select 60 GB and `Split virtual disk into multiple files`. 
 7. Then on the final screen click on `Customize Hardware`.
 
-{{< figure src="/img/course01/course01/image002.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image002.png" title="" class="custom-figure-6" >}}
 
 8. Under `Memory` (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
@@ -124,7 +124,7 @@ Wait a short while and then you should see a Windows Setup window. Choose your d
 
 Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the `License Agreement` (if you dare - ***mwhahaha!***). Now once you reach the `Sign in` page don’t fill anything in, rather select `Domain join instead` in the bottom left-hand corner.
 
-{{< figure src="/img/course01/image006a.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image006a.png" title="" class="custom-figure-6" >}}
 
 Choose any username and password, in my case it'll be the highly original choice of `User` and `password`. Then choose 3 security questions, since this is a "burner" system used for the express purpose of this course don't overthink it - randomly hitting the keyboard a few times will do just fine. Turn off all the privacy settings, and for `Cortana` select `Not Now`.
 
@@ -135,13 +135,13 @@ Next we'll install VMWare Tools which for our purposes does two things. First, i
 
 So just to be sure, at this point you should be staring at a Windows desktop. Now in the VMWare menu bar click `VM` and then `Install VMWare Tools`. If you open `Explorer` (in the VM) you should now see a `D:` drive. 
 
-{{< figure src="/img/course01/image008.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image008.png" title="" class="custom-figure-6" >}}
 
 Double-click the drive, hit `Yes` when asked if we want this app to make changes to the device. Hit `Next`, select `Typical` and hit `Next`. Finally hit `Install` and then once done `Finish`. You'll need to restart your system for the changes to take effect, but we'll shut it down since we need to change a setting. So hit the Windows icon, Power icon, and then select `Shut Down`.
 
 Right-click on your VM and select `Settings`. In the list on the LHS select `Display`, which should be right at the bottom. On the bottom - deselect `Automatically adjust user interface size in the virtual machine`, as well as `Stretch mode`, it should now look like this:
 
-{{< figure src="/img/course01/image009.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image009.png" title="" class="custom-figure-6" >}}
 
 Go ahead and start-up the VM once again, we'll now get to configuring our VM.
 
@@ -171,7 +171,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     7. Note that Windows will warn you and ask if you want to allow this app to make changes to the device, hit `Yes`.
     8. All 4 toggle settings should now be disabled.
 
-{{< figure src="/img/course01/image010.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image010.png" title="" class="custom-figure-6" >}}
     
 2. **Disable the Windows Update service**
     1. Open the Run dialog box by pressing Win+R.
@@ -180,7 +180,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     4. In the Windows Update Properties (Local Computer) window, under the `General` tab, in the `Startup type:` dropdown menu, select `Disabled` - see image below.
     5. Click `Apply` and then `OK`.
     
- {{< figure src="/img/course01/image011.png" title="" class="custom-figure-2" >}}
+ {{< figure src="/img/course01/image011.png" title="" class="custom-figure-6" >}}
 
 3. **Disable Defender via Group Policy Editor**
     1. Open the Run dialog box by pressing Win+R.
@@ -190,7 +190,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     5. In the new window on the top left select `Enabled` - see image below. 
     6. First hit `Apply` then `OK`.
 
- {{< figure src="/img/course01/image012.png" title="" class="custom-figure-2" >}}
+ {{< figure src="/img/course01/image012.png" title="" class="custom-figure-6" >}}
 
 4. **Disable Updates via Group Policy Editor**
     1. Still in `Local Group Policy Editor`, navigate to: `Computer Configuration` > `Administrative Templates` > `Windows Components` > `Windows Update`.
@@ -216,7 +216,7 @@ Almost there! We just need to boot into Safe Mode to make some final adjustments
     5. Hit `Apply` first, the `OK`.
     6. Select `Restart`.
     
-{{< figure src="/img/course01/image014.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image014.png" title="" class="custom-figure-6" >}}
 
 Once your system has restarted in `Safe mode`...
 
@@ -231,7 +231,7 @@ Once your system has restarted in `Safe mode`...
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdNisSvc`
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdFilter`
 
-{{< figure src="/img/course01/image015.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/course01/image015.png" title="" class="custom-figure-6" >}}
 
 8. **Disable Updates via Registry**
     1. Still in `Registry Editor` let's navigate to the following:
@@ -241,7 +241,7 @@ Once your system has restarted in `Safe mode`...
     4. Double-click the new `AUOptions` key and change its value to `2`. Click `OK` - see image below.
     5. Close Registry Editor.
 
-{{< figure src="/img/course01/image016.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/course01/image016.png" title="" class="custom-figure-6" >}}
 
 9. **Leave Safe Mode**
     1. All that's left to do is get back into our regular Windows environment.
@@ -267,7 +267,7 @@ But for now, since we are decidedly not yet there, let's download and use one ma
 
 So first download the [config file](https://github.com/bakedmuffinman/Neo23x0-sysmon-config), then [go here to download Sysmon](https://download.sysinternals.com/files/Sysmon.zip). You should now have two zip files - the config you downloaded from Github, as well as the ***Sysmon*** zip file. Extract the ***Sysmon*** archive, the contents should look as follows:
 
-{{< figure src="/img/course01/image017.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/course01/image017.png" title="" class="custom-figure-6" >}}
 
 Now also extract the zip file containing the config. Inside of the folder rename `sysmonconfig-export.xml` to `sysmonconfig.xml`. Now simply cut (or copy) the file and paste it in the folder containing ***Sysmon***. 
 
@@ -355,7 +355,7 @@ So just follow along with these few simple steps:
 7. Go down to the bottom and select `Advanced`.
 8. Select `Enable Template mode (to be used for cloning)`, hit `OK`.
 
-{{< figure src="/img/course01/image021.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/course01/image021.png" title="" class="custom-figure-6" >}}
 
 9. Note you might want to rename this VM to something like `Victim Template`, so we are aware this is the template that we should not be using, but rather use for cloning. You can do this under `Settings` > `Options` > `General`.
 10. Now let's create our first clone which we will actually be using in the course. Right-click on `Victim Template`, select `Manage` > `Clone`. Hit `Next`.
@@ -387,7 +387,7 @@ We'll be using Kali Linux to simulate the attacker. The great thing about Kali L
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Kali Linux iso image.
 
-{{< figure src="/img/gif/kali.gif" title="" class="custom-figure-2" >}}
+{{< figure src="/img/gif/kali.gif" title="" class="custom-figure-8" >}}
 
 So now let's get to actually installing it:
 1. Right-click on the VM and select `Power` > `Start Up Guest`.
@@ -449,7 +449,7 @@ So now let's install Focal Fossa:
 
 `NOTE: A few moments after logging in and answer Ubuntu's questions you'll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.`
 
-{{< figure src="/img/course01/image029.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/course01/image029.png" title="" class="custom-figure-6" >}}
 
 OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next one. So feel free to skip this, or just get it done with now so that next time everything is gtg.
 

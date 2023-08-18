@@ -26,7 +26,7 @@
       <guid>https://athul.github.io/archie/course01/prebanter/</guid>
       <description>| Return to Course Overview | Proceed to Section 1 |
 Threat hunting is not typically viewed as an &amp;ldquo;entry-level&amp;rdquo; cybersecurity discipline, probably because it is a layer of abstraction woven from other, more fundamental, layers of abstraction. It is not a house built from bricks, but a neighborhood built from houses.
-I have however created this course specifically with the beginner in mind. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient foundational information so that you can follow along not only with what we are doing, but crucially, why we are doing it.</description>
+I have however created this course specifically with the beginner in mind. What that practically entails is that I do my best to not indulge in pedantry while providing sufficient information that allows you to follow along not only with what we are doing, but crucially, why we are doing it.</description>
     </item>
     
     <item>
@@ -35,9 +35,8 @@ I have however created this course specifically with the beginner in mind. What 
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/course01/01_settingup/</guid>
-      <description>| Return to Course Overview | Proceed to Section 2 |
-1.1. Introduction In this section we&amp;rsquo;ll set up the three VMs we&amp;rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&amp;rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&amp;rsquo;ll perform some configurations as well as install extra software.
-1.2. Requirements I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area.</description>
+      <description>| Course Overview | Return to Section 0 | Proceed to Section 2 |
+1.1. Introduction In this section we&amp;rsquo;ll set up the three VMs we&amp;rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&amp;rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&amp;rsquo;ll perform some configurations as well as install extra software.</description>
     </item>
     
     <item>

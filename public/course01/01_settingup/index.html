@@ -2,23 +2,20 @@
 <html><head lang="en">
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Section 1: Setting Up Our Virtual Environment - faan|ross</title><link rel="icon" type="image/x-icon" href=/favicon.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="| Return to Course Overview | Proceed to Section 2 |
-1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software.
-1.2. Requirements I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area." />
+	<meta name="description" content="| Course Overview | Return to Section 0 | Proceed to Section 2 |
+1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software." />
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Section 1: Setting Up Our Virtual Environment" />
-<meta property="og:description" content="| Return to Course Overview | Proceed to Section 2 |
-1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software.
-1.2. Requirements I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area." />
+<meta property="og:description" content="| Course Overview | Return to Section 0 | Proceed to Section 2 |
+1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://athul.github.io/archie/course01/01_settingup/" /><meta property="article:section" content="course01" />
 <meta property="article:published_time" content="2023-08-12T02:01:58+05:30" />
 <meta property="article:modified_time" content="2023-08-12T02:01:58+05:30" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Section 1: Setting Up Our Virtual Environment"/>
-<meta name="twitter:description" content="| Return to Course Overview | Proceed to Section 2 |
-1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software.
-1.2. Requirements I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area."/>
+<meta name="twitter:description" content="| Course Overview | Return to Section 0 | Proceed to Section 2 |
+1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software."/>
 <script src="https://athul.github.io/archie/js/feather.min.js"></script>
 	
 	
@@ -26,7 +23,7 @@
 	
 
 	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.e569700d4e6d27fd2c68492689e8e273c071eeb76aab9d6a323b5a3306999487.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.dd96be82687f2a3c48a68b1615119f516a61deee410fb50de65cb93d7e921d09.css" />
 		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://athul.github.io/archie/css/dark.191767dd42068cd77e23d5f95ccc0becc0e7105decd65e1405e5695f242e2b3c.css"   />
 	
 
@@ -101,10 +98,10 @@
 		
 
 		<section class="body">
-			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/02_attack/">Proceed to Section 2</a> <code>|</code></p>
+			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/prebanter">Return to Section 0</a> <code>|</code> <a href="https://www.faanross.com/course01/02_attack/">Proceed to Section 2</a> <code>|</code></p>
 <hr>
 <p> </p>
-<figure class="custom-figure"><img src="/img/thehacker.gif"/>
+<figure class="custom-figure"><img src="/img/gif/thehacker.gif"/>
 </figure>
 
 <h1 id="11-introduction">1.1. Introduction</h1>
@@ -113,7 +110,7 @@
 <p> </p>
 <h1 id="12-requirements">1.2. Requirements</h1>
 <p>I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. <em><strong>AT ALL.</strong></em> So I&rsquo;ll provide an overview of what we&rsquo;ll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can get the same results by adapting the process, then please do so. After all - this is the <em>way of the hacker</em>.</p>
-<figure class="custom-figure"><img src="/img/tripleram.gif"/>
+<figure class="custom-figure"><img src="/img/gif/tripleram.gif"/>
 </figure>
 
 <p>As mentioned above, we&rsquo;ll create 3 VMs in total, however, at any one moment there will only be a <code>maximum of 2 VMs running concurrently</code>. For each of these VMs I recommend the following system resources:</p>
@@ -128,7 +125,7 @@
 <li>16 GB RAM (32+ even better)</li>
 <li>200 GB free HD space</li>
 </ul>
-<figure class="custom-figure"><img src="/img/beefcake.gif"/>
+<figure class="custom-figure"><img src="/img/gif/beefcake.gif"/>
 </figure>
 
 <p>Now I understand this requirement is rather beefy, but consider:</p>
@@ -141,19 +138,19 @@
 <p> </p>
 <h1 id="13-hosted-hypervisor">1.3. Hosted Hypervisor</h1>
 <p>So in the off-chance you don&rsquo;t know: a hosted (type 2) hypervisor is the software that allows us to run virtual machines on top of our base operating system. It&rsquo;s kinda like <em>Inception</em> - it allows us to create systems within our systems.</p>
-<figure class="custom-figure"><img src="/img/inception.gif"/>
+<figure class="custom-figure"><img src="/img/gif/inception.gif"/>
 </figure>
 
 <p>For this course I&rsquo;ll be using <a href="https://store-us.vmware.com/workstation_buy_dual">VMWare Workstation</a>, which as of writing costs around $200. However you could also do it with either <a href="https://www.vmware.com/ca/products/workstation-player.html">VMWare Player</a>, or <a href="https://www.virtualbox.org/wiki/Downloads">Oracle Virtualbox</a>, both of which are free.</p>
 <p>I&rsquo;ve used both <code>VMWare Player</code> and <code>VirtualBox</code> in the past, they mostly work well but running into some issues from time-to-time should not be completely unexpected. That being said, the problems I encountered were all, in hindsight, opportunities to learn. Frustrating - <em>feck yesh</em>. Enriching - sure.</p>
 <p>Since I switched over to <code>VMWare Workstation</code> my experience has been significantly more stable, so if you do have the money and are committed to this path as a career I would definitely consider getting it. That being said I don&rsquo;t wanna come across as some corporate shill, so really the choice is totally up to you.</p>
-<figure class="custom-figure"><img src="/img/makechoice.gif"/>
+<figure class="custom-figure"><img src="/img/gif/makechoice.gif"/>
 </figure>
 
 <p>Note that if you decide to not use <code>VMWare Workstation</code> then some of the details of the setup might be different. When that occurs it&rsquo;ll be up to you to figure out how to adapt it for your situation - Google, ChatGPT, StackExchange, common sense etc. Again, use the opportunities when things don&rsquo;t happen exactly &ldquo;as they should&rdquo; to learn. As a wise emperor once said - <em><strong>The impediment to action advances action. What stands in the way becomes the way.</strong></em></p>
 <p><code>So at this point please take a moment to download and install the hypervisor of your choice.</code></p>
 <p>Once that&rsquo;s done with feel free to proceed&hellip;</p>
-<figure class="custom-figure-2"><img src="/img/pleasego.gif"/>
+<figure class="custom-figure-6"><img src="/img/gif/pleasego.gif"/>
 </figure>
 
 <hr>
@@ -170,7 +167,7 @@
 <hr>
 <p> </p>
 <h1 id="15-vm-1-windows-10-aka-the-victim">1.5. VM 1: Windows 10 aka &ldquo;The Victim&rdquo;</h1>
-<figure class="custom-figure"><img src="/img/screamdrew.gif"/>
+<figure class="custom-figure"><img src="/img/gif/screamdrew.gif"/>
 </figure>
 
 <h1 id="151-installation">1.5.1. Installation</h1>
@@ -179,7 +176,7 @@
 <li>Choose <code>Typical (recommended)</code>, then click <code>Next</code>.</li>
 <li>Then select <code>I will install the operating system later</code> and hit <code>Next</code>.</li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image001.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image001.png"/>
 </figure>
 
 <ol start="4">
@@ -188,7 +185,7 @@
 <li>Select 60 GB and <code>Split virtual disk into multiple files</code>.</li>
 <li>Then on the final screen click on <code>Customize Hardware</code>.</li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image002.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image002.png"/>
 </figure>
 
 <ol start="8">
@@ -200,7 +197,7 @@
 <p>You should now see your VM in your Library (left hand column), select it and then click on <code>Power on this virtual machine</code>. If you don&rsquo;t see a Library column on the left simply hit <code>F9</code> which toggles its visibility.</p>
 <p>Wait a short while and then you should see a Windows Setup window. Choose your desired language et cetera, select <code>Next</code> and then click on <code>Install Now</code>. Select <code>I accept the license terms</code> and click <code>Next</code>. Next select <code>Custom: Install Windows only (advanced)</code>, and then select your virtual HD and click Next.</p>
 <p>Once its done installing we’ll get to the setup, select your region, preferred keyboard layout etc. Accept the <code>License Agreement</code> (if you dare - <em><strong>mwhahaha!</strong></em>). Now once you reach the <code>Sign in</code> page don’t fill anything in, rather select <code>Domain join instead</code> in the bottom left-hand corner.</p>
-<figure class="custom-figure-2"><img src="/img/image006a.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image006a.png"/>
 </figure>
 
 <p>Choose any username and password, in my case it&rsquo;ll be the highly original choice of <code>User</code> and <code>password</code>. Then choose 3 security questions, since this is a &ldquo;burner&rdquo; system used for the express purpose of this course don&rsquo;t overthink it - randomly hitting the keyboard a few times will do just fine. Turn off all the privacy settings, and for <code>Cortana</code> select <code>Not Now</code>.</p>
@@ -208,25 +205,25 @@
 <h1 id="152-vmware-tools">1.5.2. VMWare Tools</h1>
 <p>Next we&rsquo;ll install VMWare Tools which for our purposes does two things. First, it ensure that our VMs screen resolution assumes that of our actual monitor, but more importantly it also gives us the ability to copy and paste between the host and the VM.</p>
 <p>So just to be sure, at this point you should be staring at a Windows desktop. Now in the VMWare menu bar click <code>VM</code> and then <code>Install VMWare Tools</code>. If you open <code>Explorer</code> (in the VM) you should now see a <code>D:</code> drive.</p>
-<figure class="custom-figure-2"><img src="/img/image008.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image008.png"/>
 </figure>
 
 <p>Double-click the drive, hit <code>Yes</code> when asked if we want this app to make changes to the device. Hit <code>Next</code>, select <code>Typical</code> and hit <code>Next</code>. Finally hit <code>Install</code> and then once done <code>Finish</code>. You&rsquo;ll need to restart your system for the changes to take effect, but we&rsquo;ll shut it down since we need to change a setting. So hit the Windows icon, Power icon, and then select <code>Shut Down</code>.</p>
 <p>Right-click on your VM and select <code>Settings</code>. In the list on the LHS select <code>Display</code>, which should be right at the bottom. On the bottom - deselect <code>Automatically adjust user interface size in the virtual machine</code>, as well as <code>Stretch mode</code>, it should now look like this:</p>
-<figure class="custom-figure-2"><img src="/img/image009.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image009.png"/>
 </figure>
 
 <p>Go ahead and start-up the VM once again, we&rsquo;ll now get to configuring our VM.</p>
 <h1 id="153-deep-disable-ms-defender--updates">1.5.3. Deep disable MS Defender + Updates</h1>
 <p>I call this &lsquo;deep disable&rsquo; because simply toggling off the switches in <code>Settings</code> won&rsquo;t actually fully disable Defender and Updates. You see, Windows thinks of you as a younger sibling - it feels the need to protect you a bit, most of the time without you even knowing. (Unlike Linux of course which will allow you to basically nuke your OS kernel if you so desired.)</p>
-<figure class="custom-figure"><img src="/img/winlin.png"/>
+<figure class="custom-figure"><img src="/img/gif/winlin.png"/>
 </figure>
 
 <p>And just so you know why it is we&rsquo;re doing this&hellip;</p>
 <p>We are disabling Defender so that the AV won&rsquo;t interfere with us attacking the system. Now you might think well this represents an unrealistic situation since in real-life we&rsquo;ll always have our AV running. Thing is, this is a simulation - we are simulating an actual attack.</p>
 <p>Yes, the AV might pick up on our mischievous escapades here since we are using a well-known and widely-used malware framework. But, if you are being attacked by an actual threat actor worth their salt they likely won&rsquo;t be using something so common. It&rsquo;s not that much of a stretch to assume they will be capable of using analogous technologies that our AV will not pick up on. Thus, by turning off Defender this is what we are simulating.</p>
 <p>And as for updates, we disable this because sometimes we can spend all this time configuring and setting things up and then one day we boot up our VM up, Windows does it&rsquo;s whole automatic update schpiel, and suddenly things are broken. This is thus a small time investment to hedge against extreme potential frustration. <em>So worth it</em>.</p>
-<figure class="custom-figure"><img src="/img/do_it_now.gif"/>
+<figure class="custom-figure"><img src="/img/gif/do_it_now.gif"/>
 </figure>
 
 <ol>
@@ -243,7 +240,7 @@
 </ol>
 </li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image010.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image010.png"/>
 </figure>
 
 <ol start="2">
@@ -257,7 +254,7 @@
 </ol>
 </li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image011.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image011.png"/>
  </figure>
 
 <ol start="3">
@@ -272,7 +269,7 @@
 </ol>
 </li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image012.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image012.png"/>
  </figure>
 
 <ol start="4">
@@ -308,7 +305,7 @@
 </ol>
 </li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image014.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image014.png"/>
 </figure>
 
 <p>Once your system has restarted in <code>Safe mode</code>&hellip;</p>
@@ -329,7 +326,7 @@
 </ul>
 </li>
 </ol>
-<figure class="custom-figure-3"><img src="/img/image015.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image015.png"/>
 </figure>
 
 <ol start="8">
@@ -348,7 +345,7 @@
 </ol>
 </li>
 </ol>
-<figure class="custom-figure-3"><img src="/img/image016.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image016.png"/>
 </figure>
 
 <ol start="9">
@@ -367,24 +364,24 @@
 <p>But before we learn to do that, let&rsquo;s setup all the awesome tools we&rsquo;ll be using in this course.</p>
 <h1 id="154-sysmon">1.5.4. Sysmon</h1>
 <p>You should now be back in the normal Windows environment looking at your desktop. Let&rsquo;s set up <em><strong>Sysmon</strong></em> - a simple, free, Microsoft-owned program that will <em>dramatically</em> improve our logging ability.</p>
-<figure class="custom-figure"><img src="/img/lumberjack.gif"/>
+<figure class="custom-figure"><img src="/img/gif/lumberjack.gif"/>
 </figure>
 
 <p>Before we install <em><strong>Sysmon</strong></em> there&rsquo;s just one thing you need to know - in addition to downloading <em><strong>Sysmon</strong></em> itself, we also need a config file. One day when you get to <em>that</em> level you can even create your own config file, which will allow you to make it behave exactly how you want it to.</p>
 <p>But for now, since we are decidedly not yet there, let&rsquo;s download and use one made by some really smart people. Of late  I have heard a few trusted sources, included <a href="https://www.ericconrad.com">Eric Conrad</a> prefer <a href="https://github.com/bakedmuffinman/Neo23x0-sysmon-config">this version from Neo23x0</a> whose authors included another blue team giant, <a href="https://twitter.com/cyb3rops?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">Florian Roth</a>.</p>
 <p>So first download the <a href="https://github.com/bakedmuffinman/Neo23x0-sysmon-config">config file</a>, then <a href="https://download.sysinternals.com/files/Sysmon.zip">go here to download Sysmon</a>. You should now have two zip files - the config you downloaded from Github, as well as the <em><strong>Sysmon</strong></em> zip file. Extract the <em><strong>Sysmon</strong></em> archive, the contents should look as follows:</p>
-<figure class="custom-figure-3"><img src="/img/image017.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image017.png"/>
 </figure>
 
 <p>Now also extract the zip file containing the config. Inside of the folder rename <code>sysmonconfig-export.xml</code> to <code>sysmonconfig.xml</code>. Now simply cut (or copy) the file and paste it in the folder containing <em><strong>Sysmon</strong></em>.</p>
 <p>Great, everything is set up so now we can install it with a simple command. Open command prompt as administrator and navigate to the folder containing <em><strong>Sysmon</strong></em> and the config file - in my case it is <code>c:\Users\User\Downloads\Sysmon</code>. Run the following command:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Sysmon.exe -accepteula -i
 </span></span></code></pre></div><p>This is what a successful installation will look like:</p>
-<figure class="custom-figure"><img src="/img/image018.png"/>
+<figure class="custom-figure"><img src="/img/course01/image018.png"/>
 </figure>
 
 <p>Now let&rsquo;s just validate that it&rsquo;s running. In the command prompt run the command <code>powershell</code> so we change over into a PS shell. Then, run the command <code>Get-Service sysmon</code>. In the image below we can see it is running - we are good to go!</p>
-<figure class="custom-figure"><img src="/img/image019.png"/>
+<figure class="custom-figure"><img src="/img/course01/image019.png"/>
 </figure>
 
 <p>That&rsquo;s it for Sysmon, now let&rsquo;s enable PowerShell ScriptBlock logging.</p>
@@ -392,12 +389,12 @@
 <p>For security purposes, another quick and easy switch we can flip is enabling PowerShell logging. This is great because one specific type of PowerShell logs (<code>ScriptBlock</code>) will record exactly what command was run in PowerShell. As we know, in-line with the <code>Living off the Land</code> paradigm, modern adversaries LOVE abusing PowerShell. It should this be clear why having logs of commands that were run in PowerShell could potentially be of huge benefit to us.</p>
 <p>Something to be aware of is that there are a few types of PowerShell logging: Module, ScriptBlock, Operational, Transcription, Core, and Protected Event. For the purposes of this course we will be activating <code>ScriptBlock</code>, as well as <code>Operational</code>. While activating the former tells PowerShell to log the commands, we also need to activate <code>Operational</code> so that the system is able to properly save the logs.</p>
 <p>NOTE: This entire process could be performed in the GUI using <code>Group Policy Editor</code>, we will however be performing it via PowerShell command line. You should <em><strong>always</strong></em> prefer this method to using the GUI when it comes to enabling logs. Not simply to look cool, nay, there is a very good practical reason for this.</p>
-<figure class="custom-figure"><img src="/img/verycool.gif"/>
+<figure class="custom-figure"><img src="/img/gif/verycool.gif"/>
 </figure>
 
 <p>Imagine for a moment you needed to activate this feature on 1000 stations. You could either do so by logging into each station individually and interacting with the <code>gpedit</code> GUI interface, which would likely take you a few days working at a ferocious pace for all 1000 stations. Alternatively, you could run a single command from a domain controller, which would take less than a minute for any amount of stations.</p>
 <p>This is an admittedly dramatic way of saying that performing administrative tasks using PowerShell commands scales well, while flipping GUI toggles does not scale at all. So invest your time early on learning the methods that won&rsquo;t break down the moment you need to do it at scale, it&rsquo;s so worth it.</p>
-<figure class="custom-figure"><img src="/img/worth.gif"/>
+<figure class="custom-figure"><img src="/img/gif/worth.gif"/>
 </figure>
 
 <p>Open PowerShell as an administrator:</p>
@@ -430,7 +427,7 @@
 <p>That&rsquo;s it friend. We are done with BY FAR the heaviest lifting in terms of VM setup - the remaining two will comparatively be a breeze. But before we get to that there&rsquo;s one very simple thing we can do that will make our lives much easier in the future - turning this VM into a template for cloning.</p>
 <h1 id="157-creating-a-template">1.5.7. Creating a Template</h1>
 <p>So why do we want to do this again? Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same &ldquo;victim&rdquo; system for any project or course we can simply clone it as many times as we want.</p>
-<figure class="custom-figure"><img src="/img/mememe.gif"/>
+<figure class="custom-figure"><img src="/img/gif/mememe.gif"/>
 </figure>
 
 <p>Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in a few seconds. This is also useful if we ever &ldquo;mess up&rdquo; the VM, we can just come back to this starting point.</p>
@@ -445,7 +442,7 @@
 <li>Go down to the bottom and select <code>Advanced</code>.</li>
 <li>Select <code>Enable Template mode (to be used for cloning)</code>, hit <code>OK</code>.</li>
 </ol>
-<figure class="custom-figure-3"><img src="/img/image021.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image021.png"/>
 </figure>
 
 <ol start="9">
@@ -460,7 +457,7 @@
 <hr>
 <p> </p>
 <h1 id="16-vm-2-kali-linux-aka-the-attacker">1.6. VM 2: Kali Linux aka &ldquo;The Attacker&rdquo;</h1>
-<figure class="custom-figure"><img src="/img/attacker.gif"/>
+<figure class="custom-figure"><img src="/img/gif/attacker.gif"/>
 </figure>
 
 <p>We&rsquo;ll be using Kali Linux to simulate the attacker. The great thing about Kali Linux is that everything we&rsquo;ll need comes pre-packaged, so we just have to install the actual operating system.</p>
@@ -476,7 +473,7 @@
 <li>Under <code>Processors</code> I suggest at least 2, if possible given your available resources then increase it to 4.</li>
 <li>Under <code>New CD/DVD (SATA)</code> change Connection from Use Physical Drive to <code>Use ISO image file</code>. Click <code>Browse…</code> and select the location of your Kali Linux iso image.</li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/kali.gif"/>
+<figure class="custom-figure-8"><img src="/img/gif/kali.gif"/>
 </figure>
 
 <p>So now let&rsquo;s get to actually installing it:</p>
@@ -503,7 +500,7 @@
 <p> </p>
 <h1 id="17-vm-3-ubuntu-linux-2004-aka-the-analyst">1.7. VM 3: Ubuntu Linux 20.04 aka &ldquo;The Analyst&rdquo;</h1>
 <h1 id="171-installation">1.7.1. Installation</h1>
-<figure class="custom-figure-3"><img src="/img/analysis.gif"/>
+<figure class="custom-figure-3"><img src="/img/gif/analysis.gif"/>
 </figure>
 
 <p>And now finally we&rsquo;ll set up our Ubuntu VM.</p>
@@ -520,7 +517,7 @@
 <li>Under <code>New CD/DVD (SATA)</code> change Connection from Use Physical Drive to <code>Use ISO image file</code>. Click <code>Browse…</code> and select the location of your Ubuntu Linux 20.04 iso image. Make sure <code>Connect at power on</code> is enabled.
 Click <code>Close</code> then <code>Finish</code>.</li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/fossa.gif"/>
+<figure class="custom-figure-6"><img src="/img/gif/fossa.gif"/>
 </figure>
 
 <p>So now let&rsquo;s install Focal Fossa:</p>
@@ -539,7 +536,7 @@ Click <code>Close</code> then <code>Finish</code>.</li>
 <li>Hit <code>OK</code>, start the VM up once again, and log in.</li>
 </ol>
 <p><code>NOTE: A few moments after logging in and answer Ubuntu's questions you'll be asked whether you want to upgrade. IMPORTANT: Do not do so, decline the offer.</code></p>
-<figure class="custom-figure-2"><img src="/img/image029.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image029.png"/>
 </figure>
 
 <p>OK, that&rsquo;s it for the installation, now let&rsquo;s install the two programs we&rsquo;ll use in this course. Note I&rsquo;m also going to install <em><strong>RITA</strong></em> here, we won&rsquo;t use it in this course but indeed in the next one. So feel free to skip this, or just get it done with now so that next time everything is gtg.</p>
@@ -574,17 +571,17 @@ Click <code>Close</code> then <code>Finish</code>.</li>
 <li>Scroll down to <code>Install</code> and follow the instructions using the <code>install.sh</code> script. During installation you will be asked a few questions, answer <code>y</code> and hit enter each time.</li>
 <li>Let&rsquo;s check the version of RITA to ensure installation was successful. First close your terminal, reopen, and then run the commands seen in image below. You should get similar results.</li>
 </ol>
-<figure class="custom-figure"><img src="/img/image030.png"/>
+<figure class="custom-figure"><img src="/img/course01/image030.png"/>
 </figure>
 
 <p>OK. Do you know what time it is?</p>
 <p>Yeah it&rsquo;s time for all this installing and configuring to pay off - let&rsquo;s kick things off by performing the attack!</p>
-<figure class="custom-figure"><img src="/img/strangelove.gif"/>
+<figure class="custom-figure"><img src="/img/gif/strangelove.gif"/>
 </figure>
 
 <p> </p>
 <hr>
-<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/02_attack/">Proceed to Section 2</a> <code>|</code></p>
+<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/prebanter">Return to Section 0</a> <code>|</code> <a href="https://www.faanross.com/course01/02_attack/">Proceed to Section 2</a> <code>|</code></p>
 
 		</section>
 
