@@ -12,7 +12,7 @@ type: course
 
 &nbsp;  
 
-{{< figure src="/img/gif/koko.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/koko.gif" title="" class="custom-figure-4" >}}
 
 # 5. Post-Mortem Forensics: Memory
 # 5.1. Transferring the Artifacts
@@ -34,11 +34,11 @@ python -m http.server 8008
 ```
 5. You will more than likely receive a Windows Security Alert, click `Allow Access`.
 
-{{< figure src="/img/image058.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image058.png" title="" class="custom-figure-6" >}}
 
 6. Now head on over to your Ubuntu analyst VM and open the browser (FireFox). Navigate to `http://windows_IP:windows_port`, in my case that would be `http://192.168.230.158:8008`.
 
-{{< figure src="/img/image061.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image061.png" title="" class="custom-figure-6" >}}
 
 7. Go ahead and save each of the files to wherever you want - for simplicity's sake I will be saving them all directly to the desktop once again. 
 
@@ -57,7 +57,7 @@ One important thing you have to know before we move ahead is that `Volatility` u
 - `netscan` displays any network connections and sockets made by the OS.
 - `malfind` looks for inject code.
 
-{{< figure src="/img/plugging-in.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/plugging-in.gif" title="" class="custom-figure-6" >}}
 
 
 Now that you have a basic idea of the modules we'll be using, let's continue with our actual analysis.
@@ -79,13 +79,13 @@ python3 vol.py -f ~/Desktop/memdump.raw windows.pslist
 ```
 3. Scroll down until you see `rundll32.exe` and note it's PID, you can see in my example below it's `5060`, we'll use this for our next plug-in. 
 
-{{< figure src="/img/image062.png" title="" class="custom-figure-2" >}}
+{{< figure src="/img/image062.png" title="" class="custom-figure-6" >}}
 
 # 5.3.2. handles
 
 Now that we've got the PID of our suspicious program we're going to look at its handles. 
 
-{{< figure src="/img/handles.gif" title="" class="custom-figure-3" >}}
+{{< figure src="/img/handles.gif" title="" class="custom-figure-6" >}}
 
 A handle is like a reference that a program uses to access a resource - whether that be files, registry keys, or network connections. When a process wants to access one of these resources, the OS gives it a handle, kind of like a ticket, that the process uses to read from or write to the resource. 
 
@@ -119,13 +119,13 @@ This key is commonly used to debug applications in Windows. However, it is also 
 
 # 5.3.3. cmdline
 
-This is one of my favourite modules in Volatility, allowing us to extract command-line arguments of running processes from our memory dump. Here we'll apply it only to the process of interest, but of course keep in mind that we could review the entire available history.
+This is one of my favorite modules in Volatility, allowing us to extract command-line arguments of running processes from our memory dump. Here we'll apply it only to the process of interest, but of course keep in mind that we could review the entire available history.
 
 ```
 python3 vol.py -f ~/Desktop/artifacts/memdump.raw windows.cmdline.CmdLine --pid 5060 
 ``` 
 
-{{< figure src="/img/image096.png" title="" class="custom-figure-3" >}}
+{{< figure src="/img/image096.png" title="" class="custom-figure-6" >}}
 
 Here we receive the same insight as before, namely that `rundll32.exe` was not provided any arguments when it was invoked from the command line. I'm pointing this out once again so you are aware you can obtain this same information even if you were not able to perform a live analysis. 
 
@@ -175,9 +175,6 @@ I think this serves as a good introduction to `Volatility` - you now have some s
 
 
 That being the case let's move on to the log analysis, which is likely going to be the most substantial journey. For this we'll once again use our Windows VM, so in case you turned it off, please turn it back on. 
-
-***
-***
 
 
 &nbsp;  
