@@ -254,4 +254,4 @@ This signifies the end of our ***live analysis***, ie analysis we perform with t
 
 ***
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 5](https://www.faanross.com/course01/05_post_memory/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 3](https://www.faanross.com/course01/03_live_native/) `|` [Proceed to Section 5](https://www.faanross.com/course01/05_post_memory/) `|`

@@ -12,14 +12,13 @@ type: course
 
 &nbsp;  
 
-{{< figure src="/img/koko.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/koko.gif" title="" class="custom-figure" >}}
 
 # 5. Post-Mortem Forensics: Memory
 # 5.1. Transferring the Artifacts
 
 First thing's first - we need to transfer the artifacts we produced in `2.3.6` over to our Ubuntu analyst VM. 
 
-{{< figure src="/img/review.gif" title="" class="custom-figure-2" >}}
 
 But just as a note: we'll only transfer our memory dump and packet capture. We won't transfer our log files - I'll explain exactly why later. 
 
