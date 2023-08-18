@@ -12,7 +12,7 @@ type: course
 
 &nbsp;  
 
-{{< figure src="/img/gif/koko.gif" title="" class="custom-figure-4" >}}
+{{< figure src="/img/gif/koko.gif" title="" class="custom-figure-6" >}}
 
 # 5. Post-Mortem Forensics: Memory
 # 5.1. Transferring the Artifacts
@@ -34,7 +34,7 @@ python -m http.server 8008
 ```
 5. You will more than likely receive a Windows Security Alert, click `Allow Access`.
 
-{{< figure src="/img/image058.png" title="" class="custom-figure-6" >}}
+{{< figure src="/img/image058.png" title="" class="custom-figure-8" >}}
 
 6. Now head on over to your Ubuntu analyst VM and open the browser (FireFox). Navigate to `http://windows_IP:windows_port`, in my case that would be `http://192.168.230.158:8008`.
 
@@ -43,6 +43,8 @@ python -m http.server 8008
 7. Go ahead and save each of the files to wherever you want - for simplicity's sake I will be saving them all directly to the desktop once again. 
 
 ***
+
+&nbsp; 
 
 # 5.2. Introduction to Volatility
 
@@ -63,6 +65,8 @@ One important thing you have to know before we move ahead is that `Volatility` u
 Now that you have a basic idea of the modules we'll be using, let's continue with our actual analysis.
 
 ***
+
+&nbsp; 
 
 # 5.3. Analysis
 
@@ -162,12 +166,12 @@ This is thus a good reminder that the mere appearance of a process in malfind's 
 
 ***
 
+&nbsp; 
+
 # 5.4. Final Thoughts
 
 This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform live analysis and only received a memory dump, then this section showed us how we could derive a lot of the same information. Further, even if we did perform the live analysis, it might still be useful to validate the findings on a system not suspected of being compromised. 
 
-
-we bolster our case when we can come to the same conclusions via another avenue. 
 
 I think this serves as a good introduction to `Volatility` - you now have some sense of how it works, how to use it, and what are the "go to" plug-ins for threat hunting.
 
