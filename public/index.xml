@@ -100,9 +100,8 @@ What do I mean by this?</description>
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/course01/07_post_traffic/</guid>
-      <description>| Return to Course Overview | Proceed to Section 8 |
-7.1. Introduction In many respects, the realm of network packets is the ultimate domain for threat hunting. It is the only place where malware cannot hide, especially if it intends to communicate. Thus, even if malicious traffic is buried under an avalanche of legitimate traffic, one thing is for sure: the malware&amp;rsquo;s communication is always present, somewhere.
-Traffic analysis is an absolutely integral part of threat hunting, playing a major role in nearly every aspect—whether you are searching for initial evidence or seeking to build a case.</description>
+      <description>| Course Overview | Return to Section 6 | Proceed to Section 8 |
+Section 7: Post-Mortem Forensics - Traffic Analysis 7.1. Introduction In many respects, the realm of network packets is the ultimate domain for threat hunting. It is the only place where malware cannot hide, especially if it intends to communicate. Thus, even if malicious traffic is buried under an avalanche of legitimate traffic, one thing is for sure: the malware&amp;rsquo;s communication is always present, somewhere.</description>
     </item>
     
     <item>

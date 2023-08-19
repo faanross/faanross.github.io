@@ -5,13 +5,16 @@ date: 2023-08-12T02:01:58+05:30
 type: course
 ---
 
-
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 8](https://www.faanross.com/course01/08_review/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 6](https://www.faanross.com/course01/06_post_logs/) `|` [Proceed to Section 8](https://www.faanross.com/course01/08_review/) `|`
 
 ***
 
 &nbsp;  
 
+
+{{< figure src="/img/gif/akira.gif" title="" class="custom-figure" >}}
+
+# Section 7: Post-Mortem Forensics - Traffic Analysis
 # 7.1. Introduction
 
 In many respects, the realm of network packets is the ultimate domain for threat hunting. It is the only place where malware cannot hide, especially if it intends to communicate. Thus, even if malicious traffic is buried under an avalanche of legitimate traffic, one thing is for sure: the malware's communication is always present, somewhere.
@@ -73,4 +76,4 @@ That being the case, this is where we'll end our traffic analysis - short and sw
 
 ***
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` [Proceed to Section 8](https://www.faanross.com/course01/08_review/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 6](https://www.faanross.com/course01/06_post_logs/) `|` [Proceed to Section 8](https://www.faanross.com/course01/08_review/) `|`

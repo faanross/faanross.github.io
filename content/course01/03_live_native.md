@@ -36,7 +36,7 @@ You will benefit from understanding the [following short theoretical framework o
 &nbsp;  
 
 # 3.3. Analysis
-There are a number of things we can look at when we do a live analyis using the native tools, including: connections, processes, shares, firewall settings, services, accounts, groups, registry keys, scheduled tasks etc.
+There are a number of things we can look at when we do a live analysis using the native tools, including: connections, processes, shares, firewall settings, services, accounts, groups, registry keys, scheduled tasks etc.
 
 For this course we will only focus on connections and processes. If you are keen to learn more about how to investigate the other factors I suggest you watch [this excellent talk by John Strand](https://www.youtube.com/watch?v=fEip9gl2MTA). 
 

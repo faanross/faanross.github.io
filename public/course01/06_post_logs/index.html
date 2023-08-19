@@ -136,7 +136,7 @@ What do I mean by this?"/>
 
 <p>So for now it&rsquo;ll just be simpler to move ahead and used the built-in <code>Event Viewer</code> in Windows to work with these files. And since I did not want to create another &ldquo;non-victim&rdquo; Windows VM for this one task we&rsquo;re going to be using the same VM. But please be aware, unless there is literally no alternative you should never do this in an actual threat hunting scenario.</p>
 <p>The reason is quite obvious - performing a post-mortem analysis on a compromised system can potentially taint the results. We have no idea how the breach might be impacting our actions and so to ensure the integrity of our data we need to perform it in a secure environment.</p>
-<figure class="custom-figure-38"><img src="/img/tainted.gif"/>
+<figure class="custom-figure-8"><img src="/img/tainted.gif"/>
 </figure>
 
 <p>This also why for example certain antimalware software vendors provide versions of their products that can run directly from a bootable CD or USB drive - to ensure a scan that is unaffected by  resident malware.</p>
@@ -195,7 +195,7 @@ What do I mean by this?"/>
 <li>svchost.exe <code>ID 10</code>,</li>
 <li>vds.exe <code>ID 1</code></li>
 </ul>
-<figure class="custom-figure-8"><img src="/img/interesting.gif"/>
+<figure class="custom-figure-6"><img src="/img/interesting.gif"/>
 </figure>
 
 <p>We then encounter a series of three <strong>very interesting</strong> logs - <code>ID 13</code>, <code>ID 12</code>, <code>ID 13</code>. These are really awesome since, as you&rsquo;ll soon see, they give us insight into an inner workings of the malware.</p>
@@ -213,7 +213,7 @@ What do I mean by this?"/>
 <p>We can see the registry key has the same name as above (<code>DisableAntiSpyware</code>), <em>but</em>, critically, we have to pay attention to the full path of the <em>TargetObject</em>. The first one is located under <code>HKU\...</code>, while the one here is located under <code>HKLM\...</code>. <code>HKU</code> stands for <em><strong>HKEY_USERS</strong></em>, and <code>HKLM</code> stands for <em><strong>HKEY_LOCAL_MACHINE</strong></em>. These are two major registry hive keys in the Windows Registry.</p>
 <p>What you should also know is that the <code>HKU</code> hive contains configuration information for Windows user profiles on the computer, whereas the <code>HKLM</code> hive contains configuration data that is used by all users on the computer. In other words the first one deals with the specific user, the second deals with the entire system.</p>
 <p>Further, we can also see that instead of <code>rufus.exe</code> performing the actions here, it is performed by <code>svchost.exe</code>. In case you were not aware this is a legitimate Windows process, and further, it being co-opted for nefarious purposes by malware is quite common. That&rsquo;s because hackers LOVE abusing <code>svchost.exe</code> for a slew of reasons - its ubiquity, anonymity, persistence, stealth and potential for gaining elevated privileges.</p>
-<figure class="custom-figure-8"><img src="/img/1979.gif"/>
+<figure class="custom-figure-8"><img src="/img/gif/1979.gif"/>
 </figure>
 
 <p>And in fact it seems this might be the primary reason for the malware switching processes - changes to <code>HKLM</code> require elevated privileges because they affect the entire system, not just a single user. The <code>svchost.exe</code> process was running with system privileges (the highest level of privilege), which allowed it to modify the system-wide key.</p>
@@ -224,7 +224,7 @@ What do I mean by this?"/>
 <p>Here we can see the same action as performed in our first entry, ie disabling the antispyware function by setting the value to 1 (disabling through enabling the disabling function - thanks MS!). But this time it affects the <code>HKLM</code> hive instead of the <code>HKU</code> hive. In other words, where the first entry disabled antispyware for the specific user, this now disables it for the entire system.</p>
 <p>But then why the deletion event preceding this? The most likely reason the malware is doing this is to ensure that by returning the registry key to the default state (which is what deleting it in effect does), it will behave exactly as is expected. In this way it ensures that the system doesn&rsquo;t have an unexpected configuration that could interfere with the malware&rsquo;s actions.</p>
 <p>This is of course speculation on my part - the only way for us to truly understand the malware author&rsquo;s intention would be to actually reverse it, which is of course literally an entire other discipline in and of itself.</p>
-<p>That being the case this is where our speculation on this matter will remain, we will however be jumping into the amazing world of malware analysis in the future. As a threat hunter you are not expected to be an absolute wizard at it, but your abilities as a hunter will expand dramatrically if you add a basic understanding of this tool to your kit.</p>
+<p>That being the case this is where our speculation on this matter will remain, we will however be jumping into the amazing world of malware analysis in the future. As a threat hunter you are not expected to be an absolute wizard at it, but your abilities as a hunter will expand dramatically if you add a basic understanding of this tool to your kit.</p>
 <p>But for now, let&rsquo;s move on.</p>
 <figure class="custom-figure"><img src="/img/silly_walk.gif"/>
 </figure>
@@ -239,12 +239,12 @@ What do I mean by this?"/>
 </figure>
 
 <p>Here we can see <code>svchost.exe</code> (let&rsquo;s still assume this is the malware) is doing a DNS query for  DESKTOP-UKJG356. This is however the name of the very host it currently compromised. So why would malware do this - why would it do a DNS resolution to find the ip of the host it has currently infected?</p>
-<p>Well, there are several potential reasons. One possible explanation is that it is doing internal fingerprinting, it might also for example be testing network connectivity to check whether it is in a sandboxed environment - in which case it will alter its behaviour. These are again educated guesses, and as was the case above we&rsquo;ll have to dig into its guts to really understand what it&rsquo;s intention is.</p>
+<p>Well, there are several potential reasons. One possible explanation is that it is doing internal fingerprinting, it might also for example be testing network connectivity to check whether it is in a sandboxed environment - in which case it will alter its behavior. These are again educated guesses, and as was the case above we&rsquo;ll have to dig into its guts to really understand what it&rsquo;s intention is.</p>
 <p>Next we can see some events (<code>ID 10</code>) where <code>powershell.exe</code> is accessing <code>lsass.exe</code>.</p>
 <figure class="custom-figure"><img src="/img/image087.png"/>
 </figure>
 
-<p><code>LSASS</code>, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. Given its involvment in security and authentication it&rsquo;s probably no great shock to learn that hackers LOVE abusing this process. It is involved in a myriad of attack types - credential dumping, pass-the-hash, pass-the-ticket, access token creation/manipulation etc.</p>
+<p><code>LSASS</code>, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. Given its involvement in security and authentication it&rsquo;s probably no great shock to learn that hackers LOVE abusing this process. It is involved in a myriad of attack types - credential dumping, pass-the-hash, pass-the-ticket, access token creation/manipulation etc.</p>
 <figure class="custom-figure-8"><img src="/img/troll.gif"/>
 </figure>
 
@@ -272,7 +272,7 @@ What do I mean by this?"/>
 <figure class="custom-figure"><img src="/img/image089.png"/>
 </figure>
 
-<p>First, we can see that all the entries are assigned the lowest warning level (<code>Verbose</code>) with a single expection that is categorized as <code>Warning</code>. Let&rsquo;s make a note to scrutinise this when we get to that entry.</p>
+<p>First, we can see that all the entries are assigned the lowest warning level (<code>Verbose</code>) with a single exception that is categorized as <code>Warning</code>. Let&rsquo;s make a note to scrutinize this when we get to that entry.</p>
 <p>The next obvious thing we can see is that every single event ID is the exact same - <code>4104</code>. This may seem strange but is actually expected - PowerShell ScriptBlock logging is indeed associated with Event <code>ID 4104</code>.</p>
 <p>And then one final observation: look at the date and time stamps. Do you notice anything peculiar?</p>
 <figure class="custom-figure-8"><img src="/img/twins.gif"/>

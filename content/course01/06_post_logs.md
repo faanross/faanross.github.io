@@ -54,7 +54,7 @@ So for now it'll just be simpler to move ahead and used the built-in `Event View
 
 The reason is quite obvious - performing a post-mortem analysis on a compromised system can potentially taint the results. We have no idea how the breach might be impacting our actions and so to ensure the integrity of our data we need to perform it in a secure environment. 
 
-{{< figure src="/img/tainted.gif" title="" class="custom-figure-38" >}}
+{{< figure src="/img/tainted.gif" title="" class="custom-figure-8" >}}
 
 This also why for example certain antimalware software vendors provide versions of their products that can run directly from a bootable CD or USB drive - to ensure a scan that is unaffected by  resident malware. 
 
@@ -133,7 +133,7 @@ We can ignore the next 2 entries (`smartscreen.exe, ID 1`, `consent.exe, ID 1`),
 - svchost.exe `ID 10`,
 - vds.exe `ID 1`
 
-{{< figure src="/img/interesting.gif" title="" class="custom-figure-8" >}}
+{{< figure src="/img/interesting.gif" title="" class="custom-figure-6" >}}
 
 We then encounter a series of three **very interesting** logs - `ID 13`, `ID 12`, `ID 13`. These are really awesome since, as you'll soon see, they give us insight into an inner workings of the malware.
 
@@ -157,7 +157,7 @@ What you should also know is that the `HKU` hive contains configuration informat
 
 Further, we can also see that instead of `rufus.exe` performing the actions here, it is performed by `svchost.exe`. In case you were not aware this is a legitimate Windows process, and further, it being co-opted for nefarious purposes by malware is quite common. That's because hackers LOVE abusing `svchost.exe` for a slew of reasons - its ubiquity, anonymity, persistence, stealth and potential for gaining elevated privileges. 
 
-{{< figure src="/img/1979.gif" title="" class="custom-figure-8" >}}
+{{< figure src="/img/gif/1979.gif" title="" class="custom-figure-8" >}}
 
 And in fact it seems this might be the primary reason for the malware switching processes - changes to `HKLM` require elevated privileges because they affect the entire system, not just a single user. The `svchost.exe` process was running with system privileges (the highest level of privilege), which allowed it to modify the system-wide key.
 
@@ -171,7 +171,7 @@ But then why the deletion event preceding this? The most likely reason the malwa
 
 This is of course speculation on my part - the only way for us to truly understand the malware author's intention would be to actually reverse it, which is of course literally an entire other discipline in and of itself. 
 
-That being the case this is where our speculation on this matter will remain, we will however be jumping into the amazing world of malware analysis in the future. As a threat hunter you are not expected to be an absolute wizard at it, but your abilities as a hunter will expand dramatrically if you add a basic understanding of this tool to your kit. 
+That being the case this is where our speculation on this matter will remain, we will however be jumping into the amazing world of malware analysis in the future. As a threat hunter you are not expected to be an absolute wizard at it, but your abilities as a hunter will expand dramatically if you add a basic understanding of this tool to your kit. 
 
 But for now, let's move on. 
 
@@ -189,13 +189,13 @@ Next we encounter another DNS resolution entry (`ID 22`), this one is however a 
 
 Here we can see `svchost.exe` (let's still assume this is the malware) is doing a DNS query for  DESKTOP-UKJG356. This is however the name of the very host it currently compromised. So why would malware do this - why would it do a DNS resolution to find the ip of the host it has currently infected? 
 
-Well, there are several potential reasons. One possible explanation is that it is doing internal fingerprinting, it might also for example be testing network connectivity to check whether it is in a sandboxed environment - in which case it will alter its behaviour. These are again educated guesses, and as was the case above we'll have to dig into its guts to really understand what it's intention is.
+Well, there are several potential reasons. One possible explanation is that it is doing internal fingerprinting, it might also for example be testing network connectivity to check whether it is in a sandboxed environment - in which case it will alter its behavior. These are again educated guesses, and as was the case above we'll have to dig into its guts to really understand what it's intention is.
 
 Next we can see some events (`ID 10`) where `powershell.exe` is accessing `lsass.exe`.
 
 {{< figure src="/img/image087.png" title="" class="custom-figure" >}}
 
-`LSASS`, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. Given its involvment in security and authentication it's probably no great shock to learn that hackers LOVE abusing this process. It is involved in a myriad of attack types - credential dumping, pass-the-hash, pass-the-ticket, access token creation/manipulation etc. 
+`LSASS`, or the Local Security Authority Subsystem Service, is a process in Microsoft Windows operating systems responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. Given its involvement in security and authentication it's probably no great shock to learn that hackers LOVE abusing this process. It is involved in a myriad of attack types - credential dumping, pass-the-hash, pass-the-ticket, access token creation/manipulation etc. 
 
 {{< figure src="/img/troll.gif" title="" class="custom-figure-8" >}}
 
@@ -236,7 +236,7 @@ So again let's first look at everything on a high-level to see what patterns we 
 
 {{< figure src="/img/image089.png" title="" class="custom-figure" >}}
 
-First, we can see that all the entries are assigned the lowest warning level (`Verbose`) with a single expection that is categorized as `Warning`. Let's make a note to scrutinise this when we get to that entry.
+First, we can see that all the entries are assigned the lowest warning level (`Verbose`) with a single exception that is categorized as `Warning`. Let's make a note to scrutinize this when we get to that entry.
 
 The next obvious thing we can see is that every single event ID is the exact same - `4104`. This may seem strange but is actually expected - PowerShell ScriptBlock logging is indeed associated with Event `ID 4104`. 
 
@@ -319,8 +319,6 @@ We essentially only had three critical pieces of info - the name of the suspicio
 - Which command was actually used to inject the script into `rufus.exe`, from here we will also learn the id/location of the malicious dll
 
 {{< figure src="/img/pinkfloyd.gif" title="" class="custom-figure" >}}
-
-
 
 Additionally, the logs provided us with exact timestamps for many major events, which can be very useful in the incident response process. 
 

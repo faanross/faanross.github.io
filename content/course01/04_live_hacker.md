@@ -38,7 +38,7 @@ Again we're building a case, and each additional piece of evidence serves to dec
 
 {{< figure src="/img/redbutton.gif" title="" class="custom-figure" >}}
 
-Additionally, the process as outlined here may give the impression that it typically plays out as a strictly linear process. This is not necessarilly the case - instead of going through our list 1-7 below, we could jump around not only on the list itself, but with completely different  techniqes. 
+Additionally, the process as outlined here may give the impression that it typically plays out as a strictly linear process. This is not necessarily the case - instead of going through our list 1-7 below, we could jump around not only on the list itself, but with completely different  techniques. 
 
 As a simple example - if we find a suspicious process by following this procedure, we might want to pause and have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use **Least Frequency Analysis** and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis. 
 

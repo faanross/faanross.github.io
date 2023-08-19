@@ -12,6 +12,10 @@ type: course
 
 &nbsp;  
 
+{{< figure src="/img/gif/manhattan.png" title="" class="custom-figure" >}}
+
+
+
 first thing create comparison image
 
 x

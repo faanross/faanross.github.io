@@ -162,7 +162,7 @@ We can see that it correctly flagged `rundll32.exe`. However, if we go through t
 - powershell.exe
 - smartscreen.exe
 
-This is thus a good reminder that the mere appearance of a process in malfind's output is not an unequivocal affirmation of its malicious nature.
+This is thus a good reminder that the mere appearance of a process in *malfind*'s output is not an unequivocal affirmation of its malicious nature.
 
 ***
 
@@ -170,7 +170,7 @@ This is thus a good reminder that the mere appearance of a process in malfind's 
 
 # 5.4. Final Thoughts
 
-This section was admittedly not too revelatory, but really only because we already peformed live analysis. Again, if we were unable to perform live analysis and only received a memory dump, then this section showed us how we could derive a lot of the same information. Further, even if we did perform the live analysis, it might still be useful to validate the findings on a system not suspected of being compromised. 
+This section was admittedly not too revelatory, but really only because we already performed live analysis. Again, if we were unable to perform live analysis and only received a memory dump, then this section showed us how we could derive a lot of the same information. Further, even if we did perform the live analysis, it might still be useful to validate the findings on a system not suspected of being compromised. 
 
 
 I think this serves as a good introduction to `Volatility` - you now have some sense of how it works, how to use it, and what are the "go to" plug-ins for threat hunting.

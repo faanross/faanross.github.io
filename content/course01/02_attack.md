@@ -312,13 +312,13 @@ OK so let's just hold zoom out and discuss the attack we just performed. At this
 
 "Wait", I hear you say, "if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn't it cheating then to be running these commands ahead of that actually happening"? 
 
-Look at the meta: the whole point of establishing C2 on the victim is so we can run commands on it, but we literally just allowed ourselves to freely run commands on the victim so that we can establish C2. We wrote our malicious DLL to disk, injected our DLL-injection script into memory, and ran the script all from the comfort of Imaginationland.
+Look at the meta: the whole point of establishing C2 on the victim is so we can run commands on it, but we literally just allowed ourselves to freely run commands on the victim so that we can establish C2. We wrote our malicious DLL to disk, injected our DLL-injection script into memory, and ran the script all from the comfort of *Imaginationland*.
 
 {{< figure src="/img/gif/imagination.gif" title="" class="custom-figure-6" >}}
 
 So then the answer is *yes*. That was cheating - of course. But, it's cheating with a purpose you see, the purpose here being that this is a course on threat hunting. So we stripped the actions of the initial compromise down to its core and for now we've foregone our spearfishing email and VBA macro. We've streamlined the essence of the attack - we're expending less energy in the effort, and yet for our intents have created the same outcome. 
 
-So, we won't be investing our time in completely recreating a realistic simulation of the intial compromise, *however*, I do think it's very important for us to discuss here what that would look like. We are about to embark on our threat hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. 
+So, we won't be investing our time in completely recreating a realistic simulation of the initial compromise, *however*, I do think it's very important for us to discuss here what that would look like. We are about to embark on our threat hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific "cheating" method here. 
 
 Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual attack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack. 
 
@@ -330,7 +330,7 @@ So the remainder of this section will be dedicated to that. I'm very briefly goi
 1. We crafted a malicious DLL on our system.
 2. We transferred this DLL over to the victim's system.
 3. We opened a meterpreter handler on our system.
-4. On the victim's sytem we then downloaded a powershell script from a web server, and injected it into memory.
+4. On the victim's system we then downloaded a powershell script from a web server, and injected it into memory.
 5. We opened a legitimate program (`rufus.exe`).
 6. We then ran the script we downloaded in #4, causing the malicious dll from #1 to be injected into the memory space of #5.
 7. The injected DLL is executed, calling back to the handler we created in #3, thereby establishing our backdoor connection.
