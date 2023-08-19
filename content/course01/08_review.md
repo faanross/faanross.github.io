@@ -6,7 +6,7 @@ type: course
 ---
 
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` 
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 6](https://www.faanross.com/course01/07_post_traffic/) `|`
 
 ***
 
@@ -24,4 +24,4 @@ x
 
 ***
 
-`|` [Return to Course Overview](https://www.faanross.com/posts/course01/) `|` 
+`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 6](https://www.faanross.com/course01/07_post_traffic/) `|`
