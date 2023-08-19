@@ -314,7 +314,7 @@ We essentially only had three critical pieces of info - the name of the suspicio
 - The malware launched `raserver.exe` with the `/offerraupdate` flag, creating another potential backdoor.
 
 **Using PowerShell ScriptBlock we learned:**
-- The actual command that was used by the "stager" to donwload the script from the web server and inject it into memory.
+- The actual command that was used by the "stager" to download the script from the web server and inject it into memory.
 - Crucially, we learned the actual contents of the dll-injection script.
 - Which command was actually used to inject the script into `rufus.exe`, from here we will also learn the id/location of the malicious dll
 

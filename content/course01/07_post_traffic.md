@@ -11,7 +11,6 @@ type: course
 
 &nbsp;  
 
-
 {{< figure src="/img/gif/akira.gif" title="" class="custom-figure" >}}
 
 # Section 7: Post-Mortem Forensics - Traffic Analysis
@@ -29,11 +28,16 @@ So here's the thing: traffic analysis is fundamentally about discerning patterns
 
 All this to say: although traffic analysis is incredibly important for threat hunting, due to the specific nature of the attack we emulated here, it isn't an ideal match in this context. Nonetheless, I wanted to introduce it in a rudimentary sense in this course so that you have some exposure to what can be expected regarding an initial exploitation, even if it's minimal. Rest assured that in a future course, we will delve much deeper into traffic analysis, particularly to help identify unwanted persistent connections.
 
+***
+
+&nbsp;  
+
+
 # 7.2. Analysis
 
 **So let's have a quick look at what's going on in the packet capture.** Open your Ubuntu VM, open WireShark, and then open the packet capture we transferred over in Section `5.1`. 
 
-{{< figure src="/img/image097.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image097.png" title="" class="custom-figure" >}}
 
 We can see that in the brief amount of time we ran the capture for a total of 584 packets were captured. In case you are completely new to this: we can expect *a lot* of these to be completly unrelated to our attack. Even if you are not even interacting with your system it typically generates a lot of packets via ordinary backend operations.
 
@@ -41,29 +45,29 @@ So, our next step would now be to find which packets are related to the emulated
 
 Scrolling down, in my capture we can see around packet 58 + 59 there is a DNS request + response for `raw.githubusercontent.com`.
 
-{{< figure src="/img/image098.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image098.png" title="" class="custom-figure" >}}
 
 This is of course where the initial IEX command (representing our stager) reached out to that specific web server to download the injection script. Double-click on the second packet (the response), then in packet details select `Domain Name System (response)`, and then `Answer`. 
 
-{{< figure src="/img/image099.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image099.png" title="" class="custom-figure" >}}
 
 Here we can see the IPs the FQDN resolves to - again, in an actual attack we can immediately run this IOC to see for example what other systems connected to it, is it present on any threat intelligence blacklists etc. 
 
 Immediately after the DNS we can see the conversation taking place between our system and the web server - first the certificates are being authenticated, then an encrypted (TLS) exchange takes place. This is likely the actual injection script being downloaded. Since it is encrypted we cannot easily view the contents, however we already saw that the entire script that was download is accessible via PowerShell ScriptBlock logs. 
 
-{{< figure src="/img/image100.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image100.png" title="" class="custom-figure" >}}
 
 And then, around packet 118, we can see the connection being established between our system and the attacker. 
 
-{{< figure src="/img/image101.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image101.png" title="" class="custom-figure" >}}
 
 This represents a few hundred packets. In these cases, the easiest way to get a feel for what is being exchanged is to right-click on any packet (part of this series), then select `Follow`, `TCP Stream`. This shows the entire stream of contents that was exchanged. 
 
-{{< figure src="/img/image102.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image102.png" title="" class="custom-figure" >}}
 
 Right at the top we see something interesting and familiar - the magic bytes and the dos stub! This should thus give us a good hint at what we are looking at here. For the rest we can see most of the content is encrypted/obfuscated, but here and there we do see some clear text appearing.
 
-{{< figure src="/img/image103.png" title="" class="custom-figure" >}}
+{{< figure src="/img/course01/image103.png" title="" class="custom-figure" >}}
 
 There are thus many interesting questions we can ask based on what we are witnessing here, which may lead us to find out what mechanisms the malware is employing. Without getting into it too deeply, as a simple example when I Google the term `Copyright 1995-1996 Mark Adler` (which appears in the stream), we immediately find out this is due to `zlib` being included in the code. Thus it's likely the payload is being compressed or obfuscated using `zlib`, which itself is of course completely legitimate data compression software. 
 
