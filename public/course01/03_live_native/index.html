@@ -2,23 +2,20 @@
 <html><head lang="en">
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Section 3: Live Analysis - Native Windows Tools - faan|ross</title><link rel="icon" type="image/x-icon" href=/favicon.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="| Return to Course Overview | Proceed to Section 4 |
-3. Live Analysis: Native Windows Tools 3.1. Introduction So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information.
-So if we have at our disposal better tools, ie tools that can provide more information, why bother?" />
+	<meta name="description" content="| Course Overview | Return to Section 2 | Proceed to Section 4 |
+3. Live Analysis: Native Windows Tools 3.1. Introduction So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information." />
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Section 3: Live Analysis - Native Windows Tools" />
-<meta property="og:description" content="| Return to Course Overview | Proceed to Section 4 |
-3. Live Analysis: Native Windows Tools 3.1. Introduction So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information.
-So if we have at our disposal better tools, ie tools that can provide more information, why bother?" />
+<meta property="og:description" content="| Course Overview | Return to Section 2 | Proceed to Section 4 |
+3. Live Analysis: Native Windows Tools 3.1. Introduction So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://athul.github.io/archie/course01/03_live_native/" /><meta property="article:section" content="course01" />
 <meta property="article:published_time" content="2023-08-12T02:01:58+05:30" />
 <meta property="article:modified_time" content="2023-08-12T02:01:58+05:30" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Section 3: Live Analysis - Native Windows Tools"/>
-<meta name="twitter:description" content="| Return to Course Overview | Proceed to Section 4 |
-3. Live Analysis: Native Windows Tools 3.1. Introduction So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information.
-So if we have at our disposal better tools, ie tools that can provide more information, why bother?"/>
+<meta name="twitter:description" content="| Course Overview | Return to Section 2 | Proceed to Section 4 |
+3. Live Analysis: Native Windows Tools 3.1. Introduction So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information."/>
 <script src="https://athul.github.io/archie/js/feather.min.js"></script>
 	
 	
@@ -26,7 +23,7 @@ So if we have at our disposal better tools, ie tools that can provide more infor
 	
 
 	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.dd96be82687f2a3c48a68b1615119f516a61deee410fb50de65cb93d7e921d09.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.f5968f615e691145516af7beb94a05127c7b7d0e93ab337bd09b02bbfdd01e78.css" />
 		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://athul.github.io/archie/css/dark.191767dd42068cd77e23d5f95ccc0becc0e7105decd65e1405e5695f242e2b3c.css"   />
 	
 
@@ -101,9 +98,12 @@ So if we have at our disposal better tools, ie tools that can provide more infor
 		
 
 		<section class="body">
-			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/04_live_hacker/">Proceed to Section 4</a> <code>|</code></p>
+			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/02_attack/">Return to Section 2</a> <code>|</code> <a href="https://www.faanross.com/course01/04_live_hacker/">Proceed to Section 4</a> <code>|</code></p>
 <hr>
 <p> </p>
+<figure class="custom-figure"><img src="/img/gif/office_sp.gif"/>
+</figure>
+
 <h1 id="3-live-analysis-native-windows-tools">3. Live Analysis: Native Windows Tools</h1>
 <h1 id="31-introduction">3.1. Introduction</h1>
 <p>So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information.</p>
@@ -113,9 +113,11 @@ So if we have at our disposal better tools, ie tools that can provide more infor
 </figure>
 
 <hr>
+<p> </p>
 <h1 id="32-theory">3.2. Theory</h1>
 <p>You will benefit from understanding the <a href="https://www.faanross.com/posts/three_modes/">following short theoretical framework on the &lsquo;3 Modes of Threat Hunting&rsquo;</a>. I leave the decision of whether or not to read it up to you, though it will be referenced throughout the remainder of the course.</p>
 <hr>
+<p> </p>
 <h1 id="33-analysis">3.3. Analysis</h1>
 <p>There are a number of things we can look at when we do a live analyis using the native tools, including: connections, processes, shares, firewall settings, services, accounts, groups, registry keys, scheduled tasks etc.</p>
 <p>For this course we will only focus on connections and processes. If you are keen to learn more about how to investigate the other factors I suggest you watch <a href="https://www.youtube.com/watch?v=fEip9gl2MTA">this excellent talk by John Strand</a>.</p>
@@ -143,7 +145,7 @@ So if we have at our disposal better tools, ie tools that can provide more infor
 <p>Let&rsquo;s learn more about this strange process, specifically: what command-line options were used to run it, what is it&rsquo;s parent process, and what DLLs are being used by the process.</p>
 <p><strong>Let&rsquo;s have a look at the DLLs, staying in our PowerShell terminal we run:</strong></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>tasklist /m /fi &#34;pid eq 3948&#34;
-</span></span></code></pre></div><figure class="custom-figure-3"><img src="/img/image072.png"/>
+</span></span></code></pre></div><figure class="custom-figure"><img src="/img/image072.png"/>
 </figure>
 
 <p>On quick glance nothing seems unusual about this output - no DLL sticks out as being out of placed for <code>rundll32.exe</code>. So for now let&rsquo;s move on with the knowledge that we can always circle back and dig deeper if need be.</p>
@@ -170,19 +172,18 @@ So if we have at our disposal better tools, ie tools that can provide more infor
 
 <p>We can see the command is nude - no arguments are provided. Well, since again the <code>rundll32.exe</code> command is typically used to execute a function in a specific DLL file, you would expect to see it accompanied by arguments specifying the DLL file and function it&rsquo;s supposed to execute. But here it&rsquo;s simply executed by itself, again reinforcing our suspicion that something is amiss.</p>
 <hr>
+<p> </p>
 <h1 id="34-closing-thoughts">3.4. Closing Thoughts</h1>
-<p>Again we started with an open mind, spotten an unusual process being involved in a network connection, and then using other native Windows tools learned more about this process. And the more we learned, the more our suspicion was confirmed:</p>
+<p>So we started with an open mind, spotted an unusual process being involved in a network connection, and then using other native Windows tools learned more about this process. And the more we learned, the more our suspicion was confirmed:</p>
 <ul>
 <li>The parent-child relationship is unusual.</li>
 <li>The need for the parent relationship to ultimately create a network connection is unusual.</li>
 <li>The fact that the process was ran without command-line arguments was unusual.</li>
 </ul>
 <p>Now that our suspicion is well and truly aroused let&rsquo;s dig in deeper to build our case using <code>Process Hacker</code>.</p>
-<hr>
-<hr>
 <p> </p>
 <hr>
-<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/04_live_hacker/">Proceed to Section 4</a> <code>|</code></p>
+<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/02_attack/">Return to Section 2</a> <code>|</code> <a href="https://www.faanross.com/course01/04_live_hacker/">Proceed to Section 4</a></p>
 
 		</section>
 

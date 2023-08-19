@@ -36,7 +36,7 @@ I have however created this course specifically with the beginner in mind. What 
       
       <guid>https://athul.github.io/archie/course01/01_settingup/</guid>
       <description>| Course Overview | Return to Section 0 | Proceed to Section 2 |
-1.1. Introduction In this section we&amp;rsquo;ll set up the three VMs we&amp;rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&amp;rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&amp;rsquo;ll perform some configurations as well as install extra software.</description>
+Section 1: Setting Up Our Virtual Environment 1.1. Introduction In this section we&amp;rsquo;ll set up the three VMs we&amp;rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&amp;rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&amp;rsquo;ll perform some configurations as well as install extra software.</description>
     </item>
     
     <item>
@@ -45,7 +45,7 @@ I have however created this course specifically with the beginner in mind. What 
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/course01/02_attack/</guid>
-      <description>| Return to Course Overview | Proceed to Section 3 |
+      <description>| Course Overview | Return to Section 1 | Proceed to Section 3 |
 2. Performing the Attack 2.1. Introduction Why are we performing the attack ourselves? Why didn&amp;rsquo;t I just do it, export all the requisite artifacts, and share this with you? Why am I making you go through this rigmarole - is it simply that I am cruel?
 Nah. The reason is pretty simple - I have a deep sense of conviction that one can only truly &amp;ldquo;get&amp;rdquo; defense if you equally &amp;ldquo;get&amp;rdquo; offense.</description>
     </item>
@@ -56,9 +56,8 @@ Nah. The reason is pretty simple - I have a deep sense of conviction that one ca
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/course01/03_live_native/</guid>
-      <description>| Return to Course Overview | Proceed to Section 4 |
-3. Live Analysis: Native Windows Tools 3.1. Introduction So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&amp;rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information.
-So if we have at our disposal better tools, ie tools that can provide more information, why bother?</description>
+      <description>| Course Overview | Return to Section 2 | Proceed to Section 4 |
+3. Live Analysis: Native Windows Tools 3.1. Introduction So our first analysis will be a quick review using standard (native) Windows tools. These tools are a quick way to get a finger on the pulse - they&amp;rsquo;ll give us a broad overview of some important indicators while at the same time being limited in the depth of information.</description>
     </item>
     
     <item>
@@ -67,7 +66,7 @@ So if we have at our disposal better tools, ie tools that can provide more infor
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/course01/04_live_hacker/</guid>
-      <description>| Return to Course Overview | Proceed to Section 5 |
+      <description>| Course Overview | Return to Section 3 | Proceed to Section 5 |
 4. Live Analysis: Process Hacker 4.1. Introduction I explained, hopefully in a somewhat convincing manner, why it&amp;rsquo;s good practice for us to learn how to use the native Windows tools to get an initial, high-level read. But of course these tools are also limited in what information they can provide.
 So now let&amp;rsquo;s bring out the big guns and learn all we can.</description>
     </item>
@@ -78,7 +77,7 @@ So now let&amp;rsquo;s bring out the big guns and learn all we can.</description
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/course01/05_post_memory/</guid>
-      <description>| Return to Course Overview | Proceed to Section 6 |
+      <description>| Course Overview | Return to Section 4 | Proceed to Section 6 |
 5. Post-Mortem Forensics: Memory 5.1. Transferring the Artifacts First thing&amp;rsquo;s first - we need to transfer the artifacts we produced in 2.3.6 over to our Ubuntu analyst VM.
 But just as a note: we&amp;rsquo;ll only transfer our memory dump and packet capture. We won&amp;rsquo;t transfer our log files - I&amp;rsquo;ll explain exactly why later.
 Ok so there are a number of ways we can transfer our files over, and if you have your own method you prefer please go ahead.</description>
@@ -90,9 +89,9 @@ Ok so there are a number of ways we can transfer our files over, and if you have
       <pubDate>Sat, 12 Aug 2023 02:01:58 +0530</pubDate>
       
       <guid>https://athul.github.io/archie/course01/06_post_logs/</guid>
-      <description>| Return to Course Overview | Proceed to Section 7 |
+      <description>| Course Overview | Return to Section 5 | Proceed to Section 7 |
 6. Post-Mortem Forensics: Log Analysis 6.1. Introduction Now typically we might think of logging as belonging more to the realm of the SOC than a threat hunter. That&amp;rsquo;s because, at least in the way that modern logging practices operate, logging is not seen as something directly approachable by a human operator.
-What do I mean by this? One consequence of the &amp;ldquo;endpoint arm&amp;rsquo;s race&amp;rdquo; that vendors have taken the industry on is the unimaginable scale of the data being generated.</description>
+What do I mean by this?</description>
     </item>
     
     <item>

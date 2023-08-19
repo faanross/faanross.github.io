@@ -2,12 +2,12 @@
 <html><head lang="en">
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Section 4: Live Analysis - Process Hacker - faan|ross</title><link rel="icon" type="image/x-icon" href=/favicon.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="| Return to Course Overview | Proceed to Section 5 |
+	<meta name="description" content="| Course Overview | Return to Section 3 | Proceed to Section 5 |
 4. Live Analysis: Process Hacker 4.1. Introduction I explained, hopefully in a somewhat convincing manner, why it&rsquo;s good practice for us to learn how to use the native Windows tools to get an initial, high-level read. But of course these tools are also limited in what information they can provide.
 So now let&rsquo;s bring out the big guns and learn all we can." />
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Section 4: Live Analysis - Process Hacker" />
-<meta property="og:description" content="| Return to Course Overview | Proceed to Section 5 |
+<meta property="og:description" content="| Course Overview | Return to Section 3 | Proceed to Section 5 |
 4. Live Analysis: Process Hacker 4.1. Introduction I explained, hopefully in a somewhat convincing manner, why it&rsquo;s good practice for us to learn how to use the native Windows tools to get an initial, high-level read. But of course these tools are also limited in what information they can provide.
 So now let&rsquo;s bring out the big guns and learn all we can." />
 <meta property="og:type" content="article" />
@@ -16,7 +16,7 @@ So now let&rsquo;s bring out the big guns and learn all we can." />
 <meta property="article:modified_time" content="2023-08-12T02:01:58+05:30" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Section 4: Live Analysis - Process Hacker"/>
-<meta name="twitter:description" content="| Return to Course Overview | Proceed to Section 5 |
+<meta name="twitter:description" content="| Course Overview | Return to Section 3 | Proceed to Section 5 |
 4. Live Analysis: Process Hacker 4.1. Introduction I explained, hopefully in a somewhat convincing manner, why it&rsquo;s good practice for us to learn how to use the native Windows tools to get an initial, high-level read. But of course these tools are also limited in what information they can provide.
 So now let&rsquo;s bring out the big guns and learn all we can."/>
 <script src="https://athul.github.io/archie/js/feather.min.js"></script>
@@ -26,7 +26,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 	
 
 	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.dd96be82687f2a3c48a68b1615119f516a61deee410fb50de65cb93d7e921d09.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.f5968f615e691145516af7beb94a05127c7b7d0e93ab337bd09b02bbfdd01e78.css" />
 		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://athul.github.io/archie/css/dark.191767dd42068cd77e23d5f95ccc0becc0e7105decd65e1405e5695f242e2b3c.css"   />
 	
 
@@ -101,9 +101,12 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 		
 
 		<section class="body">
-			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/05_post_memory/">Proceed to Section 5</a> <code>|</code></p>
+			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/03_live_native/">Return to Section 3</a> <code>|</code> <a href="https://www.faanross.com/course01/05_post_memory/">Proceed to Section 5</a> <code>|</code></p>
 <hr>
 <p> </p>
+<figure class="custom-figure"><img src="/img/gif/carrey_hack.gif"/>
+</figure>
+
 <h1 id="4-live-analysis-process-hacker">4. Live Analysis: Process Hacker</h1>
 <h1 id="41-introduction">4.1. Introduction</h1>
 <p>I explained, hopefully in a somewhat convincing manner, why it&rsquo;s good practice for us to learn how to use the native Windows tools to get an initial, high-level read. But of course these tools are also limited in what information they can provide.</p>
@@ -113,6 +116,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 
 <p>As these things go, it really behooves us to learn a bit of theory behind what we&rsquo;re going to look at with the intention of understanding why it is we are looking at these things, and what exactly we will be looking for.</p>
 <hr>
+<p> </p>
 <h1 id="42-theory">4.2. Theory</h1>
 <p><em><strong>&ldquo;A traditional anti-virus product might look at my payload when I touch disk or load content in a browser. If I defeat that, I win. Now, the battleground is the functions we use to get our payloads into memory. -Raphael Mudge&rdquo;</strong></em></p>
 <p>There are a few key properties we want to be on the lookout for when doing live memory analysis with something like <code>Process Hacker</code>. But, it&rsquo;s very important to know that there are <strong>NO silver bullets</strong>. There are no hard and fast rules where if we see any of the following we can be 100% sure we&rsquo;re dealing with malware. After all, if we could codify the rule there would be no need for us as threat hunters to do it ourselves - it would be trivial to simply write a program that does it automatically for us.</p>
@@ -122,7 +126,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 
 <p>Additionally, the process as outlined here may give the impression that it typically plays out as a strictly linear process. This is not necessarilly the case - instead of going through our list 1-7 below, we could jump around not only on the list itself, but with completely different  techniqes.</p>
 <p>As a simple example - if we find a suspicious process by following this procedure, we might want to pause and have the SOC create a rule to scan the rest of the network looking for the same process. If we for example use <strong>Least Frequency Analysis</strong> and we see the process only occurs on one or two anomalous systems, well that then not only provides supporting evidence, but also gives us the confirmation that we are on the right path and should continue with our live memory analysis.</p>
-<figure class="custom-figure-2"><img src="/img/rabbit.gif"/>
+<figure class="custom-figure-6"><img src="/img/rabbit.gif"/>
 </figure>
 
 <p><strong>Here&rsquo;s a quick overview of our list:</strong></p>
@@ -147,13 +151,13 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <p>And of course we&rsquo;ve already encountered this exact situation in the previous section with neither <code>rufus.exe</code> nor <code>rundll32.exe</code> being suspicious, but the fact that the former is spawned the latter being unusual.</p>
 <p>Something else worth being aware of is not only may certain parent-child relationships indicate that something is suspicious, but the specifics can act as some sort of signature implying what malware is involved.</p>
 <p>For example a classical <code>Cobalt Strike</code> process tree might look like this:</p>
-<figure class="custom-figure-2"><img src="/img/image076.png"/>
+<figure class="custom-figure-6"><img src="/img/image076.png"/>
 </figure>
 
 <p>At the top we can see WMI spawning PowerShell - that itself is pretty uncommon, but used by a variety of malware software. But there&rsquo;s more - PowerShell spawning PowerShell. Again, not a smoking gun, but unusual, and something seen with Cobalt Strike.</p>
 <p>But really the most idiosyncratic property here is the multiple instances of <code>rundll32.exe</code> being spawned. This is classical Cobalt Strike behavior - the use of so-called <em><strong>sacrificial process</strong></em>. Plus the fact that it&rsquo;s <code>rundll32.exe</code> in particular - using this process name is the default setting for Cobalt Strike.</p>
 <p>It might surprise you but <em>in situ</em> it&rsquo;s estimated that about 50% of adversaries never bother changing the default settings. Which makes one wonder - are they lazy, or are we so bad at detecting even default settings that they don&rsquo;t see the point in even bothering?</p>
-<figure class="custom-figure-3"><img src="/img/thinkabout.gif"/>
+<figure class="custom-figure-8"><img src="/img/thinkabout.gif"/>
 </figure>
 
 <p>All this to say - we&rsquo;ll look for unusual parent-child Relationships, and we&rsquo;ll do so typically by looking at a <code>process tree</code> which shows as all processes and their associated relationships. In the discussion above I might have given the impression that these relationships all exist in pairs with a unidirectional relationship. Not so, just as in actual family trees a parent can spawn multiple children, and each of these can in turn spawn their own children etc. So depending on the exact direction of the relationship, any specific process may be a parent or a child.</p>
@@ -165,7 +169,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <li><em><strong>Current directory</strong></em></li>
 </ol>
 <p>There are a number of things we can look for here. For example we might see a process run from a directory we would not expect - instead of <code>svchost.exe</code> running from <code>C:\Windows\System32</code>, it ran from <code>C:\Temp</code> - <strong>UH-OH</strong>.</p>
-<figure class="custom-figure-2"><img src="/img/dogjeez.gif"/>
+<figure class="custom-figure-6"><img src="/img/dogjeez.gif"/>
 </figure>
 
 <p>Or, perhaps we see PowerShell, but it&rsquo;s running from <code>C:\Windows\Syswow64\...</code>, which by itself is a completely legitimate directory. But what exactly is its purpose?</p>
@@ -175,7 +179,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <li><em><strong>Command-line arguments</strong></em></li>
 </ol>
 <p>We already saw this in the previous section - for example though running <code>rundll32.exe</code> is completely legit, we would expect it to have arguments referencing the exact function and library it&rsquo;s supposed to load. Seeing it nude, well that&rsquo;s strange.</p>
-<figure class="custom-figure-2"><img src="/img/dwight-naked.gif"/>
+<figure class="custom-figure-8"><img src="/img/dwight-naked.gif"/>
 </figure>
 
 <p>Same goes for many other processes - we need thus to understand their function and how they are invoked to be able to determine the legitimacy of the process.</p>
@@ -183,13 +187,13 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <li><em><strong>Thread Start Address</strong></em></li>
 </ol>
 <p>When a DLL is loaded in the traditional way, ie from a disk, the operating system memory-maps the DLL into the process&rsquo;s address space. Memory mapping is a method used by the operating system to load the contents of a file into a process&rsquo;s memory space, which allows the process to access the file&rsquo;s data as if it were directly in memory. The operating system also maintains a mapping table that tracks where each DLL is loaded in memory.</p>
-<figure class="custom-figure-3"><img src="/img/binoculars.gif"/>
+<figure class="custom-figure-8"><img src="/img/binoculars.gif"/>
 </figure>
 
 <p>With traditional DLL loading, if you were to look at the start address of the thread executing the DLL, you would see some memory address indicating where the DLL has been loaded in the process&rsquo;s address space.</p>
 <p>However, in the case of Reflective DLL Injection, the DLL is loaded into memory manually without the involvement of the operating system&rsquo;s regular DLL-loading mechanisms. The custom loader that comes with the DLL takes care of mapping the DLL into memory, and the DLL never touches the disk. Since the operating system isn&rsquo;t involved in the process, it doesn&rsquo;t maintain a mapping table entry for the DLL, and as such, the start address of the thread executing the DLL isn&rsquo;t available.</p>
 <p>As a result, when you inspect the start address of the thread associated with the injected DLL, it will not show the actual memory address where the DLL is loaded. Instead, it will show <code>0x0</code>, which essentially means the address is unknown or not available - see image below. This is one of the many ways Reflective DLL Injection can be stealthy and evade detection.</p>
-<figure class="custom-figure-3"><img src="/img/image077.png"/>
+<figure class="custom-figure-8"><img src="/img/image077.png"/>
 </figure>
 
 <ol start="6">
@@ -206,7 +210,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <li><em><strong>Memory Content</strong></em></li>
 </ol>
 <p>Once we find a memory space with unusual permissions we then also want to check its content for signs of a PE file. Let&rsquo;s quickly have a look at a typical PE file structure:</p>
-<figure class="custom-figure-3"><img src="/img/image078.png"/>
+<figure class="custom-figure-8"><img src="/img/image078.png"/>
 </figure>
 
 <p>We can see two things that always stick out: the magic bytes <code>MZ</code> and a vestigial string associated with the <code>DOS Stub</code>. Magic bytes are predefined unique values used at the beginning of a file that are used to identify the file format or protocol. For a PE file, we would expect to see the ASCII character <code>MZ</code>, or <code>4D 5A</code> in hex.</p>
@@ -218,11 +222,12 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 
 <p>Finally it&rsquo;s worth being aware of <code>PE Header Stomping</code> - a more advanced technique used by some attackers to avoid detection. As another great mind in the Threat Hunting space, <a href="https://twitter.com/chris_brenton?lang=en">Chris Benton</a>, likes to say: <em><strong>&ldquo;Malware does not break the rules, but it bends them&rdquo;.</strong></em></p>
 <p>PE files <em>have</em> to have a header, but since nothing really forces or checks the exact contents of the header, the header could theoretically be anything. And so instead of the header containing some giveaways like we saw above - magic bytes, dos stub artifact, signature strings etc - the malware will overwrite the header with something else to appear legitimate. For now I just wanted you to be aware of this, we&rsquo;ll revisit header stomping first-hand in the future.</p>
-<figure class="custom-figure-3"><img src="/img/ramones.gif"/>
+<figure class="custom-figure-6"><img src="/img/ramones.gif"/>
 </figure>
 
 <p>But for now, that&rsquo;s it for the theory - <em>allons-y</em>!</p>
 <hr>
+<p> </p>
 <h1 id="43-analysis">4.3. Analysis</h1>
 <p>Open Process Hacker as admin - ie right-click and select <code>Run as administrator</code>. Scroll down until you see <code>rufus.exe</code> (or whatever other legitimate process you chose to inject into). Let&rsquo;s go through our 7 indicators.</p>
 <ol>
@@ -242,7 +247,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <ol start="2">
 <li><strong>Signature - is it valid + who signed?</strong></li>
 </ol>
-<figure class="custom-figure-2"><img src="/img/image054.png"/>
+<figure class="custom-figure-6"><img src="/img/image054.png"/>
 </figure>
 
 <p>We can see here that it has a valid signature signed by Microsoft, since of course they are the creators of <code>rundll32.exe</code>. Nothing further to concern ourselves with here.</p>
@@ -250,7 +255,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <li><strong>Current directory</strong></li>
 </ol>
 <p>In the same image, we can see the <strong>Current directory</strong>, which is the &ldquo;working directory&rdquo; of the process. This refers to the directory where the process was started from or where it is currently operating. We can see here that the current directory is the desktop, since that&rsquo;s where it was initiated from.</p>
-<figure class="custom-figure-2"><img src="/img/where_you.gif"/>
+<figure class="custom-figure-6"><img src="/img/where_you.gif"/>
 </figure>
 
 <p>Now this could happen with legitimate scripts or applications that are using <code>rundll32.exe</code> to call a DLL function. However, seeing <code>rundll32.exe</code> being called from an unusual location like a user&rsquo;s desktop could be suspicious, particularly if it&rsquo;s coupled with other strange behavior.</p>
@@ -262,7 +267,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <li><strong>Thread Start Address</strong></li>
 </ol>
 <p>On the top of the Properties window select the <code>Threads</code> tab.</p>
-<figure class="custom-figure-3"><img src="/img/image055.png"/>
+<figure class="custom-figure-6"><img src="/img/image055.png"/>
 </figure>
 
 <p>We can see under <code>Start address</code> that it is mapped, meaning it does exist on disk. This essentially tells us that this is <em>not</em> a Reflectively Loaded DLL, since we would expect that to have an unknown address listed as <code>0x0</code>.</p>
@@ -270,7 +275,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <li><strong>Memory Permissions</strong></li>
 </ol>
 <p>On the top of the Properties window select <code>Memory</code>. Now click once on the <code>Protection</code> header to sort it. Scroll down until you see <code>RWX</code> permissions.</p>
-<figure class="custom-figure-3"><img src="/img/image056.png"/>
+<figure class="custom-figure-6"><img src="/img/image056.png"/>
 </figure>
 
 <p>Indeed we see the presence of two memory spaces with <strong>Read-Write-Execute</strong> permissions, which as we learned is always suspicious since there are very few legitimate programs that will write to memory and then immediately execute it.</p>
@@ -284,9 +289,10 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <p>We immediately see the two clear giveaways that we are dealing with a PE file. We can see the magic bytes (<code>MZ</code>), and we see the strings we associate with a PE Dos Stub - <code>This program cannot be run in DOS mode</code>. Again, another point for &ldquo;team sus&rdquo;.</p>
 <p>That&rsquo;s it for our live memory analysis: feel free to exit Process Hacker. Let&rsquo;s discuss our results before moving on to our post-mortem analysis.</p>
 <hr>
+<p> </p>
 <h1 id="44-final-thoughts">4.4 Final Thoughts</h1>
 <p>Let&rsquo;s briefly review what we learned in this second live analysis using <code>Process Hacker</code>.</p>
-<figure class="custom-figure-2"><img src="/img/review.gif"/>
+<figure class="custom-figure-6"><img src="/img/review.gif"/>
 </figure>
 
 <p>We came into this with a few basic breadcrumbs we picked up in our live analysis using the native tools:</p>
@@ -306,7 +312,7 @@ So now let&rsquo;s bring out the big guns and learn all we can."/>
 <p><strong>At this point keep your Windows VM on, shut down your Kali VM, and turn on your Ubuntu VM.</strong></p>
 <p> </p>
 <hr>
-<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Return to Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/05_post_memory/">Proceed to Section 5</a> <code>|</code></p>
+<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/03_live_native/">Return to Section 3</a> <code>|</code> <a href="https://www.faanross.com/course01/05_post_memory/">Proceed to Section 5</a> <code>|</code></p>
 
 		</section>
 

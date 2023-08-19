@@ -3,11 +3,11 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Section 1: Setting Up Our Virtual Environment - faan|ross</title><link rel="icon" type="image/x-icon" href=/favicon.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="| Course Overview | Return to Section 0 | Proceed to Section 2 |
-1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software." />
+Section 1: Setting Up Our Virtual Environment 1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software." />
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Section 1: Setting Up Our Virtual Environment" />
 <meta property="og:description" content="| Course Overview | Return to Section 0 | Proceed to Section 2 |
-1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software." />
+Section 1: Setting Up Our Virtual Environment 1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://athul.github.io/archie/course01/01_settingup/" /><meta property="article:section" content="course01" />
 <meta property="article:published_time" content="2023-08-12T02:01:58+05:30" />
@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Section 1: Setting Up Our Virtual Environment"/>
 <meta name="twitter:description" content="| Course Overview | Return to Section 0 | Proceed to Section 2 |
-1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software."/>
+Section 1: Setting Up Our Virtual Environment 1.1. Introduction In this section we&rsquo;ll set up the three VMs we&rsquo;ll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we&rsquo;ll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we&rsquo;ll perform some configurations as well as install extra software."/>
 <script src="https://athul.github.io/archie/js/feather.min.js"></script>
 	
 	
@@ -23,7 +23,7 @@
 	
 
 	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.dd96be82687f2a3c48a68b1615119f516a61deee410fb50de65cb93d7e921d09.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://athul.github.io/archie/css/main.f5968f615e691145516af7beb94a05127c7b7d0e93ab337bd09b02bbfdd01e78.css" />
 		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://athul.github.io/archie/css/dark.191767dd42068cd77e23d5f95ccc0becc0e7105decd65e1405e5695f242e2b3c.css"   />
 	
 
@@ -101,6 +101,7 @@
 			<p><code>|</code> <a href="https://www.faanross.com/posts/course01/">Course Overview</a> <code>|</code> <a href="https://www.faanross.com/course01/prebanter">Return to Section 0</a> <code>|</code> <a href="https://www.faanross.com/course01/02_attack/">Proceed to Section 2</a> <code>|</code></p>
 <hr>
 <p> </p>
+<h1 id="section-1-setting-up-our-virtual-environment">Section 1: Setting Up Our Virtual Environment</h1>
 <figure class="custom-figure"><img src="/img/gif/thehacker.gif"/>
 </figure>
 
@@ -144,9 +145,6 @@
 <p>For this course I&rsquo;ll be using <a href="https://store-us.vmware.com/workstation_buy_dual">VMWare Workstation</a>, which as of writing costs around $200. However you could also do it with either <a href="https://www.vmware.com/ca/products/workstation-player.html">VMWare Player</a>, or <a href="https://www.virtualbox.org/wiki/Downloads">Oracle Virtualbox</a>, both of which are free.</p>
 <p>I&rsquo;ve used both <code>VMWare Player</code> and <code>VirtualBox</code> in the past, they mostly work well but running into some issues from time-to-time should not be completely unexpected. That being said, the problems I encountered were all, in hindsight, opportunities to learn. Frustrating - <em>feck yesh</em>. Enriching - sure.</p>
 <p>Since I switched over to <code>VMWare Workstation</code> my experience has been significantly more stable, so if you do have the money and are committed to this path as a career I would definitely consider getting it. That being said I don&rsquo;t wanna come across as some corporate shill, so really the choice is totally up to you.</p>
-<figure class="custom-figure"><img src="/img/gif/makechoice.gif"/>
-</figure>
-
 <p>Note that if you decide to not use <code>VMWare Workstation</code> then some of the details of the setup might be different. When that occurs it&rsquo;ll be up to you to figure out how to adapt it for your situation - Google, ChatGPT, StackExchange, common sense etc. Again, use the opportunities when things don&rsquo;t happen exactly &ldquo;as they should&rdquo; to learn. As a wise emperor once said - <em><strong>The impediment to action advances action. What stands in the way becomes the way.</strong></em></p>
 <p><code>So at this point please take a moment to download and install the hypervisor of your choice.</code></p>
 <p>Once that&rsquo;s done with feel free to proceed&hellip;</p>
@@ -427,7 +425,7 @@
 <p>That&rsquo;s it friend. We are done with BY FAR the heaviest lifting in terms of VM setup - the remaining two will comparatively be a breeze. But before we get to that there&rsquo;s one very simple thing we can do that will make our lives much easier in the future - turning this VM into a template for cloning.</p>
 <h1 id="157-creating-a-template">1.5.7. Creating a Template</h1>
 <p>So why do we want to do this again? Well by turning this VM we just created into a template we are in essence creating an archetype (blueprint). Then, whenever we want this same &ldquo;victim&rdquo; system for any project or course we can simply clone it as many times as we want.</p>
-<figure class="custom-figure"><img src="/img/gif/mememe.gif"/>
+<figure class="custom-figure"><img src="/img/gif/mememe2.gif"/>
 </figure>
 
 <p>Thus instead of repeating this entire, rather cumbersome process we can click a few buttons and have it ready to go in a few seconds. This is also useful if we ever &ldquo;mess up&rdquo; the VM, we can just come back to this starting point.</p>
@@ -473,7 +471,7 @@
 <li>Under <code>Processors</code> I suggest at least 2, if possible given your available resources then increase it to 4.</li>
 <li>Under <code>New CD/DVD (SATA)</code> change Connection from Use Physical Drive to <code>Use ISO image file</code>. Click <code>Browse…</code> and select the location of your Kali Linux iso image.</li>
 </ol>
-<figure class="custom-figure-8"><img src="/img/gif/kali.gif"/>
+<figure class="custom-figure-6"><img src="/img/gif/kali.gif"/>
 </figure>
 
 <p>So now let&rsquo;s get to actually installing it:</p>
@@ -500,7 +498,7 @@
 <p> </p>
 <h1 id="17-vm-3-ubuntu-linux-2004-aka-the-analyst">1.7. VM 3: Ubuntu Linux 20.04 aka &ldquo;The Analyst&rdquo;</h1>
 <h1 id="171-installation">1.7.1. Installation</h1>
-<figure class="custom-figure-3"><img src="/img/gif/analysis.gif"/>
+<figure class="custom-figure-8"><img src="/img/gif/analysis.gif"/>
 </figure>
 
 <p>And now finally we&rsquo;ll set up our Ubuntu VM.</p>
