@@ -16,17 +16,20 @@ type: course
 # Section 7: Post-Mortem Forensics - Traffic Analysis
 # 7.1. Introduction
 
-In many respects, the realm of network packets is the ultimate domain for threat hunting. It is the only place where malware cannot hide, especially if it intends to communicate. Thus, even if malicious traffic is buried under an avalanche of legitimate traffic, one thing is for sure: the malware's communication is always present, somewhere.
+In many respects, the realm of network packets is the ultimate domain for threat hunting. It is the only place where malware cannot hide, at least not if it intends to actually communicate or transfer data. Thus, even if malicious traffic is buried under an avalanche of legitimate traffic, one thing is for sure: the malware's communication is always present, somewhere.
 
-Traffic analysis is an absolutely integral part of threat hunting, playing a major role in nearly every aspect—whether you are searching for initial evidence or seeking to build a case. Accessing packets directly using tools like WireShark/Tshark, or employing specialized software such as Zeek/RITA, provides incredible opportunities for threat hunters.
+Traffic analysis is an absolutely integral part of threat hunting, playing a major role in nearly every aspect — whether you are searching for initial evidence or seeking to build a case. Accessing packets directly using tools like WireShark/Tshark, or employing specialized software such as Zeek or ACHunter (RITA), provides incredible opportunities for threat hunters.
 
-In this course, however, we are only going to touch on it lightly. The reason for this approach is straightforward: we have simulated a very specific phase of being compromised. We emulated a stager reaching out to establish a C2 connection, and even though we briefly touched on some other actions, we severed the connection shortly after it was created.
+In this course, however, we are only going to touch on it lightly. The reason for this is simple: we have simulated a very specific phase of being compromised. We emulated a stager reaching out to establish a C2 connection, and even though we briefly touched on some other actions, we severed the connection shortly after it was created.
 
 In other words, we actually performed the initial exploitation (i.e., creating the connection), but we largely skipped the 'post-exploitation' phase. Beyond all the details, the major difference between these two phases often relates to duration: while initial exploitation is typically brief, post-exploitation can last weeks, months, or even years.
 
-So here's the thing: traffic analysis is fundamentally about discerning patterns. But meaningful patterns generally emerge over time. For example, let’s say a C2 beacon reaches back to the C2 server once an hour. If you only had a one-hour packet capture, you would expect to see only a single callback, which is obviously not a pattern. Conversely, if you had a one-week packet capture, you could expect to see close to 150 callback packets, likely forming a discernible trend in terms of packet size and duration between sends.
+{{< figure src="/img/gif/escher.gif" title="" class="custom-figure" >}}
 
-All this to say: although traffic analysis is incredibly important for threat hunting, due to the specific nature of the attack we emulated here, it isn't an ideal match in this context. Nonetheless, I wanted to introduce it in a rudimentary sense in this course so that you have some exposure to what can be expected regarding an initial exploitation, even if it's minimal. Rest assured that in a future course, we will delve much deeper into traffic analysis, particularly to help identify unwanted persistent connections.
+So here's the thing: traffic analysis is fundamentally about recognizing patterns. But meaningful patterns generally emerge over time. For example, let’s say a C2 beacon reaches back to the C2 server every 20 minutes. If you only had a one-hour packet capture, you would expect to see only three callbacks, which is an insufficient sample size to derive patterns from. Conversely, if you had a one-week packet capture, you could expect to see close to 150 callback packets, likely forming a discernible trend in terms of packet size and duration between sends.
+
+All this to say: although traffic analysis is incredibly important for threat hunting, due to the specific nature of the attack we emulated here, it isn't an ideal match in this context. Nonetheless, I wanted to introduce it in a rudimentary sense in this course so that you have some exposure to what can be expected regarding an initial exploitation, even if it's minimal. The next course we'll do will be all about traffic analysis, so rest assured you will get an opportunity to get much more familiar with this powerful approach to threat hunting.          
+   
 
 ***
 
@@ -35,11 +38,11 @@ All this to say: although traffic analysis is incredibly important for threat hu
 
 # 7.2. Analysis
 
-**So let's have a quick look at what's going on in the packet capture.** Open your Ubuntu VM, open WireShark, and then open the packet capture we transferred over in Section `5.1`. 
+**So let's have a quick look at what's going on in the packet capture.** Open your Ubuntu VM, open WireShark, and then open the packet capture we transferred over in Section `5.1`. You should see something along the lines of the following, though of course remember again our results won't be identical. 
 
 {{< figure src="/img/course01/image097.png" title="" class="custom-figure" >}}
 
-We can see that in the brief amount of time we ran the capture for a total of 584 packets were captured. In case you are completely new to this: we can expect *a lot* of these to be completly unrelated to our attack. Even if you are not even interacting with your system it typically generates a lot of packets via ordinary backend operations.
+We can see that in the brief amount of time we ran the capture for a total of 584 packets were captured. In case you are completely new to this: we can expect *a lot* of these to be completely unrelated to our attack. Even if you are not even interacting with your system it typically generates a lot of packets via ordinary backend operations.
 
 So, our next step would now be to find which packets are related to the emulated attack. 
 
@@ -69,11 +72,11 @@ Right at the top we see something interesting and familiar - the magic bytes and
 
 {{< figure src="/img/course01/image103.png" title="" class="custom-figure" >}}
 
-There are thus many interesting questions we can ask based on what we are witnessing here, which may lead us to find out what mechanisms the malware is employing. Without getting into it too deeply, as a simple example when I Google the term `Copyright 1995-1996 Mark Adler` (which appears in the stream), we immediately find out this is due to `zlib` being included in the code. Thus it's likely the payload is being compressed or obfuscated using `zlib`, which itself is of course completely legitimate data compression software. 
+There are thus many interesting questions we can ask based on what we are witnessing here, which may lead us to find out what mechanisms the malware is employing. Without getting into it too deeply, as a simple example when I Google the term `Copyright 1995-1996 Mark Adler` (which appears in the stream), we immediately find out this is due to `zlib` being included in the code. Thus it's likely the payload is being compressed or obfuscated using `zlib`, which itself is of course a completely legitimate data compression software. 
 
 In any case, these are simply speculative musings. As I've said before - we'll wait till a future course before peering under the malware hood. 
 
-That being the case, this is where we'll end our traffic analysis - short and sweet. As I said, the idea here was just to give you some idea of what it entails. Rest assured that in a future course you will get *much* more acquainted with this powerful modality. 
+That being the case, this is where we'll end our traffic analysis - short and sweet. As I said, the idea here was just to give you some idea of what it entails. Rest assured that in a future course you will get *much* better acquainted with this powerful modality. I'm looking forward to it - it's gonna be awesome!
 
 
 &nbsp;  

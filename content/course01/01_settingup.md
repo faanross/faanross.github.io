@@ -446,7 +446,7 @@ So now let's install Focal Fossa:
 
 {{< figure src="/img/course01/image029.png" title="" class="custom-figure-6" >}}
 
-OK, that's it for the installation, now let's install the two programs we'll use in this course. Note I'm also going to install ***RITA*** here, we won't use it in this course but indeed in the next one. So feel free to skip this, or just get it done with now so that next time everything is gtg.
+OK, that's it for the installation, now let's install the two programs we'll use in this course. 
 
 # 1.7.2. Install Software
 # Volatility3
@@ -473,16 +473,6 @@ sudo apt update
 ```
 sudo apt install wireshark
 ```
-
-# RITA (Optional)
-
-Here's the cool thing about installing ***RITA***: when we do so it will also automatically install ***Zeek***, which is another amazing tool for traffic analysis we'll be using in the future. 
-
-1. Goto the [RITA Github repo](https://github.com/activecm/rita).
-2. Scroll down to `Install` and follow the instructions using the `install.sh` script. During installation you will be asked a few questions, answer `y` and hit enter each time. 
-3. Let's check the version of RITA to ensure installation was successful. First close your terminal, reopen, and then run the commands seen in image below. You should get similar results. 
-
-{{< figure src="/img/course01/image030.png" title="" class="custom-figure" >}}
 
 OK. Do you know what time it is? 
 
