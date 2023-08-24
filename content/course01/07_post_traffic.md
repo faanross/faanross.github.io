@@ -24,7 +24,7 @@ In this course, however, we are only going to touch on it lightly. The reason fo
 
 In other words, we actually performed the initial exploitation (i.e., creating the connection), but we largely skipped the 'post-exploitation' phase. Beyond all the details, the major difference between these two phases often relates to duration: while initial exploitation is typically brief, post-exploitation can last weeks, months, or even years.
 
-{{< figure src="/img/gif/escher.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/escher.gif" title="" class="custom-figure-6" >}}
 
 So here's the thing: traffic analysis is fundamentally about recognizing patterns. But meaningful patterns generally emerge over time. For example, let’s say a C2 beacon reaches back to the C2 server every 20 minutes. If you only had a one-hour packet capture, you would expect to see only three callbacks, which is an insufficient sample size to derive patterns from. Conversely, if you had a one-week packet capture, you could expect to see close to 150 callback packets, likely forming a discernible trend in terms of packet size and duration between sends.
 

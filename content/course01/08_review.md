@@ -20,6 +20,10 @@ If you made it this far **CONGRATS**! You have learned a *tremendous* amount - c
 
 One final thing before we high-five and part ways, I though it useful to recap, in its entirety, what exactly happened in terms of our attack and how each stage of our threat hunt contributed to an increased understanding thereof. I'll make this brief, but I do recommend one final review so we can really crystallize our insights.
 
+***
+
+&nbsp; 
+
 # Attack
 
 During our attack phase, we simulated a DLL-injection attack, incorporating a few shortcuts for efficiency. I will first outline how we executed the attack and then compare it to how this attack would transpire in a real-world scenario. Recognizing these differences is crucial, as it informs us about what we should and shouldn't expect during an actual threat hunt.
@@ -51,6 +55,10 @@ So the two major differences would be:
 1. A lot of actions that would automatically take place once the malicious Word document was opened we performed manually. The same events would (more or less) however take place, thus from a diagnostic point of view many of the same IOCs would stay true.
 2. In our simulation we chose a program (rufus.exe) and even opened it ourselves. In an actual attack this highly improbable since it represents unnecessary risk. Rather, the attacker would select a process that is already running to inject into, which could even lead to elevated privileges. So we would not expect to see any IOCs related to this event in an actual threat hunt. 
 
+***
+
+&nbsp; 
+
 # Live Analysis: Windows Tools
 At this point we, as the threat hunter, are not aware a compromise has taken place. Using a variety of simple Windows native tools we thus take a high-level view of some of the most important indicators. 
 
@@ -61,6 +69,10 @@ Here we discovered:
 - We would expect rundll32.exe to be run with command-line arguments but it was not, which was unusual. 
 
 
+***
+
+&nbsp; 
+
 # Live Analysis: Process Hacker
 Using Process Hacker our suspicion surrounding this process was further reinforced: 
 - rundll32.exe itself spawned cmd.exe - very suspicious.
@@ -68,8 +80,16 @@ Using Process Hacker our suspicion surrounding this process was further reinforc
 - The process also had RWX memory space permissions, which is a big red flag.
 - We saw that the memory content of the RWX memory space contained a PE file - again, red flag.
 
+***
+
+&nbsp; 
+
 # Post-Mortem Forensics - Memory
 We did not learn any new information here, however performing this post-mortem analysis allowed us to see how we could derive many of the same conclusions from the two sections above with a memory dump. This would be valuable if, for whatever reason, we could not perform live analysis. Further, even if we did perform the live analysis, it might still be useful to validate the findings on a non-compromised system.
+
+***
+
+&nbsp; 
 
 # Post-Mortem Forensics - Sysmon
 This was the first of two types of log analysis we performed. At this point we essentially only had three critical pieces of info - the name of the suspicious process (rundll32.exe), the name of the parent process that spawned it (rufus.exe), and the ip address it connected to (ie potentially the ip of the attacker, C2 server). 
@@ -80,6 +100,10 @@ Sysmon log analysis then showed us that:
 - The malware accessed lsass.exe, indicating some credentials were potentially compromised.
 - The malware launched raserver.exe with the /offerraupdate flag, creating another potential backdoor.
 
+***
+
+&nbsp; 
+
 # Post-Mortem Forensics - Powershell ScriptBlock
 
 We then further learned with Powershell ScriptBlock analysis:
@@ -89,6 +113,10 @@ We then further learned with Powershell ScriptBlock analysis:
 
 Additionally, the logs from both sections provided us with exact timestamps for many major events, which can be very useful in the incident response process.
 
+***
+
+&nbsp; 
+
 # Post-Mortem Forensics - Traffic
 
 In our abbreviated traffic analysis we:
@@ -96,15 +124,19 @@ In our abbreviated traffic analysis we:
 - We confirmed the ip of C2 server - what our victim system connected to. 
 - We also saw the encrypted contents of the conversation between the victim and C2 server which contained some clear text, which we could potentially leverage to learn more about the malware, even potentially its identity. 
 
+***
+
+&nbsp; 
+
 # Next Course
 
-That's it friends. Please feel free to reach out to me if you have any questions or comments - I'd love to hear from you.
+That's it friends. Please feel free to [reach out](mailto:moi@faanross.com) if you have any questions or comments - I'd love to hear from you!
 
 In the next course (already in the works) we'll create our own little script to simulate beaconing and then leave it running for an extended period (24 hours). We'll then use some of my favorite tools - Zeek, ACHunter, and RITA - to see how we can pick up on this simulated C2 activity.
 
 It's gonna be awesome... 
 
-{{< figure src="/img/gif/obviously.png" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/obviously.gif" title="" class="custom-figure" >}}
 
 
 &nbsp;  
