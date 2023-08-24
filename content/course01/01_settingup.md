@@ -176,7 +176,7 @@ And as for updates, we disable this because sometimes we can spend all this time
     4. In the Windows Update Properties (Local Computer) window, under the `General` tab, in the `Startup type:` dropdown menu, select `Disabled` - see image below.
     5. Click `Apply` and then `OK`.
     
- {{< figure src="/img/course01/image011.png" title="" class="custom-figure-6" >}}
+ {{< figure src="/img/course01/image011.png" title="" class="custom-figure-4" >}}
 
 3. **Disable Defender via Group Policy Editor**
     1. Open the Run dialog box by pressing Win+R.
@@ -227,7 +227,7 @@ Once your system has restarted in `Safe mode`...
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdNisSvc`
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SYSTEM` > `CurrentControlSet` > `Services` > `WdFilter`
 
-{{< figure src="/img/course01/image015.png" title="" class="custom-figure-6" >}}
+{{< figure src="/img/course01/image015.png" title="" class="custom-figure-4" >}}
 
 8. **Disable Updates via Registry**
     1. Still in `Registry Editor` let's navigate to the following:
