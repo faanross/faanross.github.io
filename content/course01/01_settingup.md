@@ -168,7 +168,6 @@ And as for updates, we disable this because sometimes we can spend all this time
     7. Note that Windows will warn you and ask if you want to allow this app to make changes to the device, hit `Yes`.
     8. All 4 toggle settings should now be disabled.
 
-{{< figure src="/img/course01/image010.png" title="" class="custom-figure-6" >}}
     
 2. **Disable the Windows Update service**
     1. Open the Run dialog box by pressing Win+R.
