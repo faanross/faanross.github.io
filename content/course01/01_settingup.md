@@ -112,7 +112,8 @@ Once you've successfully downloaded all three iso images we are ready to proceed
 8. Under `Memory` (see left hand column) I suggest at least 4096 MB, if possible given your available resources then increase it to 8192 MB. 
 9. Under `Processors` I suggest at least 2, if possible given your available resources then increase it to 4.
 10. Under `New CD/DVD (SATA)` change Connection from Use Physical Drive to `Use ISO image file`. Click `Browse…` and select the location of your Windows 10 iso file. 
-11. Once done click `OK` on the bottom to exit out of the Hardware options dialog box. 
+11. Once done click `Close` on the bottom to exit out of the Hardware options dialog box. 
+12. Select `Finish`.
 
 You should now see your VM in your Library (left hand column), select it and then click on `Power on this virtual machine`. If you don't see a Library column on the left simply hit `F9` which toggles its visibility.
 
@@ -234,10 +235,9 @@ Once your system has restarted in `Safe mode`...
     - `Computer` > `HKEY_LOCAL_MACHINE` > `SOFTWARE` > `Microsoft` > `Windows` > `CurrentVersion` > `WindowsUpdate` > `Auto Update`
     2. Right-click the `Auto Update` key, select `New`, and then click `DWORD (32-bit) Value`.
     3. Name the new key `AUOptions` and press Enter.
-    4. Double-click the new `AUOptions` key and change its value to `2`. Click `OK` - see image below.
+    4. Double-click the new `AUOptions` key and change its value to `2`. Click `OK`.
     5. Close Registry Editor.
 
-{{< figure src="/img/course01/image016.png" title="" class="custom-figure-6" >}}
 
 9. **Leave Safe Mode**
     1. All that's left to do is get back into our regular Windows environment.
@@ -263,7 +263,7 @@ But for now, since we are decidedly not yet there, let's download and use one ma
 
 So first download the [config file](https://github.com/bakedmuffinman/Neo23x0-sysmon-config), then [go here to download Sysmon](https://download.sysinternals.com/files/Sysmon.zip). You should now have two zip files - the config you downloaded from Github, as well as the ***Sysmon*** zip file. Extract the ***Sysmon*** archive, the contents should look as follows:
 
-{{< figure src="/img/course01/image017.png" title="" class="custom-figure-6" >}}
+{{< figure src="/img/course01/image017.png" title="" class="custom-figure-8" >}}
 
 Now also extract the zip file containing the config. Inside of the folder rename `sysmonconfig-export.xml` to `sysmonconfig.xml`. Now simply cut (or copy) the file and paste it in the folder containing ***Sysmon***. 
 
