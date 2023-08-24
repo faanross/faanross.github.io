@@ -12,7 +12,7 @@ type: course
 
 &nbsp;  
 
-{{< figure src="/img/gif/manhattan.png" title="" class="custom-figure" >}}
+{{< figure src="/img/gif/manhattan.png" title="" class="custom-figure-6" >}}
 
 # Section 8: Course Review
 
