@@ -1,13 +1,13 @@
 /* Markdown */
 :root{
---maincolor: rgb(255, 114, 201);
+--maincolor: #ff8afe;
 --bordercl:rgb(255, 181, 250);
 --callouctcolor:dodgerblue;
 --hovercolor:navy;
---darkMaincolor: #32ffa0;
+--darkMaincolor: #00ffa8;
 }
 html {
-  color: #232333;
+  color: #282828;
   font-family: 'roboto-mono', monospace;
   font-size: 15px;
   line-height: 2em;
