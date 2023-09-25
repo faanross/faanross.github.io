@@ -13,7 +13,7 @@ type: post
 
 `threat hunting c2`
 
-[lecture slides - PDF](https://drive.google.com/file/d/1dLqFZJKht7YaE-Rsfw-WCAWSIVQJLkoc/view?usp=drive_link)
+[lecture slides - PDF](https://github.com/faanross/faanross.github.io/blob/master/content/resources/ACM%20threat%20hunting%20presentation%2026.09.23.pdf)
 
 [full threat hunting c2 using memory forensics course](https://www.faanross.com/posts/course01/)
 
