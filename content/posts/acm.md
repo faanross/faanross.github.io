@@ -10,13 +10,14 @@ type: post
 
 *** 
 
-# show notes: active countermeasures webcast 26.09.23
 
 `threat hunting c2`
 
 [lecture slides - PDF](https://drive.google.com/file/d/1dLqFZJKht7YaE-Rsfw-WCAWSIVQJLkoc/view?usp=drive_link)
 
 [full threat hunting c2 using memory forensics course](https://www.faanross.com/posts/course01/)
+
+&nbsp; 
 
 `suggested lectures`
 
@@ -25,6 +26,8 @@ type: post
 [Securi-Tay 2017 - Advanced Attack Detection](https://www.youtube.com/watch?v=ihElrBBJQo8)
 
 [Raphael Mudge: In-memory Evasion](https://www.youtube.com/watch?v=lz2ARbZ_5tE)
+
+&nbsp; 
 
 `connect`
 
