@@ -4,7 +4,7 @@ date: 2023-09-25T02:01:58+05:30
 description: "show notes for my Active Countermeasures webcast 26 September 2023."
 tags: [threat_hunting, C2, dll_injection]
 author: "faan|ross"
-draft: true
+draft: false
 type: post
 ---
 
@@ -22,7 +22,6 @@ type: post
 [Keynote: Cobalt Strike Threat Hunting | Chad Tilbury](https://www.youtube.com/watch?v=borfuQGrB8g)
 [Securi-Tay 2017 - Advanced Attack Detection](https://www.youtube.com/watch?v=ihElrBBJQo8)
 [Raphael Mudge: In-memory Evasion](https://www.youtube.com/watch?v=lz2ARbZ_5tE)
-
 
 `connect`
 [youtube](https://www.youtube.com/channel/UCtwchzdOYHiXai5BxXPiHMg)
