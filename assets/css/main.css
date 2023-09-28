@@ -448,7 +448,12 @@ table td{
   margin-top: 0px !important;
 }
 
-.no-border {
+/* .no-border {
+  border: none !important;
+} */
+
+.no-border img {
   border: none !important;
 }
+
 
