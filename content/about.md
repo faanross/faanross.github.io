@@ -42,6 +42,7 @@ some `honourable mentions`:| design | systems thinking | video editing | motion 
 - [what i have to offer by charlie kaufmann](https://vimeo.com/45097801)
 - [marcus aurelius' meditations: the stoic ideal by michael sugrue](https://www.youtube.com/watch?v=Auuk1y4DRgk)
 - [it's just a ride by bill hicks](https://www.youtube.com/watch?v=KgzQuE1pR1w)
+- [solaire the sun bro - git gud](https://www.youtube.com/watch?v=blSXTZ3Nihs)
 
 ***“Nature loves courage. You make the commitment and nature will respond to that commitment by removing impossible obstacles. Dream the impossible dream and the world will not grind you under, it will lift you up. This is the trick. This is what all these teachers and philosophers who really counted, who really touched the alchemical gold, this is what they understood. This is the shamanic dance in the waterfall. This is how magic is done. By hurling yourself into the abyss and discovering it's a feather bed.”***
 ― Terence McKenna
