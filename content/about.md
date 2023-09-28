@@ -10,9 +10,8 @@ author = "faan ross"
 
 but since you clicked on ***about*** i'm gonna assume you also want to learn a bit about me, faan ross.
 
-{{< figure src="/img/watermelon.gif" title="" class="custom-figure" >}}
+{{< figure src="/img/png/nic_face.png" title="" class="custom-figure" >}}
 
-first off, this is not me. this is [nathan fielder](https://twitter.com/nathanfielder), but i really like him and *really* like this gif - so why not start there?
 
 further, since we find ourselves here it should come as no great shock that I love all things cybersecurity. my main interests center around the `practice of not simply waiting for an intruder to make their presence known, but instead actively seeking them out`. y'know - all the good stuff you'll find on this page. i also enjoy playing CTFs, in particular on HackTheBox - it's how i was introduced to this world in the first place. let it be known here that cybersecurity is the coolest goddamn thing i've ever had the opportunity to be a student of - ***praise be***.
 
