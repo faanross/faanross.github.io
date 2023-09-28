@@ -448,4 +448,7 @@ table td{
   margin-top: 0px !important;
 }
 
+.no-border {
+  border: none !important;
+}
 
