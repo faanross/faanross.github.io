@@ -454,6 +454,9 @@ table td{
 
 .no-border img {
   border: none !important;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
