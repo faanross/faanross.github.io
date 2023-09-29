@@ -52,7 +52,7 @@ some `honourable mentions`:| design | systems thinking | video editing | motion 
 ***"The universe is not only stranger than we imagine; but stranger than we CAN imagine."***
 ― JBS Haldane
 
-...
+{{< figure src="/img/png/terry.png" title="" class="no-border" >}}
 
 `finally, if you wanna connect:`
 
