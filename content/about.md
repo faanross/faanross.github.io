@@ -34,7 +34,7 @@ the meta here is also great - the more new things you learn, the better you can 
 
 some `honourable mentions`:| design | systems thinking | video editing | motion design | 80+90s aesthetics | meme-magik | evolutionary psychology |
 
-{{< figure src="/img/gif/eye.gif" title="" class="no-border" >}}
+
 
 <!-- {{< figure src="/img/mckenna.gif" title="" class="custom-figure" >}} -->
 
