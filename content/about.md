@@ -24,7 +24,7 @@ i have been practicing `brazilian jiu jitsu` since 2015 and think its likely the
 
 `dogs` might be the best thing in existence fr. i love dog training as a way to develop a common language between oneself and a dog. and in general, simply petting dogs, playing with dogs, and just being around them. i have two friends at the moment - **kuma** the groenendael and **voodoo** the dutch shepherd. i also have a legendary abyssinian called **buddlez** - i love cats too!  
 
-{{< figure src="/img/png/nic_face_2.png" title="" class="no-border" >}}
+{{< figure src="/img/gif/eye.gif" title="" class="no-border" >}}
 
 `good stories + storytelling` in all its forms - from myths to graphic novels to nic cage movies to anime to point-and-click adventure games. at the risk of sounding a touch overly woo-woo: i think stories are inextricably intertwined with the evolution of humans. i believe they can serve not merely as some form of temporary distraction, but as a deeply informative source of meaning for our deep + collective psychologies. some favourites include chainsaw man, napoleon dynamite, south park, the wire, and anything by nathan fielder.
 
