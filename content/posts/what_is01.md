@@ -106,17 +106,27 @@ In comparison, the threat hunting approach is skill-mediated, or internally filt
 
 Ok so then based on the way I've presented it here, is it just really the case that threat hunting is a new and improved version of the SOC-SIEM paradigm? Should we just replace all SOC analysts with threat hunters?
 
+{{< figure src="/img/gif/howaboutno.gif" title="" class="custom-figure-6" >}}
+
 Well of course not.
 
-Rather, it's as the wise Jimi Hendrix said - they are `different strokes for different folks` Applied contextually here, what I mean is that the SOC-SIEM and threat hunting paradigms are two different solutions for two different problems. But to understand what I mean by this we have to introduce one additional layer of nuance, specifically as it related to the quality of threats.
+Rather, it's as the wise Jimi Hendrix said:
 
-# Low- vs High-value attacks
+{{< figure src="/img/gif/jimi.gif" title="" class="custom-figure-6" >}}
+
+Applied contextually here, what I mean is that the SOC-SIEM and threat hunting paradigms are two different solutions for two different problems. But to understand what I mean by this we have to introduce one additional layer of nuance, specifically as it related to the quality of threats.
+
+# low- vs high-value attacks
 
 So far we've implicitly assumed that all threats are the exact same, as if there's this homogeneous slop of threats out there, all of equal value. But of course we know this is not the case.
 
 There are of course many ways in which we can categorize threats, one common way for example is according to a quality cline. Many of us have encountered such a categorization based on a quality cline (as shown below) when we studied introductory cyber security.
 
+{{< figure src="/img/whatis01/005.png" title="" class="custom-figure-6" >}}
+
 Now I want to do something similar, that is also categorize threats based on a quality cline, but something even simpler. Let's simply bifurcate all threats into two categories - which I'm going to call `low value` and `high value` attacks.
+
+{{< figure src="/img/whatis01/006.png" title="" class="custom-figure-6" >}}
 
 When it comes to `low value` attacks:
 
