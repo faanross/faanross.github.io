@@ -62,39 +62,41 @@ But now the SOC analyst is faced with the problem of `data capacity incompatibil
 
 So this external filter will receive **all** the security data being produced by the network, and then it will decide, based on its own rule set, which tiny subset of the data to present to the SOC analyst. And of course we call this tiny subset that's presented to the SOC analyst `alerts`.
 
-{{< figure src="/img/whatis01/001.png" title="" class="custom-figure" >}}
-
-
-
-
-
 So, what a SOC analyst is really doing in this scenario is responding to alerts.
+
+{{< figure src="/img/whatis01/001.png" title="" class="custom-figure-6" >}}
 
 One final thing I think is really worth paying attention to is that in the SOC-SIEM paradigm the view is reduced. Before, we thought of the view as the total field of security data under scrutiny by the security operator, which by default is all security data being produced by the network. 
 
 But in the SOC-SIEM paradigm this no longer holds true. Though, yes, of course, the SOC analyst still retains the ability to consult all security data (via, for example, SIEM searches or other indexing/parsing methods), they no longer personally consider all security data when looking for threats. Thus the "view" has been reduced to subset determined not by the SOC analyst, but by the code. 
 
-I want to mention this because it is this reduction in view which leads to the introduction of major blind spots into this approach to cybersecurity. And it's really these blind spots that present much of the potential for threat actors to move about undetected. 
+I want to mention this because it is this reduction in view which leads to the introduction of major blind spots (pink shaded areas in image below) into this approach to cybersecurity. And it's really these blind spots that present much of the potential for threat actors to move about undetected. 
+
+{{< figure src="/img/whatis01/002.png" title="" class="custom-figure-6" >}}
 
 Ok, so that's the SOC-SIEM approach; now let's have a look at this exact same scenario, but how one might go about approaching it using threat hunting.
 
 # The Threat Hunting approach
 
-So our setup is the exact same. First, we have our network to be secured. Then, we have our security analyst - in this case, of course, it's a threat hunter played here by the lovely Sarah Connor. Again, she has a view of the network to be able to monitor its status via the security data. And of course she is dealing with the exact same problem: the problem of `data capacity incompatibility`.
+So our setup is the exact same. First, we have our network to be secured. Then, we have our security analyst - in this case, of course, it's a threat hunter. Again, she has a view of the network to be able to monitor its status via the security data. And of course she is dealing with the exact same problem: the problem of `data capacity incompatibility`.
 
 So how does she solve this problem? Well, as was the case with the SOC analyst, the threat hunter uses a filter. Crucially, however, the threat hunter does not use an outside-in filter, but an inside-out filter, that is to say the threat hunter applies an internal filter to reduce the data set. 
 
-I'm going to term this filter a "skills-based" filter, really just because I could not find a single label to encompass everything I mean. All this to say, a threat hunter filters the total subset of data down in any given threat hunt based on their skills, experience, knowledge, available tool set, methodologies, resources, and perhaps even what they might be hunting for in any given moment based on threat intel.
+I'm going to term this filter a **kills-based** filter, really just because I could not find a single label to encompass everything I mean. All this to say, a threat hunter filters the total subset of data down in any given threat hunt based on their skills, experience, knowledge, available tool set, methodologies, resources, and perhaps even what they might be hunting for in any given moment based on threat intel.
 
 The key takeaway here is that the decision on how to reduce the data so it is accessible to find a threat is done by the security operator themselves, not by an external entity. And because it is dynamic, that is contingent in any one instance upon all the variables mentioned above, the exact subset under investigation can change and assume many different forms. 
 
 So whereas the SOC analyst was inherently reactive, that is reacting to alerts produced by the code-mediated filter, the threat hunter is inherently proactive, that is, they go to seek out the threat *in situ*, guided by an internal locus. 
+
+{{< figure src="/img/whatis01/003.png" title="" class="custom-figure-6" >}}
 
 I also want to point out that, *yes*, while in any specific instance of threat hunting, the view has been reduced to the subset of data under scrutiny, the total view is retained. So while the threat hunter might not be investigating all the security data at any given moment, they retain the ability to investigate any subset of the total security data in any given instance. In a sense, the "field of potential" has been retained - there is no inherent reduction of the total view as a result of employing threat hunting.
 
 Let's quickly compare the SOC-SIEM and threat hunting approaches.
 
 # SOC-SIEM paradigm vs Threat Hunting
+
+{{< figure src="/img/whatis01/004.png" title="" class="custom-figure-6" >}}
 
 With the SOC-SIEM approach the total set of security data is code-mediated, or externally-filtered. It is an inherently reactive approach - that is, the SOC analyst is reacting to the output of the code-mediated filter. And, with the SOC-SIEM approach, the total data set is inherently reduced to a tiny subset, thereby introducing blind spots.
 
