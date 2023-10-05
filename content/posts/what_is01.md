@@ -1,10 +1,10 @@
 ---
 title: "what is threat hunting part I - different strokes for different folks"
-date: 2023-10-04T02:01:58+05:30
-description: "this is the first in a series of episodes exploring the "what + why" of threat hunting using a conceptual framework." 
+date: 2023-10-03T02:01:58+05:30
+description: "this is the first in a series of episodes exploring the "what + why" of threat hunting using a conceptual framework."
 tags: [threat_hunting, theory]
 author: "faan|ross"
-draft: false
+type: post
 ---
 
 *** 
