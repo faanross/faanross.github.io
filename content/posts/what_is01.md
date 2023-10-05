@@ -129,23 +129,15 @@ Now I want to do something similar, that is also categorize threats based on a q
 {{< figure src="/img/whatis01/006.png" title="" class="custom-figure-6" >}}
 
 When it comes to `low value` attacks:
-
 - Make up the **vast majority** of attacks, or at least attempted attacks.
-
 - Are largely **automated**, meaning that beyond the initial push given by a human operator they don't require human input.
-
 - Because of this, that is because of the ease of replication and low human input, they are **cheap**.
-
 - Finally, we can also say that they operate according to a "shotgun", or "spray and pray" paradigm. Every individual attack has a very small likelihood of succeeding, however since the total amount of attacks are cheap to scale it ultimately still leads to many successful attacks.
 
 `High value` attacks on the other hand:
-
 - Are typically targeted, that is it usually involves a specific group of attackers targeting a specific network.
-
 - Requires a high level of human input, and these individuals are also typically skilled and competent individuals with specialized knowledge.
-
 - Because of this these attacks are expensive.
-
 - As a consequence there are relatively fewer of them compared to low value attacks, however the probability of a high value attack succeeding is much higher.
 
 
