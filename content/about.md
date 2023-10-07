@@ -17,7 +17,6 @@ further, since we find ourselves here it should come as no great shock that I lo
 
 here are a few other things that tickle my fancy...
 
-
 i have been practicing `brazilian jiu jitsu` since 2015 and think its likely the most fun goddamn thing i've ever done. i mostly practice nogi and received my purple belt under sensei louis ho (10th planet montreal) in 2019. i love hitting a sneaky gogoplata from guard or sliding into a d'arce from side control, but really nothing feels better than finishing a *mata leão*, *with* a body-triangle *obvs* - IBJJF point system be damned. 
 
 <!-- {{< figure src="/img/goodboy.gif" title="" class="custom-figure" >}} -->
