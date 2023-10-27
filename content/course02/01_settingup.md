@@ -3,10 +3,11 @@ title: "Section 1: Setting Up Our Virtual Environment"
 description: ""
 date: 2023-08-12T02:01:58+05:30
 type: course
+draft: true
 ---
 
 
-`|` [Course Overview](https://www.faanross.com/posts/course01/) `|` [Return to Section 0](https://www.faanross.com/course01/prebanter) `|` [Proceed to Section 2](https://www.faanross.com/course01/02_attack/) `|`
+`|` [Course Overview](https://www.faanross.com/posts/course02/) `|` [Return to Section 0](https://www.faanross.com/course02/prebanter) `|` [Proceed to Section 2](https://www.faanross.com/course02/02_attack/) `|`
 
 ***
 
@@ -17,13 +18,23 @@ type: course
 
 # 1.1. Introduction
 
-In this section we'll set up the three VMs we'll need for the course - Windows 10 (Victim), Kali Linux (Attacker), and Ubuntu 20.04 (Post-Mortem Analysis). First we'll download the iso images and use them to install the operating systems. Then, depending on the specific VM, we'll perform some configurations as well as install extra software.
+In this section we'll set up the three VMs we'll need for the course:
+- Windows 11 (Victim),
+- Slingshot Linux (Attacker),
+- Ubuntu 20.04 (Network Analysis)
+
+Setting up our Windows 11 victim will *by far* be the biggest time investment since we will install it using an iso, make multiple configurations, and install the required software. Conversely, **both** of our other machines won't even require installation. That's because we'll simply download prebuilt VMs and simply add them to our hypervisor - more on that when we get to the section. 
 
 ***
 
 &nbsp; 
 
 # 1.2. Requirements
+
+
+CONTINUE HERE
+
+
 
 I do want to give you some sense of the hardware requirements for this course, however I also have to add that I am not an expert in this area. ***AT ALL.*** So I'll provide an overview of what we'll be running, as well as what I think this translates to in terms of host resources (ie your actual system). But please - if you disagree with my estimation and believe you can get the same results by adapting the process, then please do so. After all - this is the *way of the hacker*. 
 
@@ -269,7 +280,7 @@ Now also extract the zip file containing the config. Inside of the folder rename
 Great, everything is set up so now we can install it with a simple command. Open command prompt as administrator and navigate to the folder containing ***Sysmon*** and the config file - in my case it is `c:\Users\User\Downloads\Sysmon`. Run the following command:
 
 ```
-Sysmon.exe -accepteula -i .\sysmonconfig.xml
+Sysmon.exe -accepteula -i
 ```
 
 This is what a successful installation will look like:
