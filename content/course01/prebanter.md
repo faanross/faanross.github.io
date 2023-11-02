@@ -11,6 +11,8 @@ type: course
 
 &nbsp;  
 
+[for the video version of this chapter](https://www.youtube.com/watch?v=teA0T6_fdq8)
+
 {{< figure src="/img/gif/ghost.gif" title="" class="custom-figure" >}}
 
 Threat hunting is not typically viewed as an "entry-level" cybersecurity discipline, probably because it is a layer of abstraction woven from other, more *fundamental*, layers of abstraction. It is not a house built from bricks, but a neighborhood built from houses. 
