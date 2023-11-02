@@ -9,8 +9,6 @@ type: course
 
 ***
 
-&nbsp;  
-
 [for the video version of this chapter](https://www.youtube.com/watch?v=teA0T6_fdq8)
 
 {{< figure src="/img/gif/ghost.gif" title="" class="custom-figure" >}}

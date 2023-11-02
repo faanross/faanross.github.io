@@ -14,6 +14,8 @@ type: post
 
 {{< figure src="/img/gif/poe.gif" title="" class="custom-figure-8" >}}
 
+[for the video version of this chapter](https://www.youtube.com/watch?v=teA0T6_fdq8)
+
 `This is the first in an ongoing + always-evolving series on threat hunting.`
 
 <!-- [NOTE: FOR THE VIDEO VERSION OF THIS COURSE CLICK HERE]() -->
