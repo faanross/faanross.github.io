@@ -21,6 +21,7 @@ In this beginner-friendly CTF walkthrough from TryHackMe we will:
 - crack the private key passphrase using john the ripper
 - ssh onto the target box using the private key to obtain a password backup file
 
+&nbsp; 
 ***
 
 
