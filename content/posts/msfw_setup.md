@@ -1,6 +1,6 @@
 ---
 title: "c2 setup + exploitation with metasploit (red team series 001)"
-date: 2023-11-15T02:01:58+05:30
+date: 2023-11-14T02:01:58+05:30
 description: "we learn how to create a handler, generate a payload, exploit the victim system and establish a c2 connection."
 tags: [metasploit, red_team, c2]
 author: "faan|ross"
