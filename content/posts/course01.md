@@ -1,5 +1,5 @@
 ---
-title: "threat hunting for beginners: hunting standard dll-injected c2 implants (Practical Course)"
+title: "threat hunting for beginners: hunting standard dll-injected c2 implants"
 date: 2023-08-12T02:01:58+05:30
 description: "In this beginner-friendly practical course we'll learn how to threat hunt standard DLL-injected C2 implants. We'll set up our own virtual environment, perform the attack, and then perform our threat hunting analysis."
 tags: [threat_hunting, C2, dll_injection]
