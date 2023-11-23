@@ -1,5 +1,5 @@
 ---
-title: "Show Notes: Active Countermeasures Webcast 26.09.23 "
+title: "show notes: active countermeasures webcast 26.09.23 "
 date: 2023-09-25T02:01:58+05:30
 description: "show notes for my Active Countermeasures webcast 26 September 2023."
 tags: [threat_hunting, C2, dll_injection]

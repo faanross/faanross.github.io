@@ -1,5 +1,5 @@
 ---
-title: "Full Video: Active Countermeasures Webcast 26.09.23 "
+title: "full video: active countermeasures webcast 26.09.23 "
 date: 2023-09-27T02:01:58+05:30
 description: "full video for my Active Countermeasures webcast 26 September 2023."
 tags: [threat_hunting, C2, dll_injection]

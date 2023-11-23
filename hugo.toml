@@ -15,7 +15,7 @@ paginate=3 # articles per page
 [params]
 	mode="dark" # color-mode → light,dark,toggle or auto
 	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
-	subtitle = "[| n00b-friendly hacking content |](https://www.youtube.com/@faanross)"
+	subtitle = "[| n00b-friendly hacking content + dnk memez |](https://www.youtube.com/@faanross)"
 	mathjax = true # enable MathJax support
 	katex = true # enable KaTeX support
 	favicon = "/favicon.ico"
