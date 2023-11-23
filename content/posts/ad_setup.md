@@ -2,7 +2,7 @@
 title: "how to set up a simple active directory environment for red teaming"
 date: 2023-11-09T02:01:58+05:30
 description: "a simple AD setup with a DC, one station, and 2 user and 2 admin accounts."
-tags: [ctf, thm, pentesting]
+tags: [ad, red_team, setup]
 author: "faan|ross"
 type: post
 ---
