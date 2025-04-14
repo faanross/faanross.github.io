@@ -1,4 +1,7 @@
 ---
+date: 2025-01-21T17:09:10-05:00
+description: "derp"
+lastmod: 2025-01-21
 showTableOfContents: true
 # tags: ["",]
 title: "Brief Introduction to DLLs"

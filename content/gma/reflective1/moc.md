@@ -1,6 +1,6 @@
 ---
 date: 2025-01-21T17:09:10-05:00
-description: "Let's build a modular gRPC RAT in .NET"
+description: "derp"
 lastmod: 2025-01-21
 showTableOfContents: false
 # tags: ["",]
