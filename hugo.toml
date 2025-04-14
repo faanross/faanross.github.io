@@ -37,7 +37,6 @@ theme = 'gokarna'
     identifier = "github"
     url = "https://github.com/faanross"
     weight = 8
-    # Surround the menu entry (or name) with HTML content, such as Feather
     # icons: https://feathericons.com
     pre = "<span data-feather='github'></span>"
     post = ""
