@@ -30,7 +30,7 @@ theme = "gokarna"
   footer = "faan rossouw"
 
   # Define SEO keywords
-  metaKeywords = ["faan rossouw", "command and control", "cyber security"]
+  metaKeywords = ["faan rossouw", "command and control", "cyber security", "malware"]
 
   # Define how many posts are displayed on the home page
   # showPostsOnHomePage must be "popular" or "recent"
