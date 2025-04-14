@@ -13,4 +13,4 @@ type: "page"
 TODO
 
 ## Module 1 - DLLs and Basic Loading
-
+[Brief Introduction to DLLs (Theory 1.1)](../module01/intro_DLLs/)
