@@ -24,7 +24,7 @@ theme = "gokarna"
   dateFormat = "January 2, 2006"
   
   # Home page meta description
-  description = "| gnostic explorations in C2 malware |"
+  description = "| gnostic explorations in malware development |"
 
   # Footer text (i.e. author/project name)
   footer = "faan rossouw"
