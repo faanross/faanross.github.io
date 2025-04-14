@@ -1,67 +1,55 @@
-baseURL = "https://athul.github.io/archie/"
-languageCode = "en-us"
-title = "faan|ross"
-theme="archie"
-copyright = "| hack the planet"
-# Code Highlight
-pygmentsstyle = "monokai"
-pygmentscodefences = true
-pygmentscodefencesguesssyntax = true
+baseURL = 'https://faanross.com/'
+languageCode = 'en-us'
+title = 'Faan Rossouw'
+theme = 'gokarna'
 
-#disqusShortname = "yourDisqusShortname"
+[menu]
 
-paginate=3 # articles per page
+  [[menu.main]]
+    name = "| courses"
+    url = "/courses/"
+    weight = 1
 
-[params]
-	mode="dark" # color-mode → light,dark,toggle or auto
-	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
-	subtitle = "[| here to democratize cybersecurity education |](https://www.youtube.com/@faanross)"
-	mathjax = true # enable MathJax support
-	katex = true # enable KaTeX support
-	favicon = "/favicon.ico"
+  [[menu.main]]
+    name = "guides"
+    url = "/page/guides/"
+    weight = 2
 
-mainSections = ["post"]
+  [[menu.main]]
+    name = "posts"
+    url = "/posts/"
+    weight = 3
 
-# Social Tags
+  [[menu.main]]
+    name = "projects"
+    url = "/projects/"
+    weight = 4
 
-[[params.social]]
-name = "GitHub"
-icon = "github"
-url = "https://github.com/faanross"
+  [[menu.main]]
+    name = "about |"
+    url = "/about/"
+    weight = 5
+    
 
-[[params.social]]
-name = "Twitter"
-icon = "twitter"
-url = "https://twitter.com/faanross"
 
-[[params.social]]
-name = "YouTube"
-icon = "youtube"
-url = "https://www.youtube.com/channel/UCtwchzdOYHiXai5BxXPiHMg"
 
-# Main menu Items
+  [[menu.main]]
+    identifier = "github"
+    url = "https://github.com/faanross"
+    weight = 8
+    # Surround the menu entry (or name) with HTML content, such as Feather
+    # icons: https://feathericons.com
+    pre = "<span data-feather='github'></span>"
+    post = ""
 
-[[menu.main]]
-name = "Home"
-url = "/"
-weight = 1
+  [[menu.main]]
+    identifier = "youtube"
+    url = "https://youtube.com/@faanross"
+    weight = 9
 
-[[menu.main]]
-name = "About"
-url = "/about"
-weight = 2
+    pre = "<span data-feather='youtube'></span>"
+    post = ""
 
-[[menu.main]]
-name = "Posts"
-url = "/posts"
-weight = 3
 
-[[menu.main]]
-name = "Tags"
-url = "/tags"
-weight = 4
 
-# [[menu.main]]
-# name = "Resources"
-# url = "/resources"
-# weight = 5
+    

@@ -1,0 +1,25 @@
+# Hugo build output and cache
+/public/
+/resources/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# GoLand IDE specific files
+.idea/
+
+# Node dependencies (if you use npm/yarn for themes or assets)
+node_modules/
+
+# Log files
+*.log
+
+# Temporary files
+*~
+*.tmp
+*.temp
+
+# Sass cache (if applicable)
+.sass-cache/
