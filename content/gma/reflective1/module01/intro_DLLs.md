@@ -7,6 +7,7 @@ showTableOfContents: false
 title: "Brief Introduction to DLLs"
 type: "page"
 ---
+## derp
 
 Before diving into the development of an actual C2 implant/loader, we must first build a solid understanding of two core components involved: Dynamic Link Libraries (DLLs) and shellcode.
 
