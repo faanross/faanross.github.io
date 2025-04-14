@@ -4,11 +4,10 @@
   --dark-tertiary-color: #646464;
   --dark-text-color: white;
   /* Header colors inspired by Dracula theme */
-  --h1-color: #65ff89;        /* Dracula foreground - crisp white yello #fefb8d */
+  --h1-color: #fefb8d;
   --h2-color: #bd93f9;
-  --h3-color: #fefb8d;        
-  --h4-color: #eb89f4;    
-
+  --h3-color: #65ff89;
+  --h4-color: #eb89f4;
 
 
   }    
