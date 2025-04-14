@@ -1,13 +1,12 @@
 ---
-date: 2025-01-21T17:09:10-05:00
-description: "derp"
-lastmod: 2025-01-21
-showTableOfContents: false
+#date: 2025-01-21T17:09:10-05:00
+#description: "derp"
+#lastmod: 2025-01-21
+showTableOfContents: true
 # tags: ["",]
 title: "Brief Introduction to DLLs"
 type: "page"
 ---
-## derp
 
 Before diving into the development of an actual C2 implant/loader, we must first build a solid understanding of two core components involved: Dynamic Link Libraries (DLLs) and shellcode.
 
