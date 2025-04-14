@@ -13,9 +13,7 @@ type: "page"
 TODO
 
 ## Module 1 - DLLs and Basic Loading
-[Brief Introduction to DLLs (Theory 1.1)](../module01/intro_DLLs/)
-
-[AABrief Introduction to DLLs (Theory 1.1)]({{< ref "module01/intro_DLLs.md" >}})
+[Brief Introduction to DLLs (Theory 1.1)]({{< ref "module01/intro_DLLs.md" >}})
 
 
 
