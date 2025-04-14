@@ -9,3 +9,5 @@ title = 'Courses'
 
 ## Golang Malware Academy
 - [Let's Build a Reflective Loader - Part 1](/gma/reflective1/moc/)
+
+- [Let's Build a Reflective Loader - Part 1]({{< ref "gma/reflective1/moc.md" >}})
