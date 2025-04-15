@@ -44,5 +44,5 @@ Though this is really an extremely brief introduction to DLLs, it's enough to ge
 
 ___
 
-
-[|NEXT|](({{< ref "intro_shellcode.md" >}}))
+|PREV|
+[|NEXT|]({{< ref "intro_shellcode.md" >}})
