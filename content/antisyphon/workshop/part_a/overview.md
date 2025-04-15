@@ -1,7 +1,11 @@
 ---
 showTableOfContents: true
-title: "General Course Introduction"
+title: "Let's Begin at the End"
 type: "page"
 ---
 
-Before
+x
+___
+[|TOC|]({{< ref "../moc.md" >}})
+[|PREV|]({{< ref "course_intro.md" >}})
+[|NEXT|]({{< ref "setup.md" >}})

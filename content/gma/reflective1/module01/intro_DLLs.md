@@ -4,6 +4,8 @@ title: "Introduction to DLLs (Theory 1.1)"
 type: "page"
 ---
 
+Before diving into the development of an actual C2 implant/loader, we must first build a solid understanding of two core components involved: Dynamic Link Libraries (DLLs) and shellcode.
+
 ## What is a Dynamic Link Library (DLL)?
 
 Imagine you are building several different software applications, and each one needs the ability to perform a common set of tasks, such as reading configuration files, encrypting data, or drawing graphical elements on the screen. One approach would be to copy and paste the code for these tasks into each application. However, this is inefficient: it increases the size of each application, makes updates difficult (you'd have to update the code in every application separately), and wastes memory if multiple applications running the same duplicated code are active simultaneously.
