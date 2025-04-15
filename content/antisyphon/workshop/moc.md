@@ -1,13 +1,12 @@
 ---
-date: 2025-01-21T17:09:10-05:00
-description: "Let's build a modular gRPC RAT in .NET"
-# image: "/static/ratking.png"
-lastmod: 2025-01-21
 showTableOfContents: false
 # tags: ["",]
-title: "RATKing w. AntiSyphon (2025 vs)"
+title: "Let’s Build a Simple C2 in Golang and Vue.js"
 type: "page"
 ---
 
 
-## DERP
+## Part A: Introduction
+- [General Course Introduction]({{< ref "part_a/course_intro.md" >}})
+- [Overview of What We'll Create]({{< ref "part_a/overview.md" >}})
+- [LAB 00 - Project Setup]({{< ref "part_a/setup.md" >}})
