@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Introduction to Shellcode"
+title: "Introduction to Shellcode (Theory 1.2)"
 type: "page"
 ---
 
@@ -93,6 +93,6 @@ data from the DLL's mapped memory space (e.g., from its resources) and then perf
 In this variation, the DLL acts more like a passive data file once loaded.
 
 ---
-
+[|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "intro_DLLs.md" >}})
 [|NEXT|]({{< ref "dll_loading.md" >}})

@@ -7,6 +7,6 @@ type: "page"
 
 
 ---
-
+[|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "dll_loading.md" >}})
 [|NEXT|]({{< ref "create_loader.md" >}})

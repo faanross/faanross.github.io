@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Standard DLL Loading in Windows"
+title: "Standard DLL Loading in Windows (Theory 1.3)"
 type: "page"
 ---
 ## The Windows API Functions
@@ -72,5 +72,6 @@ In the next chapter, we will begin exploring the PE file format in more detail, 
 For now however let's do two practical labs to better understand what we've been discussing thus far.
 
 ___
+[|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "intro_shellcode.md" >}})
 [|NEXT|]({{< ref "create_dll.md" >}})

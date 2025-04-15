@@ -1,10 +1,8 @@
 ---
 showTableOfContents: true
-title: "Introduction to DLLs"
+title: "Introduction to DLLs (Theory 1.1)"
 type: "page"
 ---
-
-Before diving into the development of an actual C2 implant/loader, we must first build a solid understanding of two core components involved: Dynamic Link Libraries (DLLs) and shellcode.
 
 ## What is a Dynamic Link Library (DLL)?
 
@@ -44,5 +42,5 @@ Though this is really an extremely brief introduction to DLLs, it's enough to ge
 
 ___
 
-|PREV|
+[|TOC|]({{< ref "../moc.md" >}})
 [|NEXT|]({{< ref "intro_shellcode.md" >}})
