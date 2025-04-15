@@ -6,7 +6,7 @@ theme = 'gokarna'
 [menu]
 
   [[menu.main]]
-    name = "| courses"
+    name = "courses"
     url = "/courses/"
     weight = 1
 
@@ -26,7 +26,7 @@ theme = 'gokarna'
     weight = 4
 
   [[menu.main]]
-    name = "about |"
+    name = "about"
     url = "/about/"
     weight = 5
     
