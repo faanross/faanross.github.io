@@ -74,24 +74,24 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 - Note that creating shellcode is beyond the scope of this course, it's a technically challenging topic that requires an understanding of assembly. Good news is that I am also working on a free course on this topic which will be completed somewhere in 2025. In the meantime we'll use this reliable source for this course.
 
 **`ExecuteShellcode()`:**
-- This function contains the logic for executing the raw shellcode bytes. It allocates a block of memory marked as readable, writable, and executable (`PAGE_EXECUTE_READWRITE`). It then copies the shellcode bytes into this memory and executes them by treating the memory address as a function pointer. Finally, it cleans up by freeing the allocated memory.
-- I've mentioned it before, but it's worth repeating - this is an incredibly unsophisticated way to run shellcode that is 100% bound to be picked up by any AV/EDR. But it forms the conceptual foundation upon which we will iterate once we have everything in place, so for now it simply doing the trick is good enough.
+- This function contains the logic for executing the raw shellcode bytes. It allocates a block of memory marked as readable, writable, and executable (`PAGE_EXECUTE_READWRITE`) (1). It then copies the shellcode bytes into this memory (2) and executes them by treating the memory address as a function pointer (3). Finally, it cleans up by freeing the allocated memory (4).
+- I've mentioned it before, but it's worth repeating - this is an incredibly unsophisticated way to run shellcode that is 100% guaranteed to be picked up by any AV/EDR. But it forms the conceptual foundation upon which we will iterate once we have everything in place, so for now it simply doing the trick is good enough.
 
 **`extern "C"`:**
-- This block tells the C++ compiler to use C-style linkage for the function(s) inside it. This prevents C++ "name mangling," ensuring our exported function has the simple, predictable name `LaunchCalc` instead of a decorated C++ name.
+- This block tells the C++ compiler to use C-style linkage for the function(s) inside it. This prevents [C++ "name mangling,"](https://www.emmtrix.com/wiki/Demystifying_C%2B%2B_-_Name_Mangling) ensuring our exported function retains the simple, predictable name `LaunchCalc` instead of a decorated C++ name.
 
 **`__declspec(dllexport)`:**
 - This Microsoft-specific keyword explicitly tells the compiler and linker that the following function (`LaunchCalc`) should be exported from the DLL, making it callable by external applications.
 
 **`LaunchCalc()`:**
-- This is the function we intend to call from our loader later.
-- It simply calls `ExecuteShellcode()` and returns its success/failure status.
+- This is the name we give to the function we intend to call from our loader later.
+- The function does 2 things - it calls `ExecuteShellcode()` and returns its success/failure status.
 
 **`DllMain()`:**
 - This is the standard entry point function for a Windows DLL.
-- The operating system calls this function when the DLL is loaded or unloaded from a process, or when threads are created/destroyed within the process.
-- While not strictly necessary for _this specific_ payload to function (as we trigger it via the export), a `DllMain` is required for a well-formed DLL and is often used for initialization/cleanup. Here, it does nothing but return `TRUE`.
-- Also note that we can for example call LaunchCalc() automatically once the Dll is loaded, but in general this is not preferred since it offers less control without a clear advantage in most contexts.
+- The operating system calls this function when the DLL is loaded or unloaded from a process, or when threads are created/destroyed within the process - you'll notice 4 sections corresponding to these 4 events.
+- While not strictly necessary for _this specific_ payload to function (as we call it directly since it has been exported), a `DllMain` is required for a well-formed DLL and is often used for initialization/cleanup. Here, it does nothing but return `TRUE`.
+- Also note that we can for example call `LaunchCalc()` automatically once the Dll is loaded, but in general this is not preferred since it offers less control without a clear advantage in most contexts.
 
 
 ## Instructions
@@ -116,7 +116,10 @@ g++ -shared -o calc_dll.dll calc_dll.cpp -Wl,--out-implib,libcalc_dll.a
 
 ## Expected Outcome:
 
-After the compilation command finishes without errors, you should find a new file named `calc_dll.dll` in the same directory, this is your compiled Dynamic Link Library. The DLL contains embedded shellcode to launch `calc.exe` and exports the function `LaunchCalc` to trigger this shellcode. This DLL file is ready to be used in the next lab where we will write a Go program to load and execute it using standard Windows API calls.
+After the compilation command finishes without errors, you should find a new file named `calc_dll.dll` in the same directory, 
+this is your compiled Dynamic Link Library. The DLL contains embedded shellcode to launch `calc.exe` and exports the 
+function `LaunchCalc` to trigger this shellcode. For now we can't do much with it, but it is now ready to be used in the next lab 
+where we will create a Go loader to execute it using standard Windows API calls.
 
 ___
 ## Code with Comments
