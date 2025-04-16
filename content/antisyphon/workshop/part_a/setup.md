@@ -144,3 +144,49 @@ With staging we select all the changes you want to save, while committing perman
 as a snapshot in our project's history with your descriptive message.
 
 The next (optional) step is then to `push` this commit (i.e. the "snapshot") to an online repo, but since we've not yet
+created this repo, now would be the time to do so.
+
+## Creating an online repo
+So go to `github.com` > Repositories > New. Give it a name, description (optional) and select either Public or Private.
+This is up to you, but typically while something is a work-in-progress its good to keep it private, at least up
+until the point its in working state and has a README that makes it clear what the purpose of the application is,
+how to install it, use it etc.
+
+Don't add a README, nor a gitignore (since we already did this), and if you know what a license entails and would like
+to add it - go for it - otherwise just select `None`. You can now click `Create Repository`. 
+
+Following this you can now head back to the terminal where we'll run our final commands:
+
+```shell
+# This command connects your local repository to a remote repository on GitHub.
+git remote add origin git@github.com:faanross/orlokC2.git
+
+# This command renames the current branch from `master` to `main`.
+git branch -M main
+
+# This command pushes your local `main` branch to the remote repository and sets it as the upstream branch.
+git push -u origin main
+```
+
+After you've run this last command you can go back to the repo on Github, and hit refresh - you should now see your 
+files live on your online repo. Without getting into the finer nuances and all situations you'll possibly encounter in
+Github, in general, in about 95% of situations, you'll only ever need to run 3 commands.
+
+Let's say you've been working a bit and would like to stage all your new files and changes to commit, and push it to
+your repo, just run (in the root directory where the .git file can be located):
+
+```go
+git add .
+git commit -am "some message here reflecting what changes/updates were just made"
+git push
+```
+
+## Conclusion
+And that's it, a super simple a concise summary of how to start a new Go module ("project"), how to set up version control, 
+and how to synchronize your local repo with an online version. Now that all the groundwork has been laid let's
+go ahead and get cracking on our actual application.
+
+___
+[|TOC|]({{< ref "../moc.md" >}})
+[|PREV|]({{< ref "overview.md" >}})
+[|NEXT|]({{< ref "../part_b/intro.md" >}})
