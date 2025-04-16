@@ -17,3 +17,9 @@ type: "page"
 
 ## Module 2: PE Format for Loaders
 - [PE File Structure Essentials (Theory 2.1)]({{< ref "module02/structure.md" >}})
+- [Addressing in PE Files (Theory 2.2)]({{< ref "module02/addresses.md" >}})
+- [PE Header Inspection with PE-Bear (Lab 2.1)]({{< ref "module02/pebear.md" >}})
+- [PE Header Parser in Go (Lab 2.2)]({{< ref "module02/peparser.md" >}})
+
+
+

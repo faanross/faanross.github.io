@@ -3,12 +3,16 @@ showTableOfContents: true
 title: "PE File Structure Essentials (Theory 2.1)"
 type: "page"
 ---
+## Preface
+Be aware that the PE file structure is a very deep rabbit hole. I've personally found that other courses on this topic can get bogged down in laborious technical explanations, often causing interest to wane. My goal with this section, therefore, is to cover the absolute bare minimum needed for us to progress. Plenty of resources exist to take you deep into that rabbit hole if you wish, but what's provided here are just enough "bread crumbs." This will give you a foundational understanding for the upcoming labs – enough to know what you're looking at and, more importantly, why we care about these specific elements.
+
 ## Anatomy of a Windows Executable - The PE Format
 
 In the previous module we learned how the standard Windows functions `LoadLibrary` and `GetProcAddress` are used to load DLLs from disk. 
 I also mentioned the drawbacks of this approach, namely the reliance on disk-based files and the monitoring capabilities of the operating 
 system's loader. To overcome these limitations and perform reflective loading, we need to essentially replicate the core tasks of the 
 Windows loader ourselves. To do that, we must first understand the blueprint of Windows executables and DLLs: the **Portable Executable (PE) file format**.
+
 
 The PE format is the standard file format for all versions of 32-bit and 64-bit Windows executables (`.exe`), object code, and DLLs (`.dll`). It's derived from the older Common Object File Format (COFF) used in Unix systems. Think of it as a container holding all the necessary information in a predictable arrangement, which allows the Windows loader to map the file into memory and prepare it for execution.
 
@@ -101,4 +105,4 @@ For an excellent visual perspective, I highly recommend exploring the work of An
 ---
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "../module01/create_loader.md" >}})
-[|NEXT|]({{< ref "dll_loading.md" >}})
+[|NEXT|]({{< ref "addresses.md" >}})
