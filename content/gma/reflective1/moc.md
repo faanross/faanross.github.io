@@ -14,3 +14,6 @@ type: "page"
 - [Standard DLL Loading in Windows (Theory 1.3)]({{< ref "module01/dll_loading.md" >}})
 - [Create a Basic DLL (Lab 1.1)]({{< ref "module01/create_dll.md" >}})
 - [Create a Basic Loader in Go (Lab 1.2)]({{< ref "module01/create_loader.md" >}})
+
+## Module 2: PE Format for Loaders
+- [PE File Structure Essentials (Theory 2.1)]({{< ref "module02/structure.md" >}})
