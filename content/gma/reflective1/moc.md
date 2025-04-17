@@ -22,4 +22,9 @@ type: "page"
 - [PE Header Parser in Go (Lab 2.2)]({{< ref "module02/peparser.md" >}})
 
 
+## Module 3: Reflective DLL Loading Core Logic
+- Intro to Reflective DLL Loading (Theory 3.1)
+- Memory Allocation (Theory 3.2)
+- Mapping the DLL Image (Theory 3.3)
+- Manual DLL Mapping in Go (Lab 3.1)
 
