@@ -12,7 +12,7 @@ theme = 'gokarna'
 
   [[menu.main]]
     name = "guides"
-    url = "/page/guides/"
+    url = "/guides/"
     weight = 2
 
 
@@ -21,10 +21,15 @@ theme = 'gokarna'
     url = "/projects/"
     weight = 3
 
+[[menu.main]]
+name = "articles"
+url = "/articles/"
+weight = 4
+
   [[menu.main]]
     name = "about"
     url = "/about/"
-    weight = 4
+    weight = 5
     
 
 
