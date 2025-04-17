@@ -1,13 +1,12 @@
 ---
 showTableOfContents: true
-title: "Create a Basic Loader in Go (Lab 1.2)"
+title: "Mapping the DLL Image (Theory 3.3)"
 type: "page"
-draft: "true"
 ---
 
 
 
 ---
 [|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "create_dll.md" >}})
-[|NEXT|]({{< ref "dll_loading.md" >}})
+[|PREV|]({{< ref "memalloc.md" >}})
+[|NEXT|]({{< ref "maplab.md" >}})

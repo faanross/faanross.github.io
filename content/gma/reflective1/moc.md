@@ -23,8 +23,8 @@ type: "page"
 
 
 ## Module 3: Reflective DLL Loading Core Logic
-- Intro to Reflective DLL Loading (Theory 3.1)
-- Memory Allocation (Theory 3.2)
-- Mapping the DLL Image (Theory 3.3)
-- Manual DLL Mapping in Go (Lab 3.1)
+- [Intro to Reflective DLL Loading (Theory 3.1)]({{< ref "module03/intro.md" >}})
+- [Memory Allocation (Theory 3.2)]({{< ref "module03/memalloc.md" >}})
+- [Mapping the DLL Image (Theory 3.3)]({{< ref "module03/mapping.md" >}})
+- [Manual DLL Mapping in Go (Lab 3.1)]({{< ref "module03/maplab.md" >}})
 

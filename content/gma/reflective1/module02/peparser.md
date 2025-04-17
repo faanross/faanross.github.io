@@ -479,4 +479,4 @@ to our reflective loader, which we'll now begin discussing in Module 03.
 ---
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "pebear.md" >}})
-[|NEXT|]({{< ref "../module02/structure.md" >}})
+[|NEXT|]({{< ref "../module03/intro.md" >}})
