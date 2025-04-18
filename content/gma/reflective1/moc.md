@@ -1,9 +1,6 @@
 ---
-date: 2025-01-21T17:09:10-05:00
-description: "derp"
-lastmod: 2025-01-21
-showTableOfContents: false
-# tags: ["",]
+description: "GMA course on reflective loader part 1"
+showTableOfContents: true
 title: "Let's Build a Reflective Loader - Part 1"
 type: "page"
 ---

@@ -6,5 +6,7 @@ type: "page"
 ---
 
 
-## Part A: Introduction
-    b
+## WORK-IN-PROGRESS
+
+This should be done somewhere in May-June 2025. If you'd like to be notified when it's released
+you can signup [here]({{< ref "../../../signup/" >}}).
