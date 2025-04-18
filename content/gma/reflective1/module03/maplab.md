@@ -330,75 +330,83 @@ func magicTypeToString(magic uint16) string {
 
 ## Code Breakdown
 
-Note I am only explaining new logic that was not already discussed in our PE Parser.
+Note I am only explaining new logic that was not already discussed in our PE Parser, obvs if you wanted to understand all the code
+here you'd also need to refer back to it. 
 
-### **New Imports:**
+### New Imports
 - `unsafe`: This package is introduced because manual mapping requires direct memory manipulation that bypasses Go's standard type safety. It's specifically used here to obtain raw pointers (`unsafe.Pointer`) to the beginning of the `dllBytes` slice and to convert between Go pointers and the `uintptr` type required by some Windows API functions.
 - `golang.org/x/sys/windows`: This package provides direct access to Windows API calls from Go. It's essential for interacting with the Windows memory management system (`VirtualAlloc`, `VirtualFree`, `WriteProcessMemory`) and for getting a handle to the current process (`CurrentProcess`).
 
-* **main Function Logic (Mapping Steps):**
+### `main` Function Logic 
 
-    * **(Step 1: Read DLL and Parse Headers):** This step remains largely the same as in `peparser.go`, extracting necessary information like `optionalHeader.SizeOfImage`, `optionalHeader.ImageBase`, `optionalHeader.SizeOfHeaders`, and `fileHeader.NumberOfSections`.
+#### Step 1: Read DLL and Parse Headers
+This step remains largely the same as in `peparser.go`, extracting necessary information like `optionalHeader.SizeOfImage`, `optionalHeader.ImageBase`, `optionalHeader.SizeOfHeaders`, and `fileHeader.NumberOfSections`.
 
-    * **Step 2: Allocate Memory:**
-        * The goal is to reserve a block of virtual memory within the current process large enough to hold the entire DLL image, as specified by `optionalHeader.SizeOfImage`.
-        * The program first attempts to allocate this memory at the DLL's preferred base address, `optionalHeader.ImageBase`. This is done using `windows.VirtualAlloc`.
-        * `windows.VirtualAlloc` Parameters:
-            * `lpAddress`: The desired starting address. Initially set to `uintptr(optionalHeader.ImageBase)`.
-            * `dwSize`: The amount of memory to allocate, `uintptr(optionalHeader.SizeOfImage)`.
-            * `flAllocationType`: Flags specifying the type of allocation. `windows.MEM_RESERVE | windows.MEM_COMMIT` reserves the virtual address space *and* allocates physical memory backing for it in one step.
-            * `flProtect`: Memory protection constants. `windows.PAGE_EXECUTE_READWRITE` marks the memory region as readable, writable, and executable – necessary for the mapped code and data but generally overly permissive for production scenarios (permissions should ideally be set per section).
-        * If allocation at the preferred base fails (e.g., address space already in use), the code attempts `windows.VirtualAlloc` again, but this time passes `0` as the `lpAddress`. This tells the operating system to choose a suitable available address for the allocation.
-        * The actual base address returned by the successful `VirtualAlloc` call is stored in the `allocBase` variable (type `uintptr`).
-        * A `defer` statement is used with `windows.VirtualFree` to ensure the allocated memory block is released back to the system when the `main` function exits, preventing memory leaks. `windows.MEM_RELEASE` is used to decommit and release the entire region.
+#### Step 2: Allocate Memory
+The goal is to reserve a block of virtual memory within the current process large enough to hold the entire DLL image, as specified by `optionalHeader.SizeOfImage`.
 
-    * **Step 3: Copy Headers:**
-        * The PE headers (DOS, NT, Section Headers) must be the first thing present in the newly allocated memory block, mimicking how the Windows loader would map them.
-        * The total size of the headers is taken from `optionalHeader.SizeOfHeaders`.
-        * A raw pointer (`uintptr`) to the start of the original DLL data (`dllBytes[0]`) is obtained using `unsafe.Pointer`. This is needed for the `WriteProcessMemory` call.
-        * `windows.WriteProcessMemory` is used to copy the header data:
-            * `hProcess`: A handle to the target process. `windows.CurrentProcess()` provides a pseudo-handle to the mapper's own process.
-            * `lpBaseAddress`: The destination address in the target process, which is our `allocBase`.
-            * `lpBuffer`: The source address of the data to copy. This requires casting the `uintptr` obtained from `dllBytes` back to a `(*byte)(unsafe.Pointer(...))` representation.
-            * `nSize`: The number of bytes to copy (`headerSize`).
-            * `lpNumberOfBytesWritten`: A pointer to a variable that receives the actual number of bytes successfully copied.
-        * The number of bytes written is checked to ensure the entire header section was copied correctly.
+The program first attempts to allocate this memory at the DLL's preferred base address, `optionalHeader.ImageBase`. This is done using `windows.VirtualAlloc`. 
+- `windows.VirtualAlloc` Parameters:
+  - `lpAddress`: The desired starting address. Initially set to `uintptr(optionalHeader.ImageBase)`.
+  - `dwSize`: The amount of memory to allocate, `uintptr(optionalHeader.SizeOfImage)`.
+  - `flAllocationType`: Flags specifying the type of allocation. `windows.MEM_RESERVE | windows.MEM_COMMIT` reserves the virtual address space *and* allocates physical memory backing for it in one step.
+  - `flProtect`: Memory protection constants. `windows.PAGE_EXECUTE_READWRITE` marks the memory region as readable, writable, and executable – necessary for the mapped code and data but generally overly permissive for production scenarios (permissions should ideally be set per section).
+        
+If allocation at the preferred base fails (e.g., address space already in use), the code attempts `windows.VirtualAlloc` again, but this time passes `0` as the `lpAddress`. This tells the operating system to choose a suitable available address for the allocation.
 
-    * **Step 4: Copy Sections:**
-        * This is the core mapping step where the actual code and data from the DLL file are placed into the allocated memory at their correct relative virtual addresses (RVAs).
-        * The code calculates the file offset where the first `IMAGE_SECTION_HEADER` begins (`firstSectionHeaderOffset`) and uses `reader.Seek` to position the `bytes.Reader` there.
-        * It then loops `fileHeader.NumberOfSections` times. In each iteration:
-            * It reads the `IMAGE_SECTION_HEADER` struct for the current section from the `reader`.
-            * It checks if `sectionHeader.SizeOfRawData` is zero. Sections like `.bss` (uninitialized data) often have a `VirtualSize` but no raw data on disk, so they don't need to be copied; the memory is already zeroed by `VirtualAlloc`.
-            * **Source Address Calculation:** The file offset of the section's data (`sectionHeader.PointerToRawData`) is added to the base pointer of the DLL file data (`dllBytesPtr`) to get the `sourceAddr` in the `dllBytes` slice.
-            * **Destination Address Calculation:** The section's intended RVA (`sectionHeader.VirtualAddress`) is added to the base address of our allocated memory block (`allocBase`) to get the correct `destAddr` in the process's virtual memory.
-            * The number of bytes to copy is `sectionHeader.SizeOfRawData`.
-            * `windows.WriteProcessMemory` is called again, this time copying `sizeToCopy` bytes from `sourceAddr` (in `dllBytes`) to `destAddr` (in the allocated memory block).
-            * Errors and the number of bytes written are checked for each section.
+The actual base address returned by the successful `VirtualAlloc` call is stored in the `allocBase` variable (type `uintptr`).
 
-    * **Step 5: Self-Check (Basic):**
-        * The code prints messages indicating the mapping process (copying headers and sections) is complete.
-        * It suggests using a debugger to manually inspect the memory at `allocBase` to verify the presence of PE signatures and section data at the expected RVAs, serving as a basic confirmation that the mapping *appears* correct structurally. (Note: This does not handle relocations or imports, which are required for the DLL to function correctly).
-        * The program then finishes, and the `defer` statement ensures `VirtualFree` is called.
+A `defer` statement is used with `windows.VirtualFree` to ensure the allocated memory block is released back to the system when the `main` function exits, preventing memory leaks. `windows.MEM_RELEASE` is used to decommit and release the entire region.
+
+#### Step 3: Copy Headers
+The PE headers (DOS, NT, Section Headers) must be the first thing present in the newly allocated memory block, mimicking how the Windows loader would map them.
+
+The total size of the headers is taken from `optionalHeader.SizeOfHeaders`.
+
+A raw pointer (`uintptr`) to the start of the original DLL data (`dllBytes[0]`) is obtained using `unsafe.Pointer`. This is needed for the `WriteProcessMemory` call.
+
+`windows.WriteProcessMemory` is used to copy the header data:
+- `hProcess`: A handle to the target process. `windows.CurrentProcess()` provides a pseudo-handle to the mapper's own process.
+- `lpBaseAddress`: The destination address in the target process, which is our `allocBase`.
+- `lpBuffer`: The source address of the data to copy. This requires casting the `uintptr` obtained from `dllBytes` back to a `(*byte)(unsafe.Pointer(...))` representation.
+- `nSize`: The number of bytes to copy (`headerSize`).
+- `lpNumberOfBytesWritten`: A pointer to a variable that receives the actual number of bytes successfully copied.
+
+The number of bytes written is checked to ensure the entire header section was copied correctly.
+
+#### Step 4: Copy Sections
+This is the core mapping step where the actual code and data from the DLL file are placed into the allocated memory at their correct relative virtual addresses (RVAs).
+
+The code calculates the file offset where the first `IMAGE_SECTION_HEADER` begins (`firstSectionHeaderOffset`) and uses `reader.Seek` to position the `bytes.Reader` there.
+
+It then loops `fileHeader.NumberOfSections` times. In each iteration:
+- It reads the `IMAGE_SECTION_HEADER` struct for the current section from the `reader`.
+- It checks if `sectionHeader.SizeOfRawData` is zero. Sections like `.bss` (uninitialized data) often have a `VirtualSize` but no raw data on disk, so they don't need to be copied; the memory is already zeroed by `VirtualAlloc`.
+- **Source Address Calculation:** The file offset of the section's data (`sectionHeader.PointerToRawData`) is added to the base pointer of the DLL file data (`dllBytesPtr`) to get the `sourceAddr` in the `dllBytes` slice.
+- **Destination Address Calculation:** The section's intended RVA (`sectionHeader.VirtualAddress`) is added to the base address of our allocated memory block (`allocBase`) to get the correct `destAddr` in the process's virtual memory.
+- The number of bytes to copy is `sectionHeader.SizeOfRawData`.
+- `windows.WriteProcessMemory` is called again, this time copying `sizeToCopy` bytes from `sourceAddr` (in `dllBytes`) to `destAddr` (in the allocated memory block).
+- Errors and the number of bytes written are checked for each section.
+
+
 
 ## Instructions
 
-- Compile the parser
+- Compile the mapper
 ```shell
 GOOS=windows GOARCH=amd64 go build
 ```
 
 - Then copy it over to target system and invoke from command-line, providing as argument the dll you'd like to analyze, for example
 
-```shell
-C:\Users\vuilhond\Desktop> .\man_mapper.exe .\calc_dll.dll
+```bash
+".\man_mapper.exe .\calc_dll.dll"
 ```
 
 
 
 ## Results
 ```shell
-PS C:\Users\vuilhond\Desktop> .\man_mapper.exe .\calc_dll.dll
 [+] Starting Manual DLL Mapper...
 [+] Reading file: .\calc_dll.dll
 [+] Parsed PE Headers successfully.
@@ -477,16 +485,22 @@ PS C:\Users\vuilhond\Desktop> .\man_mapper.exe .\calc_dll.dll
 ```
 
 ## Discussion
-- Note that again we found the same address for ImageBase as in Labs 2.1 and 2.2 - `0x26A5B0000`.
+- Note that once again we found the same address for ImageBase as in Labs 2.1 and 2.2 - `0x26A5B0000`.
 - Based on SizeOfImage (`0x22000`) we then allocate that amount of memory. 
 - In this case we were indeed able to allocate at the preferred address `0x26A5B0000`, meaning that no relocations would need to take place.
 - We then copy all the headers, and then iterate through each section, doing the same.
 
+## Conclusion
+Great, we've covered considerable ground in these first three modules - we can now parse a PE file, manually allocate memory,
+and copy required sections into that memory. But, as mentioned, we're not quite done ready to run shellcode yet. 
 
+In the next module we're going to cover two important steps:
+- First, in the case that are not able to allocate memory at our preferred base address, we need to perform relocations.
+- Next, it's more often than not the case that our DLL in turn uses function from other system DLLs, meaning we need to resolve those imports.
 
-
+Let's roll on.
 
 ---
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "mapping.md" >}})
-[|NEXT|]({{< ref "dll_loading.md" >}})
+[|NEXT|]({{< ref "../module04/reloc.md" >}})

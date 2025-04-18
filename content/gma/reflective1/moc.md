@@ -15,6 +15,7 @@ type: "page"
 - [Create a Basic DLL (Lab 1.1)]({{< ref "module01/create_dll.md" >}})
 - [Create a Basic Loader in Go (Lab 1.2)]({{< ref "module01/create_loader.md" >}})
 
+
 ## Module 2: PE Format for Loaders
 - [PE File Structure Essentials (Theory 2.1)]({{< ref "module02/structure.md" >}})
 - [Addressing in PE Files (Theory 2.2)]({{< ref "module02/addresses.md" >}})
@@ -27,4 +28,10 @@ type: "page"
 - [Memory Allocation (Theory 3.2)]({{< ref "module03/memalloc.md" >}})
 - [Mapping the DLL Image (Theory 3.3)]({{< ref "module03/mapping.md" >}})
 - [Manual DLL Mapping in Go (Lab 3.1)]({{< ref "module03/maplab.md" >}})
+
+## Module 4: Handling Relocations and Imports
+- [Base Relocations (Theory 4.1)]({{< ref "module04/reloc.md" >}})
+- [IAT Resolution (Theory 4.2)]({{< ref "module04/iat.md" >}})
+- [Relocation Fixing (Lab 4.1)]({{< ref "module04/reloc_lab.md" >}})
+- [IAT Resolution Implementation (Lab 4.2)]({{< ref "module04/iat_lab.md" >}})
 
