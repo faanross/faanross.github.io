@@ -3,6 +3,12 @@ languageCode = 'en-us'
 title = 'Faan Rossouw'
 theme = 'gokarna'
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+
 [menu]
 
   [[menu.main]]
