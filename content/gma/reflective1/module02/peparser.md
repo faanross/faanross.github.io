@@ -443,9 +443,6 @@ C:\Users\vuilhond\Desktop> .\peparser.exe .\calc_dll.dll
 ```
 
 ## Results
-Okay, here is a concise Results section comparing the script's output with the PE-Bear findings from Lab 2.1:
-
-## Results
 
 Executing the Go PE parser script (`peparser.exe`) on `calc_dll.dll` successfully yielded results that directly correspond to the values observed using PE-Bear in our previous lab.
 
