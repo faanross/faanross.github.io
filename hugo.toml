@@ -58,6 +58,12 @@ weight = 10
 pre = "<span data-feather='slack'></span>"
 post = ""
 
+[[menu.main]]
+identifier = "signup"
+url = "/signup/"
+weight = 11
 
+pre = "<span data-feather='mail'></span>"
+post = ""
 
     
