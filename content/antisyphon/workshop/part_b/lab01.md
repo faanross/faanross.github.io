@@ -159,8 +159,9 @@ We can now finally call the `net/http` library method to run our listener with s
 		log.Fatalf("Server error: %v", err)
 	}
 ```
+<br>
 
-**So the entire `main()` should now look like this**
+So the entire `main()` should now look like this
 ```go
 func main() {
 
@@ -180,7 +181,21 @@ func main() {
 ```
 
 ## test
-Let's go ahead and test.
+First, let's run our actual server. Now we could use `go build`, which would compile our program, and then we could run 
+it (2 steps). However, when in a period of rapid development I prefer using `go run`, which is going to compile, execute,
+and then delete the binary once we're done. In other words, it does everything we need in a single command, so for now
+that's a save I'm happy to accept.
+
+So in your root project folder run:
+```shell
+go run ./cmd/server
+```
+
+This will look for the entrypoint in that directory, which should run our server, leading to the following output:
+
+![final_project](../img/lab01A.png)
+
+We can see that 
 
 
 
@@ -188,10 +203,10 @@ Let's go ahead and test.
 - Run `curl` - show we get feedback both on client + server side
 
 ## conclusion
-- Great, so that's really the core foundation - listener, router, handler
-- Now let's continue to build on it
-- But first -> since we'll now also touch on some topics related to concurrency, I just want to do a very quick dive into this topic to ensure we're all on the same page
-
+Great, so that's really the core foundation - listener, router, handler. There is however A LOT of weaknesses in our code here,
+we're blocking our main thread, we have not mechanism for graceful shutdown etc. Now unfortunately this was one of those corners
+that had to be cut when I refined the course down to 4 hours. However, I did at the very least just give you some introduction
+to what blocking means and how Goroutines can help us out, so let's quickly dip our toes in the next
 
 
 
@@ -200,5 +215,5 @@ Let's go ahead and test.
 
 ___
 [|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "../part_a/overview.md" >}})
-[|NEXT|]({{< ref "lab01.md" >}})
+[|PREV|]({{< ref "../part_a/setup.md" >}})
+[|NEXT|]({{< ref "lab02.md" >}})

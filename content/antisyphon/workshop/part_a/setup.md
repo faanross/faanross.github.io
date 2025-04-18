@@ -189,4 +189,4 @@ go ahead and get cracking on our actual application.
 ___
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "overview.md" >}})
-[|NEXT|]({{< ref "../part_b/intro.md" >}})
+[|NEXT|]({{< ref "../part_b/lab01.md" >}})
