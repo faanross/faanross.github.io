@@ -45,7 +45,8 @@ After completing this final step the memory block starting at `AllocatedBase` wi
 This mapped image _structurally_ resembles how the DLL would look in memory if loaded by `LoadLibrary`, *but* it's not quite ready for execution yet. The addresses within the code and data might still be pointing to locations relative to the DLL's _preferred_ `ImageBase`, not the `AllocatedBase` where we actually loaded it.
 Furthermore, the DLL likely depends on functions from other system DLLs, and the pointers for these imports haven't been resolved yet. These are the crucial tasks of **fixing relocations** and **resolving imports**, which we will cover in Module 4.
 
-Before we proceed with our lab, I though it would be useful to distill what we've discussed here in a numbered checklist of sorts, we can then reference this to server as a sort of roadmap to guide us.
+## Checklist
+Before we proceed with our lab, I thought it would be useful to distill what we've discussed here in a numbered checklist of sorts, which can then be referenced server as a roadmap to guide us.
 
 1. Allocate a contiguous block of virtual memory (result is `AllocatedBase`).
 2. Obtain the `SizeOfHeaders` value from the PE Optional Header.
