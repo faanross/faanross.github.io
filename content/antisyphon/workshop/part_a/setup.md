@@ -40,11 +40,17 @@ chunks within your project. You use the package keyword at the top of your Go fi
 Then you've got Modules. A module is essentially a collection of related Go packages that are versioned together as a single unit. 
 It's what defines your project, or maybe a reusable chunk of code (what you'd typically call a 'library' or 'framework' in other languages).
 
-So when we create a new "project" in Go, we are actually creating a new module. An awesome feature of a Go module is that
+So when we create a new "project" in Go, we are actually creating a new module. An awesome feature of a Go module is that it keeps 
+track of all the other modules (your project's dependencies) that your code needs to run, 
+and crucially, which specific versions of them. 
 
-The key thing about a module is that it keeps track of all the other modules (your project's dependencies) that your code needs to run, 
-and crucially, which specific versions of them. This is getting a bit abstract, let's just get going and I'll show you
-exactly what I mean here.
+So unlike in Python for example where you need to generate a requirements.txt with what packages you are using, and then 
+someone that wants to run you application needs to use something like `pip` 
+to download them in a unique virtual environment (to ensure versions don't clash), Go does all of this for you. So package
+management is all "seamless", and unique to a specific application, so again you don't have system-wide packages meaning
+you don't need virtual environments in Go.
+
+
 
 
 ## Setting Up Our Project

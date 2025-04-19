@@ -29,6 +29,6 @@ type: "page"
 ## Module 4: Handling Relocations and Imports
 - [Base Relocations (Theory 4.1)]({{< ref "module04/reloc.md" >}})
 - [IAT Resolution (Theory 4.2)]({{< ref "module04/iat.md" >}})
-- [Relocation Fixing (Lab 4.1)]({{< ref "module04/reloc_lab.md" >}})
+- [Intentional Base Relocation (Lab 4.1)]({{< ref "module04/reloc_lab.md" >}})
 - [IAT Resolution Implementation (Lab 4.2)]({{< ref "module04/iat_lab.md" >}})
 

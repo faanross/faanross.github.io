@@ -49,7 +49,7 @@ If the loader determines that the DLL was loaded at an `ActualAllocatedBase` dif
 
    **delta = ActualAllocatedBase - PreferredImageBase**
 
-   This delta is the value that needs to be added to each hardcoded address within the DLL that requires relocation. Note that this needs to be calculated using pointer-sized integers (e.g., int64 or uintptr arithmetic in Go) to handle potential address differences correctly. The agent/main.go code calculates this deltaImageBase.
+   This delta is the value that needs to be added to each hardcoded address within the DLL that requires relocation. Note that this needs to be calculated using pointer-sized integers (e.g., int64 or uintptr arithmetic in Go) to handle potential address differences correctly. 
 
 2. **Locate the Relocation Table:** Find the RVA and Size of the base relocation directory from the `DataDirectory` (index 5). Calculate the starting virtual address of the table: `RelocTableVA = ActualAllocatedBase + RelocTableRVA`.
 
