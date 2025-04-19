@@ -25,7 +25,7 @@ That version is much more complete, rounded, and a better overall educational ex
 
 ## Part B: Server Setup
 - [Basic Listener, Handler, Router (Lab 01)]({{< ref "part_b/lab01.md" >}})
-- [Brief Introduction to Goroutines (Lab 02)]({{< ref "part_b/lab01.md" >}})
+- [Brief Introduction to Goroutines (Lab 02)]({{< ref "part_b/lab02.md" >}})
 
 ## Part C: Agent Setup
 - [Basic Agent Setup and Config System (Lab 03)]({{< ref "part_c/lab03.md" >}})

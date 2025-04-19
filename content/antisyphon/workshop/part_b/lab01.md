@@ -193,19 +193,33 @@ go run ./cmd/server
 
 This will look for the entrypoint in that directory, which should run our server, leading to the following output:
 
-![final_project](../img/lab01A.png)
+![lab01](../img/lab01A.png)
 
-We can see that 
+We can see that the server application reports that it is running on our chosen interface and port.
+
+Let's run `lsof` to actually confirm this.
+
+![lab01](../img/lab01B.png)
+
+And we can see that indeed we're listening on the chosen port.
+
+Let's now use `curl` to hit our endpoint and see if we trigger the expected output.
+
+![lab01](../img/lab01C.png)
+
+We can see that we're able to connect, and we get the expected message on the client side.
+
+Further, we can see below that on the server side, we also get our expected message. 
+
+![lab01](../img/lab01D.png)
 
 
 
-- Run `lsof` - show that we bind to interface + port
-- Run `curl` - show we get feedback both on client + server side
 
 ## conclusion
 Great, so that's really the core foundation - listener, router, handler. There is however A LOT of weaknesses in our code here,
-we're blocking our main thread, we have not mechanism for graceful shutdown etc. Now unfortunately this was one of those corners
-that had to be cut when I refined the course down to 4 hours. However, I did at the very least just give you some introduction
+we're blocking our main thread, we have no mechanism for graceful shutdown etc. Now unfortunately this was one of those corners
+that had to be cut when I distilled the course down to 4 hours. However, I did at the very least just give you some introduction
 to what blocking means and how Goroutines can help us out, so let's quickly dip our toes in the next
 
 
