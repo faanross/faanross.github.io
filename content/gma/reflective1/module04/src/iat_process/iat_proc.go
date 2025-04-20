@@ -18,52 +18,30 @@ import (
 
 // --- Existing PE Structures ---
 type IMAGE_DOS_HEADER struct {
-	Magic    uint16     // Magic number (MZ)
-	Cblp     uint16     // Bytes on last page of file
-	Cp       uint16     // Pages in file
-	Crlc     uint16     // Relocations
-	Cparhdr  uint16     // Size of header in paragraphs
-	MinAlloc uint16     // Minimum extra paragraphs needed
-	MaxAlloc uint16     // Maximum extra paragraphs needed
-	Ss       uint16     // Initial (relative) SS value
-	Sp       uint16     // Initial SP value
-	Csum     uint16     // Checksum
-	Ip       uint16     // Initial IP value
-	Cs       uint16     // Initial (relative) CS value
-	Lfarlc   uint16     // File address of relocation table
-	Ovno     uint16     // Overlay number
-	Res      [4]uint16  // Reserved words
-	Oemid    uint16     // OEM identifier (for e_oeminfo)
-	Oeminfo  uint16     // OEM information; e_oemid specific
-	Res2     [10]uint16 // Reserved words
-	Lfanew   int32      // File address of new exe header (PE header offset)
-}
-
+	Magic  uint16
+	_      [58]byte
+	Lfanew int32
+} //nolint:revive
 type IMAGE_FILE_HEADER struct {
-	Machine              uint16 // Architecture type
-	NumberOfSections     uint16 // Number of sections
-	TimeDateStamp        uint32 // Time and date stamp
-	PointerToSymbolTable uint32 // Pointer to symbol table
-	NumberOfSymbols      uint32 // Number of symbols
-	SizeOfOptionalHeader uint16 // Size of optional header
-	Characteristics      uint16 // File characteristics
-}
-
-type IMAGE_DATA_DIRECTORY struct {
-	VirtualAddress uint32 // RVA of the directory
-	Size           uint32 // Size of the directory
-}
-
+	Machine              uint16
+	NumberOfSections     uint16
+	TimeDateStamp        uint32
+	PointerToSymbolTable uint32
+	NumberOfSymbols      uint32
+	SizeOfOptionalHeader uint16
+	Characteristics      uint16
+}                                                               //nolint:revive
+type IMAGE_DATA_DIRECTORY struct{ VirtualAddress, Size uint32 } //nolint:revive
 type IMAGE_OPTIONAL_HEADER64 struct {
-	Magic                       uint16 // Magic number (0x20b for PE32+)
+	Magic                       uint16
 	MajorLinkerVersion          uint8
 	MinorLinkerVersion          uint8
 	SizeOfCode                  uint32
 	SizeOfInitializedData       uint32
 	SizeOfUninitializedData     uint32
-	AddressOfEntryPoint         uint32 // RVA of the entry point
+	AddressOfEntryPoint         uint32
 	BaseOfCode                  uint32
-	ImageBase                   uint64 // Preferred base address
+	ImageBase                   uint64
 	SectionAlignment            uint32
 	FileAlignment               uint32
 	MajorOperatingSystemVersion uint16
@@ -73,8 +51,8 @@ type IMAGE_OPTIONAL_HEADER64 struct {
 	MajorSubsystemVersion       uint16
 	MinorSubsystemVersion       uint16
 	Win32VersionValue           uint32
-	SizeOfImage                 uint32 // Total size of the image in memory
-	SizeOfHeaders               uint32 // Size of headers (DOS + PE + Section Headers)
+	SizeOfImage                 uint32
+	SizeOfHeaders               uint32
 	CheckSum                    uint32
 	Subsystem                   uint16
 	DllCharacteristics          uint16
@@ -84,44 +62,26 @@ type IMAGE_OPTIONAL_HEADER64 struct {
 	SizeOfHeapCommit            uint64
 	LoaderFlags                 uint32
 	NumberOfRvaAndSizes         uint32
-	DataDirectory               [16]IMAGE_DATA_DIRECTORY // Array of data directories
-}
-
+	DataDirectory               [16]IMAGE_DATA_DIRECTORY
+} //nolint:revive
 type IMAGE_SECTION_HEADER struct {
-	Name                 [8]byte // Section name (null-padded)
-	VirtualSize          uint32  // Actual size used in memory
-	VirtualAddress       uint32  // RVA of the section
-	SizeOfRawData        uint32  // Size of section data on disk
-	PointerToRawData     uint32  // File offset of section data
-	PointerToRelocations uint32  // File offset of relocations
-	PointerToLinenumbers uint32  // File offset of line numbers
-	NumberOfRelocations  uint16  // Number of relocations
-	NumberOfLinenumbers  uint16  // Number of line numbers
-	Characteristics      uint32  // Section characteristics (flags like executable, readable, writable)
-}
+	Name                                                                                                     [8]byte
+	VirtualSize, VirtualAddress, SizeOfRawData, PointerToRawData, PointerToRelocations, PointerToLinenumbers uint32
+	NumberOfRelocations, NumberOfLinenumbers                                                                 uint16
+	Characteristics                                                                                          uint32
+}                                                                                                                 //nolint:revive
+type IMAGE_BASE_RELOCATION struct{ VirtualAddress, SizeOfBlock uint32 }                                           //nolint:revive
+type IMAGE_IMPORT_DESCRIPTOR struct{ OriginalFirstThunk, TimeDateStamp, ForwarderChain, Name, FirstThunk uint32 } //nolint:revive
 
-type IMAGE_BASE_RELOCATION struct { //nolint:revive // Windows struct
-	VirtualAddress uint32
-	SizeOfBlock    uint32
-}
-
-// --- Import Structures/Constants ---
-type IMAGE_IMPORT_DESCRIPTOR struct { //nolint:revive // Windows struct
-	OriginalFirstThunk uint32 // RVA to IMAGE_THUNK_DATA (Import Name Table / ILT)
-	TimeDateStamp      uint32 // Often 0 unless bound
-	ForwarderChain     uint32 // -1 if no forwarders
-	Name               uint32 // RVA to DLL name string
-	FirstThunk         uint32 // RVA to IMAGE_THUNK_DATA (Import Address Table / IAT)
-}
-
+// --- Constants ---
 const (
 	IMAGE_DOS_SIGNATURE             = 0x5A4D
 	IMAGE_NT_SIGNATURE              = 0x00004550
 	IMAGE_DIRECTORY_ENTRY_BASERELOC = 5
-	IMAGE_DIRECTORY_ENTRY_IMPORT    = 1 // Import Directory index
+	IMAGE_DIRECTORY_ENTRY_IMPORT    = 1
 	IMAGE_REL_BASED_DIR64           = 10
 	IMAGE_REL_BASED_ABSOLUTE        = 0
-	IMAGE_ORDINAL_FLAG64            = uintptr(1) << 63 // Flag indicating import by ordinal for 64-bit
+	IMAGE_ORDINAL_FLAG64            = uintptr(1) << 63
 	MEM_COMMIT                      = 0x00001000
 	MEM_RESERVE                     = 0x00002000
 	MEM_RELEASE                     = 0x8000
@@ -129,13 +89,13 @@ const (
 	PAGE_EXECUTE_READWRITE          = 0x40
 )
 
-// --- *** NEW: Dynamically load GetProcAddress for ordinal lookup *** ---
+// --- Global Proc Address Loader ---
 var (
 	kernel32DLL        = windows.NewLazySystemDLL("kernel32.dll")
 	procGetProcAddress = kernel32DLL.NewProc("GetProcAddress")
 )
 
-// --- Existing Helper Functions ---
+// --- Helper Functions ---
 func sectionNameToString(nameBytes [8]byte) string {
 	n := bytes.IndexByte(nameBytes[:], 0)
 	if n == -1 {
@@ -170,6 +130,7 @@ func magicTypeToString(magic uint16) string {
 	}
 }
 
+// --- Main Function ---
 func main() {
 	// Ensure running on Windows
 	if runtime.GOOS != "windows" {
@@ -178,7 +139,6 @@ func main() {
 	fmt.Println("[+] Starting Manual DLL Mapper (with IAT Resolution)...")
 
 	// --- Step 1: Read DLL and Parse Headers ---
-
 	if len(os.Args) < 2 {
 		log.Fatalf("[-] Usage: %s <path_to_dll>\n", os.Args[0])
 	}
@@ -220,7 +180,6 @@ func main() {
 	fmt.Println("[+] Parsed PE Headers successfully.")
 	fmt.Printf("[+] Target ImageBase: 0x%X\n", optionalHeader.ImageBase)
 	fmt.Printf("[+] Target SizeOfImage: 0x%X (%d bytes)\n", optionalHeader.SizeOfImage, optionalHeader.SizeOfImage)
-	// --- End Step 1 ---
 
 	// --- Step 2: Allocate Memory for DLL ---
 	fmt.Printf("[+] Allocating 0x%X bytes of memory for DLL...\n", optionalHeader.SizeOfImage)
@@ -244,7 +203,6 @@ func main() {
 			fmt.Println("[+] Main DLL memory freed successfully.")
 		}
 	}()
-	// --- End Step 2 ---
 
 	// --- Step 3: Copy Headers into Allocated Memory ---
 	fmt.Printf("[+] Copying PE headers (%d bytes) to allocated memory...\n", optionalHeader.SizeOfHeaders)
@@ -256,30 +214,36 @@ func main() {
 		log.Fatalf("[-] Failed to copy PE headers to allocated memory: %v (Bytes written: %d)", err, bytesWritten)
 	}
 	fmt.Printf("[+] Copied %d bytes of headers successfully.\n", bytesWritten)
-	// --- End Step 3 ---
 
 	// --- Step 4: Copy Sections into Allocated Memory ---
 	fmt.Println("[+] Copying sections...")
-	firstSectionHeaderOffset := uintptr(dosHeader.Lfanew) + 4 + unsafe.Sizeof(fileHeader) + uintptr(optionalHeader.SizeOfHeaders) - unsafe.Sizeof(optionalHeader)
+	firstSectionHeaderAddr := allocBase + uintptr(dosHeader.Lfanew) + 4 + unsafe.Sizeof(fileHeader) + uintptr(fileHeader.SizeOfOptionalHeader) // Address of first section header IN allocBase
 	sectionHeaderSize := unsafe.Sizeof(IMAGE_SECTION_HEADER{})
 	numSections := fileHeader.NumberOfSections
 	for i := uint16(0); i < numSections; i++ {
-		currentSectionHeaderAddr := allocBase + firstSectionHeaderOffset + uintptr(i)*sectionHeaderSize
+		currentSectionHeaderAddr := firstSectionHeaderAddr + uintptr(i)*sectionHeaderSize
 		sectionHeader := (*IMAGE_SECTION_HEADER)(unsafe.Pointer(currentSectionHeaderAddr))
-		sectionName := sectionNameToString(sectionHeader.Name)
+		// sectionName := sectionNameToString(sectionHeader.Name) // Less verbose logging
 		if sectionHeader.SizeOfRawData == 0 {
 			continue
 		}
+		if uintptr(sectionHeader.PointerToRawData)+uintptr(sectionHeader.SizeOfRawData) > uintptr(len(dllBytes)) {
+			log.Printf("[!] Warning: Section %d ('%s') raw data exceeds file size. Skipping copy.", i, sectionNameToString(sectionHeader.Name))
+			continue
+		}
 		sourceAddr := dllBytesPtr + uintptr(sectionHeader.PointerToRawData)
+		if uintptr(sectionHeader.VirtualAddress)+uintptr(sectionHeader.SizeOfRawData) > allocSize {
+			log.Printf("[!] Warning: Section %d ('%s') virtual address/size exceeds allocated size. Skipping copy.", i, sectionNameToString(sectionHeader.Name))
+			continue
+		}
 		destAddr := allocBase + uintptr(sectionHeader.VirtualAddress)
 		sizeToCopy := uintptr(sectionHeader.SizeOfRawData)
 		err = windows.WriteProcessMemory(windows.CurrentProcess(), destAddr, (*byte)(unsafe.Pointer(sourceAddr)), sizeToCopy, &bytesWritten)
 		if err != nil || bytesWritten != sizeToCopy {
-			log.Fatalf("    [-] Failed to copy section '%s': %v (Bytes written: %d)", sectionName, err, bytesWritten)
+			log.Fatalf("    [-] Failed to copy section '%s': %v (Bytes written: %d)", sectionNameToString(sectionHeader.Name), err, bytesWritten)
 		}
 	}
 	fmt.Println("[+] All sections copied.")
-	// --- End Step 4 ---
 
 	// --- Step 5: Process Base Relocations ---
 	fmt.Println("[+] Checking if base relocations are needed...")
@@ -300,18 +264,35 @@ func main() {
 			currentBlockAddr := relocTableBase
 			totalFixups := 0
 			for currentBlockAddr < relocTableEnd {
+				if currentBlockAddr < allocBase || currentBlockAddr+unsafe.Sizeof(IMAGE_BASE_RELOCATION{}) > allocBase+allocSize {
+					log.Printf("[!] Error: Relocation block address 0x%X is outside allocated range. Stopping relocations.", currentBlockAddr)
+					break
+				}
 				blockHeader := (*IMAGE_BASE_RELOCATION)(unsafe.Pointer(currentBlockAddr))
 				if blockHeader.VirtualAddress == 0 || blockHeader.SizeOfBlock <= uint32(unsafe.Sizeof(IMAGE_BASE_RELOCATION{})) {
+					break
+				}
+				if currentBlockAddr+uintptr(blockHeader.SizeOfBlock) > relocTableEnd {
+					log.Printf("[!] Error: Relocation block size (%d) at 0x%X exceeds directory bounds. Stopping relocations.", blockHeader.SizeOfBlock, currentBlockAddr)
 					break
 				}
 				numEntries := (blockHeader.SizeOfBlock - uint32(unsafe.Sizeof(IMAGE_BASE_RELOCATION{}))) / 2
 				entryPtr := currentBlockAddr + unsafe.Sizeof(IMAGE_BASE_RELOCATION{})
 				for i := uint32(0); i < numEntries; i++ {
-					entry := *(*uint16)(unsafe.Pointer(entryPtr + uintptr(i*2)))
+					entryAddr := entryPtr + uintptr(i*2)
+					if entryAddr < allocBase || entryAddr+2 > allocBase+allocSize {
+						log.Printf("    [!] Error: Relocation entry address 0x%X is outside allocated range. Skipping entry.", entryAddr)
+						continue
+					}
+					entry := *(*uint16)(unsafe.Pointer(entryAddr))
 					relocType := entry >> 12
 					offset := entry & 0xFFF
 					if relocType == IMAGE_REL_BASED_DIR64 {
 						patchAddr := allocBase + uintptr(blockHeader.VirtualAddress) + uintptr(offset)
+						if patchAddr < allocBase || patchAddr+8 > allocBase+allocSize {
+							log.Printf("        [!] Error: Relocation patch address 0x%X is outside allocated range. Skipping fixup.", patchAddr)
+							continue
+						}
 						originalValuePtr := (*uint64)(unsafe.Pointer(patchAddr))
 						*originalValuePtr = uint64(int64(*originalValuePtr) + delta)
 						totalFixups++
@@ -326,7 +307,6 @@ func main() {
 	}
 	// --- End Step 5 ---
 
-	// THIS IS OUR NEW CODE!
 	// --- Step 6: Process Import Address Table (IAT) ---
 	fmt.Println("[+] Processing Import Address Table (IAT)...")
 	importDirEntry := optionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]
@@ -338,16 +318,46 @@ func main() {
 		importDescSize := unsafe.Sizeof(IMAGE_IMPORT_DESCRIPTOR{})
 		importDescBase := allocBase + uintptr(importDirRVA)
 		importCount := 0
+		// fmt.Printf("    DEBUG: Import Directory VA: 0x%X\n", importDescBase)
 
+		// // DEBUG: Read and print the first descriptor BEFORE the loop
+		// if importDescBase < allocBase || importDescBase+importDescSize > allocBase+allocSize {
+		// 	log.Printf("    [-] Error: Calculated Import Directory VA 0x%X is outside allocated range [0x%X - 0x%X]. Cannot read first descriptor.",
+		// 		importDescBase, allocBase, allocBase+allocSize-1)
+		// } else {
+		// 	firstDesc := (*IMAGE_IMPORT_DESCRIPTOR)(unsafe.Pointer(importDescBase))
+		// 	fmt.Printf("    DEBUG: First Descriptor Raw Values: OFT=0x%X, TS=0x%X, FC=0x%X, NameRVA=0x%X, FT=0x%X\n",
+		// 		firstDesc.OriginalFirstThunk, firstDesc.TimeDateStamp, firstDesc.ForwarderChain, firstDesc.Name, firstDesc.FirstThunk)
+		// }
+
+		// Iterate through IMAGE_IMPORT_DESCRIPTOR array (null terminated)
 		for i := 0; ; i++ {
-			importDesc := (*IMAGE_IMPORT_DESCRIPTOR)(unsafe.Pointer(importDescBase + uintptr(i)*importDescSize))
-			if importDesc.OriginalFirstThunk == 0 && importDesc.FirstThunk == 0 {
+			currentDescAddr := importDescBase + uintptr(i)*importDescSize
+			if currentDescAddr < allocBase || currentDescAddr+importDescSize > allocBase+allocSize {
+				log.Printf("    [!] Error: Calculated descriptor address 0x%X is outside allocated range. Stopping IAT processing.", currentDescAddr)
+				break
+			}
+			// fmt.Printf("\n    DEBUG: Reading descriptor %d at address 0x%X\n", i, currentDescAddr) // Keep DEBUG optional
+			importDesc := (*IMAGE_IMPORT_DESCRIPTOR)(unsafe.Pointer(currentDescAddr))
+			// fmt.Printf("        DEBUG: Desc %d: OFT=0x%X, TS=0x%X, FC=0x%X, NameRVA=0x%X, FT=0x%X\n", i, importDesc.OriginalFirstThunk, importDesc.TimeDateStamp, importDesc.ForwarderChain, importDesc.Name, importDesc.FirstThunk) // Keep DEBUG optional
+
+			if importDesc.OriginalFirstThunk == 0 && importDesc.FirstThunk == 0 { /* fmt.Printf("    DEBUG: Null descriptor found at index %d. Stopping.\n", i); */
 				break
 			}
 			importCount++
 
 			dllNameRVA := importDesc.Name
-			dllNamePtr := (*byte)(unsafe.Pointer(allocBase + uintptr(dllNameRVA)))
+			if dllNameRVA == 0 {
+				log.Printf("    [!] Warning: Descriptor %d has null Name RVA. Skipping.", i)
+				continue
+			}
+			dllNamePtrAddr := allocBase + uintptr(dllNameRVA)
+			// fmt.Printf("        DEBUG: DLL Name String RVA=0x%X, VA=0x%X\n", dllNameRVA, dllNamePtrAddr)
+			if dllNamePtrAddr < allocBase || dllNamePtrAddr >= allocBase+allocSize {
+				log.Printf("    [!] Error: Calculated DLL Name VA 0x%X is outside allocated range. Skipping descriptor %d.", dllNamePtrAddr, i)
+				continue
+			}
+			dllNamePtr := (*byte)(unsafe.Pointer(dllNamePtrAddr))
 			dllName := windows.BytePtrToString(dllNamePtr)
 			fmt.Printf("    [->] Processing imports for: %s\n", dllName)
 
@@ -355,21 +365,32 @@ func main() {
 			if err != nil {
 				log.Fatalf("    [-] FATAL: Failed to load dependency library '%s': %v\n", dllName, err)
 			}
-			fmt.Printf("        [+] Loaded '%s' successfully. Handle: 0x%X\n", dllName, hModule)
+			// fmt.Printf("        [+] Loaded '%s' successfully. Handle: 0x%X\n", dllName, hModule) // Less verbose
 
 			iltRVA := importDesc.OriginalFirstThunk
 			if iltRVA == 0 {
 				iltRVA = importDesc.FirstThunk
 			}
 			iatRVA := importDesc.FirstThunk
+			if iltRVA == 0 || iatRVA == 0 {
+				log.Printf("    [!] Warning: Descriptor %d for '%s' has null ILT/IAT RVA. Skipping.", i, dllName)
+				continue
+			}
 			iltBase := allocBase + uintptr(iltRVA)
 			iatBase := allocBase + uintptr(iatRVA)
 			entrySize := unsafe.Sizeof(uintptr(0))
+			// fmt.Printf("        DEBUG: ILT VA=0x%X, IAT VA=0x%X\n", iltBase, iatBase)
 
 			for j := uintptr(0); ; j++ {
 				iltEntryAddr := iltBase + (j * entrySize)
 				iatEntryAddr := iatBase + (j * entrySize)
+				if iltEntryAddr < allocBase || iltEntryAddr >= allocBase+allocSize {
+					log.Printf("    [!] Error: Calculated ILT Entry VA 0x%X is outside allocated range. Stopping imports for %s.", iltEntryAddr, dllName)
+					break
+				}
 				iltEntry := *(*uintptr)(unsafe.Pointer(iltEntryAddr))
+				// fmt.Printf("            DEBUG: Reading ILT Entry %d at 0x%X, Value=0x%X\n", j, iltEntryAddr, iltEntry)
+
 				if iltEntry == 0 {
 					break
 				}
@@ -379,10 +400,9 @@ func main() {
 				importNameStr := ""
 
 				if iltEntry&IMAGE_ORDINAL_FLAG64 != 0 {
-					// Import by Ordinal
 					ordinal := uint16(iltEntry & 0xFFFF)
 					importNameStr = fmt.Sprintf("Ordinal %d", ordinal)
-					// *** FIX: Use procGetProcAddress.Call for ordinal lookup ***
+					// fmt.Printf("            DEBUG: Importing by %s\n", importNameStr)
 					ret, _, callErr := procGetProcAddress.Call(uintptr(hModule), uintptr(ordinal))
 					if ret == 0 {
 						errMsg := fmt.Sprintf("GetProcAddress by ordinal %d returned NULL", ordinal)
@@ -395,15 +415,18 @@ func main() {
 						procErr = fmt.Errorf("GetProcAddress by ordinal %d syscall failed: %w", ordinal, callErr)
 					}
 					funcAddr = ret
-					// *** END FIX ***
 				} else {
-					// Import by Name
 					hintNameRVA := uint32(iltEntry)
 					hintNameAddr := allocBase + uintptr(hintNameRVA)
+					// fmt.Printf("            DEBUG: Importing by Name. Hint/Name RVA=0x%X, VA=0x%X\n", hintNameRVA, hintNameAddr)
+					if hintNameAddr < allocBase || hintNameAddr+2 >= allocBase+allocSize {
+						log.Printf("        [!] Error: Calculated Hint/Name VA 0x%X is outside allocated range. Skipping import.", hintNameAddr)
+						continue
+					}
 					funcNamePtr := unsafe.Pointer(hintNameAddr + 2)
 					funcName := windows.BytePtrToString((*byte)(funcNamePtr))
 					importNameStr = fmt.Sprintf("Function '%s'", funcName)
-					// Use standard windows package GetProcAddress for name lookup
+					// fmt.Printf("            DEBUG: Importing %s\n", importNameStr)
 					funcAddr, procErr = windows.GetProcAddress(hModule, funcName)
 					if procErr != nil && funcAddr == 0 {
 						procErr = fmt.Errorf("GetProcAddress failed for %s: %w", funcName, procErr)
@@ -416,12 +439,16 @@ func main() {
 					log.Fatalf("        [-] FATAL: Failed to resolve import %s from %s: %v (Addr: 0x%X)\n", importNameStr, dllName, procErr, funcAddr)
 				}
 
+				if iatEntryAddr < allocBase || iatEntryAddr >= allocBase+allocSize {
+					log.Printf("        [!] Error: Calculated IAT Entry VA 0x%X is outside allocated range. Skipping patch for %s.", iatEntryAddr, importNameStr)
+					continue
+				}
 				iatEntryPtr := (*uintptr)(unsafe.Pointer(iatEntryAddr))
 				*iatEntryPtr = funcAddr
-				// fmt.Printf("        [+] Resolved %s -> 0x%X. Patched IAT at 0x%X.\n", importNameStr, funcAddr, iatEntryAddr)
-			}
+				// fmt.Printf("            [+] Resolved %s -> 0x%X. Patched IAT at 0x%X.\n", importNameStr, funcAddr, iatEntryAddr) // Less verbose
+			} // End inner loop
 			fmt.Printf("    [+] Finished imports for '%s'.\n", dllName)
-		}
+		} // End outer loop
 		fmt.Printf("[+] Import processing complete (%d DLLs).\n", importCount)
 	}
 	// --- *** End Step 6 *** ---
@@ -429,7 +456,7 @@ func main() {
 	// --- Step 7: Self-Check ---
 	fmt.Println("[+] Manual mapping process complete (Headers, Sections copied, Relocations potentially applied, IAT resolved).")
 	fmt.Println("[+] Self-Check Suggestion: Use a debugger...")
-	fmt.Println("    to inspect the memory at the allocated base address (0x%X).", allocBase)
+	fmt.Printf("    to inspect the memory at the allocated base address (0x%X).\n", allocBase)
 	fmt.Println("    Verify that the 'MZ' and 'PE' signatures are present at the start")
 	fmt.Println("    and that data corresponding to sections appears at the correct RVAs.")
 	fmt.Println("    If relocations occurred, check known absolute addresses (if any) were patched.")
@@ -439,5 +466,4 @@ func main() {
 	fmt.Scanln()
 
 	fmt.Println("[+] Mapper finished.")
-	// Deferred VirtualFree calls will execute now
 }

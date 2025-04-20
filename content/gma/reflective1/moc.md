@@ -30,5 +30,5 @@ type: "page"
 - [Base Relocations (Theory 4.1)]({{< ref "module04/reloc.md" >}})
 - [IAT Resolution (Theory 4.2)]({{< ref "module04/iat.md" >}})
 - [Intentional Base Relocation (Lab 4.1)]({{< ref "module04/reloc_lab.md" >}})
-- [IAT Resolution Implementation (Lab 4.2)]({{< ref "module04/iat_lab.md" >}})
+- [IAT Processing (Lab 4.2)]({{< ref "module04/iat_lab.md" >}})
 
