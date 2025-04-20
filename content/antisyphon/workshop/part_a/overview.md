@@ -49,16 +49,17 @@ in place so that in the following section we can tie everything together.
 We'll create our **Vue.js** Web UI frontend using **Vite**, which means we'll run a simple command to put an entire template
 in place, complete with a local web server so we can run a development version of our client on our local host.
 
+Once that's done we still need to connect our server to our new client UI, for this course we'll use websockets so that
+our server can push real-time updates to our client - no need for polling. So on the server side we're going to set up
+a websocket server, as well as an all-important receiver function called `handleWebsocket()`, which will serve as the
+entrypoint for our client on the server side. On the client side we'll also add a simple js websocket implementation.
+
 **PLEASE NOTE**: Since this is primarily an offensive security course, not a frontend dev course, we're going to blast
 through any section that involves JS. I won't completely blackbox it, but unlike our sections on Golang where we'll actually
 build out our logic line-by-line, I'm going to C+P the code and very briefly cover it at a high-level. This is the only way that
 I could include us having a decent-enough frontend for our C2 framework, while still getting everything done in the allotted
 time. If you're positively Jonesing to learn Vue.js, there are numerous free courses on Youtube, pick one and start building
-something as soon as is feasible - that's how I got started. 
-
-Once that's done we still need to connect our server to our new client UI, so we'll set up a websocket server struct on the
-server's side. Additionally, we'll create an all-important receiver function called `handleWebsocket()`, 
-which will serve as the entrypoint for our client on the server side. 
+something as soon as is feasible - that's how I got started. [Here's one](https://www.youtube.com/watch?v=VeNfHj6MhgA) that will get you going nicely.
 
 
 
@@ -66,13 +67,21 @@ which will serve as the entrypoint for our client on the server side.
 ![final_project](../img/final.png)
 
 Now that we've completed the "circuit" - client to server to agent, back to server to client - we can now weave everything
-together by creating a core function. We're going to create an abbreviated command interpreter of sorts, that will be 
+together. In this case, since the focus of this workshop is really to build out the entire framework instead of advanced
+endpoint behaviour, our agent will have a very simple command interpreter of sorts that will be 
 capable of running 3 core commands on the endpoint - `whoami`, `pwd`, and `hostname`. 
 
 The first thing we need to do is actually give our agent the ability to run these commands, and capture the output as strings.
 
-Once this is done we'll 
+Once this is done we'll start at the client and work our way through the sequence as it would happen:
+- We give our client the ability to allow us to select a command, and then send that to the server.
+- The server then processes the command, and queues it.
+- The agent checks in, receives the command from the queue.
+- The agent then runs the command, captures the output, and returns the result to the server.
+- Finally, our server sends it back to the client where it is rendered in-browser. 
 
+## Conclusion
+That's it! It's going to be a fun ride, so without any further delay, let's get right to it.
 
 
 ___

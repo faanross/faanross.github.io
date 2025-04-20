@@ -3,13 +3,13 @@ showTableOfContents: true
 title: "Basic Listener, Handler, Router (Lab 01)"
 type: "page"
 ---
-## overview
-In this first lab we'll create a basic listener, router, and handler:
--  a **LISTENER** is capable of binding to a specified port to create a socket. It can then listen for incoming requests and assuming all conditions are met will accept and create a connection.
-- a **ROUTER** is what "allows things to be done" with that connection. 
-    - It allows us to set up **ROUTES**, which connects a specific endpoint to for example a handler.
-    - As a simple example, we can say that if a GET request is sent to `/heartbeat` (the endpoint), execute a function (handler) that will check if any jobs are waiting in the queue.
-    - a **HANDLER** is thus the function that executes in response to a specific request method being received by a specific endpoint.
+## Overview
+In our first module we’ll create the foundation of our server. We’ll first create a **Listener** (over **HTTP/1.1**)
+that will bind to a port to create a socket, accept an incoming request and create a connection instance.
+
+But a connection by itself is not very interesting. And so in order for it to “do something”, we’ll furnish it with a **router**, 
+which allows us to define **routes**. You can think of a route simply as defining a method + endpoint in relation to an action. 
+So for example: if a GET request (**method**) is sent to the root **endpoint** `/`, then call the **handler** `RootHandler` (**action**).
 
 ## cmd/server/main.go
 
@@ -17,7 +17,7 @@ Let's create our first file, following the convention of placing all our entry p
 we'll first create a directory called `cmd` in our root directory, inside of that we'll create a directory called `server`,
 and then finally inside of that we'll create a file called `main.go`. This will contain the entrypoint to our server application.
 
-Now in Goland for example this file will automatically be declared to be `package server` at the top, but since this
+Now in Goland for example this file will automatically be declared to be `package server` at the top (since it's parent folder is named `server`), but since this
 is intended to be our entrypoint, we want to change this to `package main`. 
 
 Now before we even declare our main function let's define two global constants - the interface + port we want our listener to bind to.
@@ -31,7 +31,7 @@ For now we will only test locally, hence `127.0.0.1` - this can obviously be cha
 Note that during R&D some people also like using "all interfaces" (0.0.0.0), but in general this is not a great idea as it could
 allow external hosts to probe. 
 
-Let's now create our main function, and immediately inside of it we'll create a new router using Chi.
+Let's now create our main function, and immediately inside of it we'll create a new router using `Chi`.
 
 ```go
 func main() {
@@ -54,7 +54,7 @@ critical tasks such as authentication, request decoding, data decryption, and pa
 
 Now if you've written the line above you'll likely immediately see some form of an error, depending on which IDE you are using.
 The error will say something along the lines of "unresolved reference", which is just Go's fancy way of saying it can't find the
-import. And that's because of course, as I just mentioned, this is not a standar library - meaning we need to import it.
+import. And that's because of course, as I just mentioned, this is not a standard library - meaning we need to import it.
 
 So open your terminal, make sure you are in the root directory of our project, and run the following command: 
 
@@ -106,8 +106,8 @@ it's the actual request hitting our server, carrying all the details about what 
 any data they sent, etc.). Then, `w` is our way to talk back – it's the tool we can use to craft and send your response.
 
 We can see inside the handler that when this function is called two things will happen:
-- On the server-side: We get a notification that the endpoint was hit + a timestamp.
-- On the client-side: We receive a simple message - `I'm Mister Derp! `.
+- On the server-side: We get a notification that the endpoint was hit + a timestamp (since we are using `log` and not `fmt`).
+- On the client-side: We receive a simple message - `I'm Mister Derp!`.
 
 
   
@@ -116,8 +116,8 @@ We can see inside the handler that when this function is called two things will 
 
 ## cmd/server/main.go
 
-So now our route and handler set up we're ready to circle back to main and finish our lab. After creating our router
-instance, let's now call our function that will set up our route.
+Since our route and handler are both set up we're ready to circle back to main and finish our lab. After creating our router
+instance, let's call our function that will set up our route.
 
 ```go
 func main() {
@@ -131,17 +131,17 @@ Notice that, since it's part of `package router`, the keyword `router` precedes 
 
 Next, though it's great for allowing fine-grained control that we seperated the server's interface and port with our 
 two package-level declarations at the top, we now actually need to combine the two since the function we'll call to create
- our listener requires them combined as a single argument. We can do this quite easily with `fmt.Sprintf`.
+ our listener requires them to be combined as a single argument. We can do this quite easily with `fmt.Sprintf`.
 
 
 ```go
 serverAddrPort := fmt.Sprintf("%s:%s", serverAddr, serverPort)
 ```
 
-And now just before we go and create our listener let's just print to console confirming that's what we're doing. 
+And now just before we go and create our listener let's just print to console confirming what we're doing. 
 This might seem like we're getting our order wrong - should we not first bind to the port and only then print to console?
-Actually, there's a good reason for this - we won't be able to print, or in fact do anything after we run our listener.
-This is because at the moment we only have a single goroutine (thread). We'll discuss and address in our next section,
+Actually, there's a good reason for this - we won't be able to print, or in fact do anything, after we run our listener.
+This is because at the moment we only have a single goroutine (thread). We'll discuss and address this in our next section,
 but for now you'll just have to trust me that the order is correct. 
 
 
@@ -181,10 +181,11 @@ func main() {
 ```
 
 ## test
-First, let's run our actual server. Now we could use `go build`, which would compile our program, and then we could run 
-it (2 steps). However, when in a period of rapid development I prefer using `go run`, which is going to compile, execute,
+First, let's run our actual server. We could use `go build`, which would compile our program, and then we could run 
+it separately afterward (2 steps). However, when in a period of rapid development I prefer using `go run`, which is going to 
+compile, execute,
 and then delete the binary once we're done. In other words, it does everything we need in a single command, so for now
-that's a save I'm happy to accept.
+that's an expediency I'm happy to leverage.
 
 So in your root project folder run:
 ```shell
@@ -197,11 +198,11 @@ This will look for the entrypoint in that directory, which should run our server
 
 We can see that the server application reports that it is running on our chosen interface and port.
 
-Let's run `lsof` to actually confirm this.
+Let's run `lsof` to confirm.
 
 ![lab01](../img/lab01B.png)
 
-And we can see that indeed we're listening on the chosen port.
+And we can see that we're listening on the chosen port.
 
 Let's now use `curl` to hit our endpoint and see if we trigger the expected output.
 
@@ -217,10 +218,11 @@ Further, we can see below that on the server side, we also get our expected mess
 
 
 ## conclusion
-Great, so that's really the core foundation - listener, router, handler. There is however A LOT of weaknesses in our code here,
+Great, so that's really our server's core foundation - listener, router, handler. 
+There is however A LOT of weaknesses in our code here,
 we're blocking our main thread, we have no mechanism for graceful shutdown etc. Now unfortunately this was one of those corners
 that had to be cut when I distilled the course down to 4 hours. However, I did at the very least just give you some introduction
-to what blocking means and how Goroutines can help us out, so let's quickly dip our toes in the next
+to what blocking means and how Goroutines can help us out, so let's check that out in the next lab.
 
 
 
