@@ -4,26 +4,27 @@ title: "Overview of Our Project"
 type: "page"
 ---
 ## Let's Begin at the End
-I'd like to start with a quick overview of what we'll create by the end of today's workshop.
+I'd like to start with a quick overview of what we'll create by the end of today's workshop. I'll present the final 
+diagram here, and then we'll deconstruct it during the remainder of this lecture.
 
 ![final_project](../img/final.png)
 
 Now even this is a bit of a simplification, since I did not include _every_ single function and data structure on this diagram.
-Instead, my goal was just to illustrate some semblance of the lynchpin components, and how they fit together.
-Now perhaps this seems overwhelming, but honestly by the end this is going to actually seem incredibly trivial, and 
-you'll be rearing to take it to the next level, I promise.
+Instead, my goal was to illustrate some semblance of the lynchpin components, and how they fit together.
+Now perhaps this seems overwhelming, but honestly by the end of our workshop this is going to actually seem incredibly trivial, and 
+you'll be ready to take it to the next level, I promise.
 
-For now however to make better sense of this, I'm going to show the progression as we go through each section, starting with 
-our server.
+For now however I'm going to show the progression as we go through each section, starting with our server.
 
 ## Server
 ![server](../img/server.png)
 
-In our first section we'll create the foundation of our server. We'll first a **Listener** that will bind to a port to create a socket, accept an incoming request and create a connection instance.
+In our first section we'll create the foundation of our server. 
+We'll first create a **Listener** that will bind to a port to create a socket, accept an incoming request and create a connection instance.
 
 But a connection by itself is not very interesting. And so in order for it to "do something", we'll furnish it with a **router**, which allows
 us to define **routes**. You can think of a route simply as defining a method + endpoint in relation to an action. So for example: if
-a GET request (**method**) is sent to the root **endpoint** `/` then call the **handler** `RootHandler` (action).
+a GET request (**method**) is sent to the root **endpoint** `/`, then call the **handler** `RootHandler` (**action**).
 
 Since we won't yet have an agent at this stage, we'll use `curl` as a substitute to test our server's functionality. 
 

@@ -13,11 +13,10 @@ general more descriptive than the actual lectures, they are not expanded, meanin
 1:1 onto these notes. This means some shortcuts were taken as I had to ensure the entire course could fit into the 
 allotted 4 hours.
 
-If you'd like to do the same course that goes into greater depth, has explanatory lectures reviewing essential
-theory prior to the practical labs, and has multiple bonus labs please see the Director's Cut [here]({{< ref "../workshop_dcut/moc.md" >}}).
-
-That version is much more complete, rounded, and a better overall educational experience imo,
-**so if you are not here from the workshop, but would like to learn, I HIGHLY encourage you to follow the Director's Cut curriculum instead.**
+**If you'd like to do this same essential course but go into greater depth, please see the Director's Cut** [here]({{< ref "../workshop_dcut/moc.md" >}}).
+There I have included numerous explanatory lectures reviewing essential theory prior to the practical labs, and 
+it has multiple bonus labs which will build out more essential components. It roughly has twice the amount of content,
+and is imo a much more complete, rounded, and better overall educational experience.
 
 ## Part A: Introduction
 - [Overview of What We'll Create]({{< ref "part_a/overview.md" >}})
