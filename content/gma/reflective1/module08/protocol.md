@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "The DLL Entry Point (Theory 5.1)"
+title: "Communication Protocol Design (Theory 8.2)"
 type: "page"
 ---
 

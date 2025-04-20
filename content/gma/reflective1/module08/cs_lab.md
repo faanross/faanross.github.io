@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "The DLL Entry Point (Theory 5.1)"
+title: "Client + Server Logic (Lab 8.1)"
 type: "page"
 ---
 

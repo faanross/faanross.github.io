@@ -1,7 +1,6 @@
 ---
-description: "GMA course on reflective loader part 1"
 showTableOfContents: true
-title: "Let's Build a Reflective Loader - Part 1"
+title: "Let's Build a Reflective Loader"
 type: "page"
 ---
 ## Preface

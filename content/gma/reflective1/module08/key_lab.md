@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "The DLL Entry Point (Theory 5.1)"
+title: "Implement Client ID and Key Derivation (Lab 8.2)"
 type: "page"
 ---
 

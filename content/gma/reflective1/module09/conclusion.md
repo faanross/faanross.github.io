@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "The DLL Entry Point (Theory 5.1)"
+title: "Course Conclusion"
 type: "page"
 ---
 

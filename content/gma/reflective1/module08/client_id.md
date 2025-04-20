@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "The DLL Entry Point (Theory 5.1)"
+title: "Environmental Keying + Client ID (Theory 8.3)"
 type: "page"
 ---
 

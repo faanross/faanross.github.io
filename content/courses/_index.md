@@ -10,4 +10,4 @@ title = 'Courses'
 <br>
 
 ## Golang Maldev Academy
-- [Let's Build a Reflective Loader - Part 1]({{< ref "gma/reflective1/moc.md" >}})
+- [Let's Build a Reflective Loader]({{< ref "gma/reflective1/moc.md" >}})
