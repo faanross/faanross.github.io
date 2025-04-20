@@ -4,6 +4,9 @@ showTableOfContents: true
 title: "Let's Build a Reflective Loader - Part 1"
 type: "page"
 ---
+## Preface
+- [Course Introduction]
+- [What We'll Learn]
 
 ## Module 1 - DLLs and Basic Loading
 - [Introduction to DLLs (Theory 1.1)]({{< ref "module01/intro_DLLs.md" >}})
@@ -32,3 +35,36 @@ type: "page"
 - [Intentional Base Relocation (Lab 4.1)]({{< ref "module04/reloc_lab.md" >}})
 - [IAT Processing (Lab 4.2)]({{< ref "module04/iat_lab.md" >}})
 
+
+## Module 5: Execution and Exports
+- [The DLL Entry Point (Theory 5.1)]({{< ref "module05/entry.md" >}})
+- [Exported Functions (Theory 5.2)]({{< ref "module05/export.md" >}})
+- [Call DllMain (Lab 5.1)]({{< ref "module05/entry_lab.md" >}})
+- [Call Exported Function (Lab 5.2)]({{< ref "module05/export_lab.md" >}})
+
+
+## Module 6: Basic Obfuscation - XOR
+- [Introduction to Obfuscation (Theory 6.1)]({{< ref "module06/intro.md" >}})
+- [Simple XOR (Theory 6.2)]({{< ref "module06/simple.md" >}})
+- [XOR Functions in Go (Lab 6.1)]({{< ref "module06/xor_lab.md" >}})
+- [Obfuscated Loading (Lab 6.2)]({{< ref "module06/load_lab.md" >}})
+
+## Module 7: Rolling XOR & Key Derivation
+- [Rolling XOR (Theory 7.1)]({{< ref "module07/rolling.md" >}})
+- [Key Derivation (Theory 7.2)]({{< ref "module07/key.md" >}})
+- [Implementing Rolling XOR (Lab 7.1)]({{< ref "module07/rolling_lab.md" >}})
+- [Implementing Key Derivation (Lab 7.2)]({{< ref "module07/key_lab.md" >}})
+
+## Module 8: Network Delivery & Client/Server
+- [Client + Server Communication (Theory 8.1)]({{< ref "module08/client_server.md" >}})
+- [Communication Protocol Design (Theory 8.2)]({{< ref "module08/protocol.md" >}})
+- [Environmental Keying + Client ID (Theory 8.3)]({{< ref "module08/client_id.md" >}})
+- [Client + Server Logic (Lab 8.1)]({{< ref "module08/cs_lab.md" >}})
+- [Implement Client ID and Key Derivation (Lab 8.2)]({{< ref "module08/key_lab.md" >}})
+
+## Module 9: Final Project + Review
+- [Curriculum Review]({{< ref "module09/review.md" >}})
+- [Final Project]({{< ref "module09/project.md" >}})
+- [Course Conclusion]({{< ref "module09/conclusion.md" >}})
+
+___

@@ -1,8 +1,7 @@
 ---
 showTableOfContents: true
-title: "Create a Basic Loader in Go (Lab 1.2)"
+title: "Call Exported Function (Lab 5.2)"
 type: "page"
-draft: "true"
 ---
 
 

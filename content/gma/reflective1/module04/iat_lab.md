@@ -576,7 +576,7 @@ This is where we now apply our IAT processing logic we learned about in Theory 4
 
 ## Interesting Observation
 
-Perhaps you've noticed something peculiar about our code, right around line `354`:
+Perhaps you've noticed something peculiar about our code, right around line `364`:
 
 ```go
 			hModule, err := windows.LoadLibrary(dllName)
