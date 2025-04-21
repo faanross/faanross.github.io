@@ -5,7 +5,7 @@ type: "page"
 ---
 ## Preface
 - [Course Introduction]
-- [What We'll Learn]
+- [Course Preview + Curriculum]
 
 ## Module 1 - DLLs and Basic Loading
 - [Introduction to DLLs (Theory 1.1)]({{< ref "module01/intro_DLLs.md" >}})

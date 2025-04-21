@@ -4,8 +4,6 @@ showTableOfContents: false
 title: "Let’s Build a Simple C2 in Golang and Vue.js"
 type: "page"
 ---
-## Solutions
-All the final solutions are available on GitHub [here](https://www.github.com/faanross/workshop_antisyphon_25042025).
 
 ## Overview
 Below are the lecture notes for my AntiSyphon workshop presented on April 25th 2025. Though the notes are in 
@@ -17,6 +15,9 @@ allotted 4 hours.
 There I have included numerous explanatory lectures reviewing essential theory prior to the practical labs, and 
 it has multiple bonus labs which will build out more essential components. It roughly has twice the amount of content,
 and is imo a much more complete, rounded, and better overall educational experience.
+
+## Solutions
+All the final solutions are available on GitHub [here](https://www.github.com/faanross/workshop_antisyphon_25042025).
 
 ## Part A: Introduction
 - [Overview of What We'll Create]({{< ref "part_a/overview.md" >}})
