@@ -377,12 +377,18 @@ We'll then initialize our `Config` struct by calling the constructor. This allow
 by calling its constructor, passing the config as an argument.
 
 We then `Start()` our agent, after which we wait for the termination signal (`SIGTERM`). Once called it will unblock
-the main thread, causing the Stop() function to be called on the agent.
+the main thread, causing the `Stop()` function to be called on the agent.
 
 ## Test 
 
-- RUN SERVER AND AGENT SHOW OUTPUT.
+Let's first start our server (`go run ./cmd/server`), and then we can start our agent (`go run ./cmd/agent`).
 
+We'll immediately see that our agent will automatically hit our server's endpoint every 5 - 7.5 seconds, and we'll
+periodically see the expected output on both the server and agent console. 
+
+![lab03](../img/lab03a.png)
+
+![lab03](../img/lab03b.png)
 
 
 

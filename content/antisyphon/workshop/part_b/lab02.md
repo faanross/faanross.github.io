@@ -115,34 +115,77 @@ the `http.ListenAndServe()`
 function - that's done by our newly minted goroutine. So it moves on, handles the print statement, and thereafter since it
 is then free with nothing else to do it finished our `main()` function, which in turn signals to our application to exit.
 
-## Intentional Block
-Now there are better ways to do this than we're about to. Typically, we want to combine channels with signal handling
-so that we can intentionally block our `main()` function before it ends with the ability to gracefully kill it using a
-signal (like Ctrl + C). But, for now we're going to use a simple little "hack" - an empty `select` statement.
+## Signal Handling
 
-In some ways it's analogous to an empty `for` loop - it just creates an endless hole of logical continuity. Like I said, not
-very elegant, but it's going get the job done for now. So add this right the to bottom of your code.
+So what we want to do now is reintroduce some form of blocking at the end, but then also make it contingent upon
+some action we can control to unblock, and thus exit. And the way we'll do this is with signal handling.
+
+So let's add the following 2 lines right at the top of our sever's main function.
 
 ```go
-func main() {
-
-    // previous code here 
-	
-	fmt.Println("This code will NEVER execute!")
-
-	select {}
-}
+sigChan := make(chan os.Signal, 1)  
+signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 ```
 
-And if we run it again we'll see we're all good - the statement will execute _and_ our program will continue to run.
+Rather than break these 2 lines of code down bit by bit, I think it's easier if I just explain the entire thing
+conceptually. 
+
+As most of you probably know if you run almost any application and hit Ctrl + C, the application will immediately exit. 
+This is of course how we have been killing our server process thus far, but the question then becomes - how is this happening?
+We never added any logic to our application to tie those two keys with an instruction for our application to exit, so what gives?
+Well, it's not application itself that is exiting. 
+
+You see, whenever you run an application, and it's then the active process, the OS is still "listening", and keeping tabs of
+what's going on. The process itself (i.e. our application) is itself of course being managed by the OS, and it's the OS
+that detects when a user inputs Ctrl + C. This is called SIGTERM, and the OS "knows" that whenever the user hits Ctrl + C
+they are asking it to immediately and abruptly close the current active process.
+
+So what we're doing above is we're creating a new channel called sigChan. `Channels` are used for Goroutines to communicate
+with one another, for now I just want you to think of this channel as a signal. When we create it, it's "deactivated",
+but as soon as we "activate" it, it then serves as a trigger for us to be able to do something. 
+
+So with this code we're saying: We don't want SIGTERM (i.e. Ctrl + C) to be interpreted by the OS as a request to
+immediately kill the current process anymore. Instead, what we want is for our sigChan to be activated.
+
+And so then what happens once sigChan is activated? Well let me show you the one other line of code we'll add, 
+right at the bottom of our main() function.
+
+```go
+
+
+func main() {
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	// AFTER THE NEW GO FUNC()
+
+	<-sigChan
+
+	fmt.Println("Program will now exit.")
+
+}
+
+```
+
+So you can see we added `<-sigChan`. What this does is it block the main goroutine, when it gets there it stops. But,
+we have the ability to unblock it, and perhaps you've already guessed it. When we hit Ctrl + C and activate sigChan
+it serves as a signal to unblock, and thus allow the main goroutine to proceed past it, finish execution of the main()
+function, and thus end our application. 
+
+
+And if we run it our application we'll see we're all good - the statement will execute _and_ our program will continue to run,
+until we hit Ctrl + C to end it. 
 
 ![lab02](../img/lab02b.png)
 
 
 ## Conclusion
-Ideally we'd now also add channels + signal handling to allow our goroutines and listeners to all stop gracefully. Alas,
+Ideally we'd now also add the ability to gracefully stop our listener and its goroutine. Alas,
 that luxury is not available to us in our allotted time - I decided to cut it since it might be the "right way" to do things,
-but not doing it still works just fine. However, if you're keen to learn how to do it, which I do encourage, see the Director's Cut. 
+but not doing it still works just fine. 
+
+However, if you're keen to learn how to do it, which I do encourage, see the Director's Cut. 
 
 
 ___
