@@ -219,8 +219,10 @@ Further, we can see below that on the server side, we also get our expected mess
 
 ## conclusion
 Great, so that's really our server's core foundation - listener, router, handler. 
-There is however A LOT of weaknesses in our code here,
-we're blocking our main thread, we have no mechanism for graceful shutdown etc. Now unfortunately this was one of those corners
+There are however A LOT of weaknesses in our code here - we don't have an ability to create multiple listeners,
+we're blocking our main thread, we have no mechanism for graceful shutdown etc. 
+
+Now unfortunately this was one of those corners
 that had to be cut when I distilled the course down to 4 hours. However, I did at the very least just give you some introduction
 to what blocking means and how Goroutines can help us out, so let's check that out in the next lab.
 
