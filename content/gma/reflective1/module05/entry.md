@@ -85,5 +85,5 @@ Once `DllMain` (if present) has been called successfully, the DLL is fully initi
 
 ---
 [|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "create_dll.md" >}})
-[|NEXT|]({{< ref "dll_loading.md" >}})
+[|PREV|]({{< ref "../module04/iat_lab.md" >}})
+[|NEXT|]({{< ref "export.md" >}})

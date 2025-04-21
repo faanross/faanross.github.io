@@ -8,5 +8,5 @@ type: "page"
 
 ---
 [|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "create_dll.md" >}})
-[|NEXT|]({{< ref "dll_loading.md" >}})
+[|PREV|]({{< ref "../module05/export_lab.md" >}})
+[|NEXT|]({{< ref "simple.md" >}})

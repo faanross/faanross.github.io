@@ -1,30 +1,3 @@
----
-showTableOfContents: true
-title: "IAT Processing (Lab 4.2)"
-type: "page"
----
-
-## Overview
-We'll now modify our code from Lab 4.1 to resolve the imported functions required by the `calc_dll.dll`.
-
-This involves:
-- **Parsing the DLL's Import Directory**,
-- **Loading the necessary dependency DLLs** (like `kernel32.dll`),
-- **Finding the addresses of the required functions** within those dependencies using `GetProcAddress`, and
-- **Patching the Import Address Table (IAT)** within our manually mapped DLL image with these resolved addresses.
-
-
-## Notes
-We'll remove our forced relocations from the previous lab, this was only to ensure we tested the relocation logic, but since we now know it works, no need to do so any longer.
-
-Also note that there is no need to do the same for IAT lookup (meaning forcing it as with base relocations). Unlike base relocations which _only_ need to happen if the `delta` is non-zero (and which we could force by making `delta` non-zero), IAT resolution is _always_ necessary if the DLL imports _any_ functions, which is always the case if you use other win32 API functions like we do.
-
-In any case, our output will confirm whether were able to resolve DLL imports, so we'll know whether we've succeeded or not.
-
-
-## Code
-
-```go
 //go:build windows
 // +build windows
 
@@ -38,6 +11,7 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"syscall"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
@@ -100,8 +74,24 @@ type IMAGE_SECTION_HEADER struct {
 type IMAGE_BASE_RELOCATION struct{ VirtualAddress, SizeOfBlock uint32 }                                           //nolint:revive
 type IMAGE_IMPORT_DESCRIPTOR struct{ OriginalFirstThunk, TimeDateStamp, ForwarderChain, Name, FirstThunk uint32 } //nolint:revive
 
+type IMAGE_EXPORT_DIRECTORY struct { //nolint:revive // Windows struct
+	Characteristics       uint32
+	TimeDateStamp         uint32
+	MajorVersion          uint16
+	MinorVersion          uint16
+	Name                  uint32 // RVA of the DLL name string
+	Base                  uint32 // Starting ordinal number
+	NumberOfFunctions     uint32 // Total number of exported functions (Size of EAT)
+	NumberOfNames         uint32 // Number of functions exported by name (Size of ENPT & EOT)
+	AddressOfFunctions    uint32 // RVA of the Export Address Table (EAT)
+	AddressOfNames        uint32 // RVA of the Export Name Pointer Table (ENPT)
+	AddressOfNameOrdinals uint32 // RVA of the Export Ordinal Table (EOT)
+}
+
 // --- Constants ---
 const (
+	IMAGE_DIRECTORY_ENTRY_EXPORT    = 0
+	DLL_PROCESS_ATTACH              = 1
 	IMAGE_DOS_SIGNATURE             = 0x5A4D
 	IMAGE_NT_SIGNATURE              = 0x00004550
 	IMAGE_DIRECTORY_ENTRY_BASERELOC = 5
@@ -480,195 +470,139 @@ func main() {
 	}
 	// --- *** End Step 6 *** ---
 
-	// --- Step 7: Self-Check ---
-	fmt.Println("[+] Manual mapping process complete (Headers, Sections copied, Relocations potentially applied, IAT resolved).")
-	fmt.Println("[+] Self-Check Suggestion: Use a debugger...")
-	fmt.Printf("    to inspect the memory at the allocated base address (0x%X).\n", allocBase)
-	fmt.Println("    Verify that the 'MZ' and 'PE' signatures are present at the start")
-	fmt.Println("    and that data corresponding to sections appears at the correct RVAs.")
-	fmt.Println("    If relocations occurred, check known absolute addresses (if any) were patched.")
-	fmt.Println("    Inspect the IAT section: pointers should now point to actual function addresses in loaded modules.")
+	// --- Step 7: Call DLL Entry Point (DllMain) ---
+	fmt.Println("[+] Locating and calling DLL Entry Point (DllMain)...")
+	dllEntryRVA := optionalHeader.AddressOfEntryPoint
+
+	if dllEntryRVA == 0 {
+		fmt.Println("[*] DLL has no entry point (AddressOfEntryPoint is 0). Skipping DllMain call.")
+	} else {
+		entryPointAddr := allocBase + uintptr(dllEntryRVA)
+		fmt.Printf("[+] Entry Point found at RVA 0x%X (VA 0x%X).\n", dllEntryRVA, entryPointAddr)
+		fmt.Printf("[+] Calling DllMain(0x%X, DLL_PROCESS_ATTACH, 0)...\n", allocBase)
+
+		// Call DllMain: BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
+		// Arguments:
+		//   hinstDLL = base address of DLL (allocBase)
+		//   fdwReason = DLL_PROCESS_ATTACH (1)
+		//   lpvReserved = 0 (standard for dynamic loads)
+		ret, _, callErr := syscall.SyscallN(entryPointAddr, allocBase, DLL_PROCESS_ATTACH, 0)
+
+		// Check for errors during the system call itself
+		// Note: '0' corresponds to ERROR_SUCCESS for the syscall status
+		if callErr != 0 {
+			log.Fatalf("    [-] Syscall error during DllMain call: %v\n", callErr)
+			// Consider cleanup before fatal exit if needed
+		}
+
+		// Check the boolean return value from DllMain itself
+		// DllMain returns TRUE (non-zero) on success, FALSE (zero) on failure for attach.
+		if ret != 0 { // Non-zero means TRUE
+			fmt.Printf("    [+] DllMain executed successfully (returned TRUE).\n")
+		} else { // Zero means FALSE
+			// Failure during DLL_PROCESS_ATTACH usually means the DLL cannot initialize
+			log.Fatalf("    [-] DllMain reported initialization failure (returned FALSE). Aborting.\n")
+			// Consider cleanup before fatal exit if needed
+		}
+	}
+
+	// --- Step 8: Find and Call Exported Function ---
+	targetFunctionName := "LaunchCalc" // The function we want to call
+	fmt.Printf("[+] Locating exported function: %s\n", targetFunctionName)
+
+	var targetFuncAddr uintptr = 0 // Initialize to 0 (not found)
+
+	// Find the Export Directory entry
+	exportDirEntry := optionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT]
+	exportDirRVA := exportDirEntry.VirtualAddress
+	// exportDirSize := exportDirEntry.Size // Size might be useful for boundary checks
+
+	if exportDirRVA == 0 {
+		log.Println("[-] DLL has no Export Directory. Cannot find exported function.")
+		// Depending on requirements, might be fatal or just skip this step
+	} else {
+		fmt.Printf("[+] Export Directory found at RVA 0x%X\n", exportDirRVA)
+		exportDirBase := allocBase + uintptr(exportDirRVA) // VA of IMAGE_EXPORT_DIRECTORY
+		exportDir := (*IMAGE_EXPORT_DIRECTORY)(unsafe.Pointer(exportDirBase))
+
+		// Calculate the absolute addresses of the EAT, ENPT, and EOT
+		eatBase := allocBase + uintptr(exportDir.AddressOfFunctions)    // Export Address Table VA
+		enptBase := allocBase + uintptr(exportDir.AddressOfNames)       // Export Name Pointer Table VA
+		eotBase := allocBase + uintptr(exportDir.AddressOfNameOrdinals) // Export Ordinal Table VA
+
+		fmt.Printf("    NumberOfNames: %d, NumberOfFunctions: %d\n", exportDir.NumberOfNames, exportDir.NumberOfFunctions)
+		fmt.Println("[+] Searching Export Name Pointer Table (ENPT)...")
+
+		// Iterate through the names in ENPT
+		for i := uint32(0); i < exportDir.NumberOfNames; i++ {
+			// Get RVA of the function name string from ENPT
+			nameRVA := *(*uint32)(unsafe.Pointer(enptBase + uintptr(i*4))) // ENPT stores RVAs (4 bytes)
+			// Get VA of the function name string
+			nameVA := allocBase + uintptr(nameRVA)
+			// Read the function name string
+			funcName := windows.BytePtrToString((*byte)(unsafe.Pointer(nameVA)))
+
+			// Uncomment for verbose debugging:
+			// fmt.Printf("    [%d] Checking Name: '%s'\n", i, funcName)
+
+			// Check if this is the function name we are looking for
+			if funcName == targetFunctionName {
+				fmt.Printf("    [+] Found target function name '%s' at index %d.\n", targetFunctionName, i)
+				// Get the ordinal for this name from EOT using the same index i
+				// EOT stores WORDs (2 bytes)
+				ordinal := *(*uint16)(unsafe.Pointer(eotBase + uintptr(i*2)))
+				fmt.Printf("        Ordinal: %d\n", ordinal)
+
+				// Use the ordinal as an index into the EAT to get the function's RVA
+				// EAT stores RVAs (4 bytes)
+				// Note: The ordinal is the direct index into the EAT array
+				funcRVA := *(*uint32)(unsafe.Pointer(eatBase + uintptr(ordinal*4)))
+				fmt.Printf("        Function RVA: 0x%X\n", funcRVA)
+
+				// Calculate the final absolute Virtual Address of the target function
+				targetFuncAddr = allocBase + uintptr(funcRVA)
+				fmt.Printf("[+] Target function '%s' located at VA: 0x%X\n", targetFunctionName, targetFuncAddr)
+				break // Exit loop once found
+			}
+		} // End name search loop
+
+		// Check if we found the function
+		if targetFuncAddr == 0 {
+			log.Printf("[-] Target function '%s' not found in Export Directory.\n", targetFunctionName)
+			// Decide if this is fatal based on application logic
+		} else {
+			// --- Call the Exported Function ---
+			fmt.Printf("[+] Calling target function '%s' at 0x%X...\n", targetFunctionName, targetFuncAddr)
+
+			// LaunchCalc signature is: BOOL LaunchCalc() - takes 0 arguments
+			ret, _, callErr := syscall.SyscallN(targetFuncAddr, 0, 0, 0, 0)
+
+			if callErr != 0 {
+				log.Printf("    [-] Syscall error during '%s' call: %v\n", targetFunctionName, callErr)
+				// Consider if this is fatal
+			} else {
+				// Check the boolean return value from LaunchCalc
+				if ret != 0 { // Non-zero means TRUE
+					fmt.Printf("    [+] Exported function '%s' executed successfully (returned TRUE).\n", targetFunctionName)
+					fmt.Println("        ==> Check if Calculator launched! <==")
+				} else { // Zero means FALSE
+					fmt.Printf("    [-] Exported function '%s' reported failure (returned FALSE).\n", targetFunctionName)
+				}
+			}
+		}
+	} // End else (Export Directory found)
+
+	// --- Step 9: Self-Check (Basic) --- (Renumbered)
+	fmt.Println("\n[+] ===== FINAL LOADER STATUS =====") // Separator for final checks
+	fmt.Println("[+] Manual mapping & execution process complete.")
+	fmt.Println("[+] Self-Check Suggestion:")
+	fmt.Printf("    - Verify console output shows successful completion of all stages (Parse, Alloc, Map, Reloc Check, IAT, DllMain, Export Call).\n") // Updated
+	fmt.Printf("    - PRIMARY CHECK: Verify that '%s' was launched successfully!\n", "calc.exe")                                                       // Updated
+	fmt.Printf("    - (Optional) Use Process Hacker/Explorer to observe the loader process briefly running and launching the payload.\n")              // Updated
 
 	fmt.Println("\n[+] Press Enter to free memory and exit.")
 	fmt.Scanln()
 
 	fmt.Println("[+] Mapper finished.")
+
 }
-
-```
-
-
-## Code Breakdown
-### Truncated Headers
-Note that I've now started truncating some of the headers, only including values we actually require.
-
-
-For example before our `IMAGE_DOS_HEADER` explicitly defined each field
-```go
-type IMAGE_DOS_HEADER struct {
-	Magic    uint16     // Magic number (MZ)
-	Cblp     uint16     // Bytes on last page of file
-	Cp       uint16     // Pages in file
-	Crlc     uint16     // Relocations
-	Cparhdr  uint16     // Size of header in paragraphs
-	MinAlloc uint16     // Minimum extra paragraphs needed
-	MaxAlloc uint16     // Maximum extra paragraphs needed
-	Ss       uint16     // Initial (relative) SS value
-	Sp       uint16     // Initial SP value
-	Csum     uint16     // Checksum
-	Ip       uint16     // Initial IP value
-	Cs       uint16     // Initial (relative) CS value
-	Lfarlc   uint16     // File address of relocation table
-	Ovno     uint16     // Overlay number
-	Res      [4]uint16  // Reserved words
-	Oemid    uint16     // OEM identifier (for e_oeminfo)
-	Oeminfo  uint16     // OEM information; e_oemid specific
-	Res2     [10]uint16 // Reserved words
-	Lfanew   int32      // File address of new exe header (PE header offset)
-}
-```
-
-
-But this is complete overkill since, as we learned before, we'll only ever use `Magic` and `Lfanew`. And so hence forth we'll black box unused values (see below). It remains important however that we define the right amount of bytes between the fields so our program can correctly parse the values we do need, in this case 58 bytes. This is because each `uint16` is 2 bytes, with `Res` being 4 x 2 bytes, and `Res2` being 10 x 2 bytes.
-
-
-```go
-// --- Existing PE Structures ---
-type IMAGE_DOS_HEADER struct {
-	Magic  uint16
-	_      [58]byte
-	Lfanew int32
-} //nolint:revive
-```
-
-
-### New Structs/Constants/Variables
-#### Structs
-**`IMAGE_IMPORT_DESCRIPTOR` struct:** Added to define the layout of entries in the Import Directory table.
-#### Constants
-`IMAGE_DIRECTORY_ENTRY_IMPORT` (1): Index for the Import Directory.
-
-`IMAGE_ORDINAL_FLAG64`: Bit flag for identifying ordinal imports on 64-bit.
-
-#### Structs
-`kernel32DLL = windows.NewLazySystemDLL("kernel32.dll")`: Loads `kernel32.dll` lazily.
-
-`procGetProcAddress = kernel32DLL.NewProc("GetProcAddress")`: Gets a procedure object for `GetProcAddress` itself. This is needed to correctly call `GetProcAddress` by **ordinal**.
-
-
-### Process Import Address Table (Step 6)
-This is where we now apply our IAT processing logic we learned about in Theory 4.2.
-- **Locate Import Directory:** Gets the `importDirEntry` from `optionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]`. Skips if no import directory exists.
-- **Calculate Descriptor Address:** Calculates the starting VA (`importDescBase`) of the `IMAGE_IMPORT_DESCRIPTOR` array within the mapped DLL's memory.
-- **Iterate Descriptors (Outer Loop):** Loops through descriptors until a null one is found.
-- **Get Dependency DLL Name:** Reads the DLL name string from the mapped memory using the `Name` RVA.
--  **Load Dependency DLL:** Calls `windows.LoadLibrary` to load the required DLL (e.g., `kernel32.dll`) into the current process. Stores the handle (`hModule`).
-- **Locate ILT/IAT:** Calculates the VAs (`iltBase`, `iatBase`) of the Import Lookup Table and Import Address Table within the mapped DLL's memory.
-- **Iterate Imports (Inner Loop):** Loops through the ILT/IAT entries until a null ILT entry.
-    * Reads the ILT entry (`iltEntry`).
-    * **Check Import Type:** Determines if import is by ordinal (`iltEntry & IMAGE_ORDINAL_FLAG64 != 0`) or by name.
-    * **Resolve Address:**
-    * *By Ordinal:* Extracts the ordinal. **Crucially, it now calls `procGetProcAddress.Call(uintptr(hModule), uintptr(ordinal))`** using the dynamically loaded procedure object, which correctly handles ordinal lookups. It checks the return value (`ret`) and the call error (`callErr`) appropriately.
-    * *By Name:* Calculates the name string address (skipping the hint). Calls the standard `windows.GetProcAddress(hModule, funcName)` wrapper, as this works correctly for name lookups. Error checking remains the same.
-    * Stores the resolved address in `funcAddr`. Handles errors (fatal).
-    * **Patch IAT:** Calculates the IAT entry address (`iatEntryAddr`) and uses `unsafe.Pointer` to write the resolved `funcAddr` into the IAT within the mapped DLL's memory.
-
-
-## Interesting Observation
-
-Perhaps you've noticed something peculiar about our code, right around line `364`:
-
-```go
-			hModule, err := windows.LoadLibrary(dllName)
-			if err != nil {
-				log.Fatalf("    [-] FATAL: Failed to load dependency library '%s': %v\n", dllName, err)
-			}
-			fmt.Printf("        [+] Loaded '%s' successfully. Handle: 0x%X\n", dllName, hModule)
-```
-
-
-Spotted the irony? We're building a reflective loader with the primary goal of avoiding the use of  `LoadLibrary`, but in order to do so we have to process IAT, which requires us to... That's right, use `LoadLibrary`. But the devil is in the details, we're primarily interested in avoiding its use for our main payload, and here we are using it to resolve the payload's dependencies, i.e. legitimate Windows DLLs. So the key distinction is what's being loaded. Loading `kernel32.dll` is benign whereas loading `MyEvilImplant.dll` via `LoadLibrary` might trigger alerts.
-
-Note however that sophisticated loaders might try to resolve imports without calling `LoadLibrary`/`GetProcAddress` at all, perhaps by manually parsing the export tables of dependency modules already loaded in the process (found via the PEB), but this adds significant complexity and fragility compared to just using the standard APIs for resolving dependencies.
-
-## Instructions
-
-- Compile the IAT processor.
-
-```shell
-GOOS=windows GOARCH=amd64 go build
-```
-
-- Then copy it over to target system and invoke from command-line, providing as argument the dll you’d like to analyze, for example:
-
-```bash
-".\iat_process.exe .\calc_dll.dll"
-```
-
-
-## Results
-```shell
-[+] Starting Manual DLL Mapper (with IAT Resolution)...
-[+] Reading file: .\calc_dll.dll
-[+] Parsed PE Headers successfully.
-[+] Target ImageBase: 0x26A5B0000
-[+] Target SizeOfImage: 0x22000 (139264 bytes)
-[+] Allocating 0x22000 bytes of memory for DLL...
-[+] DLL memory allocated successfully at actual base address: 0x26A5B0000
-[+] Copying PE headers (1536 bytes) to allocated memory...
-[+] Copied 1536 bytes of headers successfully.
-[+] Copying sections...
-[+] All sections copied.
-[+] Checking if base relocations are needed...
-[+] Image loaded at preferred base. No relocations needed.
-[+] Processing Import Address Table (IAT)...
-[+] Import Directory found at RVA 0x9000
-    [->] Processing imports for: KERNEL32.dll
-    [+] Finished imports for 'KERNEL32.dll'.
-    [->] Processing imports for: api-ms-win-crt-environment-l1-1-0.dll
-    [+] Finished imports for 'api-ms-win-crt-environment-l1-1-0.dll'.
-    [->] Processing imports for: api-ms-win-crt-heap-l1-1-0.dll
-    [+] Finished imports for 'api-ms-win-crt-heap-l1-1-0.dll'.
-    [->] Processing imports for: api-ms-win-crt-runtime-l1-1-0.dll
-    [+] Finished imports for 'api-ms-win-crt-runtime-l1-1-0.dll'.
-    [->] Processing imports for: api-ms-win-crt-stdio-l1-1-0.dll
-    [+] Finished imports for 'api-ms-win-crt-stdio-l1-1-0.dll'.
-    [->] Processing imports for: api-ms-win-crt-string-l1-1-0.dll
-    [+] Finished imports for 'api-ms-win-crt-string-l1-1-0.dll'.
-    [->] Processing imports for: api-ms-win-crt-time-l1-1-0.dll
-    [+] Finished imports for 'api-ms-win-crt-time-l1-1-0.dll'.
-[+] Import processing complete (7 DLLs).
-[+] Manual mapping process complete (Headers, Sections copied, Relocations potentially applied, IAT resolved).
-[+] Self-Check Suggestion: Use a debugger...
-    to inspect the memory at the allocated base address (0x26A5B0000).
-    Verify that the 'MZ' and 'PE' signatures are present at the start
-    and that data corresponding to sections appears at the correct RVAs.
-    If relocations occurred, check known absolute addresses (if any) were patched.
-    Inspect the IAT section: pointers should now point to actual function addresses in loaded modules.
-
-[+] Press Enter to free memory and exit.
-
-[+] Mapper finished.
-[+] Attempting to free main DLL allocation at 0x26A5B0000...
-[+] Main DLL memory freed successfully.
-```
-
-
-## Discussion
-- **`DLL memory allocated successfully at actual base address: 0x26A5B0000`** - Confirms the memory for the DLL was allocated successfully, and in this instance, it occurred at the preferred `ImageBase` (0x26A5B0000).
-- **`Import Directory found at RVA 0x9000`** - The program successfully located the start of the import information within the mapped PE headers using the Data Directory.
-- **`Import processing complete (7 DLLs).`** - Confirmation that the IAT processing logic successfully iterated through all 7 dependency DLLs listed in the import directory before encountering the null terminator, indicating the main loop worked correctly. (Implicitly, the inner loops resolved the functions, otherwise a fatal error would have occurred).
-- **`Manual mapping process complete (Headers, Sections copied, Relocations potentially applied, IAT resolved).`** - This final status message confirms all implemented stages of the reflective loading process up to this point completed successfully.
-
-## Conclusion
-Let's take stock: We've parsed the important PE information, we've loaded our DLL into memory, base internal addresses will be relocated if need be, and external dependencies are resolved (IAT patched).
-
-The only remaining step is to actually _execute_ code within it.
-
-
-
-
----
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "reloc_lab.md" >}})
-[|NEXT|]({{< ref "../module05/entry.md" >}})
