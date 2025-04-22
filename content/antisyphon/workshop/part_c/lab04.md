@@ -5,7 +5,7 @@ type: "page"
 ---
 ## Overview
 
-In our previous lab
+In our previous lab we created the foundational logic for our agent. In 
 
 
 Our agent is assigned a UUID (Universally Unique Identifier) to serve as its permanent, unique fingerprint. This is critical because temporary network details like connection IDs or IP addresses are unreliable for tracking; connections drop and IPs change beyond our control. By embedding a fixed UUID within the agent, we ensure a stable identifier that persists across restarts and network changes, allowing us to reliably track and manage this specific agent instance consistently over time.
