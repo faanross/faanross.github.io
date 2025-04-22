@@ -42,6 +42,7 @@ BOOL ExecuteShellcode() {
 
     VirtualFree(exec_memory, 0, MEM_RELEASE);
     return TRUE;
+}
 
 extern "C" {
     __declspec(dllexport) BOOL LaunchCalc() {
