@@ -7,7 +7,7 @@ type: "page"
 - [Course Introduction]
 - [Course Preview + Curriculum]
 
-## Module 1 - DLLs and Basic Loading
+## Module 1: DLLs and Basic Loading
 - [Introduction to DLLs (Theory 1.1)]({{< ref "module01/intro_DLLs.md" >}})
 - [Introduction to Shellcode (Theory 1.2)]({{< ref "module01/intro_shellcode.md" >}})
 - [Standard DLL Loading in Windows (Theory 1.3)]({{< ref "module01/dll_loading.md" >}})
@@ -63,7 +63,7 @@ type: "page"
 
 ## Module 9: Final Project 
 
-## Module 10: Review + Course Conclusion
+## Review + Course Conclusion
 
 
 ___
