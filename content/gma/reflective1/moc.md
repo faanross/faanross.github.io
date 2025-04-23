@@ -50,7 +50,7 @@ type: "page"
 
 ## Module 7: Rolling XOR & Key Derivation
 - [Rolling XOR (Theory 7.1)]({{< ref "module07/rolling.md" >}})
-- [Key Derivation (Theory 7.2)]({{< ref "module07/key.md" >}})
+- [Key Derivation Logic (Theory 7.2)]({{< ref "module07/key.md" >}})
 - [Implementing Rolling XOR (Lab 7.1)]({{< ref "module07/rolling_lab.md" >}})
 - [Implementing Key Derivation (Lab 7.2)]({{< ref "module07/key_lab.md" >}})
 
