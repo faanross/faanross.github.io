@@ -26,51 +26,39 @@ Also note that (as you will soon see), a Websocket connections starts out as a H
 the client will send a standard HTTP GET request containing an "Upgrade" header. If the server then agrees to this
 the connection transitions from HTTP to the persistent WebSocket protocol.
 
-## overview
-- Right now we can connect to our vue application via our browser using the connection mediated by vite
-- and of course our agent can connect to our server using the HTTP/1.1 connection we created
-
-- But, there is no way for our server to speak to our web ui
-
-
-- SO we need to now go and create this, and as we just explained Websockets is an ideal protocol since it's real-time, no need for polling
+## Implementation
+In order for our server and client to connect with one another we need to furnish both halves with the ability to
+create and handle websocket connections. In this lab we'll add it to our server in Go, and in the next lesson we'll
+add it to our client in JS. 
 
 
-- We'll now build everything out on our server-side then in the next lab we'll get to our client UI to complete the connection
+## Library
 
+For our Golang-implementation we'll use a popular library called Gorilla. 
 
-
-## Server-Side WebSocket Implementation
-
-We'll need to add the Gorilla WebSocket package:
+Let's run the following command in our project's root directory to add the module.
 
 ```
 go get github.com/gorilla/websocket
 ```
 
-## websocket_ui.go
+## internal/websocket/wss.go
 
-- new file here
-  `internal/websocket/wss.go`
+Now let's create a new directory and file here - `internal/websocket/wss.go`.
 
+The first thing we'll do is define our port as a package-level variable, create a `WebSocketServer` struct with a 
+single field (for now), and create the accompanying constructor to instantiate this struct.
 
-- Define our WebSocket Port
-- Create a struct representing the WSS instance
-- And then a constructor to instantiate
 
 ```go
 package websocket
 
 var WebSocketPort = 8080
 
-
-
 // WebSocketServer represents a simple WebSocket server
 type WebSocketServer struct {
 	port int
 }
-
-
 
 // NewWebSocketServer creates a new WebSocket server
 func NewWebSocketServer(port int) *WebSocketServer {
@@ -78,22 +66,16 @@ func NewWebSocketServer(port int) *WebSocketServer {
 		port: port,
 	}
 }
-
 ```
 
-- For now we'll only add the port here to our WSS struct, we'll build on it later on
+Next, we want to create our function that will start our Websocket server. But before we do that, we're also going
+to declare something known as a global singleton.
 
-
-
-
-- Now we'll also define a global instance and immediately implement it in our `StartWebSocketServer()` method
-
+Let's look at this code first, then I'll dig into both a bit more.
 
 ```go
 // Global WebSocket server instance
 var GlobalWSServer *WebSocketServer
-
-
 
 func StartWebSocketServer() {
 
@@ -115,14 +97,22 @@ func StartWebSocketServer() {
 }
 ```
 
--  `var GlobalWSServer *WebSocketServer` is implementing what's known as the singleton pattern.
-- The singleton pattern ensures you have exactly one instance of a particular object accessible from anywhere in your application.
-- In this case, it's making a single WebSocket server available globally.
+Our global singleton `var GlobalWSServer *WebSocketServer`, which as you can see we then immediately assign the return
+value of our constructor inside our function, is a pattern used to create a single instance of a struct, and make it available globally.
+Here this is achieved by the fact that it's declared at package-level (ie not inside a function scope), and since
+it's capitalized, it means its exported (public). 
 
-- In our function then we call the constructor and assign it to the global instance
-- Note that we start our WSS in a separate goroutine
-- We are of course erroring out on `GlobalWSServer.Start()` since we have not yet defined that method, let's do so now
+We're doing this since we only want a single instance of a websocket server, and we want to make it accessible 
+throughout our application. 
 
+Then inside our function `StartWebSocketServer()`, after we've called our constructor, we'll call another function
+called `Start()` (which we'll create soon) in its own goroutine. Notice what seems like an arbitrary sleep, this just
+introduces a pause to ensure the new function (`Start()`) has time to execute before our calling function here exits.
+
+Note that this is not great practice for a number of reasons, the correct way to have handled this would have been
+with channels, but that would be way more complex, and so we use this "quick hack" since it'll do the job most of the time.
+
+Let's now create that `Start()` method.
 
 
 ```go
@@ -140,95 +130,25 @@ func (s *WebSocketServer) Start() error {
 }
 ```
 
+You can see we're creating an endpoint at `/ws`, which will call a handler `s.handleWebSocket`, which we will create
+next. The other major event is that we're creating a HTTP server at the end by calling `http.ListenAndServe()`. As
+you likely recall, a websocket connection starts out as an HTTP connection, which we can then upgrade. This will
+take place inside our handler `handleWebsocket`, which you can think of as the client's main "entrypoint"
+into our server. 
 
-- We set up a route we call `handleWebSocket` so when client (vue js frontend) hits /ws on port 8080, we'll define that shortly
-- We print confirmation to console and then we start the actual server
-
-
-- We can now define our handleWebsocket method, this is really where almost everything will happen
-- Two things - upgrade our connection from HTTP to WS, and create our reading loop
-- So you will get very familiar with this method, we'll use it throughout as the reading loop the entrypoint for the client UI in our server
-
-
-```go
-func (s *WebSocketServer) handleWebSocket(w http.ResponseWriter, r *http.Request) {
-
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Printf("Failed to upgrade connection to WebSocket: %v", err)
-		return
-	}
-	
-	defer conn.Close()
-
-
-	// Log the new connection
-	fmt.Println("New WebSocket connection established")
-
-```
-
-- The first thing we do is Upgrade our connection, as I explained before WSS piggybacks off HTTP, so start the initial connection as HTTP, then we upgrade - that's what upgraded.Upgrade does
-
-- We need to add this, let's do so right above `handleWebSocket()`
+Also note however before we create the handler, we'll also define `upgrader`, which is a struct from our `gorilla` package 
+we are instantiating. And we are defining it with the most lax permissions possible, we are essentially saying - 
+always and indiscriminately upgrade to a websocket `connection` when a client requests it.
+This is fine in a development environment, but is of course something you'd likely want to address before moving to production.
 
 ```go
 var upgrader = websocket.Upgrader{
-	// Allow connections from any origin for development
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
+// Allow connections from any origin for development
+CheckOrigin: func(r *http.Request) bool {
+return true
+},
 }
-```
 
-
-- Now that we've upgraded we add the heart of this method, which is an infite for-loop used to read and process incoming requests
-- For loop - persistent - we know whats what WSS are., so when we start our connection this is where it is the entire time
-
-
-```go
-	for {
-		// Read message
-		messageType, message, err := conn.ReadMessage()
-		if err != nil {
-			log.Printf("Error reading message: %v", err)
-			break
-		}
-
-
-
-
-
-
-		// Log the received message
-		log.Printf("Received message: %s", message)
-
-
-
-
-
-		// Echo the message back to the client
-		err = conn.WriteMessage(messageType, message)
-		if err != nil {
-			log.Printf("Error sending message: %v", err)
-			break
-		}
-	}
-```
-
-- For now obvs we don't have our UI-side wss method yet so we can't test it
-- But I just want to do something simple for a proof of concept
-- So essentially we read any message, and then just echo it back to whoever is sending it
-
-- Connects over HTTP but then upgrades to Websocket, as we explained
-- Then the infinite for loop is classic websocket - creates this persistent state, but since all in own goroutine not blocking
-- For now all we are going to do is echo the message back to client, this will just test to see if we indeed have ability to communicate 2 ways, we'll still change this entier part what goes on in for loop dramatically, this is really where A LOT of the logic is going to happen in terms of what type of message can we receive and what to do with them, send etc.
-
-
-
-
-**ENTIRE METHOD FOR REFERENCE**
-
-```go
 // handleWebSocket handles WebSocket connections
 func (s *WebSocketServer) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	// Upgrade HTTP connection to WebSocket
@@ -242,8 +162,7 @@ func (s *WebSocketServer) handleWebSocket(w http.ResponseWriter, r *http.Request
 	// Log the new connection
 	fmt.Println("New WebSocket connection established")
 
-
-
+	
 	// Simple message reading loop
 	for {
 		messageType, message, err := conn.ReadMessage()
@@ -266,12 +185,23 @@ func (s *WebSocketServer) handleWebSocket(w http.ResponseWriter, r *http.Request
 ```
 
 
+Inside the `handleWebSocket()` function then we immediately call the `Upgrade()` function on the struct we just created.
+Then I want you to shift attention to the infinite `for` loop. This is in some ways similar to our `for` loop from our
+agent's `runLoop` - we want to enter this state indefinitely. This is of course because as mentioned, our websocket 
+connection is persistent, so here we are essentially just entering into a state to receive and respond at any moment.
+
+For now, I've furnished this with a basic `echo` functionality - meaning whatever we receive from the client, we just
+send right back. This is just so we have some logic to test whether our websocket connection works, we'll replace this
+later with something that makes more sense. 
 
 
 
-## now of course we need to also start it in main.go
 
-- Just call the function
+## cmd/server/main.go
+
+It might seem like everything is now set up, but there is one final, critical thing we need to do - call our `StartWebSocketServer()`
+from our server's `main.go` to put the whole wheel in motion.
+
 
 ```go
 websocket.StartWebSocketServer()
@@ -282,7 +212,19 @@ websocket.StartWebSocketServer()
 
 
 ## test
-- We can run see it is listening
+So let's run our server first, and we should see that it's listening on `8080`.
+
+![lab06](../img/lab06a.png)
+
+And now, since we don't yet have a client that connect to the server, I'm going to use `websocat` to do so.
+
+![lab06](../img/lab06c.png)
+
+You can see that we were able to connect, and each time we write something it's echo'ed right back at us.
+
+And on the server side we can confirm that we're receiving this message.
+
+![lab06](../img/lab06b.png)
 
 
 ___
