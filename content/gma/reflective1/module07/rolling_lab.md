@@ -85,7 +85,7 @@ func main() {
 	}
 }
 
-    ```
+```
 
 ## Code Breakdown
 ### `rollingXor` function
@@ -124,7 +124,6 @@ Decrypted Text (Hex): 4920616D204C6F7264652C20594120594120594121
 
 [+] Verifying decryption matches original plaintext...
 [+] Success! Decrypted text matches original plaintext.
-
 
 ```
 
