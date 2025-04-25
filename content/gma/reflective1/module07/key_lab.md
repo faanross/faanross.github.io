@@ -5,7 +5,8 @@ type: "page"
 ---
 ## Goal
 
-We'll now use our new rolling XOR function to both encrypt (on DLL-side) and decrypt (on loader-side) our DLL. Additionally, we are going to implement a specific key derivation mechanism. This involves generating a "shared secret" from disguised constants and then deriving a session-specific key using that secret plus dynamic parameters. For now, since we have not yet implemented a Client-Server model however we'll simulate the dynamic parameters using placeholders, and then in the next module's lab we'll simple "connect" our actual dynamic parameters.
+We'll now use our new rolling XOR function to both encrypt (on DLL-side) and decrypt (on loader-side) our DLL. 
+Additionally, we are going to implement a specific key derivation mechanism. This involves generating a "shared secret" from disguised constants and then deriving a session-specific key using that secret plus dynamic parameters. For now, since we have not yet implemented a Client-Server model however we'll simulate the dynamic parameters using placeholders, and then in the next module's lab we'll simple "connect" our actual dynamic parameters.
 
 **So let's break this down into 3 clear steps:**
 1. Add the necessary constants and functions (`generatePEValidationKey`, `deriveKeyFromParams`, and their helpers) to both our obfuscator tool and the reflective loader.
