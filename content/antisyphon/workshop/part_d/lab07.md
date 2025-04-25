@@ -8,7 +8,6 @@ type: "page"
 
 
 
-
 ___
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "lab06.md" >}})
