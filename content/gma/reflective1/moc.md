@@ -61,7 +61,7 @@ type: "page"
 - [Client + Server Logic (Lab 8.1)]({{< ref "module08/cs_lab.md" >}})
 - [Implement Client ID and Key Derivation (Lab 8.2)]({{< ref "module08/key_lab.md" >}})
 
-## Review + Course Conclusion
+## Module 9: Refining In-Process Execution
 
 
 
