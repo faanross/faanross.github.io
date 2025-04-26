@@ -56,20 +56,22 @@ weight = 4
     pre = "<span data-feather='youtube'></span>"
     post = ""
 
-[[menu.main]]
-identifier = "slack"
-url = "https://faanrossmaldev.slack.com"
-weight = 10
 
-pre = "<span data-feather='slack'></span>"
-post = ""
+  [[menu.main]]
+  identifier = "slack"
+  url = "https://faanrossmaldev.slack.com"
+  weight = 11
 
-[[menu.main]]
-identifier = "signup"
-url = "/signup/"
-weight = 11
+  pre = "<span data-feather='slack'></span>"
+  post = ""
+
+  [[menu.main]]
+  identifier = "signup"
+  url = "/signup/"
+  weight = 12
 
 pre = "<span data-feather='mail'></span>"
 post = ""
 
-    
+
+

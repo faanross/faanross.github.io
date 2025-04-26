@@ -61,9 +61,8 @@ type: "page"
 - [Client + Server Logic (Lab 8.1)]({{< ref "module08/cs_lab.md" >}})
 - [Implement Client ID and Key Derivation (Lab 8.2)]({{< ref "module08/key_lab.md" >}})
 
-## Module 9: Final Project 
-
 ## Review + Course Conclusion
+
 
 
 ___
