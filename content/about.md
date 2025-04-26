@@ -32,6 +32,6 @@ Faan
 {{< figure src="/images/profpic.png" alt="Profile picture" >}}
 ___
 
-
+_Life is a brief pause between two mysteries_. - CGJ
 
 
