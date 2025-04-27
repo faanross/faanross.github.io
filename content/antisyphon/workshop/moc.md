@@ -34,7 +34,7 @@ All the final solutions are available on GitHub [here](https://www.github.com/fa
 ## Part D: Client Setup
 - [Minimal Client UI Setup with Vue.js (Lab 05)]({{< ref "part_d/lab05.md" >}})
 - [Adding Websocket to Server (Lab 06)]({{< ref "part_d/lab06.md" >}})
-- [Adding Websocket to Client (Lab 07]({{< ref "part_d/lab07.md" >}})
+- [Adding Websocket to Client (Lab 07)]({{< ref "part_d/lab07.md" >}})
 
 ## Part E: Weaving It All Together
 - [Agent Command Execution (Lab 08)]({{< ref "part_e/lab08.md" >}})

@@ -3,6 +3,9 @@ showTableOfContents: true
 title: "An Epic Introductory Journey in Malware Development"
 type: "page"
 ---
+
+**Last Updated: 27 April 2025**
+
 ## Preface (still to do)
 
 - [Course Introduction]({{< ref "module00/hello.md" >}})
