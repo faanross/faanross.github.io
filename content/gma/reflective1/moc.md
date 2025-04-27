@@ -1,9 +1,9 @@
 ---
 showTableOfContents: true
-title: "Let's Build a Reflective Loader"
+title: "An Epic Journey in Golang Malware Development"
 type: "page"
 ---
-## Preface
+## Preface (still to do)
 - [Course Introduction]
 - [Course Preview + Curriculum]
 
@@ -62,7 +62,18 @@ type: "page"
 - [Implement Client ID and Key Derivation (Lab 8.2)]({{< ref "module08/key_lab.md" >}})
 
 ## Module 9: Refining In-Process Execution
+- [Decoupling Memory Permissions (Theory 9.1)]({{< ref "module09/decouple.md" >}})
+- [Introducing Basic Delays and Misdirection (Theory 9.2)]({{< ref "module09/delay.md" >}})
+- [Decoupling, Delays, and Misdirections (Lab 9.1)]({{< ref "module09/decouple_lab.md" >}})
+- [Shellcode Encryption & Decryption In-Memory (Theory 9.3)]({{< ref "module09/encrypt.md" >}})
+- [Implementing Runtime Shellcode Decryption (Lab 9.2)]({{< ref "module09/encrypt_lab.md" >}})
+- [Basic Thread Obfuscation Concepts (Theory 9.4)]({{< ref "module09/thread.md" >}})
+- [Analyzing Start Address Exposure (Conceptual Lab 9.3)]({{< ref "module09/start_lab.md" >}})
 
 
+
+
+
+## MORE TO COME... WIP
 
 ___
