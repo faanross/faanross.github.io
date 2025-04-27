@@ -2,8 +2,8 @@
 draft = false
 title = 'Courses'
 +++
-## Golang Maldev Academy
-- [An Epic Journey in Golang Malware Development]({{< ref "gma/reflective1/moc.md" >}})
+## Firestarter Maldev Academy
+- [An Epic Introductory Journey in Malware Development]({{< ref "gma/reflective1/moc.md" >}})
 
   <br>
 

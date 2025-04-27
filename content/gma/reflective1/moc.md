@@ -1,11 +1,13 @@
 ---
 showTableOfContents: true
-title: "An Epic Journey in Golang Malware Development"
+title: "An Epic Introductory Journey in Malware Development"
 type: "page"
 ---
 ## Preface (still to do)
-- [Course Introduction]
+
+- [Course Introduction]({{< ref "module00/hello.md" >}})
 - [Course Preview + Curriculum]
+
 
 ## Module 1: DLLs and Basic Loading
 - [Introduction to DLLs (Theory 1.1)]({{< ref "module01/intro_DLLs.md" >}})

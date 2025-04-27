@@ -80,7 +80,7 @@ void (*shellcode_func)() = (void(*)())buffer;
 shellcode_func();
 ```
 
-There is one final optional, but recommended step - cleanup. After execution finishes (assuming it returns), we'll the memory protection back to `PAGE_READWRITE` or even `PAGE_NOACCESS` using `VirtualProtect` before freeing the memory. This minimizes the time window where executable code resides in memory. Then, we free the memory using `VirtualFree`.
+There is one final optional, but recommended step - cleanup. After execution finishes (assuming it returns), we'll change the memory protection back to `PAGE_READWRITE` or even `PAGE_NOACCESS` using `VirtualProtect` before freeing the memory. This minimizes the time window where executable code resides in memory. Then, we free the memory using `VirtualFree`.
 
 ```cpp
 // Optional: Change back protection before freeing
