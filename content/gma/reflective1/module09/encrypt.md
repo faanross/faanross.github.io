@@ -19,7 +19,7 @@ Let's break this down, starting with our current implementation:
 ## The Gap
 The issue is here at Steps 4 + 5 - after the entire payload has been deobfuscated it is reflectively loaded into memory. Then the exported function `LaunchCalc` within our DLL gets called. Inside `LaunchCalc`, it calls our `ExecuteShellcode` function.
 
-So, the logic inside of our DLL is something like:
+So, the logic inside our DLL is something like:
 
 ```C++
 unsigned char calc_shellcode[] = {
