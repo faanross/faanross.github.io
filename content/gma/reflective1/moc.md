@@ -10,6 +10,7 @@ type: "page"
 
 - [Course Introduction]({{< ref "module00/hello.md" >}})
 - [Course Preview + Curriculum]
+- [Recommended Lab Setup]
 
 
 ## Module 1: DLLs and Basic Loading
