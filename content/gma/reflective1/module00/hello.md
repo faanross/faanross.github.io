@@ -23,7 +23,7 @@ Also, as far as is possible, the aim is not just to cobble together a bunch of d
 have a thread of continuity throughout. So, we'll continue to build on the same project throughout the course as we learn. 
 We'll start with something crude, realize its weaknesses, improve on it, and iterate. 
 
-And, in a large sense, I have also attempted to recapitulate the evolution of maldev as it's played out over its short evolution.
+And, to the extent that it's possible, I have attempted to recapitulate the evolution of maldev as it's played out over its short history.
 This means that transitions largely follow the history of maldev, instead of just jumping to what are today considered 'the best techniques'. 
 The reason for this is I want us to get a clear understanding of all the fundamentals, and of the collective (and reciprocal) process of 
 iterative design that has led us to where we are today. 
