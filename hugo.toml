@@ -32,10 +32,15 @@ name = "articles"
 url = "/articles/"
 weight = 4
 
+[[menu.main]]
+name = "talks"
+url = "/talks/"
+weight = 5
+
   [[menu.main]]
     name = "about"
     url = "/about/"
-    weight = 5
+    weight = 6
 
 
 
