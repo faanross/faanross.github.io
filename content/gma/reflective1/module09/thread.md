@@ -132,16 +132,23 @@ Some common approaches involve:
 We will delve much deeper into sleep masking techniques later in the curriculum, but it's useful to understand it as another facet of obfuscating not just _where_ code executes, but _when_ and _how_ it pauses and resumes.
 
 ## Conclusion
-While we've improved our memory allocation pattern and hidden the static shellcode, the _initiation_ of execution via a direct call to our allocated buffer remains a potential detection point, especially when considering remote threads. EDRs closely monitor thread start addresses and call stacks.
+While we've improved our memory allocation pattern and hidden the static shellcode, the _initiation_ of execution via a 
+direct call to our allocated buffer remains a potential detection point, especially when considering remote threads. EDRs closely monitor thread start addresses and call stacks.
 
 Basic thread obfuscation concepts revolve around making this starting point appear more legitimate, perhaps by pointing it initially to existing code (like API functions or ROP gadgets) that subsequently redirects to our payload. Sleep masking decreases the probability of our malicious code being scanned once it's injected into memory during inevitable C2 sleep periods.
 
-Since these techniques involve a significant jump in complexity, as well as a reliance on foundational knowledge we've not yet explored, we're not really equipped to do a real practical implementation of them. At this point it will create more questions than answers.
+Since these techniques involve a significant jump in complexity, as well as a reliance on foundational knowledge 
+we've not yet explored, we're not really equipped to do a real practical implementation of them. At this point it will create more questions than answers.
 
-However, I do think there is some value in at least "simulating" the major ideas behind them, as it will help create a clearer map of the terrain, which future modules will then help to further illuminate. So to wrap up this module, let's do a "conceptual lab".
+That being the case there won't be any lab to accompany this theoretical section, at least now. We'll cover the
+discussed techniques in future modules once we're equipped to do so, for now I just wanted point this issue out
+in an effort to illuminate the territory we're in, and the dilemmas we're facing.
+
+This being the case, we've in some sense reached the limit of what this specific paradigm has to offer, and so we're
+now ready to enter the exciting domain of external process injection. 
 
 
 ---
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "encrypt_lab.md" >}})
-[|NEXT|]({{< ref "start_lab.md" >}})
+[|NEXT|]({{< ref "../module10/process.md" >}})

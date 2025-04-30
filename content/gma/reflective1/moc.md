@@ -74,7 +74,17 @@ type: "page"
 - [Shellcode Encryption & Decryption In-Memory (Theory 9.3)]({{< ref "module09/encrypt.md" >}})
 - [Implementing Runtime Shellcode Decryption (Lab 9.2)]({{< ref "module09/encrypt_lab.md" >}})
 - [Basic Thread Obfuscation Concepts (Theory 9.4)]({{< ref "module09/thread.md" >}})
-- [Analyzing Start Address Exposure (Conceptual Lab 9.3)]({{< ref "module09/start_lab.md" >}})
+
+
+## Module 10: Process Injection Fundamentals (WinAPI)
+- [Process Injection Introduction & Target Selection (Theory 10.1)]({{< ref "module10/process.md" >}})
+- [Finding and Opening Target Processes (Lab 10.1)]({{< ref "module10/find_lab.md" >}})
+- [Remote Memory Operations (WinAPI) (Theory 10.2)]({{< ref "module10/mem.md" >}})
+- [Performing Remote Memory Operations (Lab 10.2)]({{< ref "module10/mem_lab.md" >}})
+- [Remote Thread Execution (WinAPI) (Theory 10.3)]({{< ref "module10/remote.md" >}})
+- [Executing Code via CreateRemoteThread (Lab 10.3)]({{< ref "module10/remote_lab.md" >}})
+- [Classic DLL Injection (WinAPI) (Theory 10.4)]({{< ref "module10/classic.md" >}})
+- [Implementing Classic DLL Injection (Lab 10.4)]({{< ref "module10/classic_lab.md" >}})
 
 
 
