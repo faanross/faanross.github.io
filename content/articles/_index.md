@@ -24,5 +24,6 @@ at home.
 In addition to Malware of the Day, I also write articles of a variety of topics related to network threat hunting and command and control.
 
 - [The Beginner’s Guide to Command and Control Part 1 – How C2 Frameworks Operate](https://www.activecountermeasures.com/the-beginners-guide-to-command-and-control-part-1-how-c2-frameworks-operate/)
+- [The Beginner’s Guide to Command and Control Part 2 – The Role of C2 in Modern Threat Campaigns](https://www.activecountermeasures.com/the-beginners-guide-to-command-and-control-part-2-the-role-of-c2-in-modern-threat-campaigns/)
 - [Threat Hunting a Telegram C2 Channel](https://www.activecountermeasures.com/threat-hunting-a-telegram-c2-channel/)
 - [A Network Threat Hunter’s Guide to C2 over QUIC](https://www.activecountermeasures.com/a-network-threat-hunters-guide-to-c2-over-quic/)
