@@ -215,7 +215,7 @@ We can use a tool like [System Informer](https://systeminformer.sourceforge.io/d
 
 Let's also confirm the handle is correct. In the list of processes, find `process_finder.exe` (or whatever you named your enumerating application), and double-click on it. Find the `Handles` tab, and then at the top right-click on the column header, select `Choose columns...`. On the LHS select `Handle`, then click on `Show >`, this should transfer it over to the RHS, you can then click OK.
 
-![find_lab](../img/find_lab_a.png)
+![find_lab](../img/find_lab_b.png)
 
 You should be able to find the handle to `notepad.exe` in your list, assuming you did not hit enter in the console to close handle yet. Here we can now confirm the value corresponds to that displayed by our application, in my case `0x164`.
 
