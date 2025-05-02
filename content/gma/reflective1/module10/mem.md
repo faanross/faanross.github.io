@@ -5,7 +5,7 @@ type: "page"
 ---
 ## Overview
 
-In the previous lesson and accompanying lab (Lab 2.1), we learned how to enumerate running processes and obtain a handle (`hProcess`) to a target process with specific access rights. This handle is our key to interacting with the target process's virtual address space, i.e. allowing us to inject our shellcode into its memory.
+In the previous lesson and accompanying lab, we learned how to enumerate running processes and obtain a handle (`hProcess`) to a target process with specific access rights. This handle is our key to interacting with the target process's virtual address space, i.e. allowing us to inject our shellcode into its memory.
 
 Now that we have a handle, the next steps in performing process injection involve manipulating the target process's memory. Specifically, we need to:
 
