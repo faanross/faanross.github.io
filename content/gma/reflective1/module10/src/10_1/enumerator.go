@@ -28,7 +28,7 @@ func findProcessPID(targetName string) (uint32, error) {
 	// Initialize PROCESSENTRY32W struct. dwSize MUST be set.
 	var entry windows.ProcessEntry32
 	// Use unsafe.Sizeof for struct size
-	entry.Size = uint32(unsafe.Sizeof(entry)) // <--- FIX 1: Use unsafe.Sizeof
+	entry.Size = uint32(unsafe.Sizeof(entry))
 
 	// Get the first process
 	err = windows.Process32First(handle, &entry)
