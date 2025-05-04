@@ -8,17 +8,14 @@ import (
 	"log"
 	"os"
 	"strings"
-	"unsafe" // Keep for pointer conversions
+	"unsafe"
 
-	// ADD the new win32api package
 	"github.com/zzl/go-win32api/v2/win32"
 
-	// KEEP x/sys/windows for OpenProcess, Handle, Toolhelp, Write/Read/Protect Memory, UTF16ToString etc.
-	// We will use its Handle type and functions other than Alloc/FreeEx.
 	"golang.org/x/sys/windows"
 )
 
-// findProcessPID function remains the same (uses golang.org/x/sys/windows)
+// This is our function from Lab 10.1
 func findProcessPID(targetName string) (uint32, error) {
 	handle, err := windows.CreateToolhelp32Snapshot(windows.TH32CS_SNAPPROCESS, 0)
 	if err != nil {
@@ -165,7 +162,7 @@ func main() {
 		fmt.Println("[+] Read data verification successful.")
 	}
 
-	// --- Change Remote Memory Protection (Keep using windows package) ---
+	// --- Change Remote Memory Protection using windows package ---
 	var oldProtect uint32
 	// Use constant from windows package as input to windows.VirtualProtectEx
 	newProtect := uint32(windows.PAGE_READONLY)
@@ -177,7 +174,7 @@ func main() {
 	}
 	fmt.Printf("[+] Protection changed successfully. Old protection was: 0x%X\n", oldProtect)
 
-	// --- Attempt Second Write (Keep using windows package) ---
+	// --- Attempt Second Write using windows package ---
 	secondData := []byte("Attempting second write...\000")
 	fmt.Printf("[*] Attempting to write again to remote address 0x%X (should fail)...\n", remoteAddrUintptr) // Use uintptr address
 	// Use windows package for WriteProcessMemory
