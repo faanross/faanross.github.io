@@ -3,7 +3,7 @@ draft = false
 title = 'Courses'
 +++
 ## Firestarter Maldev Academy
-- [An Epic Introductory Journey in Malware Development]({{< ref "gma/reflective1/moc.md" >}})
+- [An Epic Introductory Journey in Malware Development]({{< ref "firestarter/journey/moc.md" >}})
 
   <br>
 

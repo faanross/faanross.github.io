@@ -158,13 +158,13 @@ func main() {
 
 	// Corrected call to win32.CreateRemoteThread:
 	hWin32Thread, crtErrCode = win32.CreateRemoteThread(
-		win32.HANDLE(hProcess),                                               // hProcess is windows.Handle, cast to win32.HANDLE
-		nil,                                                                  // lpThreadAttributes (*win32.SECURITY_ATTRIBUTES)
-		uintptr(0),                                                           // dwStackSize (uintptr)
+		win32.HANDLE(hProcess), // hProcess is windows.Handle, cast to win32.HANDLE
+		nil,                    // lpThreadAttributes (*win32.SECURITY_ATTRIBUTES)
+		uintptr(0),             // dwStackSize (uintptr)
 		win32.LPTHREAD_START_ROUTINE(unsafe.Pointer(remoteAllocatedAddress)), // lpStartAddress (LPTHREAD_START_ROUTINE is unsafe.Pointer)
-		unsafe.Pointer(uintptr(0)),                                           // lpParameter (unsafe.Pointer)
-		0,                                                                    // dwCreationFlags (uint32)
-		&threadId,                                                            // lpThreadId (*uint32)
+		unsafe.Pointer(uintptr(0)), // lpParameter (unsafe.Pointer)
+		0,                          // dwCreationFlags (uint32)
+		&threadId,                  // lpThreadId (*uint32)
 	)
 
 	if crtErrCode != win32.NO_ERROR {

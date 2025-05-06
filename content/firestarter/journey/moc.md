@@ -4,7 +4,7 @@ title: "An Epic Introductory Journey in Malware Development"
 type: "page"
 ---
 
-**Last Updated: 1 May 2025**
+**Last Updated: 6 May 2025**
 
 ## Preface (still to do)
 
@@ -83,8 +83,13 @@ type: "page"
 - [Performing Remote Memory Operations (Lab 10.2)]({{< ref "module10/mem_lab.md" >}})
 - [Remote Thread Execution (WinAPI) (Theory 10.3)]({{< ref "module10/remote.md" >}})
 - [Executing Code via CreateRemoteThread (Lab 10.3)]({{< ref "module10/remote_lab.md" >}})
-- [Classic DLL Injection (WinAPI) (Theory 10.4)]({{< ref "module10/classic.md" >}})
-- [Implementing Classic DLL Injection (Lab 10.4)]({{< ref "module10/classic_lab.md" >}})
+
+## Module 11: Module 11: Introduction to the Native API
+- [API-Hooking and the  Native API (Theory 11.1)]({{< ref "module11/native.md" >}})
+- [Finding Native API Functions (Theory 11.2)]({{< ref "module11/finding.md" >}})
+- [Finding Native API Function Addresses (Lab 11.1)]({{< ref "module11/finding_lab.md" >}})
+- [Calling Native API Functions (Theory 11.3)]({{< ref "module11/calling.md" >}})
+- [Calling Native API via Syscall Package (Lab 11.2)]({{< ref "module11/calling_lab.md" >}})
 
 
 
