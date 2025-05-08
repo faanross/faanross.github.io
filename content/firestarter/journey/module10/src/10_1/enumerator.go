@@ -9,8 +9,6 @@ import (
 	"os"
 	"strings"
 	"unsafe" // Import unsafe for Sizeof
-
-	"golang.org/x/sys/windows"
 )
 
 // findProcessPID uses Toolhelp snapshot to find the PID of the first process matching targetName.
