@@ -1,9 +1,9 @@
 ---
 showTableOfContents: true
-title: "The Complete Guide to Windows Architecture and API"
+title: "Introduction to the Windows Architecture Models"
 type: "page"
 ---
-## The Windows Architectural Foundation
+## The Layered Nature of the Windows Architecture
 
 The Windows operating system, beneath its user interface, is an intricate system. Understanding its many interconnected components can seem daunting, particularly from a security perspective. This guide begins by establishing a foundational concept for navigating this complexity.
 
@@ -54,8 +54,6 @@ User Mode applications interact with Kernel Mode services through a well-defined
 
 
 
-
-
-
 ---
-[|BACK|]({{< ref "../../../guides/_index.md" >}})
+[|TOC|]({{< ref "moc.md" >}})
+[|NEXT|]({{< ref "02_components.md" >}})
