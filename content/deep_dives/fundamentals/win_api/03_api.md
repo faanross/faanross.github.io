@@ -83,7 +83,7 @@ Return to Win32 API (`kernel32.dll`) **→**
 
 ## The Ring Model
 
-![ring_model](./img/002.png)
+![ring_model](../img/002.png)
 
 In addition to the "layered model", you'll also sometimes hear the Windows API being described as a "ring model", specifically referring to "rings of privilege" - see image above. The thing about this image is that it's a more general, or universal, representation of conceptual privilege layers for OS, but Windows only has **Ring 0** (kernel mode) , and **Ring 3** (user mode).
 
