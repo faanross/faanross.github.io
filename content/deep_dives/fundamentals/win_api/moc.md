@@ -9,6 +9,8 @@ type: "page"
 - [The Layered + Ring Models]({{< ref "03_api.md" >}})
 - [Windows API Data Types]({{< ref "04_types.md" >}})
 - [Working with Windows API Functions]({{< ref "05_functions.md" >}})
+- [Error Handling and Debugging]({{< ref "06_error.md" >}})
+- [Security Implications]({{< ref "07_security.md" >}})
 
 **WORK-IN-PROGRESS...**
 
