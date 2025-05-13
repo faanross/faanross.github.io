@@ -8,5 +8,4 @@ type: "page"
 
 ---
 [|TOC|]({{< ref "moc.md" >}})
-[|PREV|]({{< ref "01_intro.md" >}})
-[|NEXT|]({{< ref "02_components.md" >}})
+[|PREV|]({{< ref "09_advanced.md" >}})

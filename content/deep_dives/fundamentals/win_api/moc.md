@@ -11,8 +11,14 @@ type: "page"
 - [Working with Windows API Functions]({{< ref "05_functions.md" >}})
 - [Error Handling and Debugging]({{< ref "06_error.md" >}})
 - [Security Implications]({{< ref "07_security.md" >}})
+- [API Evolution and Windows Versions]({{< ref "08_versions.md" >}})
 
 **WORK-IN-PROGRESS...**
+
+- [Beyond the Basics]({{< ref "09_advanced.md" >}})
+- [Conclusion]({{< ref "10_conclusion.md" >}})
+
+
 
 
 ---
