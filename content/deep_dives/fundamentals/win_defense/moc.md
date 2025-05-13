@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "The Complete Guide to Understanding Modern Windows Defenses"
+title: "The Complete Guide to Modern Windows Defenses"
 type: "page"
 ---
 
