@@ -61,7 +61,7 @@ Microsoft didn't create this split just to make our lives harder, rather, it ser
 2. **Security and Protection (The Wall We Climb):** This boundary is _the_ primary defense against malware. It stops one dodgy application from trashing the OS or sniffing data from your online banking session in another process. Our job is often to find ways _around_ or _through_ these protections. Understanding the rules of User Mode helps us understand how to bend or break them, or how to leverage Kernel Mode vulnerabilities to bypass them entirely.
 3. **Controlled Hardware Access (The Gatekeepers):** Want to talk to the webcam? Control the keyboard? We can't just send commands to the hardware from User Mode. We have to go through Kernel Mode drivers. This means driver exploits, or loading our _own_ (malicious) driver, become attractive pathways if we need that level of control.
 
-## Crossing the Chasm: System Calls – The Gateway to Kernel Power
+## System Calls – The Gateway to the Kernel 
 
 So, if User Mode apps can't do much on their own, how does anything get done? They make system calls.
 
@@ -76,7 +76,7 @@ This instruction is a formal request to the Kernel:
 5. The Kernel prepares the result.
 6. The CPU switches back to User Mode, and the User Mode code gets the result.
 
-# **Why System Calls are Critical for Malware Devs**
+## Why System Calls are Critical for Malware Devs
 
 Why should we care about **syscalls** as malware developers? Because it's this transition point, this meticulously controlled gateway between User Mode and Kernel Mode, where the action truly happens. It's the OS's primary chokepoint, and for us, that means it's a goldmine for intelligence, interception, and manipulation. Every significant request a User Mode application makes to the operating system core – whether it's opening a file, allocating memory, or sending a network packet – _must_ pass through this narrow channel. This makes the system call interface one of our primary targets.
 
