@@ -50,7 +50,7 @@ Here are a few solid ones:
 - [NTInternals](http://undocumented.ntinternals.net)
 - [NtDoc](https://ntdoc.m417z.com)
 - [Windows Native API Programming by Pavel Yosifovich](https://leanpub.com/windowsnativeapiprogramming)
-
+- [Vergilius Project](https://www.vergiliusproject.com)
 
 
 
