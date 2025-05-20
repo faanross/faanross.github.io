@@ -94,5 +94,5 @@ I'm including a reference to this model for posterity since you're sure to encou
 
 ---
 [|TOC|]({{< ref "moc.md" >}})
-[|PREV|]({{< ref "02_components.md" >}})
-[|NEXT|]({{< ref "04_types.md" >}})
+[|PREV|]({{< ref "03_components.md" >}})
+[|NEXT|]({{< ref "05_types.md" >}})

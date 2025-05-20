@@ -156,5 +156,5 @@ Hopefully, this walkthrough gives you a better feel for how to approach API docu
 
 ---
 [|TOC|]({{< ref "moc.md" >}})
-[|PREV|]({{< ref "04_types.md" >}})
-[|NEXT|]({{< ref "06_error.md" >}})
+[|PREV|]({{< ref "05_types.md" >}})
+[|NEXT|]({{< ref "07_error.md" >}})

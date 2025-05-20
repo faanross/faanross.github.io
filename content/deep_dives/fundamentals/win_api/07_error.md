@@ -85,5 +85,5 @@ Microsoft provides documentation for common NTSTATUS values, though many values 
 
 ---
 [|TOC|]({{< ref "moc.md" >}})
-[|PREV|]({{< ref "05_functions.md" >}})
-[|NEXT|]({{< ref "07_security.md" >}})
+[|PREV|]({{< ref "06_functions.md" >}})
+[|NEXT|]({{< ref "08_security.md" >}})

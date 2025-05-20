@@ -128,5 +128,5 @@ Modern Windows applications typically use Unicode internally, with conversion to
 
 ---
 [|TOC|]({{< ref "moc.md" >}})
-[|PREV|]({{< ref "03_api.md" >}})
-[|NEXT|]({{< ref "05_functions.md" >}})
+[|PREV|]({{< ref "04_api.md" >}})
+[|NEXT|]({{< ref "06_functions.md" >}})

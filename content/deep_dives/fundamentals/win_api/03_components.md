@@ -88,5 +88,5 @@ On systems supporting hardware virtualization extensions, the Hyper-V hypervisor
 
 ---
 [|TOC|]({{< ref "moc.md" >}})
-[|PREV|]({{< ref "01_intro.md" >}})
-[|NEXT|]({{< ref "03_api.md" >}})
+[|PREV|]({{< ref "02_process.md" >}})
+[|NEXT|]({{< ref "04_api.md" >}})

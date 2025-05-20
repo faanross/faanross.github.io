@@ -96,4 +96,4 @@ And, of course, we'll be using this gateway constantly, even if indirectly. Ever
 
 ---
 [|TOC|]({{< ref "moc.md" >}})
-[|NEXT|]({{< ref "02_components.md" >}})
+[|NEXT|]({{< ref "02_process.md" >}})

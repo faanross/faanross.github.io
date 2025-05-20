@@ -81,5 +81,5 @@ In offensive security contexts, including malware development but also for examp
 
 ---
 [|TOC|]({{< ref "moc.md" >}})
-[|PREV|]({{< ref "06_error.md" >}})
-[|NEXT|]({{< ref "08_versions.md" >}})
+[|PREV|]({{< ref "07_error.md" >}})
+[|NEXT|]({{< ref "09_versions.md" >}})
