@@ -135,7 +135,7 @@ For complex functions, or when absolute control is needed (especially when prepa
 
 Calling Native API functions from Go requires moving beyond the standard `golang.org/x/sys/windows` wrappers for documented WinAPI calls. The `syscall` package, particularly `syscall.SyscallN`, provides the mechanism to call arbitrary function pointers, but demands careful handling of argument types (converting everything to `uintptr`, often using `unsafe.Pointer`) and strict adherence to the target function's signature. Defining corresponding Go structs for required Native API structures is often necessary. Checking the `NTSTATUS` return value is crucial for determining the success or failure of the Native API call itself.
 
-In the next lab, we'll practice using this `syscall.SyscallN` approach.
+In the next lab, we'll practice using this `syscall.SyscallN` approach.vb fcgnhm
 
 
 ---

