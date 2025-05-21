@@ -84,13 +84,36 @@ type: "page"
 - [Remote Thread Execution (WinAPI) (Theory 10.3)]({{< ref "module10/remote.md" >}})
 - [Executing Code via CreateRemoteThread (Lab 10.3)]({{< ref "module10/remote_lab.md" >}})
 
-## Module 11: Module 11: Introduction to the Native API
+## Module 11: Introduction to the Native API
 - [API-Hooking and the  Native API (Theory 11.1)]({{< ref "module11/native.md" >}})
 - [Finding Native API Functions (Theory 11.2)]({{< ref "module11/finding.md" >}})
 - [Finding Native API Function Addresses (Lab 11.1)]({{< ref "module11/finding_lab.md" >}})
 - [Calling Native API Functions (Theory 11.3)]({{< ref "module11/calling.md" >}})
 - [Calling Native API via Syscall Package (Lab 11.2)]({{< ref "module11/calling_lab.md" >}})
 
+
+## Module 12: Process Injection with Native API
+- [Native API for Process Interaction: NtOpenProcess (Theory 12.1)]({{< ref "module12/ntopen.md" >}})
+- [Opening Processes via NtOpenProcess (Lab 12.1)]({{< ref "module12/ntopen_lab.md" >}})
+- [Native API for Remote Memory Manipulation (Theory 12.2)]({{< ref "module12/remote.md" >}})
+- [Remote Memory Operations via Native API (Lab 12.2)]({{< ref "module12/remote_lab.md" >}})
+- [Native API for Remote Execution: NtCreateThreadEx (Theory 12.3)]({{< ref "module12/execution.md" >}})
+- [Native API Injection with NtCreateThreadEx (Lab 12.3)]({{< ref "module12/execution_lab.md" >}})
+
+## Module 13: Direct Syscalls
+- [Syscall Mechanics & SSN Discovery (Theory 13.1)]({{< ref "module13/ssn.md" >}})
+- [Discovering SSNs via ntdll Parsing (Lab 13.1)]({{< ref "module13/ssn_lab.md" >}})
+- [Crafting Syscall Stubs (Theory 13.2)]({{< ref "module13/stubs.md" >}})
+- [Creating Go Assembly Syscall Stubs (Lab 13.2)]({{< ref "module13/stubs_lab.md" >}})
+- [Direct Syscall Process Injection (Theory 13.3)]({{< ref "module13/direct.md" >}})
+- [Direct Syscall Process Injection (Lab 13.3)]({{< ref "module13/direct_lab.md" >}})
+
+
+## Module 14: Advanced Syscall Evasion
+- [Dynamic SSN Resolution Techniques (Theory 14.1)]({{< ref "module14/dynamic.md" >}})
+- [Implementing HellsGate for SSN Discovery (Lab 14.1)]({{< ref "module14/hellsgate_lab.md" >}})
+- [Indirect Syscalls (Theory 14.2)]({{< ref "module14/indirect.md" >}})
+- [Implementing Indirect Syscalls (Lab 14.2)]({{< ref "module14/indirect_lab.md" >}})
 
 
 

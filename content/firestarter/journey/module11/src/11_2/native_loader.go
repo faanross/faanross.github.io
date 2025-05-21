@@ -115,10 +115,10 @@ func main() {
 	// NumberOfBytesWritten: Pointer to SIZE_T, can be 0 (nil) if not needed to check.
 	ntStatus, _, sysCallErr = syscall.SyscallN(
 		funcAddrs["NtWriteVirtualMemory"],
-		uintptr(windows.CurrentProcess()),              // ProcessHandle
-		baseAddress,                                    // BaseAddress
-		uintptr(unsafe.Pointer(&calcShellcode[0])),     // Buffer
-		size,                                           // NumberOfBytesToWrite
+		uintptr(windows.CurrentProcess()),          // ProcessHandle
+		baseAddress,                                // BaseAddress
+		uintptr(unsafe.Pointer(&calcShellcode[0])), // Buffer
+		size, // NumberOfBytesToWrite
 		uintptr(unsafe.Pointer(&numberOfBytesWritten)), // *NumberOfBytesWritten (or uintptr(0) if not checking)
 	)
 
