@@ -3,13 +3,11 @@ showTableOfContents: true
 title: "Let's Build a Reflective Loader in Golang"
 type: "page"
 ---
-
 <br>
 
 ![firestarter](../img/keif.gif)
 
 <br>
-
 
 ## Module 1: DLLs and Basic Loading
 - [Introduction to DLLs (Theory 1.1)]({{< ref "module01/intro_DLLs.md" >}})
