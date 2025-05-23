@@ -13,7 +13,7 @@ type: "page"
 - [Error Handling and Debugging]({{< ref "07_error.md" >}})
 - [Security Implications]({{< ref "08_security.md" >}})
 - [API Evolution and Windows Versions]({{< ref "09_versions.md" >}})
-- [Asynchronous I/O]({{< ref "10_async.md" >}})
+- [Extended API Features]({{< ref "10_extended.md" >}})
 
 
 **WORK-IN-PROGRESS...**

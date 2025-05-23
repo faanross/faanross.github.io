@@ -12,11 +12,11 @@ The Windows API has evolved significantly over the decades, expanding to support
 
 Understanding the security landscape of different Windows versions will inform us to the security measures we'll likely encounter.
 
-### **Windows XP**
+### Windows XP
 - Limited User Account Control (primarily for Administrator vs. Limited User), basic Windows Firewall, Data Execution Prevention (DEP) introduced in SP2, Address Space Layout Randomization (ASLR) was rudimentary or non-existent in early versions.
 - Often considered a softer target due to fewer built-in defenses. Exploits might not need to contend with robust UAC or advanced memory protections. However, DEP and later ASLR (if patched) still present hurdles.
 
-### **Windows Vista**
+### Windows Vista
 - Introduced User Account Control (UAC) with varying integrity levels (Low, Medium, High, System), mandatory integrity control (MIC), Kernel Patch Protection (PatchGuard) for 64-bit systems, improved ASLR, Code Integrity (CI), and a more robust Windows Firewall.
 - UAC became a significant obstacle, requiring bypass techniques. Integrity levels dictate what processes can interact with each other, impacting injection and manipulation strategies. PatchGuard made kernel-level rootkits much harder to implement reliably on 64-bit systems.
 
@@ -186,4 +186,4 @@ Understanding this API evolution, the security features tied to OS versions, and
 ---
 [|TOC|]({{< ref "moc.md" >}})
 [|PREV|]({{< ref "08_security.md" >}})
-[|NEXT|]({{< ref "10_async.md" >}})
+[|NEXT|]({{< ref "10_extended.md" >}})
