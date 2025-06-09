@@ -11,10 +11,6 @@ general more descriptive than the actual lectures, they are not expanded, meanin
 1:1 onto these notes. This means some shortcuts were taken as I had to ensure the entire course could fit into the 
 allotted 4 hours.
 
-**If you'd like to do this same essential course but go into greater depth, please see the Director's Cut** [here]({{< ref "../workshop_dcut/moc.md" >}}).
-There I have included numerous explanatory lectures reviewing essential theory prior to the practical labs, and 
-it has multiple bonus labs which will build out more essential components. It roughly has twice the amount of content,
-and is imo a much more complete, rounded, and better overall educational experience.
 
 ## Solutions
 All the final solutions are available on GitHub [here](https://www.github.com/faanross/workshop_antisyphon_25042025).
