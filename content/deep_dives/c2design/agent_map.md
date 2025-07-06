@@ -11,6 +11,7 @@ The modern cyber-attack lifecycle is a multi-stage campaign, but it is within th
 This transition is a shift from a static payload to an active, dynamic entity tasked with establishing a durable presence, understanding its environment, escalating privileges, expanding its foothold, and ultimately, achieving the attacker's strategic goals. 
 This report provides an **exhaustive, multi-level conceptual map of the on-host behaviours exhibited by a C2 agent**, detailing the intricate web of actions that unfold after the initial point of compromise.
 
+---
 
 ## MITRE ATT&CK
 
@@ -27,6 +28,17 @@ Instead, they operate in a fluid, iterative cycle, often returning to previous t
 
 
 This map, therefore, is not a simple checklist but a **conceptual map to the complex, interconnected, and often cyclical landscape of post-exploitation behaviour**.
+
+
+---
+
+## Part I: Establishing and Fortifying the Beachhead
+
+
+
+
+
+
 
 
 
