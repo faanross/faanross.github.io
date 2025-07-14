@@ -65,7 +65,7 @@ DNS is a distributed system with numerous redundant servers. This decentralized 
 
 To fully grasp the mechanics of DNS tunnelling, a foundational understanding of the specific protocol components and processes that are abused is essential. The technique's effectiveness stems from exploiting the intended functionality of DNS in unintended ways.
 
-
+<br>
 
 ### The Resolution Path
 
@@ -78,6 +78,29 @@ Note that below I'll define the most standard and common expression of C2 over D
 3. **Local Resolver:** The implant sends this query to its locally configured DNS server (the "recursive resolver"). In most corporate networks, for security reasons, this will be a trusted server within the corporate network itself, like a MS AD domain controller. Meaning that all traffic from the C2 agent is typically sent to a local host, which typically attracts less scrutiny.
 4. **Recursive Lookup:** The corporate resolver is not authoritative for `legit-server.com`, so it begins the recursive DNS lookup process. It queries the internet's root DNS servers, which direct it to the TLD servers for the `.com` zone. The `.com` TLD servers then inform the resolver that the authoritative name server for `legit-server.com` is the attacker's C2 server.
 5. **Delivery:** The corporate resolver forwards the original query, containing the encoded data as subdomain, directly to the attacker's C2 server. The attacker has now successfully received data from an internal host that may have no direct internet access, using the organization's own DNS infrastructure as a delivery mechanism.
+
+<br>
+
+### The Anatomy of a DNS Packet
+
+Now that we have a basic handle on the process, let's deconstruct the actual DNS packets in both directions to better understand how it works. The main thing to be aware of is that a DNS package provides distinct fields that can be repurposed to carry covert data.
+
+<br>
+
+#### Upstream (Client to Server): The Query Name (QNAME)
+The primary vehicle for sending data from the implant to the C2 server is the `QNAME` field, which contains the domain name being requested. Attackers encode their data directly into this field, typically as the subdomains.
+
+Bandwidth is constrained in this regard by protocol definition:
+- A Fully Qualified Domain Name (FQDN) cannot exceed 255 bytes in total length.
+- Each individual label (the text between the dots) is limited to 63 bytes.
+- Allowed characters are typically alphanumeric (`a-z`, `0-9`) and the hyphen (`-`), though the hyphen cannot be at the beginning or end of a label.
+
+<br>
+
+#### Downstream (Server to Client): The Resource Data (RDATA)
+To send commands or data back to the implant, the  C2 server sends a DNS response. The payload is typically placed in the Answer Section of the response, specifically within the RDATA (Resource Data) field of a given resource record. The capacity of this downstream channel is determined by the type of record used - see the following section.
+
+<br>
 
 
 
