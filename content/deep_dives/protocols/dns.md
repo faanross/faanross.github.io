@@ -61,6 +61,25 @@ DNS is a distributed system with numerous redundant servers. This decentralized 
 <br>
 
 
+## A Covert Channel Primer
+
+To fully grasp the mechanics of DNS tunnelling, a foundational understanding of the specific protocol components and processes that are abused is essential. The technique's effectiveness stems from exploiting the intended functionality of DNS in unintended ways.
+
+
+
+### The Resolution Path
+
+The core mechanism that makes DNS C2 possible from within a restricted network is the standard DNS resolution path. One major benefit of this approach vs all other protocols is that it leverages the trusted, hierarchical nature of DNS.
+
+Note that below I'll define the most standard and common expression of C2 over DNS, however there are variations I'll get to later.
+
+1. **Attacker Setup:** The attacker first registers a domain (e.g., `legit-server.com`) and configures an **authoritative name server** under their control to be responsible for this domain. This server also runs the C2 server.
+2. **Implant Query:** A compromised host housing the C2 agent desires sending data to the C2 server. It does this by constructing a DNS query for a specially crafted hostname, such as `[encoded-data].legit-server.com`. Notice that the encoded data is used as the subdomain.
+3. **Local Resolver:** The implant sends this query to its locally configured DNS server (the "recursive resolver"). In most corporate networks, for security reasons, this will be a trusted server within the corporate network itself, like a MS AD domain controller. Meaning that all traffic from the C2 agent is typically sent to a local host, which typically attracts less scrutiny.
+4. **Recursive Lookup:** The corporate resolver is not authoritative for `legit-server.com`, so it begins the recursive DNS lookup process. It queries the internet's root DNS servers, which direct it to the TLD servers for the `.com` zone. The `.com` TLD servers then inform the resolver that the authoritative name server for `legit-server.com` is the attacker's C2 server.
+5. **Delivery:** The corporate resolver forwards the original query, containing the encoded data as subdomain, directly to the attacker's C2 server. The attacker has now successfully received data from an internal host that may have no direct internet access, using the organization's own DNS infrastructure as a delivery mechanism.
+
+
 
 
 
