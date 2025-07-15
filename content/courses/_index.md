@@ -6,7 +6,7 @@ title = 'Courses'
 
 ## Firestarter Maldev Academy
 - [Let's Build a Reflective Loader in Golang]({{< ref "firestarter/reflective/moc.md" >}})
-- [Let's Learn From Havoc C2]({{< ref "firestarter/havoc/moc.md" >}})
+<!---[Let's Build a C2 over DNS Simulator]({{< ref "firestarter/c2dns/moc.md" >}}) --->
 
 <br>
 
