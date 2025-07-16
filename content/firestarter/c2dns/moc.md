@@ -9,4 +9,10 @@ type: "page"
 - [Background: From Theory to Threat]({{< ref "module00/02_bg.md" >}})
 - [Why DNS?]({{< ref "module00/03_why.md" >}})
 
+## DNS Primer
+
+
+
+
+## Covert Channel Primer
 
