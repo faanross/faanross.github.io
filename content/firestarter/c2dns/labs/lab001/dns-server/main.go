@@ -8,6 +8,9 @@ import (
 	"github.com/miekg/dns"
 )
 
+// our local dns server's port
+var port = 53530
+
 // The zone map will store our DNS records.
 var zone = map[string][]dns.RR{}
 
@@ -112,7 +115,7 @@ func main() {
 	dns.HandleFunc(".", handleDNSRequest)
 
 	// Step 3: Start the server.
-	port := 53530
+
 	server := &dns.Server{Addr: fmt.Sprintf(":%d", port), Net: "udp"}
 	log.Printf("Starting authoritative DNS server on port %d\n", port)
 

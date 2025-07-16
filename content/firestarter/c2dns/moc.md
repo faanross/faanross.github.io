@@ -1,8 +1,10 @@
 ---
 showTableOfContents: true
-title: "A Complete Guide to C2 OVER DNS"
+title: "Let's Build a C2 over DNS Simulator"
 type: "page"
 ---
+
+![gza](../img/gza.gif)
 
 ## Introduction
 - [Introduction to C2 over DNS]({{< ref "module00/01_intro.md" >}})
