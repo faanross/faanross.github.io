@@ -23,6 +23,7 @@ at home.
 ## Active Countermeasures
 In addition to Malware of the Day, I also write articles of a variety of topics related to network threat hunting and command and control.
 
+- [DNS Packet Inspection for Network Threat Hunters](https://www.activecountermeasures.com/dns-packet-inspection-for-network-threat-hunters/)
 - [Threat Hunting C2 over HTTPS Connections Using the TLS Certificate](https://www.activecountermeasures.com/threat-hunting-c2-over-https-connections-using-the-tls-certificate/)
 - [The Beginner’s Guide to Command and Control Part 1 – How C2 Frameworks Operate](https://www.activecountermeasures.com/the-beginners-guide-to-command-and-control-part-1-how-c2-frameworks-operate/)
 - [The Beginner’s Guide to Command and Control Part 2 – The Role of C2 in Modern Threat Campaigns](https://www.activecountermeasures.com/the-beginners-guide-to-command-and-control-part-2-the-role-of-c2-in-modern-threat-campaigns/)
