@@ -42,6 +42,8 @@ Think of it like a library building (the DLL) containing many books (functions).
 ## Conclusion
 Though this is really an extremely brief introduction to DLLs, it's enough to get us going for the purpose of this course. If however you wanted to know more, please see Deep Dive on DLLs (TODO: link).
 
+## References
+[CppCon 2017: James McNellis “Everything You Ever Wanted to Know about DLLs”](https://www.youtube.com/watch?v=JPQWQfDhICA)
 ___
 
 [|TOC|]({{< ref "../moc.md" >}})
