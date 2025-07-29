@@ -371,6 +371,3 @@ The next logical step is now to actually trigger the execution of the code resid
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "mem.md" >}})
-[|NEXT|]({{< ref "remote.md" >}})

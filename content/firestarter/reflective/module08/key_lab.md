@@ -131,4 +131,3 @@ That wraps it up it for this course, in the next section we'll review what we've
 ---
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "cs_lab.md" >}})
-[|NEXT|]({{< ref "../module09/decouple.md" >}})

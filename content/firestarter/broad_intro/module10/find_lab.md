@@ -255,6 +255,3 @@ We now have a functional Go tool to enumerate processes and obtain a handle to a
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "process.md" >}})
-[|NEXT|]({{< ref "mem.md" >}})

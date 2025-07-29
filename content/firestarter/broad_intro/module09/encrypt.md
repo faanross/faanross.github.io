@@ -62,6 +62,3 @@ So, we'll create a new separate file to encrypt our shellcode, copy this new she
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "decouple_lab.md" >}})
-[|NEXT|]({{< ref "encrypt_lab.md" >}})

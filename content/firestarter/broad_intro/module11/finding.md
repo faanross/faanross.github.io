@@ -81,6 +81,3 @@ Once we have determined the address we can then proceed to call `ntdll` function
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "native.md" >}})
-[|NEXT|]({{< ref "finding_lab.md" >}})

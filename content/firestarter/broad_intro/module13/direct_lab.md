@@ -6,6 +6,3 @@ type: "page"
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "direct.md" >}})
-[|NEXT|]({{< ref "../module14/dynamic.md" >}})

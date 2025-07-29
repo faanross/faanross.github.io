@@ -5,6 +5,3 @@ type: "page"
 ---
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "stubs_lab.md" >}})
-[|NEXT|]({{< ref "direct_lab.md" >}})

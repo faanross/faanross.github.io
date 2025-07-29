@@ -74,6 +74,3 @@ Because of these detection points, more advanced techniques (often involving the
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "mem_lab.md" >}})
-[|NEXT|]({{< ref "remote_lab.md" >}})

@@ -23,7 +23,7 @@ When an application needs to use a function contained within a DLL:
 
 The use of DLLs provides several significant advantages:
 
-1. **Modularity:** Software can be broken down into smaller, manageable components (DLLs). Different teams can work on different DLLs independently.
+1. **Modularity:** Software can be broken down into smaller, manageable components. Different teams can work on different DLLs independently.
 2. **Code Reusability:** As discussed, common functions can be placed in a DLL and shared by many applications, avoiding code duplication.
 3. **Memory Savings:** The operating system can share a single copy of a DLL's code in physical memory among multiple applications that use it.
 4. **Easier Updates:** If a bug is fixed or a feature is added in a DLL, only the DLL needs to be updated. All applications using that DLL will automatically benefit from the change the next time they run, without needing to be recompiled themselves (assuming the DLL's interface remains compatible).

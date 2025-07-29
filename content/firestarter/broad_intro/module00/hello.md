@@ -61,5 +61,3 @@ Live long and prosper.
 Faan
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|NEXT|]({{< ref "../module01/intro_DLLs.md" >}})

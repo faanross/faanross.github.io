@@ -377,6 +377,3 @@ We have now successfully called lower-level Native API functions for memory mana
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "calling.md" >}})
-[|NEXT|]({{< ref "../module12/ntopen.md" >}})

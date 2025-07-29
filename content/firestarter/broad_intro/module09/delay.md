@@ -84,6 +84,3 @@ The basic idea here is that you structure your code so the allocation happens mu
 Though, as I've alluded to, these techniques come with many "what-if" strings attached, I do think it's still useful to implement it as some of the meta-instruction can help provide insight onto "ways of thinking about solving problems" as we move ahead into more advanced territories. Let's jump in a quick lab to decouple permissions and add delays + misdirection.
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "decouple.md" >}})
-[|NEXT|]({{< ref "decouple_lab.md" >}})

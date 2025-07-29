@@ -145,6 +145,3 @@ In theory these changes might have made some improvement to our chances of being
 We've successfully refactored our shellcode execution. This serves as a solid foundation for the subsequent lessons in this module where we will explore further refinements and techniques for in-process evasion.
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "delay.md" >}})
-[|NEXT|]({{< ref "encrypt.md" >}})

@@ -119,6 +119,3 @@ In the next lab, we will use these functions in Go to perform these remote memor
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "find_lab.md" >}})
-[|NEXT|]({{< ref "mem_lab.md" >}})

@@ -8,6 +8,3 @@ type: "page"
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "remote.md" >}})
-[|NEXT|]({{< ref "execution.md" >}})

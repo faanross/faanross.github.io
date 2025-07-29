@@ -182,6 +182,3 @@ We've successfully located the necessary Native API functions within `ntdll.dll`
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "finding.md" >}})
-[|NEXT|]({{< ref "calling.md" >}})

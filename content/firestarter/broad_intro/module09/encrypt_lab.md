@@ -232,6 +232,3 @@ We've integrated runtime decryption into our shellcode execution process, enhanc
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "encrypt.md" >}})
-[|NEXT|]({{< ref "thread.md" >}})

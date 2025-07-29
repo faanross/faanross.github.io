@@ -147,6 +147,3 @@ So to recap: In order for us to inject into another process we first need to enu
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "../module09/thread.md" >}})
-[|NEXT|]({{< ref "find_lab.md" >}})

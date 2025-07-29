@@ -97,6 +97,3 @@ Well, notice how I said "immediately changing it"? Decoupling the events allows 
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "../module08/key_lab.md" >}})
-[|NEXT|]({{< ref "delay.md" >}})

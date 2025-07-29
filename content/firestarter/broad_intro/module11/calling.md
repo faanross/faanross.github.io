@@ -139,6 +139,3 @@ In the next lab, we'll practice using this `syscall.SyscallN` approach.vb fcgnhm
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "finding_lab.md" >}})
-[|NEXT|]({{< ref "calling_lab.md" >}})

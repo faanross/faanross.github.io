@@ -346,6 +346,3 @@ This technique achieves the goal of running code under the context of another pr
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "remote.md" >}})
-[|NEXT|]({{< ref "../module11/native.md" >}})

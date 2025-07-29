@@ -107,12 +107,4 @@ Before we conclude this introduction section on the Native API I want to provide
 The Native API provided by `ntdll.dll` represents a lower level of interaction with the Windows operating system compared to the standard WinAPI found in libraries like `kernel32.dll`. While more complex and often less documented, calling Native API functions directly can bypass user-mode hooks placed on their higher-level counterparts, offering a potential step up in evasion. Understanding this layering is crucial as we progress towards even lower-level techniques like direct system calls. In the next lesson, we'll look at how to dynamically find the addresses of these Native API functions within `ntdll.dll` from our Go code.
 
 
-
-
-
-
-
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "../module10/remote_lab.md" >}})
-[|NEXT|]({{< ref "finding.md" >}})

@@ -149,6 +149,3 @@ now ready to enter the exciting domain of external process injection.
 
 
 ---
-[|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "encrypt_lab.md" >}})
-[|NEXT|]({{< ref "../module10/process.md" >}})
