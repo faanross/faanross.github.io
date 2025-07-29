@@ -92,6 +92,11 @@ Inside the Loader: The loader itself contains this execution logic. After loadin
 data from the DLL's mapped memory space (e.g., from its resources) and then performs the allocation, copying, and execution steps itself. 
 In this variation, the DLL acts more like a passive data file once loaded.
 
+## References
+
+[Shellcode Execution with GoLang - Joff Thyer](https://www.youtube.com/watch?v=gH9qyHVc9-M)
+[pwn.college - Shellcode Injection - Introduction](https://www.youtube.com/watch?v=715v_-YnpT8)
+
 ---
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "intro_DLLs.md" >}})
