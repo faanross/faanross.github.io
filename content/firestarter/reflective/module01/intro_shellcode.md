@@ -86,9 +86,10 @@ The core execution logic – the steps responsible for taking the raw shellcode 
 (e.g., using VirtualAlloc), and then transferring execution control to them (e.g., using CreateThread or a function pointer call) 
 – can reside in one of two primary places:
 
-Inside the DLL: An exported function within the DLL contains this execution logic. The loader's main job after loading the DLL 
+- Inside the DLL: An exported function within the DLL contains this execution logic. The loader's main job after loading the DLL 
 is simply to find and call this specific function.
-Inside the Loader: The loader itself contains this execution logic. After loading the DLL, the loader extracts the raw shellcode 
+
+- Inside the Loader: The loader itself contains this execution logic. After loading the DLL, the loader extracts the raw shellcode 
 data from the DLL's mapped memory space (e.g., from its resources) and then performs the allocation, copying, and execution steps itself. 
 In this variation, the DLL acts more like a passive data file once loaded.
 
