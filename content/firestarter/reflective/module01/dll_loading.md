@@ -6,8 +6,10 @@ type: "page"
 ## The Windows API Functions
 The Windows API provides a vast collection of functions that allow us to interact with the operating system, 
 manage resources, create user interfaces, and much more. We'll get to know many of these key functions as we go along, 
-but for now we'll learn about to of the most important ones - `LoadLibrary` and `GetProcAddress`. 
-In our introduction to DLLs, we mentioned that for a process to use a DLL function it essentially needs to know two things - 
+but for now we'll learn about two of the most important ones - `LoadLibrary` and `GetProcAddress`. 
+
+
+In our [introduction to DLLs](https://www.faanross.com/firestarter/reflective/module01/intro_dlls/), we mentioned that for a process to use a DLL function it essentially needs to know two things - 
 the name of the DLL, and the name of the exported function. And it's these two functions that we use along with that information 
 to load our shellcode:
 - `LoadLibrary` is given the name/path of DLL, which it then loads.
@@ -30,6 +32,9 @@ the Windows loader performs several steps:
 If successful, `LoadLibrary` returns a **handle** (often referred to as `HMODULE` or `HINSTANCE`) to the loaded DLL. 
 This handle is essentially a unique identifier representing the base address where the DLL was loaded in the process's memory.
 If it fails (e.g., file not found, invalid format), it returns `NULL`.
+
+**NOTE:** If every step and action described above does not make complete sense yet - that's fine! We're going
+to dig into each much deeper, and you'll gain direct experience of each. By the end, this will all make perfect sense. 
 
 ## GetProcAddress
 Once a DLL has been successfully loaded using `LoadLibrary` and we have its handle, `GetProcAddress` is then used to find the memory 
