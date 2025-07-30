@@ -96,6 +96,7 @@ In this variation, the DLL acts more like a passive data file once loaded.
 ## References
 
 [Shellcode Execution with GoLang - Joff Thyer](https://www.youtube.com/watch?v=gH9qyHVc9-M)
+
 [pwn.college - Shellcode Injection - Introduction](https://www.youtube.com/watch?v=715v_-YnpT8)
 
 ---
