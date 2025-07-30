@@ -52,12 +52,11 @@ If the function is not found in the DLL's export table, `GetProcAddress` returns
 
 ## Calling Windows API from Go
 
-Go provides numerous mechanisms to interact with native C-style libraries, most of which we'll cover at some point during this course. 
-But for now I want to introduce the two most elementary techniques:
+Go provides numerous mechanisms to interact with native C-style libraries, right now I want to introduce the two most elementary techniques:
 
 1. **`syscall` Package:** This built-in package offers lower-level access. You can load DLLs (`syscall.LoadDLL`) and find procedures (`dll.FindProc`). You then invoke the procedure using methods like `proc.Call()` or `syscall.SyscallN()`, passing arguments as `uintptr` types and handling potential errors. This method gives fine-grained control but requires careful management of types and error checking based on Windows conventions.
 
-2. **`golang.org/x/sys/windows` Package:** This is generally to be the more "user-friendly" way, typically at the expense of having less control. It provides Go-style wrappers around many common Windows API functions. For instance, it directly offers functions like `windows.LoadLibrary` and `windows.GetProcAddress`. These wrappers handle much of the type conversion and error checking boilerplate.
+2. **`golang.org/x/sys/windows` Package:** This is the more "user-friendly" package (i.e. abstracted), but comes at the expense of having less control. It provides Go-style wrappers around many common Windows API functions. For instance, it directly offers functions like `windows.LoadLibrary` and `windows.GetProcAddress`. These wrappers handle much of the type conversion and error checking boilerplate.
 
 
 Regardless of the package used, the underlying principle is the same: Go code obtains a pointer to the native Windows API function (like `LoadLibrary`) and then invokes that function according to its documented C signature, marshaling Go types to their C equivalents (like Go strings to null-terminated C strings or pointers).
