@@ -7,6 +7,7 @@ I write a monthly report for [Active Countermeasures](activecountermeasures.com)
 subsequent network threat hunt. All **pcap + zeek logs are also provided**, allowing you to get hands-on experience by emulating the investigation
 at home.
 
+- [ZetaSwitch – DNS/HTTP Multi-Modal C2](https://www.activecountermeasures.com/malware-of-the-day-zetaswitch-dns-http-multi-modal-c2/)
 - [Multi-Modal C2 Communication (Numinon C2)](https://www.activecountermeasures.com/malware-of-the-day-multi-modal-c2-communication-numinon-c2/)
 - [C2 over ICMP (ICMP-GOSH)](https://www.activecountermeasures.com/malware-of-the-day-c2-over-icmp-icmp-gosh/)
 - [C2 over NTP (goMESA)](https://www.activecountermeasures.com/malware-of-the-day-c2-over-ntp-gomesa/)
