@@ -10,7 +10,6 @@ I teach a number of workshops and courses about C2 development in Golang with An
 
 If you have any questions or feedback, feel free to [connect](mailto:moi@faanross.com).
 
-
 **Live long and prosper**.
 
 Faan
