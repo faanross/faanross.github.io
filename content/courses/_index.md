@@ -12,6 +12,7 @@ title = 'Courses'
 
 ## AntiSyphon 
 - [Let’s Build a Simple C2 in Golang and Vue.js - 4 hr Workshop]({{< ref "antisyphon/workshop/moc.md" >}})
+- [Let's Build a Multi-Modal C2 Covert Channel in Golang - 4 hr Workshop]
 
 <br>
 
