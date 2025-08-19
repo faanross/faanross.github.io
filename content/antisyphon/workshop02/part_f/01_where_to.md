@@ -3,7 +3,6 @@ showTableOfContents: true
 title: "Where To From Here?"
 type: "page"
 ---
-## Let's Begin at the End
 
 
 ___

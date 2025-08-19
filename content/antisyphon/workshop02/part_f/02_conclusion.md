@@ -3,7 +3,6 @@ showTableOfContents: true
 title: "Conclusion"
 type: "page"
 ---
-## Let's Begin at the End
 
 
 ___

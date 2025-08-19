@@ -3,9 +3,9 @@ showTableOfContents: true
 title: "Dual-server Startup"
 type: "page"
 ---
-## Let's Begin at the End
-
-
+## Solutions
+The **starting** solution can be found [here](https://github.com/faanross/workshop_antisyphon_18092025/tree/main/Lesson10_Begin).
+The **final** solution can be found [here](https://github.com/faanross/workshop_antisyphon_18092025/tree/main/Lesson10_Done).
 ___
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "01_api.md" >}})
