@@ -22,9 +22,9 @@ they are seperated via a modular design.
 ## What We'll Create
 - Agent interface (`internals/models/interfaces.go`)
 - Server interface (`internals/models/interfaces.go`)
-- Config struct (`internals/config/config.go`)
 - Agent factory function (`internals/models/factories.go`)
 - Server factory function (`internals/models/factories.go`)
+- Config struct (`internals/config/config.go`)
 - Agent's main entrypoint (`cmd/agent/main.go`)
 
 
@@ -79,6 +79,61 @@ Now that we have our two interfaces we can move towards implementing them - mean
 So in the upcoming lessons we want to work towards creating our **4 types** - a HTTPS agent and server, and a DNS agent and server.
 
 But before we get to that we want to design our system that will give us the correct type based on what we specify in a config.
+
+
+## Factory Function
+
+Once our application is built, it will essentially function like this - we'll specify what type of agent/server we want in a config file (let 's DNS), and then when we start our application, we want it to automatically create the correct types. In this case of course that would be a DNS agent and server.
+
+So we'll get to creating our config system where we specify what we want soon enough, but this mythical ability to create the types we want is called a factory function. And it is EXTREMELY simple - we pass it the config, it looks at what type of agent/server we want, and then using an internal switch statement it simply calls the correct constructors for the types we want. That's it.
+
+### Agent Factory Function
+
+So in `internals/models/factories.go`, let's first create our Agent factory function:
+
+```go
+// NewAgent creates a new communicator based on the protocol
+func NewAgent(cfg *config.Config) (Agent, error) {
+	switch cfg.Protocol {
+	case "https":
+		return nil, fmt.Errorf("HTTPS not yet implemented")
+	case "dns":
+		return nil, fmt.Errorf("DNS not yet implemented")
+	default:
+		return nil, fmt.Errorf("unsupported protocol: %v", cfg.Protocol)
+	}
+}
+```
+
+Note that of course at this point we have not yet created `config.Config`, so you'll IDE will likely put up a fuss when referencing it. Don't worry, we'll attend to it soon enough.
+
+So here we can see the essential logic which is as simple as I alluded to. Note of course that since none of our actual constructors have been implemented, we're not calling them yet, but rather just returning an error in both cases. As we create our actual types and associated constructors we'll replace these lines.
+
+
+### Server Factory Function
+
+The Server's factory function is the exact same logic:
+
+```go
+// NewServer creates a new server based on the protocol
+func NewServer(cfg *config.Config) (Server, error) {
+	switch cfg.Protocol {
+	case "https":
+		return nil, fmt.Errorf("HTTPS not yet implemented")
+	case "dns":
+		return nil, fmt.Errorf("DNS not yet implemented")
+	default:
+		return nil, fmt.Errorf("unsupported protocol: %v", cfg.Protocol)
+	}
+}
+```
+
+
+Now let's go ahead and create the actual config we'll pass to these factory functions so they know which constructor to call.
+
+
+
+
 
 
 
