@@ -40,12 +40,12 @@ lectures available here in markdown format.
 - [DNS Agent]({{< ref "part_d/02_dns_agent.md" >}})
 - [DNS Loop]({{< ref "part_d/03_dns_loop.md" >}})
 
-- ## Part E: Transition Using API Switch
+## Part E: Transition Using API Switch
 - [Implement API Switch]({{< ref "part_e/01_api.md" >}})
 - [Dual-server Startup]({{< ref "part_e/02_dual.md" >}})
 - [Agent Parsing + Protocol Transition]({{< ref "part_e/03_transition.md" >}})
 
-- ## Part F: Wrap-up
+## Part F: Wrap-up
 - [Where To From Here?]({{< ref "part_f/01_where_to.md" >}})
 - [Conclusion]({{< ref "part_f/02_conclusion.md" >}})
 
