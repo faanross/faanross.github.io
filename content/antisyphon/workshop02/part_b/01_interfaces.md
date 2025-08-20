@@ -171,6 +171,45 @@ That's pretty much it for this first lesson, we've really laid a completely logi
 We don't really have much to test yet, that being said we can cobble together a contrived main entrypoint for either the agent or server (I'll just pick agent in this case), which I think will help us just get somewhat of a better sense of how the config, factory function, and (eventually) constructors will fit together.
 
 
+## Agent's main
+
+Let's create a new file in `./cmd/agent/main.go`
+
+```go
+func main() {
+	agentCfg := config.Config{
+		Protocol: "https",
+	}
+
+	_, err := models.NewAgent(&agentCfg)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+}
+```
+
+
+Since we don't yet have a constructor, we'll just create a struct literal `agentCfg`, and then call our `NewAgent` factory function with this as the sole argument.
+
+We don't yet have any use for the first argument (which will be the agent type once we implement the constructor), so we throw it away using `_`. And of course since we know that our current factory function will return an error regardless of the argument, we expect this line to execute - `fmt.Println(err)`.
+
+
+## Test
+
+So let's run our Agent and see what happens:
+
+```shell
+❯ go run ./cmd/agent
+HTTPS not yet implemented
+```
+
+And indeed of course as we expect we can see the error for HTTPS was returned and then printed to console. So not too exciting, but I just wanted to give you a sense that:
+- We are going to specify our desired protocol (`https` or `dns`) in our config
+- The config is passed to the Agent's factory function
+- Based on the specified protocol a switch statement will execute specific logic
+
+That's it for now, in the next lesson we'll create a more user-friendly implementation of a config system using YAML.
 
 
 
