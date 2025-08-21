@@ -56,7 +56,7 @@ openssl req -new -x509 -sha256 -key server.key -out server.crt -days 365 \
 
 ## Server Design
 
-As explained in the workshop overview, each time the agent agent periodically checks in with the server, its going to respond with a JSON containing a single bool field: `change`. By default change will be false, which of course just means "don't change to DNS".
+As explained in the workshop overview, each time the agent periodically checks in with the server, its going to respond with a JSON containing a single bool field: `change`. By default change will be false, which of course just means "don't change to DNS".
 
 For now, since we essentially just want to build out all our HTTPS machinery before focusing on the transition logic, it's going to stay `false`. Then eventually we'll integrate the ability for the field to change to `true`, when the HTTPS agent thus receives the JSON containing `change=true,` it will transition to DNS.
 
