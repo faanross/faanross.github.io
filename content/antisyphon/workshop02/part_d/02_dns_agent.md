@@ -161,7 +161,7 @@ First start the server with go run `./cmd/server`, we can then run our agent and
 ```
 
 
-Here we can indeed see 42.42.42.42 printed to terminal - the indication to not change the underlying communication protocol.
+Here we can indeed see `42.42.42.42` printed to terminal - the indication to not change the underlying communication protocol.
 
 
 
