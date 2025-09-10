@@ -27,7 +27,7 @@ I'm once again choosing to do this since I think it's a great touch when project
 
 ## What We'll Create
 - YAML config (`./configs/config.yaml`)
-- Agent interface (`internals/config/loader.go`)
+- YAML config loader (`internals/config/loader.go`)
 
 
 ## Import Library
