@@ -12,9 +12,9 @@ The **final** solution can be found [here](https://github.com/faanross/workshop_
 
 We've made it! Our final lesson.
 
-So to tie everything together, we need our agent to take a specific action based on the response it receives. Right now it does not do anything, whatever value is received, it will just print it to terminal and continue with business as usual.
+To tie everything together, we need our agent to take a specific action based on the response it receives. Right now it does not do anything, whatever value is received, it will just print it to terminal and continue with business as usual.
 
-So we need to add the logic for it to transition to the opposite protocol if the right signal was detected. And if not, then just continue with business as usual.
+We need to add the logic for it to transition to the opposite protocol if the right signal was detected. And if not, then just continue with business as usual.
 
 This will all take place in our `RunLoop()`.
 
@@ -30,14 +30,17 @@ func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
 		// Check if context is cancelled
 		select {
 		case <-ctx.Done():
-			return ctx.Err()
+            log.Println("Run loop cancelled")
+            return nil
 		default:
 		}
 
 		response, err := comm.Send(ctx)
 		if err != nil {
 			log.Printf("Error sending request: %v", err)
-			return err
+			// Don't exit - just sleep and try again
+			time.Sleep(cfg.Timing.Delay)
+            continue // Skip to next iteration
 		}
 
 		// BASED ON PROTOCOL, HANDLE PARSING DIFFERENTLY
@@ -65,14 +68,15 @@ func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
 		case <-time.After(sleepDuration):
 			// Continue to next iteration
 		case <-ctx.Done():
-			return ctx.Err()
+            log.Println("Run loop cancelled")
+            return nil
 		}
 	}
 }
 ```
 
 
-So essentially in our switch statement, based on the protocol, it will "capture" the response, and then print it to terminal.
+As I just said above, in our switch statement, based on the protocol, it will "capture" the response, and then print it to terminal.
 
 
 
@@ -84,7 +88,7 @@ So essentially in our switch statement, based on the protocol, it will "capture"
 There's a handful of changes to fully implement our desired logic, so I'll do it step-by-step. This is also arguably the most complex change we've performed, and so I think it's worth just quickly reviewing what we'll do before just jumping straight into it.
 
 
-**So as we just saw above, currently our `RunLoop()`:**
+**As we just saw above, currently our `RunLoop()`:**
 1. Uses the same `comm` agent for the entire loop
 2. Just logs responses without checking them
 3. Has no mechanism to switch protocols
@@ -94,7 +98,6 @@ There's a handful of changes to fully implement our desired logic, so I'll do it
 2. Logic to detect and handle transitions
 3. Ability to create and swap to a new agent
 
-So let's jump into it.
 
 ## Improving our RunLoop()
 
@@ -110,9 +113,9 @@ So right at the top of the function, first thing even before the `for` loop, add
 
 
 
-Now, instead of referencing `comm` as the current agent, we should use `currentAgent`. Remember, comm is hardcoded, it's the value we find initially in our config. Though `currentAgent` starts of being equal to it, it'll soon get the ability to change based on the response we receive from the server.
+Now, instead of referencing `comm` as the current agent, we should use `currentAgent`. Remember, `comm` is hardcoded, it's the value we find initially in our config. Though `currentAgent` starts of being equal to it, it'll soon get the ability to change based on the response we receive from the server.
 
-So find this line:
+Find this line:
 
 ```go
 response, err := comm.Send(ctx)
@@ -223,7 +226,7 @@ For DNS: We are asking: **is ipAddr == "69.69.69.69"**? If yes, it returns `true
 
 
 ## Quick Recap
-Again, since this is arguably the most complex logic we've implemented, let's just quickly recap what we did:
+Let's just quickly recap what we did:
 1. **State Tracking**: We now track which protocol and agent we're currently using
 2. **Dynamic Switching**: When transition detected, we create a new agent
 3. **Simple Swap**: We just update the variables - next loop iteration uses new agent
@@ -248,10 +251,10 @@ That's it! The beauty is in its simplicity - just track state, detect signals, a
 
 ## Test
 
-So let's start up our server, and our agent. We can start with any protocol, in this specific case I'll start with `https`.
+Let's start up our server, and our agent. We can start with any protocol, in this specific case I'll start with `https`.
 
 
-Now once it's running, let's hit our endpoint with:
+Once it's running, let's hit our endpoint with:
 ```bash
 curl -X POST http://localhost:8080/switch
 ```
@@ -322,12 +325,7 @@ And if we take a peek at our agent-side output we'll see this same pattern play 
 
 And that's it, we now have a simple, but potent foundation for a covert channel that can transition between two different protocols on-demand.
 
-Now this is of course just a baseline, and there's many things we'd now want to layer on top of this, which I'll discuss in the next section.
-
-
-
 
 ___
 [|TOC|]({{< ref "../moc.md" >}})
 [|PREV|]({{< ref "02_dual.md" >}})
-[|NEXT|]({{< ref "../part_f/01_where_to.md" >}})
