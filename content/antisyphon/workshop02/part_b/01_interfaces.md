@@ -159,9 +159,9 @@ type TimingConfig struct {
 
 As you can probably deduce, we're just using one config for both our agent and server. At the moment, and for the purpose of this workshop it works, but if you wished to a be a bit more efficient, explicit, or as your needs evolve based on project complexity you might want to implement separate configs for each of them.
 
-Also note that I've created an embedded config called `TimingConfig` inside of `Config`. Now to be honest, in this situation this was kinda unnecessary - it probably would have made more sense to just have Delay and Jitter directly inside of `Config`.
+Also note that I've created an embedded config called `TimingConfig` inside of `Config`. Now to be honest, in this situation this was kinda unnecessary - it probably would have made more sense to just have `Delay` and `Jitter` directly inside of `Config`.
 
-So why did I do it? Really just to show you the pattern and make you aware that you can do it. This might seems trivial or banal here and now, but the ability to embed structs within structs (within structs...) is an incredibly powerful and flexible feature that forms part of a meta-feature called **composition**.
+So why did I do it? Really just to show you the pattern and make you aware that you can do it. This might seem trivial, but the ability to embed structs within structs (within structs...) is an incredibly powerful and flexible feature that forms part of a meta-feature called **composition**.
 
 Without getting into too much detail here, I do want to mention a few things. First, composition is Go's idiomatic answer to **inheritance**, one of the core "features" of OOP. And second, if you want to become a "serious" Go developer, this is a muscle you'll absolutely 100% want to develop.
 

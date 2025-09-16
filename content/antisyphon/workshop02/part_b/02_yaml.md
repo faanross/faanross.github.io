@@ -68,7 +68,7 @@ Great, so now we can create our YAML file.
 
 ## config yaml file
 
-Let's add the following to a new file `./configs/config.yaml`. It's important to take note that the labels used here **have to** match the tags we just added to our struct exactly.
+Let's add the following to a new file `./configs/config.yaml`. It's important to take note that the labels used here **have to** match the tags we just added to our struct.
 
 ```yaml
 client: "127.0.0.1:0"
@@ -85,7 +85,7 @@ tls_key: "./certs/server.key"
 tls_cert: "./certs/server.crt"
 ```
 
-We are referencing tls_key and tls_cert here, neither of which exists yet. This is fine, we'll add it in our next lesson.
+We are referencing `tls_key` and `tls_cert` here, neither of which exists yet. This is fine, we'll add it in our next lesson.
 
 Great, so now we have our config as a simple, clean YAML file, and our struct has the ability, or "knowledge", to receive values that are unmarshalled from a YAML file. What we need now is a function that, after starting our application, will do just that - read the YAML file, create a new struct instance, and then unmarshall the values from the YAML file into the struct.
 
@@ -94,7 +94,7 @@ Great, so now we have our config as a simple, clean YAML file, and our struct ha
 ## Config loader
 Let's create this new file in `internals/config/loader.go`.
 
-So let's first just create the function with placeholder comments:
+Let's first just create the function with placeholder comments:
 
 ```go
 // LoadConfig reads and parses the configuration file
@@ -112,7 +112,7 @@ func LoadConfig(path string) (*Config, error) {
 ```
 
 
-So, first thing is we want to load the YAML file from disk, we get this path as the argument called `path`:
+First thing is we want to load the YAML file from disk, we get this path as the argument called `path`:
 
 ```go
 	// We'll provide path to *.yaml to function when we call it
@@ -136,7 +136,7 @@ Now we can create our empty struct, and unmarshall the YAML values into it:
 ```
 
 
-Now finally we can call a yet-to-be created method on `cfg`, which will perform some basic validation:
+Finally, we can call a yet-to-be created method on `cfg`, which will perform some basic validation:
 
 ```go
 	// Optional, but good proactive -> Validate the configuration
@@ -205,7 +205,7 @@ func (c *Config) ValidateConfig() error {
 	}
 
 	if c.TlsKey == "" {
-		return fmt.Errorf("tls cert cannot be empty")
+		return fmt.Errorf("tls key cannot be empty")
 	}
 
 	return nil
@@ -269,7 +269,7 @@ And this is exactly what we see.
 
 ## Conclusion
 
-That's it as far as our foundation goes. We have our interfaces, we our factory functions, and now we have a config system with a struct, YAML-file, and ability to load values from the latter to populate the former.
+That's it as far as our foundation goes. We have our interfaces, our factory functions, and now we have a config system with a struct, YAML-file, and ability to load values from the latter to populate the former.
 
 We'll now move into our next phase where we'll implement the ability to communicate over HTTPS.
 
