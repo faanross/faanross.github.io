@@ -103,14 +103,17 @@ func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
 		// Check if context is cancelled
 		select {
 		case <-ctx.Done():
-			return ctx.Err()
+            log.Println("Run loop cancelled")
+            return nil
 		default:
 		}
 
 		response, err := comm.Send(ctx)
 		if err != nil {
 			log.Printf("Error sending request: %v", err)
-			return err
+			// Don't exit - just sleep and try again
+			time.Sleep(cfg.Timing.Delay)
+            continue // Skip to next iteration
 		}
 
 		// BASED ON PROTOCOL, HANDLE PARSING DIFFERENTLY
@@ -139,7 +142,8 @@ func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
 		case <-time.After(sleepDuration):
 			// Continue to next iteration
 		case <-ctx.Done():
-			return ctx.Err()
+            log.Println("Run loop cancelled")
+            return nil
 		}
 	}
 }
