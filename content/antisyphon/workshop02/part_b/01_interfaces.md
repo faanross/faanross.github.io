@@ -9,7 +9,7 @@ The **starting** solution can be found [here](https://github.com/faanross/worksh
 The **final** solution can be found [here](https://github.com/faanross/workshop_antisyphon_18092025/tree/main/Lesson01_Done).
 
 ## Overview
-As we discussed in the previous lecture, Go's interfaces provide an awesome way for us to implement a generalized feature, while abstracting away specific implementations thereof. This is incredibly useful if a given feature either:
+Go's interfaces provide an awesome way for us to implement a generalized feature, while abstracting away specific implementations thereof. This is incredibly useful if a given feature either:
 1) Has **multiple** types of implementations, or
 2) The **specific** type of implementation might **change** in the future.
 
@@ -30,7 +30,7 @@ they are seperated via a modular design.
 
 ## Interfaces
 
-The first thing we'll create is both an interface for our `Agent`, as well as `Server`. And of course, as we've now extensively covered, an interface is just a contract, it's just a list of all methods a type has to implement to fulfill the contract.
+The first thing we'll create is both an interface for our `Agent`, as well as `Server`. An interface is just a contract, it's just a list of all methods a type has to implement to fulfill the contract.
 
 
 ### Agent interface
@@ -53,7 +53,7 @@ So for example in the `net/http` library, we'll typically say something like the
 response, error := Send()
 ```
 
-Meaning the return value of the send function is the reception of the response. All to say, they're really baked in together, you can't really have one without the other.
+Meaning the return value of the send function is the reception of the response. 
 
 
 ### Server interface
@@ -83,9 +83,10 @@ But before we get to that we want to design our system that will give us the cor
 
 ## Factory Function
 
-Once our application is built, it will essentially function like this - we'll specify what type of agent/server we want in a config file (let 's DNS), and then when we start our application, we want it to automatically create the correct types. In this case of course that would be a DNS agent and server.
+Once our application is built, it will essentially function like this - we'll specify what type of agent/server we want in a config file (let's say DNS), and then when we start our application, we want it to automatically create the correct types. In this case of course that would be a DNS agent and server.
 
-So we'll get to creating our config system where we specify what we want soon enough, but this mythical ability to create the types we want is called a factory function. And it is EXTREMELY simple - we pass it the config, it looks at what type of agent/server we want, and then using an internal switch statement it simply calls the correct constructors for the types we want. That's it.
+So we'll get to creating our config system where we specify what we want soon enough, but this mythical ability to create the types we want is called a factory function. 
+And it is EXTREMELY simple - it's essentially just a switch statement wrapped in a function. We pass the function a config, it looks at what type of agent/server we want, and then using an internal switch statement it simply calls the correct constructors for the types we want. That's it.
 
 ### Agent Factory Function
 
@@ -156,7 +157,7 @@ type TimingConfig struct {
 ```
 
 
-As you can probably deduce, we're just using one config for both our agent and server. At the moment, and for the purpose of this workshop it works, but if you wished to a be a bit more efficient, explicit, or as your needs evolve based on project complexity you might want to implement separate configs for each of them
+As you can probably deduce, we're just using one config for both our agent and server. At the moment, and for the purpose of this workshop it works, but if you wished to a be a bit more efficient, explicit, or as your needs evolve based on project complexity you might want to implement separate configs for each of them.
 
 Also note that I've created an embedded config called `TimingConfig` inside of `Config`. Now to be honest, in this situation this was kinda unnecessary - it probably would have made more sense to just have Delay and Jitter directly inside of `Config`.
 
