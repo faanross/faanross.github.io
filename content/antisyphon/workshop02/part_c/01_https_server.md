@@ -11,9 +11,9 @@ The **final** solution can be found [here](https://github.com/faanross/workshop_
 ## Overview
 In the next 3 lessons we'll create our complete HTTPS logic, including the server (this lesson), agent (Lesson 4), and run loop (lesson 5). Thereafter we'll do the exact same thing for DNS.
 
-For our HTTPS server: we'll obviously use a struct to represent an instance of a HTTPS server. We'll then also create an accompanying constructor to instanstandtiate it - it's of course this exact constructor that we'll then call from the factory function.
+For our HTTPS server: we'll once again use a struct to represent an instance of a HTTPS server. We'll then also create an accompanying constructor to instantiate it - it's of course this exact constructor that we'll then call from the factory function.
 
-Additionally, if we can recall from our first lesson - we created a Server interface (aka "contract"), that had two methods - `Start()` and `Stop()`. So of course, in addition to our Server struct and constructor, we'll need to implements these, as well as a handler so that our server can actually "do something" once our agent connects to it.
+Additionally, if we can recall from our first lesson - we created a Server interface (aka "contract"), that had two methods - `Start()` and `Stop()`. So, in addition to our `Server` struct and constructor, we'll need to implement these, as well as a handler so that our server can actually "do something" once our agent connects to it.
 
 That's about it, let's get cracking.
 
@@ -25,7 +25,7 @@ That's about it, let's get cracking.
 
 ## Import Library
 
-Though Go's standard library (`net/http`) has a server + router, I am a huge fan of Chi. It's an established + well-maintained, and though we won't get to it in this course, it's go incredible, flexible support for middleware implementation.
+Though Go's standard library (`net/http`) has a server + router, I am a huge fan of Chi. It's an established + well-maintained, and though we won't get to it in this course, it's got incredible, flexible support for middleware implementation.
 
 So let's add it with:
 
@@ -37,7 +37,7 @@ go get github.com/go-chi/chi/v5
 
 ## Let's Generate Some Certs
 
-Since we'll be using HTTPS, we'll of course need some certs. In this case I'll generate some self-signed ones using openssl, of course if you have alternative source or method you prefer - by all means go ahead.
+Since we'll be using HTTPS, we'll need some certs. In this case I'll generate some self-signed ones using openssl, of course if you have alternative source or method you prefer - by all means go ahead.
 
 First I'll create a directory called `./certs`, then `cd` into it. Let's then run the following:
 
@@ -56,11 +56,11 @@ openssl req -new -x509 -sha256 -key server.key -out server.crt -days 365 \
 
 ## Server Design
 
-As explained in the workshop overview, each time the agent periodically checks in with the server, its going to respond with a JSON containing a single bool field: `change`. By default change will be false, which of course just means "don't change to DNS".
+Each time the agent periodically checks in with the server, its going to respond with a JSON containing a single bool field: `change`. By default, change will be `false`, which means "don't change to DNS".
 
 For now, since we essentially just want to build out all our HTTPS machinery before focusing on the transition logic, it's going to stay `false`. Then eventually we'll integrate the ability for the field to change to `true`, when the HTTPS agent thus receives the JSON containing `change=true,` it will transition to DNS.
 
-So that's just a brief overview, for now let's just focus on creating a simple server with a single endpoint which will respond with this JSON every time the endpoint is hit.
+So that's just a brief overview, for now let's focus on creating a simple server with a single endpoint which will respond with this JSON every time the endpoint is hit.
 
 
 ## Server struct
@@ -96,7 +96,7 @@ type HTTPSResponse struct {
 }
 ```
 
-This is of course going to be marshalled to JSON before going on the wire, notice how, similar to how we needed YAML tags in the previous lesson to allow for struct-YAML conversion, we now need JSON tags to achieve something similar.
+This is going to be marshalled to JSON before going on the wire, notice how, similar to how we needed YAML tags in the previous lesson to allow for struct-YAML conversion, we now need JSON tags to achieve something similar.
 
 
 ## Server constructor
@@ -120,7 +120,7 @@ Note that we're not yet assigning our `server` field - we'll do that in the actu
 
 ## Start()
 
-Now, in order for our HTTPS Server to satisfy the `Server` interface we need to create the `Start()` and `Stop()` methods for it. Let's first create Start()
+Now, in order for our HTTPS Server to satisfy the `Server` interface we need to create the `Start()` and `Stop()` methods for it. Let's first create `Start()`:
 
 ```go
 
@@ -145,7 +145,7 @@ func (s *HTTPSServer) Start() error {
 
 So a few things worth remarking - first, we can see we're using the Chi library here to create a router.
 
-We then define our endpoint, this is slightly arbitrary but for simplicity's sake I've assigned it as a GET method hitting the root (`/`) endpoint. We can see that when it's hit, it'll call the RootHandler function. We'll create this soon enough.
+We then define our endpoint, this is slightly arbitrary but for simplicity's sake I've assigned it as a GET method hitting the root (`/`) endpoint. We can see that when it's hit, it'll call the `RootHandler` function. We'll create this soon enough.
 
 We'll now also assign the `server` field of our `HTTPSServer` struct, and since calling the library function `ListenAndServeTLS()` returns an error we can call it as the return value.
 
@@ -183,7 +183,7 @@ Simple as - we instantiate a `HTTPSResponse` with the `Change` field set to `fal
 
 ## Stop()
 
-In order to satisfy the interface we'll also add a Stop() method for our server.
+In order to satisfy the interface we'll also add a `Stop()` method for our server.
 
 
 
@@ -291,9 +291,9 @@ Thereafter we can now call our `models.NewServer()` factory function, which, in 
 
 Now that we have that we can call `Start()` on it, but to ensure we don't block our main goroutine let's call it in it's own goroutine using the `go` keyword.
 
-We'll then also add some basic signal handling so that we can block our main goroutine using `<-sigChan`. Since `Start()` is called in its own goroutine, if we did not do this (or something similar), our program would immediately exit since the `main` function will complete and thus exit. ``
+We'll then also add some basic signal handling so that we can block our main goroutine using `<-sigChan`. Since `Start()` is called in its own goroutine, if we did not do this (or something similar), our program would immediately exit since the `main` function will complete and thus exit. 
 
-Finally, once we've indicated our intention to exit the program we'll progress to the final code, which will gracefully shut down our server using Stop(), before exiting the program altogether.
+Finally, once we've indicated our intention to exit the program we'll progress to the final code, which will gracefully shut down our server using `Stop()`, before exiting the program altogether.
 
 ## Test
 

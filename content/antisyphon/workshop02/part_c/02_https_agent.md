@@ -10,8 +10,8 @@ The **final** solution can be found [here](https://github.com/faanross/workshop_
 
 ## Overview
 We'll now create our HTTPS agent, the yin to our server's yang. We'll once again use a struct to represent an instance of
-an agent, a constructor to instantiate it (which will be wired into our NewAgent factory function), and then to satisfy
-the Agent interface we'll need to create the associated `Send()` method. Let's do this.
+an agent, a constructor to instantiate it (which will be wired into our `NewAgent()` factory function), and then to satisfy
+the `Agent` interface we'll need to create the associated `Send()` method. Let's do this.
 
 
 ## What We'll Create
@@ -181,7 +181,7 @@ func main() {
 
 ```
 
-Note the temporary code as indicated by the comment. In the next lesson we'll create our Agent loop - that is the logic so it repetitively calls `Send()` in a loop. For now we'll just call Send() once, and since that function just returns the response body without printing it, we'll unmarshall and print it here.
+Note the temporary code as indicated by the comment. In the next lesson we'll create our Agent loop - that is the logic so it repetitively calls `Send()` in a loop. For now we'll just call `Send()` once, and since that function just returns the response body without printing it, we'll unmarshall and print it here.
 
 
 ## test
@@ -194,7 +194,7 @@ Let's run our server:
 
 
 
-Then let's our agent:
+Then let's run our agent:
 ```shell
 ❯ go run ./cmd/agent/
 2025/08/11 12:03:05 Sending request to https server...
