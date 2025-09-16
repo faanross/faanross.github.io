@@ -13,8 +13,6 @@ The **final** solution can be found [here](https://github.com/faanross/workshop_
 ## Overview
 In this lesson we want to create a new endpoint on a new port that, when we hit it, indicates that we want to transition from one protocol to another. It's extremely simple, we don't have to convey any information, just the mere fact that we hit the endpoint is interpreted to mean: "transition from the current protocol to the other protocol".
 
-So of course if we added more protocols this system will break down, but it won't take much to add an additional layer of context to allow us to communicate our specific desired protocol. I'll cover this conceptually at the end of this lesson and leave it up to you to implement if you so desire.
-
 
 ## What We'll Create
 - Control API (`./internals/control/control_api.go`)
@@ -30,11 +28,11 @@ Now, as we saw before, usually our server will just always respond with either `
 
 But imagine that instead of just responding with the given value it first checks this global flag. BTW, global in this context means "accessible from anywhere in the application", in other languages it's sometimes also termed as being `public`.
 
-So it check's the global flag, if the flag is `false` (i.e. we did not hit the endpoint) it will indeed just response with `false`/`42.42.42.42`.
+It checks the global flag, if the flag is `false` (i.e. we did not hit the endpoint) it will indeed just response with `false`/`42.42.42.42`.
 
 But, if the flag is `true` (i.e. we did hit the endpoint signalling our desire to change protocol) then our server will instead response with `true` (for HTTPS) or `69.69.69.69` (for DNS).
 
-So in this lesson we're essentially just implementing a mechanism to allow us to trigger a new type of response from our server to the agent. Then, all we need to do in the remaining lessons is ensure that our agent can take variable actions based on that information.
+In this lesson we're implementing a mechanism to allow us to trigger a new type of response from our server to the agent. Then, all we need to do in the remaining lessons is ensure that our agent can take variable actions based on that information.
 
 One final thing, one additional layer of nuance, we need to consider is this: I just said if we hit an endpoint the flag changes from `false` to `true`, and if the server sees that the flag is `true` it will send the "change" response to the agent.
 
@@ -45,12 +43,12 @@ In other words, we want to hit the endpoint, we want the flag to change to `true
 
 ## Create our Control API
 
-So let's start implementing all the logic we just discussed in a new file  `./internals/control/control_api.go`
+Let's start implementing all the logic we just discussed in a new file  `./internals/control/control_api.go`
 
 
 First thing, let's create our global flag. Now this could just be a boolean, but a much better practice would be to create a struct so that we could pair a boolean with a mutex.
 
-So let's define the `struct`, and instantiate a global instance of it by capitalizing the name.
+Let's define the `struct`, and instantiate a global instance of it by capitalizing the name.
 
 ```go
 // TransitionManager handles the global transition state
@@ -105,7 +103,7 @@ func (tm *TransitionManager) CheckAndReset() bool {
 ```
 
 
-Let's now create a simple HTTP server (we'll use port 8080) that will expose an endpoint for us to hit to call the `TriggerTransition()` method.
+Let's create a simple HTTP server (we'll use port 8080) that will expose an endpoint for us to hit to call the `TriggerTransition()` method.
 
 
 ```go
@@ -125,7 +123,7 @@ func StartControlAPI() {
 As you can see I've chosen the endpoint `/switch`. Further, we're not actually calling `TriggerTransition()` here, but as with all endpoints we're calling a handler `handleSwitch`, which will be tasked with calling the method in turn.
 
 
-So last thing, let's implement our handler `handleSwitch`:
+Last thing, let's implement our handler `handleSwitch`:
 
 
 

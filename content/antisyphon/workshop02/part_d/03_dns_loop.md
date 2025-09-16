@@ -154,8 +154,8 @@ And so we can see very simply that we switch on the `cfg.Protocol`, and then exe
 
 ## Updating our Agent's main
 
-Let's just undo the changes we made at the end of the last lab so that we once again use RunLoop:
-1. Delete the single Send()
+Let's undo the changes we made at the end of the last lab so that we once again use `RunLoop()`:
+1. Delete the single `Send()`
 2. Uncomment the commented out code
 
 ```go

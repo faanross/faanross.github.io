@@ -16,13 +16,13 @@ Let's just think about this for a second:
 - Our server runs say on HTTPS, and so does our agent
 - We signal our intent to switch both to DNS by hitting the `/switch` on port 8080
 - Our server then sends `true` to the agent
-- (TODO) Our agent will interpret this value and reach out to connect to the server over DNS
+- (**TODO**) Our agent will interpret this value and reach out to connect to the server over DNS
 
 But there is of course something missing here... We don't have a DNS server to respond. So a transition should also involve creating the new server. Now there are two ways to do this - the right way, and the expedited way.
 
 The right way assumes we only have our HTTP server running (in the example above), then when the trigger is received it creates a DNS Server. Then, once it's confirmed the new connection with the agent has been established over DNS it will kill the HTTPS server.
 
-But, there is a much simpler way - we can just start both servers when our application begins, and keep both open. This of course the expedited way, and it's what I'll opt to do in this situation since it'll save us quite a bit of work, and have the exact same outcome.
+But, there is a much simpler way - we can just start both servers when our application begins, and keep both open. This of course represents the expedited way, and it's what I'll opt to do in this situation since it'll save us quite a bit of work, and have the exact same outcome.
 
 That being said, it's not great practice and it's not something that scales really well - it's a definite uptick in technical debt, the equivalent of sweeping dust under the rug.
 
@@ -33,7 +33,7 @@ OK, with that out of the way, let's just make a simple adjustment to our server'
 
 ## Server's main
 
-So in our server's main, this is the code that currently:
+In our server's main, this is the code that currently:
 - Creates a server based on the value in `cfg`
 - Starts that specific server
 - Following the reception of the termination signal stops only that server
@@ -67,7 +67,7 @@ So in our server's main, this is the code that currently:
 ```
 
 
-So we just want to change all that code to:
+We just want to change that code to:
 ```go
 
 	// Create BOTH servers regardless of config
@@ -118,7 +118,7 @@ So we just want to change all that code to:
 	}
 
 	if err := dnsServer.Stop(); err != nil {
-		log.Printf("Error HTTPS stopping server: %v", err)
+		log.Printf("Error DNS stopping server: %v", err)
 	}
 ```
 
@@ -189,7 +189,7 @@ func main() {
 	}
 
 	if err := dnsServer.Stop(); err != nil {
-		log.Printf("Error HTTPS stopping server: %v", err)
+		log.Printf("Error DNS stopping server: %v", err)
 	}
 
 }
@@ -211,7 +211,7 @@ We can test this real quick by running the server:
 
 We can see from the output that both servers were started on the same port 8443 - HTTPS on TCP, and DNS on UDP.
 
-We can also confirm that this is actually case with 1:
+We can also confirm that this is actually case with `lsof`:
 ```shell
 ❯ lsof -i :8443
 COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
