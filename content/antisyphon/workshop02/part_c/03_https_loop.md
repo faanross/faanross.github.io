@@ -30,9 +30,9 @@ So that's what we'll create in this section, the runloop - the agent-side logic 
 
 ## Helper function
 
-Before we get to the actual RunLoop() function, let's add a helper function that will determine the exact amount of time to sleep between each round. If you can recall, we already specified `delay` (in seconds), and `jitter` (in percentage) in our config. This function thus uses those values and each time calculates a new random value within the range predicated by the chosen delay and jitter.
+Before we get to the actual `RunLoop()` function, let's add a helper function that will determine the exact amount of time to sleep between each round. If you can recall, we already specified `delay`, and `jitter` in our config. This function thus uses those values and each time calculates a new random value within the range determined by the chosen delay and jitter.
 
-So in a new file `./internals/runloop/runloop.go` let's create the following:
+In a new file `./internals/runloop/runloop.go` let's create the following:
 ```go
 // CalculateSleepDuration calculates the actual sleep time with jitter
 func CalculateSleepDuration(baseDelay time.Duration, jitterPercent int) time.Duration {
@@ -60,12 +60,12 @@ func CalculateSleepDuration(baseDelay time.Duration, jitterPercent int) time.Dur
 ```
 
 
-So at the end we'll return a duration of type `time.Duration`, which can be used directly by our `RunLoop()` function.
+At the end we'll return a duration of type `time.Duration`, which can be used directly by our `RunLoop()` function.
 
 
 ## RunLoop()
 
-Speaking of, in the same file we can now thus create our `RunLoop()`. Note the arguments - `context` (to allow us to stop it from outside of this function), the Agent` `instance, and the `config`.
+Speaking of, in the same file we can now create our `RunLoop()`. 
 
 ```go
 func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
@@ -74,14 +74,17 @@ func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
 		// Check if context is cancelled
 		select {
 		case <-ctx.Done():
-			return ctx.Err()
+            log.Println("Run loop cancelled")
+            return nil
 		default:
 		}
 
 		response, err := comm.Send(ctx)
 		if err != nil {
 			log.Printf("Error sending request: %v", err)
-			return err
+			// Don't exit - just sleep and try again
+			time.Sleep(cfg.Timing.Delay)
+            continue // Skip to next iteration
 		}
 
 		// Parse and display response
@@ -101,7 +104,8 @@ func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
 		case <-time.After(sleepDuration):
 			// Continue to next iteration
 		case <-ctx.Done():
-			return ctx.Err()
+            log.Println("Run loop cancelled")
+            return nil
 		}
 	}
 }
@@ -122,7 +126,7 @@ So with that implemented, we can now update our Agent's main function to use thi
 
 ## Agent's main
 
-Back inside of `./cmd/agent/main.go` we can now remove the previous "once off" logic and utilize our RunLoop(), and add some signal handling to allow for graceful shutdown.
+Back inside of `./cmd/agent/main.go` we can now remove the previous "once off" logic and utilize our `RunLoop()`, and add some signal handling to allow for graceful shutdown.
 
 ```go
 const pathToYAML = "./configs/config.yaml"
@@ -172,14 +176,14 @@ func main() {
 
 Note that, as was the case with the server, we'll call `RunLoop` in a separate goroutine since it's blocking. Then we'll implement the same system of signal handling using `sigChan`, which blocks at `<-sigChan`.
 
-Once we hit Ctrl+C we'll pass beyond that point, which will call `cancel()`. It's `cancel()` that will leads to the `ctx.Done()` case in our `RunLoop()`, allowing it to exit out of the infinite `for`.
+Once we hit Ctrl+C we'll pass beyond that point, which will call `cancel()`. If `cancel()` is called, it then leads to the `ctx.Done()` being closed, so that select case is met in our `RunLoop()`, allowing it to exit out of the infinite `for`.
 
 
 
 
 ## Test
 
-So we'll run our server, and now if we run our agent we expect there to be periodical "check-ins" - we hit the endpoint, sleep for some time, and repeat this until we hit Ctrl + C.
+Let's run our server, and now if we run our agent we expect there to be periodical "check-ins" - we hit the endpoint, sleep for some time, and repeat this until we hit Ctrl + C.
 
 ```shell
 ❯ go run ./cmd/agent
