@@ -23,7 +23,7 @@ Now that we've created our DNS Server we can create our own DNS Agent, also leve
 Let's create a new file in `internals/dns/agent_dns.go`. We'll first create our DNS Agent struct and associated constructor.
 
 ```go
-// DNSAgent implements the CommunicatorAgent interface for DNS
+// DNSAgent implements the Agent interface for DNS
 type DNSAgent struct {
 	serverAddr string
 	client     *dns.Client
@@ -45,7 +45,7 @@ func NewDNSAgent(serverAddr string) *DNSAgent {
 Then, to satisfy our Agent interface, we need to implement our Send() method.
 
 ```go
-// Send implements Communicator.Send for DNS
+// Send implements Agent.Send for DNS
 func (c *DNSAgent) Send(ctx context.Context) ([]byte, error) {
 	// Create DNS query message
 	m := new(dns.Msg)
@@ -144,7 +144,7 @@ Since our Agent's main currently leverages the runloop, which cannot yet handle 
 ```
 
 
-Don't worry about the fact that we're not handling the return error from Send - this is just a quick temporary test.
+Don't worry about the fact that we're not handling the return error from `Send()` - this is just a temporary test.
 
 
 ## Test

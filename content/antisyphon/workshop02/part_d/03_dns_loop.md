@@ -10,7 +10,7 @@ The **final** solution can be found [here](https://github.com/faanross/workshop_
 
 ## Overview
 
-We'll now make a small change to our current RunLoop so that it's able to discriminate between HTTPS and DNS. This way we can use the same function for both instead of needing to each protocol to have its own distinct `RunLoop()` function.
+We'll now make a small change to our current `RunLoop()` so that it's able to discriminate between HTTPS and DNS. This way we can use the same function for both instead of needing to each protocol to have its own distinct `RunLoop()` function.
 
 
 
@@ -28,14 +28,17 @@ func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
 		// Check if context is cancelled
 		select {
 		case <-ctx.Done():
-			return ctx.Err()
+		    log.Println("Run loop cancelled")
+            return nil
 		default:
 		}
 
 		response, err := comm.Send(ctx)
 		if err != nil {
 			log.Printf("Error sending request: %v", err)
-			return err
+			// Don't exit - just sleep and try again
+			time.Sleep(cfg.Timing.Delay)
+            continue // Skip to next iteration
 		}
 
 		// Parse and display response
@@ -55,7 +58,8 @@ func RunLoop(ctx context.Context, comm models.Agent, cfg *config.Config) error {
 		case <-time.After(sleepDuration):
 			// Continue to next iteration
 		case <-ctx.Done():
-			return ctx.Err()
+            log.Println("Run loop cancelled")
+            return nil
 		}
 	}
 }

@@ -10,7 +10,7 @@ The **final** solution can be found [here](https://github.com/faanross/workshop_
 
 
 ## Overview
-Though some of the details will differ, we'll now do the same essential thing for DNS as we just did for HTTPS. In this lesson we'll create the server, then we'll create the DNS agent (lesson 7), and finally we'll adjust our existing runloop to make it compatible with both HTTPS and DNS.
+Though some of the details will differ, we'll now do the same essential thing for DNS as we just did for HTTPS. In this lesson we'll create the server, then we'll create the DNS agent (lesson 7), and finally we'll adjust our existing runloop to make it compatible with both HTTPS and DNS (lesson 8).
 
 When we're done with that we'll have all our foundational communication logic in place, which sets us up perfectly for the development of a trigger signal, parsing, and transition logic in our final chapters.
 
@@ -61,7 +61,7 @@ func NewDNSServer(cfg *config.Config) *DNSServer {
 
 Here our Server is even simpler since we don't need to reference our cert. Further, the `dns.Server` instance is a type from the `miekg/dns` library we just imported.
 
-Note that, unlike HTTPS, we don't need a struct to represent a message. As I explained in the preview section of this workshop, with DNS we're not sending a JSON in a response body, but rather the value of the IP itself in our DNS response will indicate whether the communication protocol should stay the same or should transition.
+Note that, unlike HTTPS, we don't need a struct to represent a message. With DNS we're not sending a JSON in a response body, but rather the value of the IP itself in our DNS response will indicate whether the communication protocol should stay the same or should transition.
 
 
 
@@ -90,7 +90,7 @@ Everything is pretty straightforward, note that we are also defining our handler
 
 ## handleDNSRequest
 
-There's quite a bit more to explain here, have a look at the code first then I'll explain below it.
+There's quite a bit more to explain here, have a look at the code first then I'll explain it below.
 
 ```go
 
