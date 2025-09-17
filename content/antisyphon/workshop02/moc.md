@@ -30,6 +30,9 @@ lectures available here in markdown format.
 
 [//]: # (- [Interfaces + Composition in Golang]&#40;{{< ref "part_a/06_golang.md" >}}&#41;)
 
+- [Setup Guide]({{< ref "part_b/00_setup.md" >}})
+
+
 ## Foundation
 - [Project Structure and Interfaces]({{< ref "part_b/01_interfaces.md" >}})
 - [YAML-based Configuration Management System]({{< ref "part_b/02_yaml.md" >}})

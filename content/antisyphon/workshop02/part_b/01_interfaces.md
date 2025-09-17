@@ -218,5 +218,5 @@ That's it for now, in the next lesson we'll create a more user-friendly implemen
 
 ___
 [|TOC|]({{< ref "../moc.md" >}})
-[|PREV|]({{< ref "../part_a/06_golang.md" >}})
+[|PREV|]({{< ref "00_setup.md" >}})
 [|NEXT|]({{< ref "02_yaml.md" >}})
