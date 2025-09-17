@@ -5,12 +5,12 @@ type: "page"
 ---
 
 ## Preface
-Please note you don't need a special VM for this course since we'll be developing. So I recommend using your base OS ("daily driver")
+Please note you don't need a special VM for this course since we'll be developing. I recommend using your base OS ("daily driver")
 since that way you can just use this setup to continue your coding efforts following this course. If however you wanted to keep
 things "seperated", you could def do it on a VM, it won't hurt, but since that's not required I'm not going to provide instructions.
 
-There are essentially 4 things you need: go, an IDA, the course repo, and "extra apps". I will provide instructions on setting
-these up for all three OS - Windows, Darwin, and Linux. Note I am using Darwin, just my preference, but there should be no reason
+There are essentially 4 things you need: go, an IDE, the course repo, and "extra apps" (optional). I will provide instructions on setting
+these up for all three major OS - Windows, Darwin, and Linux. Note I am using Darwin, just my preference, but there should be no reason
 you could not follow along using any OS.
 
 ## 1. Install Go Programming Language
@@ -47,6 +47,7 @@ you could not follow along using any OS.
 ### Option A: GoLand (Recommended - What I'll Use)
 - Download from: https://www.jetbrains.com/goland/
 - It's a paid tool, but you can get a **30-day free trial** (no credit card needed)
+- You can also use the code `MAX_JETBRAINS` (please keep this on the d-low) to get a 6-month license
 - Just install and open - it configures Go automatically
 
 ### Option B: VS Code (Free Alternative)
@@ -124,9 +125,10 @@ Run these commands to make sure everything works:
 - **Permission errors** - On Mac/Linux, add `sudo` before install commands
 - **Windows security warnings** - It's okay to allow Go and the tools through Windows Defender
 
-## You're All Set! 🎉
+## You're All Set! 
 
 If you completed the checklist above, you're ready for tomorrow's workshop. Don't worry if something doesn't work perfectly - we'll have time at the beginning to help with any setup issues.
+Also as mentioned we'll have two awesome people - Dezzy and Hermon (h,k) - that have offered to help people that are having issues.
 
 See you tomorrow!
 
