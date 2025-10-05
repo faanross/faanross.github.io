@@ -6,8 +6,7 @@ title = 'Courses'
 
 ## Firestarter Maldev Academy
 - [Let's Build a Reflective Loader in Golang]({{< ref "firestarter/reflective/moc.md" >}})
-<!---[Let's Build a C2 over DNS Simulator]({{< ref "firestarter/c2dns/moc.md" >}}) --->
-
+- [The Complete Offensive Security Tooling Development Course in Golang]({{< ref "firestarter/complete_intro/moc.md" >}})
 <br>
 
 ## AntiSyphon 
