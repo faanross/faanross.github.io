@@ -10,7 +10,7 @@ type: "page"
 <br>
 
 ## MODULE 1: FOUNDATIONS & GO-WINDOWS INTEROPERABILITY
-Offensive Tooling Landscape & Career Paths
+[Offensive Tooling Landscape & Career Paths]({{< ref "module01/1_1_landscape.md" >}})
 
 
 
