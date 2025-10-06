@@ -213,6 +213,112 @@ GOOS=windows GOARCH=amd64 garble -literals -tiny build \
 
 ![garbled binary](../img/garbled.png)
 
+We can see that, despite the fact we ran tiny, the binary is now quite a bit larger at 4.3MB. 
+
+So we have some sense of the impact we can have on the file-size, but let's see what actual impact these changes had on analysis.
+
+
+
+### **PE Analysis: Understanding Your Binary**
+
+
+Note that for PE Analysis I'll be using [PEBear](https://github.com/hasherezade/pe-bear) on a Windows system.
+
+If you prefer to use the command-line on MacOS or Linux, you can use `readpe`, which can be installed using:
+
+```shell
+# Linux: Install readpe
+sudo apt-get install pev
+
+# MacOS
+brew install pev
+```
+
+
+For this exercise let's compare the following 3 binaries:
+1. `implant_win64.exe` ("vanilla" Windows 64-bit binary)
+2. `implant_optimized.exe` (debug info stripped + optimized for size, Windows 64-bit binary)
+3. `implant_obfuscated.exe` (strings obfuscated and size optimized using garble, Windows 64-bit binary)
+
+
+#### General
+##### `implant_win64.exe`
+![win64 IAT](../img/win64/00_general.png)
+
+
+##### `implant_optimized.exe`
+![win64 optimized](../img/win_opt/00_general.png)
+
+
+##### `implant_obfuscated.exe`
+![win64 obfuscated](../img/win_obs/00_general.png)
+
+
+##### Observation
+Observation here
+
+
+#### IMPORTS (IAT - Import Address Table)
+##### `implant_win64.exe`
+![win64 IAT](../img/win64/01_IAT.png)
+
+
+##### `implant_optimized.exe`
+![win64 optimized](../img/win_opt/01_IAT.png)
+
+
+##### `implant_obfuscated.exe`
+![win64 obfuscated](../img/win_obs/01_IAT.png)
+
+
+##### Observation
+Observation here
+
+#### IMPORTS (IAT - Import Address Table)
+##### `implant_win64.exe`
+![win64 IAT](../img/win64/02_strings.png)
+
+
+##### `implant_optimized.exe`
+![win64 optimized](../img/win_opt/02_strings.png)
+
+
+##### `implant_obfuscated.exe`
+![win64 obfuscated](../img/win_obs/02_strings.png)
+
+
+##### Observation
+Observation here
+
+
+
+
+### **Entropy Analysis: Quantifying Obfuscation**
+
+Though, as we just saw, tools like garble can be helpful in obfuscating our code, this does potentially come at a cost.
+Normal, compiled code and legitimate data have structure and repetition, which results in low-to-medium entropy. 
+In contrast, the primary goal of packing and encryption is to destroy the original structure and make the data appear as 
+random as possible. Entropy is the "measure of randomness", and analysts can use it 
+as a quick and effective proxy to detect obfuscation.
+
+So let's see what impact our obfuscation had on our entropy level. For this exercise I'll be using [Detect-It-Easy](https://github.com/horsicq/Detect-It-Easy),
+which is available for all OS. Note that if you prefer other tools that may be used include PEStudio, Binwalk, and CyberChef.
+
+
+#### implant_win64.exe
+
+
+
+#### implant_optimized.exe
+
+
+
+#### implant_obfuscated.exe
+
+
+
+#### Observation
+
 
 
 
