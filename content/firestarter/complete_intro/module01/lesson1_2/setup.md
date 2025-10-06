@@ -255,7 +255,10 @@ For this exercise let's compare the following 3 binaries:
 
 
 ##### Observation
-Observation here
+We can observe that while the MD5, SHA1, and SHA256 hashes are all affected by the different compiling techniques,
+the ImpHash is not. 
+
+**Knowledge Check** - explain why this is the case from first principles. 
 
 
 #### IMPORTS (IAT - Import Address Table)
@@ -272,24 +275,27 @@ Observation here
 
 
 ##### Observation
-Observation here
+Our IAT is unaffected - neither stripping the debug info, nor obfuscating strings has any impact on which modules
+are statically linked, nor which module functions are being called.
 
-#### IMPORTS (IAT - Import Address Table)
+**Knowledge Check** - explain why this is the case from first principles.
+
+#### Strings
 ##### `implant_win64.exe`
 ![win64 IAT](../img/win64/02_strings.png)
-
+- Observe entry 7388 for example, we can see the complete path the source file
 
 ##### `implant_optimized.exe`
 ![win64 optimized](../img/win_opt/02_strings.png)
-
+- The same entry, now labelled 7391, still displays the source file name, but the path is stripped.
 
 ##### `implant_obfuscated.exe`
 ![win64 obfuscated](../img/win_obs/02_strings.png)
-
+- All the strings are now garbled - they are randomized strings and symbols.
 
 ##### Observation
-Observation here
-
+Our original compilation preserves a lot of sensitive information about our build and environment. Stripping the 
+debug info removes a lot (though not all) sensitive information. Using garble to obfuscate our strings blurs all the info.
 
 
 
