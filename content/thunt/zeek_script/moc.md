@@ -3,11 +3,6 @@ showTableOfContents: true
 title: "The Complete Zeek Scripting Course for Network Threat Hunting"
 type: "page"
 ---
-<br>
-
-
-
-
 
 ## MODULE 1: Foundations
 ### Lesson 1.1: Zeek Ecosystem Overview
