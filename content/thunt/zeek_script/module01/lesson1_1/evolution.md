@@ -38,12 +38,9 @@ The rebranding to Zeek marked more than just a name change. It represented a mat
 
 Today, Zeek is deployed in environments ranging from small businesses to Fortune 500 companies, from university networks to critical infrastructure providers. It's used by government agencies for national security missions and by managed security service providers offering network monitoring services to their clients. The tool that began as one graduate student's research project has become a cornerstone of modern network security monitoring.
 
----
-
-
 
 ---
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "../../moc.md" >}})
-[|NEXT|]({{< ref "../../moc.md" >}})
+[|NEXT|]({{< ref "./philos.md" >}})
 

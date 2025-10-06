@@ -7,11 +7,14 @@ title = 'Courses'
 ## Firestarter Maldev Academy
 - [Let's Build a Reflective Loader in Golang]({{< ref "firestarter/reflective/moc.md" >}})
 - [The Complete Offensive Security Tooling Development Course in Golang]({{< ref "firestarter/complete_intro/moc.md" >}})
+
+<br>
 <br>
 
 ## Network Threat Hunting
 - [The Complete Zeek Scripting Course for Network Threat Hunting]({{< ref "thunt/zeek_script/moc.md" >}})
 
+<br>
 <br>
 
 ## AntiSyphon 
