@@ -1,13 +1,13 @@
 ---
 showTableOfContents: true
-title: "The Complete Offensive Security Tooling Development Course in Golang"
+title: "The Complete Zeek Scripting Course for Network Threat Hunting"
 type: "page"
 ---
 <br>
 
-![firestarter](../img/keif.gif)
 
-<br>
+
+
 
 ## MODULE 1: Foundations
 ### Lesson 1.1 - Offensive Tooling Landscape & Career Paths
@@ -19,6 +19,6 @@ type: "page"
 
 <br>
 
-![dancing_ghost](../img/max.gif)
+
 
 ___
