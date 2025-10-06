@@ -175,7 +175,45 @@ GOOS=linux GOARCH=amd64 go build -o implant_linux64 implant.go
 ls -lh implant_*
 ```
 
+<br> 
+
 ![different os sizes](../img/os_sizes.png)
+
+We can see here that the size of both the linux64 and win32 executables are 2.8MB, while the win64MB is 3.0MB.
+
+Let's see what effect it will have if we strip the debug info:
+
+```bash
+# Strip debug info, reduce size
+GOOS=windows GOARCH=amd64 go build \
+  -ldflags="-s -w" \
+  -trimpath \
+  -o implant_optimized.exe \
+  implant.go
+
+```
+<br> 
+
+![stripped binary](../img/stripped.png)
+
+By stripping the debug info we've now managed to reduce the size further to 2.0MB.
+
+Let's now use garble to encrypt our string:
+
+```bash
+# Obfuscate code
+GOOS=windows GOARCH=amd64 garble -literals -tiny build \
+  -o implant_obfuscated.exe \
+  implant.go
+# -literals: encrypt strings
+# -tiny: optimize for size
+```
+
+<br> 
+
+![garbled binary](../img/garbled.png)
+
+
 
 
 
