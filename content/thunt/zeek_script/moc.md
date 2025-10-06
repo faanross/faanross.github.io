@@ -26,16 +26,18 @@ type: "page"
 - [Part 4 - Practical Exercises]({{< ref "module01/lesson1_2/exercises.md" >}})
 - [Part 5 - Knowledge Validation]({{< ref "module01/lesson1_2/validation.md" >}})
 
+### Lesson 1.3: Installation + Deployment
+- [Part 1 - Preparing Your Installation Environment]({{< ref "module01/lesson1_3/prepare.md" >}})
+- [Part 2 - Installation Method 1: Package Manager]({{< ref "module01/lesson1_3/package.md" >}})
+- [Part 3 - Installation Method 2: Compiling From Source]({{< ref "module01/lesson1_3/compile.md" >}})
+- [Part 4 - Installation Method 3: Docker Container]({{< ref "module01/lesson1_3/docker.md" >}})
+- [Part 5 - Configuration + Initial Setup]({{< ref "module01/lesson1_3/configure.md" >}})
+- [Part 6 - Starting Zeek and Capturing Your First Traffic]({{< ref "module01/lesson1_3/start.md" >}})
+- [Part 7 - Basic Operations + Management]({{< ref "module01/lesson1_3/management.md" >}})
+- [Part 8 - Practical Exercises]({{< ref "module01/lesson1_3/exercises.md" >}})
+- [Part 9 - Knowledge Validation]({{< ref "module01/lesson1_3/validation.md" >}})
 
 
-
-
-
-
-
-prac
-
-val
 
 
 
