@@ -32,7 +32,8 @@ type: "page"
 
 
 ### Lesson 1.3 - Windows Internals Review For Offensive Operations
-- [Part 1 - Process and Thread Architecture]({{< ref "module01/lesson1_3/process.md" >}})
+- [Part 1 - Process Architecture]({{< ref "module01/lesson1_3/process.md" >}})
+- [Part 2 - Thread Architecture]({{< ref "module01/lesson1_3/thread.md" >}})
 
 
 
