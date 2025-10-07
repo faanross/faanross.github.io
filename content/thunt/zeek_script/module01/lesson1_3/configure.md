@@ -198,6 +198,42 @@ This directional context is critical for many Zeek detection scripts.
 
 
 
+#### **3. zeekctl.cfg - ZeekControl Settings**
+
+Review and adjust these key settings:
+
+```bash
+sudo nano /opt/zeek/etc/zeekctl.cfg
+```
+
+**Settings to configure:**
+
+```ini
+# Email for notices (optional - change if you want email alerts)
+MailTo = root@localhost
+
+# Log rotation: how often to rotate logs (in seconds)
+# 3600 = 1 hour (default)
+LogRotationInterval = 3600
+
+# Log expiration: how long to keep old logs
+# 0 = never expire (default)
+# Set to number of days if you want automatic cleanup
+LogExpireInterval = 28
+
+# Stats logging (keep enabled to track Zeek performance)
+StatsLogEnable = 1
+StatsLogExpireInterval = 0
+```
+
+**Recommended changes for learning/testing:**
+
+```ini
+LogRotationInterval = 3600    # Keep at 1 hour (good default)
+LogExpireInterval = 28          # Delete logs after 28 days (saves disk space)
+```
+
+
 
 
 
