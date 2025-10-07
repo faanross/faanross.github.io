@@ -1,12 +1,12 @@
 ---
 showTableOfContents: true
-title: "Part 5 - Practical: Setting Up Your Offensive Go Environment"
+title: "Part 5 - Practical Exercises"
 type: "page"
 ---
 
-## **PART 5: PRACTICAL - SETTING UP YOUR OFFENSIVE GO ENVIRONMENT**
+## **PART 5: PRACTICAL EXERCISES**
 
-### **Development Environment Setup**
+### **Exercise 1: Development Environment Setup**
 
 Let's build a professional cross-compilation environment for offensive Go development.
 
@@ -114,7 +114,7 @@ code --install-extension golang.go
 ```
 
 
-### **Your First Offensive Go Binary**
+### **Exercise 2: Compile Your First Offensive Go Binary**
 
 Let's build a simple but functional reverse shell, then analyze it.
 
@@ -219,8 +219,11 @@ So we have some sense of the impact we can have on the file-size, but let's see 
 
 
 
-### **PE Analysis: Understanding Your Binary**
+### **Exercise 3: PE Analysis**
 
+**NOTE:** We will do a basic, superficial analysis here. This is just to get you acquainted with some of the tooling 
+we'll be using in the course, in future lessons we'll perform these same analyses in much more depth once we've 
+established the required insight. 
 
 Note that for PE Analysis I'll be using [PEBear](https://github.com/hasherezade/pe-bear) on a Windows system.
 
@@ -299,31 +302,37 @@ debug info removes a lot (though not all) sensitive information. Using garble to
 
 
 
-### **Entropy Analysis: Quantifying Obfuscation**
+### **Exercise 4: Entropy Analysis**
 
-Though, as we just saw, tools like garble can be helpful in obfuscating our code, this does potentially come at a cost.
-Normal, compiled code and legitimate data have structure and repetition, which results in low-to-medium entropy. 
-In contrast, the primary goal of packing and encryption is to destroy the original structure and make the data appear as 
-random as possible. Entropy is the "measure of randomness", and analysts can use it 
-as a quick and effective proxy to detect obfuscation.
-
-So let's see what impact our obfuscation had on our entropy level. For this exercise I'll be using [Detect-It-Easy](https://github.com/horsicq/Detect-It-Easy),
+Entropy is the "measure of randomness", and analysts can use it as a quick and effective proxy to detect obfuscation. So let's see what impact our obfuscation had on our entropy level. For this exercise I'll be using [Detect-It-Easy](https://github.com/horsicq/Detect-It-Easy),
 which is available for all OS. Note that if you prefer other tools that may be used include PEStudio, Binwalk, and CyberChef.
 
 
 #### implant_win64.exe
+![win64 IAT](../img/win64/04_entropy.png)
+
 
 
 
 #### implant_optimized.exe
-
+![win64 optimized](../img/win_opt/04_entropy.png)
 
 
 #### implant_obfuscated.exe
-
-
+![win64 obfuscated](../img/win_obs/04_entropy.png)
 
 #### Observation
+The entropy analysis of these three binaries reveals a counterintuitive but fundamental principle about what actually drives high entropy in executable files. At first glance, we'd expect the garbled binary to show the highest entropy since it's intentionally obfuscated with scrambled strings and mangled identifiers, yet it actually shows lower entropy than the first, unmodified binary. The explanation lies in understanding what truly maximizes randomness in binary data.
+
+The first binary, compiled with a standard `go build` command, achieved the highest entropy rating of 6.84 (85% packed classification) not because of any obfuscation or packing, but because Go's compiler embedded compressed debug sections like `.zdebug_line` into the executable.
+
+These compressed sections exhibit entropy values approaching 8.0 - near-perfect randomness - because compression algorithms eliminate redundancy and create dense, highly efficient data representations. When we look at the entropy graph, that flat line at the top represents these compressed sections dominating the overall entropy calculation.
+
+When we stripped the debug information from the second binary, you removed precisely those high-entropy compressed sections, which is why the overall entropy dropped to 6.13 (76% not packed).
+
+Similarly, the garbled binary, while containing thoroughly obfuscated strings and control flow, doesn't incorporate compression and was  also stripped of debug symbols. Garble's obfuscation creates complexity and makes reverse engineering harder, but obfuscated code still contains patterns and structure that prevent it from achieving the near-perfect randomness that compression delivers.
+
+The fundamental lesson here is that **compressed data consistently produces higher entropy than obfuscated code,** which means debug symbols and compression have a far greater impact on entropy measurements than deliberate obfuscation techniques - a surprising reality that highlights how entropy alone cannot reliably distinguish between legitimate optimized binaries and intentionally packed malware.
 
 
 
@@ -332,4 +341,4 @@ which is available for all OS. Note that if you prefer other tools that may be u
 ---
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "./runtime.md" >}})
-[|NEXT|]({{< ref "../../moc.md" >}})
+[|NEXT|]({{< ref "./validation.md" >}})

@@ -27,6 +27,12 @@ type: "page"
 - [Part 3 - Language Comparison - Go vs the Competition]({{< ref "module01/lesson1_2/comparison.md" >}})
 - [Part 4 - Go Runtime Internals Relevant to Evasion]({{< ref "module01/lesson1_2/runtime.md" >}})
 - [Part 5 - Practical: Setting Up Your Offensive Go Environment]({{< ref "module01/lesson1_2/setup.md" >}})
+- [Part 6 - Knowledge Validation]({{< ref "module01/lesson1_2/validation.md" >}})
+- [Part 7 - Conclusion + Next Steps]({{< ref "module01/lesson1_2/conclusion.md" >}})
+
+
+### Lesson 1.3 - Windows Internals Review For Offensive Operations
+- [Part 1 - Process and Thread Architecture]({{< ref "module01/lesson1_3/process.md" >}})
 
 
 
