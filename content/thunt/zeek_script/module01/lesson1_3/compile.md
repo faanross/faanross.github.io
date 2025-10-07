@@ -63,7 +63,7 @@ sudo apt install -y libpcap-dev libssl-dev python3-dev \
     swig zlib1g-dev libmaxminddb-dev
 
 # Optional but recommended libraries
-sudo apt install -y flex bison libkrb5-dev
+sudo apt install -y flex bison libkrb5-dev libgoogle-perftools-dev libzmq3-dev
 ```
 
 **Understanding the dependencies:**
@@ -115,6 +115,7 @@ cd ~/src
 # Clone the Zeek repository
 git clone --recursive https://github.com/zeek/zeek
 cd zeek
+git submodule update --init –recursive
 
 # Check out the latest stable release
 git checkout v8.0.1  # Or whatever the latest stable version is
