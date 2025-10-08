@@ -16,31 +16,27 @@ theme = 'gokarna'
     url = "/courses/"
     weight = 1
 
-  [[menu.main]]
-    name = "guides"
-    url = "/guides/"
-    weight = 2
 
 [[menu.main]]
 name = "malware"
 url = "/malware/"
-weight = 3
+weight = 2
 
 
 [[menu.main]]
 name = "articles"
 url = "/articles/"
-weight = 4
+weight = 3
 
 [[menu.main]]
 name = "talks"
 url = "/talks/"
-weight = 5
+weight = 4
 
   [[menu.main]]
     name = "about"
     url = "/about/"
-    weight = 6
+    weight = 5
 
 
 
