@@ -4,9 +4,7 @@ title: "Part 2 - Thread Architecture"
 type: "page"
 ---
 
-
-## Part 2: Thread Architecture
-### Thread Anatomy
+## Thread Anatomy
 
 **Processes don't execute - threads execute.** A process is merely a container that holds resources like memory, file handles, and security context. The actual execution - the running of instructions - happens within threads, which are the fundamental units of CPU scheduling.
 
@@ -40,7 +38,7 @@ type: "page"
 └──────────────────────────────────────────────────────────────┘
 ```
 
-#### Kernel Thread (ETHREAD/KTHREAD)
+### Kernel Thread (ETHREAD/KTHREAD)
 
 This is the kernel's representation of a thread - the operating system's internal data structure that tracks everything the OS needs to manage and schedule the thread.
 
@@ -50,7 +48,7 @@ This is the kernel's representation of a thread - the operating system's interna
 - **Kernel stack pointer**: Points to a separate stack used when the thread executes kernel-mode code (like system calls); this is distinct from the user-mode stack.
 - **Context (register values)**: The saved CPU register state that allows the OS to pause a thread and resume it later exactly where it left off.
 
-#### User Thread Components
+### User Thread Components
 
 These are the user-mode structures that exist in the process's address space and support thread execution outside the kernel.
 
@@ -58,7 +56,7 @@ These are the user-mode structures that exist in the process's address space and
 - **User stack**: Private memory allocated for this thread's function call chain, local variables, and return addresses; each thread gets its own stack to prevent interference.
 - **TLS (Thread Local Storage)**: A mechanism for storing variables that are unique to each thread, allowing global-like variables that don't conflict across multiple threads.
 
-#### Thread Context (CPU State)
+### Thread Context (CPU State)
 
 When the OS switches between threads (context switching), it must save and restore the CPU's entire state so each thread can resume exactly where it stopped.
 
@@ -70,7 +68,7 @@ When the OS switches between threads (context switching), it must save and resto
 - **RFLAGS (CPU Flags)**: Contains status bits like zero flag, carry flag, and interrupt enable that reflect the result of the last operation and control CPU behaviour.
 
 
-### Thread States
+## Thread States
 
 ```
 Thread Lifecycle:
@@ -93,31 +91,31 @@ States:
 
 A thread's journey through its lifetime is managed by the operating system's scheduler, which orchestrates when and how threads gain access to the CPU. Understanding this lifecycle is fundamental to grasping how multitasking and concurrency work at the system level.
 
-#### The Journey Begins: Creation
+### The Journey Begins: Creation
 
 When a new thread is created - whether at process startup or spawned by an existing thread - it enters the **Created** state. At this point, the OS has allocated the necessary data structures (kernel thread object, stack space, TEB) but hasn't yet made the thread eligible for execution. From here, the thread moves to the Ready state to join the queue of threads waiting for CPU time, or in rare cases, it might be terminated immediately if the creating process exits before the thread ever runs.
 
-#### Ready: Waiting in the Wings
+### Ready: Waiting in the Wings
 
 In the **Ready** state, the thread is fully prepared to execute - all initialization is complete, and it's simply waiting for the scheduler to assign it to a CPU core. This is the waiting room where threads compete for processor time based on their priority levels. Threads can return to this state from Running when they're preempted (forcibly removed from the CPU to give other threads a turn) or from Waiting when whatever blocked them has completed.
 
-#### Running: The Spotlight
+### Running: The Spotlight
 
 The **Running** state is where the action happens - the thread is actively executing instructions on a physical CPU core. Only as many threads can be in this state simultaneously as there are CPU cores available. A running thread doesn't stay running forever; it will transition out when it voluntarily waits for something (I/O, a lock, a timer), gets preempted by the scheduler to enforce fair sharing, or completes its work and terminates.
 
-#### Waiting: Blocked and Patient
+### Waiting: Blocked and Patient
 
 When a thread enters the **Waiting** state, it has voluntarily relinquished the CPU because it needs something that isn't immediately available - perhaps it's waiting for disk I/O to complete, for another thread to release a mutex, for a network packet to arrive, or for a timer to expire. The thread remains in this blocked state, consuming no CPU cycles, until the awaited event occurs. Once the wait condition is satisfied, the OS moves the thread back to the Ready state where it competes again for CPU time.
 
-#### The Preemption Cycle
+### The Preemption Cycle
 
 The arrow between Running and Ready (marked "Preempted") represents one of the scheduler's most important responsibilities: enforcing fairness and responsiveness. Even if a thread is happily executing and hasn't requested anything, the scheduler will periodically interrupt it - typically after a time slice of 10-30 milliseconds - and move it back to Ready, giving other threads a chance to run. This preemptive multitasking prevents any single thread from monopolizing the CPU.
 
-#### Terminated: The End
+### Terminated: The End
 
 Eventually, every thread reaches the **Terminated** state, either by completing its main function, being explicitly killed, or when its parent process exits. Once terminated, the thread no longer exists as an executable entity, though some cleanup and bookkeeping may still occur before the OS fully reclaims its resources. This is a one-way transition - terminated threads cannot be resurrected.
 
-#### **States Summary:**
+### **States Summary:**
 
 - **Created**: The OS has allocated the necessary data structures for the thread to exist, but hasn't yet made the thread eligible for execution.
 - **Ready**: The thread is runnable and waiting in the scheduler's queue for its turn on a CPU core; it has everything it needs except processor time.
@@ -128,8 +126,7 @@ Eventually, every thread reaches the **Terminated** state, either by completin
 
 
 
-
-### Offensive Thread Manipulation
+## Offensive Thread Manipulation
 
 **NOTE**: In this case I won't provide functioning code, just an outline with comments. Providing the complete logic would require multiple leaps over knowledge gaps, and I'm afraid that act will cause more confusion than anything else at this point. But don't fret - we will return to this application in Module 5 and develop it in all its glory. For now, just read the code (you won't be able to compile), and get a sense for the overall structure and logical flow.
 
@@ -184,7 +181,7 @@ func InjectDLL(processHandle syscall.Handle, dllPath string) error {
 
 
 
-### **The TEB (Thread Environment Block)**
+## **The TEB (Thread Environment Block)**
 
 Similar to what we see in the previous section on Processes, the `ETHREAD/KTHREAD` contains important information related to the thread, but since it resides in kernel memory we cannot access it directly from userland. We can however again access another user-mode structure, the **TEB**, which makes this information available to us.
 
