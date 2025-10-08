@@ -29,6 +29,82 @@ This is foundational knowledge. Every subsequent module builds on these concepts
 
 ---
 
+## **PART 1:  PROCESS ARCHITECTURE**
+
+### **The Process: Windows' Fundamental Execution Container**
+
+A Windows process is fundamentally a container - a protective boundary that holds resources, memory, and security context. While threads perform the actual execution, the process provides the environment in which they operate, isolating each application from others and managing the resources they can access.
+
+For a visual overview see this [video](https://www.youtube.com/watch?v=LAnWQFQmgvI).
+
+```  
+┌──────────────────────────────────────────────────────────────┐  
+│                    WINDOWS PROCESS ANATOMY                   │  
+├──────────────────────────────────────────────────────────────┤  
+│                                                              │  
+│  PROCESS COMPONENTS:                                         │  
+│                                                              │  
+│  1. EXECUTIVE PROCESS (EPROCESS)                             │  
+│     • Kernel-mode structure                                  │  
+│     • Process ID (PID)                                       │  
+│     • Parent process ID (PPID)                               │  
+│     • Token (security context)                               │  
+│     • Handle table                                           │  
+│     • VAD tree (memory mappings)                             │  
+│                                                              │  
+│  2. VIRTUAL ADDRESS SPACE                                    │  
+│     • 0x00000000 - 0x7FFFFFFF: User space (2GB/4GB*)         │  
+│     • 0x80000000 - 0xFFFFFFFF: Kernel space (2GB/4GB*)       │  
+│     • *On 64-bit: User = 0x000 - 0x7FF..., much larger       │  
+│     • Private, isolated per process                          │  
+│                                                              │  
+│  3. PRIMARY TOKEN                                            │  
+│     • User SID (Security Identifier)                         │  
+│     • Group memberships                                      │  
+│     • Privileges (SeDebugPrivilege, etc.)                    │  
+│     • Integrity level (Low/Medium/High/System)               │  
+│                                                              │  
+│  4. HANDLE TABLE                                             │  
+│     • References to kernel objects                           │  
+│     • Files, registry keys, processes, threads               │  
+│     • Each handle has access rights                          │  
+│                                                              │  
+│  5. PEB (Process Environment Block)                          │  
+│     • User-mode structure (visible to process)               │  
+│     • Module list (loaded DLLs)                              │  
+│     • Command line parameters                                │  
+│     • Environment variables                                  │  
+│                                                              │  
+│  6. THREADS                                                  │  
+│     • At least one (primary thread)                          │  
+│     • Each has own stack and TEB                             │  
+│     • Share process address space                            │  
+│                                                              │  
+└──────────────────────────────────────────────────────────────┘  
+```  
+
+
+
+
+#### 1. Executive Process (EPROCESS)
+
+The **EPROCESS** is the kernel's master record for a process - a large data structure maintained in kernel memory that contains everything the operating system needs to manage and track the process.
+
+- **Kernel-mode structure**: This exists in protected kernel memory, invisible and inaccessible to the process itself - only the OS can read or modify it.
+- **Process ID (PID)**: A unique numerical identifier that distinguishes this process from all others currently running on the system.
+- **Parent process ID (PPID)**: Records which process spawned this one, creating a family tree of processes useful for tracking relationships and inheritance.
+- **Token (security context)**: A pointer to the security token that determines what this process is allowed to do - what files it can access, what privileges it holds.
+- **Handle table**: A process-private table that maps handle values (like file handles) to actual kernel objects, allowing the process to reference system resources.
+- **VAD tree (Virtual Address Descriptor tree)**: A data structure tracking all memory regions allocated to the process - which addresses are valid, what protections they have, and what they're mapped to.
+
+#### 2. Virtual Address Space
+
+Every process receives its own private virtual address space - an illusion of having the entire memory range to itself, even though physical RAM is shared among all processes. Remember, parts of the VAS that are not actively being used can also be mapped to disk (SWAP).
+
+- **User space (0x00000000 - 0x7FFFFFFF on 32-bit)**: This is where the process's code, data, heap, and stacks live; the process can freely access this region.
+- **Kernel space (0x80000000 - 0xFFFFFFFF on 32-bit)**: Reserved for the operating system kernel; attempting to access these addresses from user mode triggers an access violation.
+- **64-bit expansion**: On 64-bit systems, user space extends to 128TB (`0x00000000` - `0x00007FFF'FFFFFFFF`), providing vastly more virtual memory for large applications.
+- **Private and isolated**: Each process's address space is separate; a pointer to address `0x00400000` in one process refers to completely different physical memory than the same address in another process.
 
 
 
