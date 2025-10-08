@@ -202,10 +202,100 @@ typedef struct _TEB {
 ```
 
 
+### **Accessing TEB:**
+
+To access the TEB directly we'll need to use CGO. Note that we'll cover this much more extensively in later lessons, for now I just wanted to use this opportunity to give you a quick preview. Essentially, CGO is a bridge between Go and C/C++ code, which we need to use in those cases where no library functions exists in Go for performing our desired operation, and so we can then use it to access Windows C macros/functions directly.
+
+In this specific case, in order to read the TEB address, we need to access the GS segment register (on x64, the GS base address IS the TEB address).  But Go has no native way to do this - and so we use CGO to leverage C's `NtCurrentTeb()` macro which compiles to the necessary assembly instructions. `NtCurrentTeb()` essentially compiles to `__readgsqword(0x30)` or similar assembly.
 
 
+```go
+//go:build windows
+// +build windows
+
+package main
+
+/*
+#include <windows.h>
+#include <winternl.h>
+
+void* GetTEB() {
+    return NtCurrentTeb();
+}
+*/
+
+import "C"
+import (
+	"fmt"
+	"unsafe"
+)
+
+func main() {
+	teb := uintptr(C.GetTEB())
+	fmt.Printf("TEB Address: 0x%X\n", teb)
+
+	// Read PEB from TEB+0x60 (x64)
+	peb := *(*uintptr)(unsafe.Pointer(teb + 0x60))
+	fmt.Printf("PEB Address: 0x%X\n", peb)
+
+	// Optional: Read some PEB fields to verify
+	// ImageBaseAddress is at PEB+0x10
+	imageBase := *(*uintptr)(unsafe.Pointer(peb + 0x10))
+	fmt.Printf("Image Base Address: 0x%X\n", imageBase)
+}
+
+```
+
+
+As you can see above, in lines 6 to 13, we are writing C code directly inside our `*.go` file, with its boundaries indicated with `/*` to `*/`. Here specifically we are defining a function that calls `NtCurrentTeb()`, which is not an exported function but a compiler intrinsic or macro that directly reads from the GS segment register.
+
+Also note the following idiomatic applications of CGO:
+- **`import "C"`**: Compiler generates glue code to call C from Go
+- **`C.GetTEB()`**: Go calls C function, gets TEB pointer
+- **`unsafe.Pointer`**: Read memory at TEB+0x60 to get PEB address
+
+Now to compile this code we need to use our OS native C-compiler. That means of course that you have to have one installed on your system, otherwise this code will not compile.
+
+So our `go build` command becomes
+```bash
+CGO_ENABLED=1 GOOS=windows GOARCH=amd64 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ go build -o teb_access.exe teb_access.go
+```
+
+- `CGO_ENABLED=1` tells `go build` we want to use CGO
+- `CC` is our C-compiler
+- `CXX` is our C++-compiler, which we don't technically need in this case since we are using pure C, however I am including it for completeness so it can be referenced in future cases where we may use C++ logic as well.
+
+
+Once we run it we can expect the following output:
+```shell
+PS C:\Users\tresa\OneDrive\Desktop> .\teb_access.exe
+TEB Address: 0x3EE000
+PEB Address: 0x3ED000
+Image Base Address: 0x7FF7A5CA0000
+```
+
+So we can see here the following 3 addresses:
+- **TEB Address: 0x3EE000** - Thread Environment Block (per-thread data structure)
+- **PEB Address: 0x3ED000** - Process Environment Block (per-process data structure)
+- **Image Base: 0x7FF7A5CA0000** - Where your .exe is loaded in memory
+
+Notice TEB and PEB are close together (0x1000 bytes apart = 4KB), which is expected. We expect the relationship: `PEB = TEB + 0x60`.
+
+
+### **Offensive TEB Uses:**
+
+```
+TEB Field                | Offensive Application
+───────────────────────────────────────────────────────────────
+LastErrorValue           | Debugging injected code
+ThreadLocalStoragePointer| Hiding data per-thread
+ProcessEnvironmentBlock  | Gateway to PEB (module lists, etc.)
+ClientId                 | Getting own TID without API call
+```
 
 ---
+
+
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "./process.md" >}})
 [|NEXT|]({{< ref "../../moc.md" >}})
