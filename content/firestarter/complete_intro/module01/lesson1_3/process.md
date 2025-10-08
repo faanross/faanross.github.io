@@ -107,6 +107,36 @@ Every process receives its own private virtual address space - an illusion of ha
 - **Private and isolated**: Each process's address space is separate; a pointer to address `0x00400000` in one process refers to completely different physical memory than the same address in another process.
 
 
+#### 3. Primary Token
+The **primary token** is the process's security badge - it defines the security identity under which the process runs and what actions it's authorized to perform.
+
+- **User SID (Security Identifier)**: Identifies which user account owns this process, forming the basis of access control decisions throughout Windows.
+- **Group memberships**: Lists all security groups the user belongs to (Administrators, Users, etc.), which collectively determine permissions.
+- **Privileges**: Special rights that override normal security checks, like `SeDebugPrivilege` (attach to any process) or `SeBackupPrivilege` (bypass file security for backups).
+- **Integrity level**: A mandatory access control layer where Low-integrity processes (like sandboxed browsers) cannot modify resources owned by Medium or High-integrity processes, preventing privilege escalation.
+
+#### 4. Handle Table
+The **handle table** is the process's directory of system resources - a mapping between small integer handles and actual kernel objects that the process can use.
+
+- **References to kernel objects**: Handles are indirect references; instead of raw pointers, processes use handles which the kernel translates to actual object addresses.
+- **Resource variety**: Handles can refer to diverse objects - open files, registry keys, synchronization primitives (mutexes, events), other processes or threads, and more.
+- **Access rights per handle**: Each handle carries its own permission mask; a process might have read-only access to one file handle and read-write access to another.
+
+#### 5. PEB (Process Environment Block)
+The **PEB** is a user-mode data structure that lives in the process's own address space, providing the process with information about itself and its environment.
+
+- **User-mode accessibility**: Unlike `EPROCESS`, the PEB resides in user space where the process can directly read it without kernel transitions.
+- **Module list (loaded DLLs)**: Contains linked lists of all loaded modules (EXEs and DLLs), their base addresses, and names - essential for dynamic linking and introspection.
+- **Command line parameters**: Stores the full command line that launched the process, accessible via standard APIs like `GetCommandLine()`.
+- **Environment variables**: A block of null-terminated strings containing environment variables (`PATH`, `TEMP`, `USERNAME`) inherited from the parent process or set at creation.
+
+#### 6. Threads
+While a process owns resources, **threads** are what actually execute code - they're the workers operating within the process's environment.
+
+- **At least one (primary thread)**: Every process begins with one thread created automatically at process startup; the process lives as long as at least one thread remains.
+- **Each has own stack and TEB**: Threads need private stacks for function calls and Thread Environment Blocks for thread-specific data, but these are allocated within the process's shared address space.
+- **Share process address space**: All threads in a process see the same memory - they can access the same global variables, heap allocations, and code, which enables easy communication but requires careful synchronization.
+
 
 
 ---
