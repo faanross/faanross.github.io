@@ -488,6 +488,1058 @@ Together, these protections make memory exploitation extraordinarily difficult, 
 
 
 
+## Virtual Address Descriptors (VADs): The Kernel's Memory Map
+
+When a process allocates memory, opens a file mapping, or loads a DLL, the operating system needs to track what memory regions exist, where they are, what permissions they have, and what they represent. The kernel accomplishes this through **Virtual Address Descriptors (VADs)** - a sophisticated data structure that maintains a complete map of every memory region in a process's address space.
+
+### What Are VADs?
+
+**VADs** are kernel data structures that describe memory regions. Each VAD node represents a contiguous range of virtual addresses with consistent properties: the same protection flags, the same type (heap vs. file-backed), and the same backing store. The kernel organizes these VADs into a **balanced binary tree** for efficient lookup, allowing it to quickly answer questions like "what's at address 0x00400000?" or "is this memory region valid?"
+
+Think of the VAD tree as the kernel's authoritative registry of a process's memory landscape - every allocated region, every mapped file, every loaded DLL has a corresponding VAD entry. Without VADs, the kernel would have no way to track what memory belongs to a process or enforce access controls.
+
+
+
+
+### VAD Tree Structure: Organizing Memory Regions
+
+The kernel maintains one **VAD tree per process**, rooted in the `EPROCESS` structure. This tree organizes memory regions hierarchically for fast searching.
+
+```
+                    VAD TREE FOR A PROCESS
+                    
+              Root VAD (0x10000000-0x20000000)
+              Protection: PAGE_READWRITE
+              Type: Private (Heap)
+                         /              \
+                        /                \
+                       /                  \
+         (0x00400000-0x00500000)    (0x30000000-0x40000000)
+         Protection: PAGE_EXECUTE_READ   Protection: PAGE_READWRITE
+         Type: Image (notepad.exe)       Type: Mapped (data file)
+              /            \                    /              \
+             /              \                  /                \
+    (0x00100000-      (0x76D00000-    (0x20000000-       (0x50000000-
+     0x00200000)       0x76E00000)     0x20010000)        0x50020000)
+     Stack             ntdll.dll       Shared Memory      Private Heap
+     RW-, Private      R-X, Image      RW-, Shareable     RW-, Private
+```
+
+
+
+### How the Tree Works
+
+**Binary Search Efficiency:**
+
+- The tree is organized by address ranges - left children have lower addresses, right children have higher
+- Looking up "what's at address `0x76D50000`?" requires only `log(N`) comparisons
+- Without the tree, the kernel would need to scan every memory region linearly
+
+**Each VAD Node Contains:**
+
+| Field                          | Purpose                                                |
+| ------------------------------ | ------------------------------------------------------ |
+| **Start Address**              | Beginning of this memory region (e.g., `0x00400000`)   |
+| **End Address**                | End of this memory region (e.g., `0x00500000`)         |
+| **Protection Flags**           | `PAGE_EXECUTE_READ`, `PAGE_READWRITE`, etc.            |
+| **VAD Type**                   | Private, Image, Mapped, Shareable                      |
+| **File Object Pointer**        | For mapped files/DLLs: points to the underlying file   |
+| **Commit Charge**              | How much physical memory or page file this region uses |
+| **Parent/Left/Right Pointers** | Tree structure navigation                              |
+
+**Dynamic Updates:**
+
+- When `VirtualAlloc()` is called, the kernel creates a new VAD node and inserts it into the tree
+- When `VirtualFree()` is called, the corresponding VAD is removed
+- When `VirtualProtect()` changes permissions, the VAD's protection flags are updated
+
+
+
+
+### Enumerating VADs from User Mode: Practical Reconnaissance
+
+While the kernel maintains the VAD tree internally, we can query memory regions from userland using the **VirtualQuery()** API. This allows an application to enumerate its own memory layout - or for offensive tools, to map a target process's address space.
+
+#### Memory Region Scanner
+
+Here's a practical Go implementation that walks through a process's entire address space, querying each region to build a memory map:
+
+```go
+// Query memory regions (VAD entries visible from user mode)
+package main
+
+import (
+    "fmt"
+    "syscall"
+    "unsafe"
+)
+
+// MEMORY_BASIC_INFORMATION: Structure returned by VirtualQuery
+// Describes a contiguous region of memory with uniform properties
+type MEMORY_BASIC_INFORMATION struct {
+    BaseAddress       uintptr  // Starting address of region
+    AllocationBase    uintptr  // Base address of allocation that contains this region
+    AllocationProtect uint32   // Protection when region was originally allocated
+    RegionSize        uintptr  // Size of region in bytes
+    State             uint32   // MEM_COMMIT, MEM_RESERVE, or MEM_FREE
+    Protect           uint32   // Current protection flags
+    Type              uint32   // MEM_PRIVATE, MEM_MAPPED, or MEM_IMAGE
+}
+
+// Memory state constants
+const (
+    MEM_COMMIT    = 0x1000   // Memory is committed (has physical/page file backing)
+    MEM_RESERVE   = 0x2000   // Memory is reserved (address space reserved but not backed)
+    MEM_FREE      = 0x10000  // Memory is free (not allocated)
+    
+    MEM_PRIVATE   = 0x20000    // Private memory (heap, stack)
+    MEM_MAPPED    = 0x40000    // Mapped file
+    MEM_IMAGE     = 0x1000000  // Executable image (PE file)
+)
+
+var (
+    kernel32              = syscall.NewLazyDLL("kernel32.dll")
+    procVirtualQuery      = kernel32.NewProc("VirtualQuery")
+)
+
+// VirtualQuery: Query information about a memory address
+func VirtualQuery(address uintptr) (*MEMORY_BASIC_INFORMATION, error) {
+    var mbi MEMORY_BASIC_INFORMATION
+    
+    // Call VirtualQuery API
+    ret, _, err := procVirtualQuery.Call(
+        address,                           // Address to query
+        uintptr(unsafe.Pointer(&mbi)),    // Buffer to receive info
+        unsafe.Sizeof(mbi),               // Size of buffer
+    )
+    
+    if ret == 0 {
+        return nil, err  // Query failed
+    }
+    return &mbi, nil
+}
+
+// EnumerateMemory: Walk through entire address space
+func EnumerateMemory() {
+    var address uintptr = 0
+    
+    // Scan from 0 to max user-mode address on x64
+    for address < 0x7FFFFFFF0000 {
+        mbi, err := VirtualQuery(address)
+        if err != nil {
+            break  // End of accessible memory
+        }
+        
+        // Only show committed memory (ignore reserved/free)
+        if mbi.State == MEM_COMMIT {
+            protection := getProtectionString(mbi.Protect)
+            memType := getTypeString(mbi.Type)
+            
+            fmt.Printf("0x%016X - 0x%016X  %s  %s\n",
+                mbi.BaseAddress,
+                mbi.BaseAddress + mbi.RegionSize,
+                protection,
+                memType)
+        }
+        
+        // Jump to next region
+        address = mbi.BaseAddress + mbi.RegionSize
+    }
+}
+
+// Helper: Convert protection flags to readable string
+func getProtectionString(protect uint32) string {
+    switch protect & 0xFF {
+    case 0x01: return "---"   // PAGE_NOACCESS
+    case 0x02: return "R--"   // PAGE_READONLY
+    case 0x04: return "RW-"   // PAGE_READWRITE
+    case 0x20: return "R-X"   // PAGE_EXECUTE_READ
+    case 0x40: return "RWX"   // PAGE_EXECUTE_READWRITE
+    default: return "???"
+    }
+}
+
+// Helper: Convert type flags to readable string
+func getTypeString(memType uint32) string {
+    switch memType {
+    case MEM_PRIVATE: return "Private"
+    case MEM_MAPPED:  return "Mapped"
+    case MEM_IMAGE:   return "Image"
+    default: return "Unknown"
+    }
+}
+
+func main() {
+    fmt.Println("Memory Map of Current Process:")
+    fmt.Println("Start Address       - End Address         Prot  Type")
+    fmt.Println("─────────────────────────────────────────────────────")
+    EnumerateMemory()
+}
+```
+
+
+Once again let's compile using `go build`, then run it on the target machine using admin privs.
+
+You should get the following output, but note that due to ASLR your addresses will differ from mine - in fact they will differ each time you run your application!
+
+```shell
+Memory Map of Current Process:
+Start Address       - End Address         Prot  Type
+─────────────────────────────────────────────────────
+0x0000000000010000 - 0x0000000000011000  RW-  Mapped
+0x0000000000020000 - 0x0000000000030000  RW-  Mapped
+0x0000000000030000 - 0x0000000000050000  R--  Mapped
+0x0000000000050000 - 0x0000000000054000  R--  Mapped
+0x0000000000060000 - 0x0000000000062000  RW-  Private
+0x0000000000070000 - 0x0000000000081000  R--  Mapped
+0x0000000000090000 - 0x00000000000A1000  R--  Mapped
+0x00000000000B0000 - 0x00000000000B3000  R--  Mapped
+0x00000000000C0000 - 0x00000000000C7000  R--  Mapped
+0x00000000000D0000 - 0x00000000000D7000  R--  Mapped
+0x00000000000E0000 - 0x00000000000E2000  R--  Mapped
+0x00000000000F0000 - 0x00000000000F2000  R--  Mapped
+0x0000000000100000 - 0x0000000000102000  RW-  Private
+0x0000000000140000 - 0x0000000000143000  R--  Mapped
+0x0000000000150000 - 0x0000000000161000  R--  Mapped
+0x0000000000170000 - 0x0000000000181000  R--  Mapped
+0x0000000000190000 - 0x0000000000191000  RW-  Private
+0x00000000001A0000 - 0x00000000001E0000  RW-  Private
+0x00000000001E0000 - 0x0000000000200000  RW-  Private
+0x00000000003DD000 - 0x00000000003E8000  RW-  Private
+0x00000000005FA000 - 0x00000000005FD000  RW-  Private
+0x00000000005FD000 - 0x0000000000600000  RW-  Private
+0x0000000000600000 - 0x00000000006D3000  R--  Mapped
+0x00000000006E0000 - 0x00000000006F0000  RW-  Private
+0x00000000006F0000 - 0x0000000000700000  RW-  Private
+0x0000000000700000 - 0x0000000000740000  RW-  Private
+0x00000000007B0000 - 0x00000000007CA000  RW-  Private
+0x0000000000930000 - 0x0000000000931000  RW-  Private
+0x0000000000DB6000 - 0x0000000000DB7000  RW-  Private
+0x00000000031E0000 - 0x00000000031E1000  RW-  Private
+0x0000000015330000 - 0x0000000015331000  RW-  Private
+0x0000000035330000 - 0x0000000035331000  RW-  Private
+0x00000000451B0000 - 0x00000000459B0000  RW-  Private
+0x00000000459B0000 - 0x0000000045AB0000  RW-  Private
+0x0000000045CAB000 - 0x0000000045CAE000  RW-  Private
+0x0000000045CAE000 - 0x0000000045CB0000  RW-  Private
+0x0000000045EAC000 - 0x0000000045EAF000  RW-  Private
+0x0000000045EAF000 - 0x0000000045EB0000  RW-  Private
+0x00000000460AC000 - 0x00000000460AF000  RW-  Private
+0x00000000460AF000 - 0x00000000460B0000  RW-  Private
+0x00000000462AC000 - 0x00000000462AF000  RW-  Private
+0x00000000462AF000 - 0x00000000462B0000  RW-  Private
+0x000000007FFE0000 - 0x000000007FFE1000  R--  Private
+0x000000007FFEE000 - 0x000000007FFEF000  R--  Private
+0x000000C000000000 - 0x000000C00006E000  RW-  Private
+0x00007FF4FDEC0000 - 0x00007FF4FDEC5000  R--  Mapped
+0x00007FF5FFFE0000 - 0x00007FF5FFFE1000  RW-  Private
+0x00007FF5FFFF0000 - 0x00007FF5FFFF1000  R--  Mapped
+0x00007FF702630000 - 0x00007FF702631000  R--  Image
+0x00007FF702631000 - 0x00007FF7026D1000  R-X  Image
+0x00007FF7026D1000 - 0x00007FF7027A1000  R--  Image
+0x00007FF7027A1000 - 0x00007FF7027A3000  RW-  Image
+0x00007FF7027A3000 - 0x00007FF7027A6000  ???  Image
+0x00007FF7027A6000 - 0x00007FF7027AB000  RW-  Image
+0x00007FF7027AB000 - 0x00007FF7027AD000  ???  Image
+0x00007FF7027AD000 - 0x00007FF7027B1000  RW-  Image
+0x00007FF7027B1000 - 0x00007FF7027B5000  ???  Image
+0x00007FF7027B5000 - 0x00007FF7027B6000  RW-  Image
+0x00007FF7027B6000 - 0x00007FF7027BD000  ???  Image
+0x00007FF7027BD000 - 0x00007FF7027BE000  RW-  Image
+0x00007FF7027BE000 - 0x00007FF7027C5000  ???  Image
+0x00007FF7027C5000 - 0x00007FF7027CD000  RW-  Image
+0x00007FF7027CD000 - 0x00007FF7027F3000  ???  Image
+0x00007FF7027F3000 - 0x00007FF7027F8000  RW-  Image
+0x00007FF7027F8000 - 0x00007FF70289F000  R--  Image
+0x00007FF70289F000 - 0x00007FF7028A0000  ???  Image
+0x00007FF7028A0000 - 0x00007FF7028BF000  R--  Image
+0x00007FFD5B4B0000 - 0x00007FFD5B4B1000  R--  Image
+0x00007FFD5B4B1000 - 0x00007FFD5B50A000  R-X  Image
+0x00007FFD5B50A000 - 0x00007FFD5B530000  R--  Image
+0x00007FFD5B530000 - 0x00007FFD5B532000  RW-  Image
+0x00007FFD5B532000 - 0x00007FFD5B54E000  R--  Image
+0x00007FFD5B54E000 - 0x00007FFD5B54F000  R-X  Image
+0x00007FFD5E1B0000 - 0x00007FFD5E1B1000  R--  Image
+0x00007FFD5E1B1000 - 0x00007FFD5E1BB000  R-X  Image
+0x00007FFD5E1BB000 - 0x00007FFD5E1BF000  R--  Image
+0x00007FFD5E1BF000 - 0x00007FFD5E1C0000  RW-  Image
+0x00007FFD5E1C0000 - 0x00007FFD5E1C4000  R--  Image
+0x00007FFD5E1C4000 - 0x00007FFD5E1C5000  R-X  Image
+0x00007FFD5E1D0000 - 0x00007FFD5E1D1000  R--  Image
+0x00007FFD5E1D1000 - 0x00007FFD5E1E5000  R-X  Image
+0x00007FFD5E1E5000 - 0x00007FFD5E1F0000  R--  Image
+0x00007FFD5E1F0000 - 0x00007FFD5E1F1000  RW-  Image
+0x00007FFD5E1F1000 - 0x00007FFD5E22E000  R--  Image
+0x00007FFD5E22E000 - 0x00007FFD5E22F000  R-X  Image
+0x00007FFD5E350000 - 0x00007FFD5E351000  R--  Image
+0x00007FFD5E351000 - 0x00007FFD5E3C7000  R-X  Image
+0x00007FFD5E3C7000 - 0x00007FFD5E3E1000  R--  Image
+0x00007FFD5E3E1000 - 0x00007FFD5E3E2000  RW-  Image
+0x00007FFD5E3E2000 - 0x00007FFD5E3E9000  R--  Image
+0x00007FFD5E3E9000 - 0x00007FFD5E3EA000  R-X  Image
+0x00007FFD5E840000 - 0x00007FFD5E841000  R--  Image
+0x00007FFD5E841000 - 0x00007FFD5E9ED000  R-X  Image
+0x00007FFD5E9ED000 - 0x00007FFD5EBDC000  R--  Image
+0x00007FFD5EBDC000 - 0x00007FFD5EBE4000  RW-  Image
+0x00007FFD5EBE4000 - 0x00007FFD5EBE6000  ???  Image
+0x00007FFD5EBE6000 - 0x00007FFD5EC33000  R--  Image
+0x00007FFD5EC33000 - 0x00007FFD5EC34000  R-X  Image
+0x00007FFD5ECD0000 - 0x00007FFD5ECD1000  R--  Image
+0x00007FFD5ECD1000 - 0x00007FFD5EDC8000  R-X  Image
+0x00007FFD5EDC8000 - 0x00007FFD5EE07000  R--  Image
+0x00007FFD5EE07000 - 0x00007FFD5EE0A000  RW-  Image
+0x00007FFD5EE0A000 - 0x00007FFD5EE1B000  R--  Image
+0x00007FFD5EE1B000 - 0x00007FFD5EE1C000  R-X  Image
+0x00007FFD5F7C0000 - 0x00007FFD5F7C1000  R--  Image
+0x00007FFD5F7C1000 - 0x00007FFD5F89D000  R-X  Image
+0x00007FFD5F89D000 - 0x00007FFD5F8C3000  R--  Image
+0x00007FFD5F8C3000 - 0x00007FFD5F8C5000  RW-  Image
+0x00007FFD5F8C5000 - 0x00007FFD5F8D8000  R--  Image
+0x00007FFD5F8D8000 - 0x00007FFD5F8D9000  R-X  Image
+0x00007FFD60470000 - 0x00007FFD60471000  R--  Image
+0x00007FFD60471000 - 0x00007FFD604F7000  R-X  Image
+0x00007FFD604F7000 - 0x00007FFD6052F000  R--  Image
+0x00007FFD6052F000 - 0x00007FFD60531000  RW-  Image
+0x00007FFD60531000 - 0x00007FFD60539000  R--  Image
+0x00007FFD60539000 - 0x00007FFD6053A000  R-X  Image
+0x00007FFD611C0000 - 0x00007FFD611C1000  R--  Image
+0x00007FFD611C1000 - 0x00007FFD61335000  R-X  Image
+0x00007FFD61335000 - 0x00007FFD6138E000  R--  Image
+0x00007FFD6138E000 - 0x00007FFD61398000  RW-  Image
+0x00007FFD61398000 - 0x00007FFD61429000  R--  Image
+0x00007FFD61429000 - 0x00007FFD6142A000  R-X  Image
+```
+
+
+
+**Reading the output:**
+
+Each line represents a **VAD entry** - a contiguous memory region with uniform properties:
+
+- **Address Range**: Where this memory lives in the virtual address space
+- **Protection (Prot)**: Current access permissions
+    - `R--` = Read only
+    - `RW-` = Read + Write
+    - `R-X` = Read + Execute (typical for code)
+    - `RWX` = Read + Write + Execute (⚠️ suspicious!)
+- **Type**: What backs this memory
+    - `Image` = Loaded from a PE file (.exe or .dll)
+    - `Private` = Process-private allocation (heap, stack)
+    - `Mapped` = File-backed mapping
+
+
+
+
+#### Memory Region Scanner with Annotations
+
+This is cool, but we can make our code a little more useful by interpreting key regions and telling us what we're looking at. This can help us identify specific targeted regions in more complex applications.
+
+```go
+//go:build windows
+// +build windows
+
+// Enhanced memory scanner with PE parsing and module enumeration
+package main
+
+import (
+	"fmt"
+	"syscall"
+	"unsafe"
+)
+
+// MEMORY_BASIC_INFORMATION: Structure returned by VirtualQuery
+type MEMORY_BASIC_INFORMATION struct {
+	BaseAddress       uintptr
+	AllocationBase    uintptr
+	AllocationProtect uint32
+	RegionSize        uintptr
+	State             uint32
+	Protect           uint32
+	Type              uint32
+}
+
+// IMAGE_DOS_HEADER: Beginning of every PE file ("MZ" signature)
+type IMAGE_DOS_HEADER struct {
+	E_magic    uint16
+	E_cblp     uint16
+	E_cp       uint16
+	E_crlc     uint16
+	E_cparhdr  uint16
+	E_minalloc uint16
+	E_maxalloc uint16
+	E_ss       uint16
+	E_sp       uint16
+	E_csum     uint16
+	E_ip       uint16
+	E_cs       uint16
+	E_lfarlc   uint16
+	E_ovno     uint16
+	E_res      [4]uint16
+	E_oemid    uint16
+	E_oeminfo  uint16
+	E_res2     [10]uint16
+	E_lfanew   int32 // Offset to PE header
+}
+
+// IMAGE_NT_HEADERS64: Main PE header
+type IMAGE_NT_HEADERS64 struct {
+	Signature      uint32
+	FileHeader     IMAGE_FILE_HEADER
+	OptionalHeader IMAGE_OPTIONAL_HEADER64
+}
+
+type IMAGE_FILE_HEADER struct {
+	Machine              uint16
+	NumberOfSections     uint16
+	TimeDateStamp        uint32
+	PointerToSymbolTable uint32
+	NumberOfSymbols      uint32
+	SizeOfOptionalHeader uint16
+	Characteristics      uint16
+}
+
+type IMAGE_OPTIONAL_HEADER64 struct {
+	Magic                       uint16
+	MajorLinkerVersion          uint8
+	MinorLinkerVersion          uint8
+	SizeOfCode                  uint32
+	SizeOfInitializedData       uint32
+	SizeOfUninitializedData     uint32
+	AddressOfEntryPoint         uint32
+	BaseOfCode                  uint32
+	ImageBase                   uint64
+	SectionAlignment            uint32
+	FileAlignment               uint32
+	MajorOperatingSystemVersion uint16
+	MinorOperatingSystemVersion uint16
+	MajorImageVersion           uint16
+	MinorImageVersion           uint16
+	MajorSubsystemVersion       uint16
+	MinorSubsystemVersion       uint16
+	Win32VersionValue           uint32
+	SizeOfImage                 uint32
+	SizeOfHeaders               uint32
+	CheckSum                    uint32
+	Subsystem                   uint16
+	DllCharacteristics          uint16
+	// ... rest of fields truncated - not required
+}
+
+// IMAGE_SECTION_HEADER: Describes a section (.text, .data, etc.)
+type IMAGE_SECTION_HEADER struct {
+	Name                 [8]byte
+	VirtualSize          uint32
+	VirtualAddress       uint32
+	SizeOfRawData        uint32
+	PointerToRawData     uint32
+	PointerToRelocations uint32
+	PointerToLinenumbers uint32
+	NumberOfRelocations  uint16
+	NumberOfLinenumbers  uint16
+	Characteristics      uint32
+}
+
+// MODULEINFO: Information about a loaded module
+type MODULEINFO struct {
+	BaseOfDll   uintptr
+	SizeOfImage uint32
+	EntryPoint  uintptr
+}
+
+// Memory state and type constants
+const (
+	MEM_COMMIT  = 0x1000
+	MEM_RESERVE = 0x2000
+	MEM_FREE    = 0x10000
+
+	MEM_PRIVATE = 0x20000
+	MEM_MAPPED  = 0x40000
+	MEM_IMAGE   = 0x1000000
+)
+
+var (
+	kernel32                 = syscall.NewLazyDLL("kernel32.dll")
+	psapi                    = syscall.NewLazyDLL("psapi.dll")
+	procVirtualQuery         = kernel32.NewProc("VirtualQuery")
+	procEnumProcessModules   = psapi.NewProc("EnumProcessModules")
+	procGetModuleInformation = psapi.NewProc("GetModuleInformation")
+	procGetModuleBaseNameW   = psapi.NewProc("GetModuleBaseNameW")
+	procGetCurrentProcess    = kernel32.NewProc("GetCurrentProcess")
+)
+
+// SectionInfo: Stores information about a PE section
+type SectionInfo struct {
+	Name  string
+	Start uintptr
+	End   uintptr
+}
+
+// ModuleInfo: Stores information about loaded modules (DLLs)
+type ModuleInfo struct {
+	BaseAddress uintptr
+	Size        uint32
+	Name        string
+	Sections    []SectionInfo // List of sections with ranges
+}
+
+var loadedModules []ModuleInfo
+
+// EnumerateModules: Build a list of all loaded DLLs and their sections
+func EnumerateModules() {
+	hProcess, _, _ := procGetCurrentProcess.Call()
+
+	var modules [1024]syscall.Handle
+	var needed uint32
+
+	// Get all loaded module handles
+	ret, _, _ := procEnumProcessModules.Call(
+		hProcess,
+		uintptr(unsafe.Pointer(&modules[0])),
+		uintptr(len(modules)*int(unsafe.Sizeof(modules[0]))),
+		uintptr(unsafe.Pointer(&needed)),
+	)
+
+	if ret == 0 {
+		return
+	}
+
+	moduleCount := int(needed) / int(unsafe.Sizeof(modules[0]))
+
+	// For each module, get its info and parse PE sections
+	for i := 0; i < moduleCount; i++ {
+		var modInfo MODULEINFO
+
+		// Get module base address and size
+		procGetModuleInformation.Call(
+			hProcess,
+			uintptr(modules[i]),
+			uintptr(unsafe.Pointer(&modInfo)),
+			unsafe.Sizeof(modInfo),
+		)
+
+		// Get module name
+		var nameBuffer [260]uint16
+		procGetModuleBaseNameW.Call(
+			hProcess,
+			uintptr(modules[i]),
+			uintptr(unsafe.Pointer(&nameBuffer[0])),
+			uintptr(len(nameBuffer)),
+		)
+
+		moduleName := syscall.UTF16ToString(nameBuffer[:])
+
+		// Parse PE sections for this module
+		sections := parsePESections(modInfo.BaseOfDll)
+
+		loadedModules = append(loadedModules, ModuleInfo{
+			BaseAddress: modInfo.BaseOfDll,
+			Size:        modInfo.SizeOfImage,
+			Name:        moduleName,
+			Sections:    sections,
+		})
+	}
+}
+
+// parsePESections: Extract section names and ranges from PE headers
+func parsePESections(baseAddress uintptr) []SectionInfo {
+	var sections []SectionInfo
+
+	defer func() {
+		// Catch any access violations from reading invalid memory
+		recover()
+	}()
+
+	// Read DOS header
+	dosHeader := (*IMAGE_DOS_HEADER)(unsafe.Pointer(baseAddress))
+	if dosHeader.E_magic != 0x5A4D { // "MZ"
+		return sections
+	}
+
+	// Read NT headers (just signature and file header first)
+	peHeaderOffset := baseAddress + uintptr(dosHeader.E_lfanew)
+	signature := (*uint32)(unsafe.Pointer(peHeaderOffset))
+	if *signature != 0x00004550 { // "PE\0\0"
+		return sections
+	}
+
+	// Read file header (comes after 4-byte signature)
+	fileHeader := (*IMAGE_FILE_HEADER)(unsafe.Pointer(peHeaderOffset + 4))
+
+	// Section table comes after: Signature (4) + FileHeader (20) + OptionalHeader (variable)
+	// Use SizeOfOptionalHeader from FileHeader for correct offset
+	sectionTableOffset := peHeaderOffset + 4 +
+		unsafe.Sizeof(IMAGE_FILE_HEADER{}) +
+		uintptr(fileHeader.SizeOfOptionalHeader)
+
+	numSections := int(fileHeader.NumberOfSections)
+
+	for i := 0; i < numSections; i++ {
+		sectionPtr := (*IMAGE_SECTION_HEADER)(unsafe.Pointer(
+			sectionTableOffset + uintptr(i)*unsafe.Sizeof(IMAGE_SECTION_HEADER{}),
+		))
+
+		// Extract and validate section name
+		name := cleanSectionName(sectionPtr.Name[:])
+		if name == "" {
+			continue // Skip invalid sections
+		}
+
+		sectionStart := baseAddress + uintptr(sectionPtr.VirtualAddress)
+		sectionEnd := sectionStart + uintptr(sectionPtr.VirtualSize)
+
+		sections = append(sections, SectionInfo{
+			Name:  name,
+			Start: sectionStart,
+			End:   sectionEnd,
+		})
+	}
+
+	return sections
+}
+
+// cleanSectionName: Extract and validate section name from PE header
+func cleanSectionName(nameBytes []byte) string {
+	// Find null terminator or use all 8 bytes
+	length := 0
+	for length < len(nameBytes) && nameBytes[length] != 0 {
+		length++
+	}
+
+	if length == 0 {
+		return ""
+	}
+
+	// Validate all characters are printable ASCII
+	for i := 0; i < length; i++ {
+		if nameBytes[i] < 0x20 || nameBytes[i] > 0x7E {
+			return "" // Contains non-printable characters
+		}
+	}
+
+	return string(nameBytes[:length])
+}
+
+// identifyRegion: Determine what a memory region represents
+func identifyRegion(mbi *MEMORY_BASIC_INFORMATION) string {
+	addr := mbi.BaseAddress
+
+	// Check for special fixed addresses
+	if addr == 0x7FFE0000 || addr == 0x7FFEE000 {
+		return "PEB (Process Environment Block)"
+	}
+	if addr >= 0x7FFE0000 && addr < 0x7FFF0000 {
+		return "Shared User Data / PEB"
+	}
+
+	// For Image type, match against loaded modules
+	if mbi.Type == MEM_IMAGE {
+		for _, mod := range loadedModules {
+			if addr >= mod.BaseAddress && addr < mod.BaseAddress+uintptr(mod.Size) {
+				// Check if this address falls within any section
+				for _, section := range mod.Sections {
+					if addr >= section.Start && addr < section.End {
+						return fmt.Sprintf("%s (%s)", mod.Name, section.Name)
+					}
+				}
+				// If no section match, just return module name
+				return mod.Name
+			}
+		}
+		return "Unknown Image"
+	}
+
+	// Private memory - could be heap or stack
+	if mbi.Type == MEM_PRIVATE {
+		// Large RW- regions in specific ranges are often heap
+		if mbi.RegionSize > 0x10000 && (mbi.Protect&0xFF == 0x04) {
+			return "Heap"
+		}
+		// Smaller regions might be stack or thread-local storage
+		if mbi.RegionSize <= 0x10000 {
+			return "Stack / TLS"
+		}
+		return "Private"
+	}
+
+	// Mapped memory (files)
+	if mbi.Type == MEM_MAPPED {
+		return "Memory-Mapped File"
+	}
+
+	return "Unknown"
+}
+
+// VirtualQuery: Query information about a memory address
+func VirtualQuery(address uintptr) (*MEMORY_BASIC_INFORMATION, error) {
+	var mbi MEMORY_BASIC_INFORMATION
+
+	ret, _, err := procVirtualQuery.Call(
+		address,
+		uintptr(unsafe.Pointer(&mbi)),
+		unsafe.Sizeof(mbi),
+	)
+
+	if ret == 0 {
+		return nil, err
+	}
+	return &mbi, nil
+}
+
+// EnumerateMemory: Walk through entire address space
+func EnumerateMemory() {
+	var address uintptr = 0
+
+	for address < 0x7FFFFFFF0000 {
+		mbi, err := VirtualQuery(address)
+		if err != nil {
+			break
+		}
+
+		if mbi.State == MEM_COMMIT {
+			protection := getProtectionString(mbi.Protect)
+			memType := getTypeString(mbi.Type)
+			interpretation := identifyRegion(mbi)
+
+			fmt.Printf("0x%016X - 0x%016X  %s  %-7s  %s\n",
+				mbi.BaseAddress,
+				mbi.BaseAddress+mbi.RegionSize,
+				protection,
+				memType,
+				interpretation)
+		}
+
+		address = mbi.BaseAddress + mbi.RegionSize
+	}
+}
+
+// getProtectionString: Convert protection flags to readable string
+func getProtectionString(protect uint32) string {
+	switch protect & 0xFF {
+	case 0x01:
+		return "---"
+	case 0x02:
+		return "R--"
+	case 0x04:
+		return "RW-"
+	case 0x20:
+		return "R-X"
+	case 0x40:
+		return "RWX"
+	default:
+		return "???"
+	}
+}
+
+// getTypeString: Convert type flags to readable string
+func getTypeString(memType uint32) string {
+	switch memType {
+	case MEM_PRIVATE:
+		return "Private"
+	case MEM_MAPPED:
+		return "Mapped"
+	case MEM_IMAGE:
+		return "Image"
+	default:
+		return "Unknown"
+	}
+}
+
+func main() {
+	fmt.Println("Enhanced Memory Map of Current Process:")
+	fmt.Println("Start Address       - End Address         Prot  Type     Interpretation")
+	fmt.Println("────────────────────────────────────────────────────────────────────────────────")
+
+	// First, enumerate all loaded modules and parse their PE sections
+	EnumerateModules()
+
+	// Then scan memory and identify regions
+	EnumerateMemory()
+}
+
+```
+
+
+And now when we run our application we'll have a fifth column telling us, where possible, what this region represents.
+
+```shell
+PS C:\Users\tresa\OneDrive\Desktop> .\memscanner_annotated.exe
+Enhanced Memory Map of Current Process:
+Start Address       - End Address         Prot  Type     Interpretation
+────────────────────────────────────────────────────────────────────────────────
+0x0000000000010000 - 0x0000000000011000  RW-  Mapped   Memory-Mapped File
+0x0000000000020000 - 0x0000000000030000  RW-  Mapped   Memory-Mapped File
+0x0000000000030000 - 0x0000000000050000  R--  Mapped   Memory-Mapped File
+0x0000000000050000 - 0x0000000000054000  R--  Mapped   Memory-Mapped File
+0x0000000000060000 - 0x0000000000062000  RW-  Private  Stack / TLS
+0x0000000000070000 - 0x0000000000081000  R--  Mapped   Memory-Mapped File
+0x0000000000090000 - 0x00000000000A1000  R--  Mapped   Memory-Mapped File
+0x00000000000B0000 - 0x00000000000B3000  R--  Mapped   Memory-Mapped File
+0x00000000000C0000 - 0x00000000000C7000  R--  Mapped   Memory-Mapped File
+0x00000000000D0000 - 0x00000000000D7000  R--  Mapped   Memory-Mapped File
+0x00000000000E0000 - 0x00000000000F4000  RW-  Private  Heap
+0x00000000001E0000 - 0x00000000001E2000  R--  Mapped   Memory-Mapped File
+0x00000000001F0000 - 0x00000000001F2000  R--  Mapped   Memory-Mapped File
+0x0000000000220000 - 0x000000000022B000  RW-  Private  Stack / TLS
+0x00000000005FA000 - 0x00000000005FD000  RW-  Private  Stack / TLS
+0x00000000005FD000 - 0x0000000000600000  RW-  Private  Stack / TLS
+0x0000000000600000 - 0x0000000000602000  RW-  Private  Stack / TLS
+0x0000000000640000 - 0x0000000000643000  R--  Mapped   Memory-Mapped File
+0x0000000000650000 - 0x0000000000723000  R--  Mapped   Memory-Mapped File
+0x0000000000730000 - 0x0000000000741000  R--  Mapped   Memory-Mapped File
+0x0000000000750000 - 0x0000000000761000  R--  Mapped   Memory-Mapped File
+0x0000000000770000 - 0x0000000000771000  RW-  Private  Stack / TLS
+0x0000000000780000 - 0x00000000007C0000  RW-  Private  Heap
+0x00000000007C0000 - 0x00000000007E0000  RW-  Private  Heap
+0x0000000000860000 - 0x0000000000861000  RW-  Private  Stack / TLS
+0x0000000000CE6000 - 0x0000000000CE7000  RW-  Private  Stack / TLS
+0x0000000003110000 - 0x0000000003111000  RW-  Private  Stack / TLS
+0x0000000015260000 - 0x0000000015261000  RW-  Private  Stack / TLS
+0x0000000035260000 - 0x0000000035261000  RW-  Private  Stack / TLS
+0x00000000450E0000 - 0x00000000458E0000  RW-  Private  Heap
+0x00000000458E0000 - 0x00000000459E0000  RW-  Private  Heap
+0x00000000459E0000 - 0x00000000459F0000  RW-  Private  Stack / TLS
+0x00000000459F0000 - 0x0000000045A00000  RW-  Private  Stack / TLS
+0x0000000045BFB000 - 0x0000000045BFE000  RW-  Private  Stack / TLS
+0x0000000045BFE000 - 0x0000000045C00000  RW-  Private  Stack / TLS
+0x0000000045DFC000 - 0x0000000045DFF000  RW-  Private  Stack / TLS
+0x0000000045DFF000 - 0x0000000045E00000  RW-  Private  Stack / TLS
+0x0000000045E00000 - 0x0000000045E40000  RW-  Private  Heap
+0x000000004603B000 - 0x000000004603E000  RW-  Private  Stack / TLS
+0x000000004603E000 - 0x0000000046040000  RW-  Private  Stack / TLS
+0x000000004623C000 - 0x000000004623F000  RW-  Private  Stack / TLS
+0x000000004623F000 - 0x0000000046240000  RW-  Private  Stack / TLS
+0x000000007FFE0000 - 0x000000007FFE1000  R--  Private  PEB (Process Environment Block)
+0x000000007FFEE000 - 0x000000007FFEF000  R--  Private  PEB (Process Environment Block)
+0x000000C000000000 - 0x000000C000082000  RW-  Private  Heap
+0x000000C000100000 - 0x000000C00010E000  RW-  Private  Stack / TLS
+0x000000C00010E000 - 0x000000C000110000  RW-  Private  Stack / TLS
+0x00007FF4FDEC0000 - 0x00007FF4FDEC5000  R--  Mapped   Memory-Mapped File
+0x00007FF5FFFE0000 - 0x00007FF5FFFE1000  RW-  Private  Stack / TLS
+0x00007FF5FFFF0000 - 0x00007FF5FFFF1000  R--  Mapped   Memory-Mapped File
+0x00007FF6E41E0000 - 0x00007FF6E41E1000  R--  Image    memscanner_annotated.exe
+0x00007FF6E41E1000 - 0x00007FF6E4282000  R-X  Image    memscanner_annotated.exe (.text)
+0x00007FF6E4282000 - 0x00007FF6E4353000  R--  Image    memscanner_annotated.exe (.rdata)
+0x00007FF6E4353000 - 0x00007FF6E4355000  RW-  Image    memscanner_annotated.exe (.data)
+0x00007FF6E4355000 - 0x00007FF6E4358000  ???  Image    memscanner_annotated.exe (.data)
+0x00007FF6E4358000 - 0x00007FF6E435D000  RW-  Image    memscanner_annotated.exe (.data)
+0x00007FF6E435D000 - 0x00007FF6E435F000  ???  Image    memscanner_annotated.exe (.data)
+0x00007FF6E435F000 - 0x00007FF6E4363000  RW-  Image    memscanner_annotated.exe (.data)
+0x00007FF6E4363000 - 0x00007FF6E4367000  ???  Image    memscanner_annotated.exe (.data)
+0x00007FF6E4367000 - 0x00007FF6E4368000  RW-  Image    memscanner_annotated.exe (.data)
+0x00007FF6E4368000 - 0x00007FF6E4370000  ???  Image    memscanner_annotated.exe (.data)
+0x00007FF6E4370000 - 0x00007FF6E4371000  RW-  Image    memscanner_annotated.exe (.data)
+0x00007FF6E4371000 - 0x00007FF6E4377000  ???  Image    memscanner_annotated.exe (.data)
+0x00007FF6E4377000 - 0x00007FF6E437F000  RW-  Image    memscanner_annotated.exe (.data)
+0x00007FF6E437F000 - 0x00007FF6E43A5000  ???  Image    memscanner_annotated.exe (.data)
+0x00007FF6E43A5000 - 0x00007FF6E43AA000  RW-  Image    memscanner_annotated.exe (.data)
+0x00007FF6E43AA000 - 0x00007FF6E4452000  R--  Image    memscanner_annotated.exe (.pdata)
+0x00007FF6E4452000 - 0x00007FF6E4453000  ???  Image    memscanner_annotated.exe (.idata)
+0x00007FF6E4453000 - 0x00007FF6E4472000  R--  Image    memscanner_annotated.exe (.reloc)
+0x00007FFD5E1B0000 - 0x00007FFD5E1B1000  R--  Image    UMPDC.dll
+0x00007FFD5E1B1000 - 0x00007FFD5E1BB000  R-X  Image    UMPDC.dll (.text)
+0x00007FFD5E1BB000 - 0x00007FFD5E1BF000  R--  Image    UMPDC.dll (.rdata)
+0x00007FFD5E1BF000 - 0x00007FFD5E1C0000  RW-  Image    UMPDC.dll (.data)
+0x00007FFD5E1C0000 - 0x00007FFD5E1C4000  R--  Image    UMPDC.dll (.pdata)
+0x00007FFD5E1C4000 - 0x00007FFD5E1C5000  R-X  Image    Unknown Image
+0x00007FFD5E1D0000 - 0x00007FFD5E1D1000  R--  Image    powrprof.dll
+0x00007FFD5E1D1000 - 0x00007FFD5E1E5000  R-X  Image    powrprof.dll (.text)
+0x00007FFD5E1E5000 - 0x00007FFD5E1F0000  R--  Image    powrprof.dll (.rdata)
+0x00007FFD5E1F0000 - 0x00007FFD5E1F1000  RW-  Image    powrprof.dll (.data)
+0x00007FFD5E1F1000 - 0x00007FFD5E22E000  R--  Image    powrprof.dll (.pdata)
+0x00007FFD5E22E000 - 0x00007FFD5E22F000  R-X  Image    Unknown Image
+0x00007FFD5E350000 - 0x00007FFD5E351000  R--  Image    bcryptprimitives.dll
+0x00007FFD5E351000 - 0x00007FFD5E3C7000  R-X  Image    bcryptprimitives.dll (.text)
+0x00007FFD5E3C7000 - 0x00007FFD5E3E1000  R--  Image    bcryptprimitives.dll (.rdata)
+0x00007FFD5E3E1000 - 0x00007FFD5E3E2000  RW-  Image    bcryptprimitives.dll (.data)
+0x00007FFD5E3E2000 - 0x00007FFD5E3E9000  R--  Image    bcryptprimitives.dll (.pdata)
+0x00007FFD5E3E9000 - 0x00007FFD5E3EA000  R-X  Image    Unknown Image
+0x00007FFD5E840000 - 0x00007FFD5E841000  R--  Image    KERNELBASE.dll
+0x00007FFD5E841000 - 0x00007FFD5E9ED000  R-X  Image    KERNELBASE.dll (.text)
+0x00007FFD5E9ED000 - 0x00007FFD5EBDC000  R--  Image    KERNELBASE.dll (.rdata)
+0x00007FFD5EBDC000 - 0x00007FFD5EBE4000  RW-  Image    KERNELBASE.dll (.data)
+0x00007FFD5EBE4000 - 0x00007FFD5EBE6000  ???  Image    KERNELBASE.dll (.data)
+0x00007FFD5EBE6000 - 0x00007FFD5EC33000  R--  Image    KERNELBASE.dll (.pdata)
+0x00007FFD5EC33000 - 0x00007FFD5EC34000  R-X  Image    Unknown Image
+0x00007FFD5ECD0000 - 0x00007FFD5ECD1000  R--  Image    ucrtbase.dll
+0x00007FFD5ECD1000 - 0x00007FFD5EDC8000  R-X  Image    ucrtbase.dll (.text)
+0x00007FFD5EDC8000 - 0x00007FFD5EE07000  R--  Image    ucrtbase.dll (.rdata)
+0x00007FFD5EE07000 - 0x00007FFD5EE0A000  RW-  Image    ucrtbase.dll (.data)
+0x00007FFD5EE0A000 - 0x00007FFD5EE1B000  R--  Image    ucrtbase.dll (.pdata)
+0x00007FFD5EE1B000 - 0x00007FFD5EE1C000  R-X  Image    Unknown Image
+0x00007FFD5F7C0000 - 0x00007FFD5F7C1000  R--  Image    RPCRT4.dll
+0x00007FFD5F7C1000 - 0x00007FFD5F89D000  R-X  Image    RPCRT4.dll (.text)
+0x00007FFD5F89D000 - 0x00007FFD5F8C3000  R--  Image    RPCRT4.dll (.rdata)
+0x00007FFD5F8C3000 - 0x00007FFD5F8C5000  RW-  Image    RPCRT4.dll (.data)
+0x00007FFD5F8C5000 - 0x00007FFD5F8D8000  R--  Image    RPCRT4.dll (.pdata)
+0x00007FFD5F8D8000 - 0x00007FFD5F8D9000  R-X  Image    Unknown Image
+0x00007FFD60470000 - 0x00007FFD60471000  R--  Image    KERNEL32.DLL
+0x00007FFD60471000 - 0x00007FFD604F7000  R-X  Image    KERNEL32.DLL (.text)
+0x00007FFD604F7000 - 0x00007FFD6052F000  R--  Image    KERNEL32.DLL (.rdata)
+0x00007FFD6052F000 - 0x00007FFD60531000  RW-  Image    KERNEL32.DLL (.data)
+0x00007FFD60531000 - 0x00007FFD60539000  R--  Image    KERNEL32.DLL (.pdata)
+0x00007FFD60539000 - 0x00007FFD6053A000  R-X  Image    Unknown Image
+0x00007FFD606C0000 - 0x00007FFD606C1000  R--  Image    psapi.dll
+0x00007FFD606C1000 - 0x00007FFD606C2000  R-X  Image    psapi.dll (.text)
+0x00007FFD606C2000 - 0x00007FFD606C4000  R--  Image    psapi.dll (.rdata)
+0x00007FFD606C4000 - 0x00007FFD606C5000  RW-  Image    psapi.dll (.data)
+0x00007FFD606C5000 - 0x00007FFD606C8000  R--  Image    psapi.dll (.pdata)
+0x00007FFD611C0000 - 0x00007FFD611C1000  R--  Image    ntdll.dll
+0x00007FFD611C1000 - 0x00007FFD61335000  R-X  Image    ntdll.dll (.text)
+0x00007FFD61335000 - 0x00007FFD6138E000  R--  Image    ntdll.dll (.rdata)
+0x00007FFD6138E000 - 0x00007FFD61398000  RW-  Image    ntdll.dll (.data)
+0x00007FFD61398000 - 0x00007FFD61429000  R--  Image    ntdll.dll (.pdata)
+0x00007FFD61429000 - 0x00007FFD6142A000  R-X  Image    Unknown Image
+```
+
+
+We can now also see proper section names in the fifth column, including:
+- `.text` - Executable code (R-X protection)
+- `.rdata` - Read-only data like string constants (R-- protection)
+- `.data` - Initialized global/static variables (RW- protection)
+- `.pdata` - Exception handling metadata (R-- protection)
+- `.idata` - Import table (DLL imports)
+- `.reloc` - Relocation information
+
+
+#### Extra Credit - Understanding New Memory Scanner
+
+Though we will cover interpretation of memory regions in greater depth later, it might be worth taking the time to review the code above to understand how we were able to interpret different regions. But consider this "extra credit" - it's not expected that you understand everything at this point. But I think that familiarizing yourself with some of the key concepts, early on, even if only in a broad sense, will serve you in the long run.
+
+##### Adding Module Identification
+
+The enhancement uses Windows APIs to enumerate all loaded modules in the process. `EnumProcessModules` returns handles to every DLL and executable, then `GetModuleBaseNameW` and `GetModuleInformation` provide their names, base addresses, and sizes. By storing this information, we can match any Image memory region to its source module by checking if the region's address falls within a module's address range.
+
+##### Adding PE Section Parsing
+
+To identify specific sections like `.text` (code) or `.data` (variables), we parse the PE (Portable Executable) file format directly from memory (more on this in the next section, Part 4). Each module starts with a DOS header containing the "MZ" signature, which points to the PE header. The PE header includes a section table listing all sections with their names, virtual addresses, and sizes.
+
+We read these structures from memory using unsafe pointers, extract the section information, and store each section's address range. The key is using `FileHeader.SizeOfOptionalHeader` to correctly locate the section table, and validating that section names contain only printable ASCII characters.
+
+##### How Interpretation Works
+
+```
+Program Start
+    ↓
+EnumerateModules()  ← Builds module list with PE parsing
+    ↓
+EnumerateMemory()   ← Scans address space
+    ↓
+For each region → identifyRegion() → Lookup in module list
+    ↓
+Print with interpretation column
+```
+
+The result is a memory map that shows not just anonymous addresses, but meaningful context: your executable's code section, ntdll's data section, kernel structures, heaps, and stacks - all clearly labeled despite ASLR randomization.
+
+
+
+
+
+### Why VAD Enumeration Matters: Offensive and Defensive Perspectives
+
+Understanding and enumerating VADs is crucial for both attackers and defenders. The VAD tree reveals the entire memory architecture of a process, exposing both opportunities and threats.
+
+#### Offensive Use Cases
+
+**1. Finding Injection Targets**
+
+When injecting code into a remote process, you need executable memory. VAD enumeration reveals:
+
+```
+Looking for: R-X or RWX regions in target process
+Found: 0x76D00000 - 0x76E00000  R-X  Image (ntdll.dll)
+```
+
+**2. Detecting Anti-Analysis**
+
+Security tools often inject DLLs or allocate private executable memory:
+
+```
+Suspicious pattern detected:
+0x30000000 - 0x30010000  RWX  Private  ← Security monitoring code?
+0x40000000 - 0x40005000  R-X  Image    ← Unknown DLL injection?
+Action: Identify and potentially bypass or manipulate these regions
+```
+
+**3. Code Cave Discovery**
+
+PE files often contain unused space in executable sections:
+
+```
+Scan for: Null bytes or padding in R-X Image regions
+0x00420000 - 0x00430000  R-X  Image
+  → Contains 0x2000 bytes of 0x00 at offset +0x8000
+  → Potential hiding spot for shellcode
+```
+
+**4. Bypassing DEP/ASLR**
+
+VAD enumeration reveals executable memory locations even with ASLR:
+
+```
+ASLR randomizes base addresses, but VAD scan finds actual locations:
+ntdll.dll base: 0x76D00000 (random)
+kernel32.dll base: 0x77000000 (random)
+→ Use these for ROP gadget hunting
+```
+
+#### Defensive Use Cases
+
+**1. Detecting Suspicious Allocations**
+
+EDR and antivirus tools monitor VAD changes for malicious patterns:
+
+```
+⚠️ ALERT: New private RWX allocation detected
+Process: notepad.exe
+Region: 0x50000000 - 0x50001000  RWX  Private
+Action: Likely code injection → Flag for investigation
+```
+
+**2. Memory Forensics**
+
+Incident responders use VAD enumeration to find injected code:
+
+```
+Expected: System DLLs (ntdll, kernel32, kernelbase)
+Unexpected: 0x30000000 - 0x30005000  R-X  Private
+Analysis: Injected code, not backed by legitimate PE file
+```
+
+**3. Integrity Checking**
+
+Security software can baseline normal VAD layouts:
+
+```
+Baseline (clean process):
+  - .exe at 0x00400000
+  - ntdll, kernel32, standard DLLs
+  - Private heap/stack regions
+
+Current (suspicious):
+  - .exe at 0x00400000 ✓
+  - ntdll, kernel32 ✓
+  - Unknown Image at 0x10000000 ✗ ← Injected DLL!
+```
+
+**4. Behavioral Analysis**
+
+Tracking VAD changes over time reveals process behavior:
+
+```
+Time T0: 50 VAD entries (normal startup)
+Time T1: 52 VAD entries (loaded plugin DLL)
+Time T2: 75 VAD entries (massive allocation spike)
+         → 20 new Private RW- regions
+         → Potential unpacking or shellcode allocation
+```
+
+
+
+
+
+
+
 
 
 
@@ -499,4 +1551,4 @@ Together, these protections make memory exploitation extraordinarily difficult, 
 
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "./thread.md" >}})
-[|NEXT|]({{< ref "../../moc.md" >}})
+[|NEXT|]({{< ref "./security.md" >}})
