@@ -234,6 +234,166 @@ LogExpireInterval = 28          # Delete logs after 28 days (saves disk space)
 ```
 
 
+### **Configuring AF_PACKET for Better Performance**
+
+Remember in Lesson 1.2 when we discussed packet acquisition methods? Let's configure Zeek to use `AF_PACKET` for better performance:
+
+```bash
+sudo nano /opt/zeek/etc/node.cfg
+```
+
+Modify your standalone configuration:
+
+```ini
+[zeek]
+type=standalone
+host=localhost
+interface=eth0
+
+# AF_PACKET configuration
+lb_method=custom
+lb_procs=2
+pin_cpus=0,1
+af_packet_fanout_id=23
+af_packet_fanout_mode=AF_PACKET_FANOUT_HASH
+af_packet_buffer_size=128*1024*1024
+```
+
+**Understanding AF_PACKET settings:**
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│              AF_PACKET CONFIGURATION                         │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  lb_method=custom                                            │
+│  └─ Use custom load balancing (AF_PACKET fanout)             │
+│                                                              │
+│  lb_procs=2                                                  │
+│  └─ Number of processes to split traffic across              │
+│     Should be ≤ number of CPU cores available                │
+│                                                              │
+│  pin_cpus=0,1                                                │
+│  └─ Pin processes to specific CPU cores for better           │
+│     cache performance                                        │
+│                                                              │
+│  af_packet_fanout_id=23                                      │
+│  └─ Fanout group ID (arbitrary number, must be unique        │
+│     per interface)                                           │
+│                                                              │
+│  af_packet_fanout_mode=AF_PACKET_FANOUT_HASH                 │
+│  └─ How to distribute packets (HASH maintains                │
+│     connection affinity)                                     │
+│                                                              │
+│  af_packet_buffer_size=128*1024*1024                         │
+│  └─ Size of packet buffer (128 MB here)                      │
+│     Larger buffers reduce dropped packets under burst loads  │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**For a VM with 4 vCPUs, optimal settings might be:**
+
+```ini
+lb_procs=3              # Use 3 processes (leave 1 CPU for OS)
+pin_cpus=0,1,2          # Pin to first 3 cores
+```
+
+
+### **Site-Specific Configuration: local.zeek**
+
+The most important configuration file for customization is `/opt/zeek/share/zeek/site/local.zeek`. This file is where you enable/disable policies, load additional scripts, and customize Zeek's behavior. The default file includes useful comments. Let's review the following example configuration:
+
+```zeek
+##! Local site policy. Customize as appropriate.
+##!
+##! This file will not be overwritten when upgrading or reinstalling!
+
+# Load base scripts
+@load base/frameworks/software/vulnerable.zeek
+@load base/frameworks/software/version-changes.zeek
+@load base/frameworks/software/windows-version-detection.zeek
+
+# Load protocols
+@load protocols/conn/known-hosts
+@load protocols/conn/known-services
+@load protocols/dhcp/software
+@load protocols/dns/detect-external-names
+@load protocols/ftp/detect
+@load protocols/ftp/software
+@load protocols/http/detect-sqli
+@load protocols/http/detect-webapps
+@load protocols/http/software
+@load protocols/ssh/detect-bruteforcing
+@load protocols/ssh/geo-data
+@load protocols/ssh/interesting-hostnames
+@load protocols/ssh/software
+@load protocols/ssl/known-certs
+@load protocols/ssl/validate-certs
+
+# Load file analysis
+@load frameworks/files/hash-all-files
+@load frameworks/files/detect-MHR
+
+# Enable notice/alert logging to notice.log
+redef Notice::policy += {
+    [$action = Notice::ACTION_LOG]
+};
+
+# Set site-specific variables
+redef Site::local_nets += {
+    # Add your networks here (should match networks.cfg)
+    10.0.0.0/8,
+    172.16.0.0/12,
+    192.168.0.0/16,
+};
+
+# Increase some resource limits for learning environment
+redef table_expire_interval = 30min;
+redef default_table_expire_func = function() {};
+```
+
+**Understanding the configuration:**
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│              LOCAL.ZEEK STRUCTURE                            │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  @load directives                                            │
+│  └─ Include additional script packages                       │
+│     Think of these like "import" statements                  │
+│                                                              │
+│  redef statements                                            │
+│  └─ Override default values of variables                     │
+│     Customize Zeek's behavior                                │
+│                                                              │
+│  SCRIPT CATEGORIES:                                          │
+│                                                              │
+│  base/frameworks/*                                           │
+│  └─ Core functionality frameworks                            │
+│                                                              │
+│  protocols/*                                                 │
+│  └─ Protocol-specific analysis and detection                 │
+│                                                              │
+│  policy/*                                                    │
+│  └─ Optional detection policies                              │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+The scripts you load in `local.zeek` determine what analysis Zeek performs. The base installation is conservative - it provides visibility but doesn't enable every possible detection. As you progress through this course, you'll add more `@load` directives to enable specific detections.
+
+Once you feel confident that you understand the different config settings open your own `local.zeek` script and make any edits you feel inspired to:
+
+```bash
+sudo nano /opt/zeek/share/zeek/site/local.zeek
+```
+Alternatively, you could leave things as they are for now - we will constantly turn back to this file and make edits
+as the course progresses since it is the foundational script used for all scripting that follows.
+
+**NOTE:** If you do decide to make some edits, it would be a good idea to make a backup copy of your default script using `cp`, just in case anything goes awry and you make breaking changes.
+
 
 
 
