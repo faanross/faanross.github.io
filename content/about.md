@@ -5,7 +5,7 @@ title = 'hi.'
 +++
 
 I'm a security researcher at [Active Countermeasures](https://www.activecountermeasures.com) interested in **post-exploitation malware development**,
-**covert channels**, **offensive sec tooling**, **ai (for) red teaming**, **network threat hunting**  etc.
+**covert channels**, **offensive sec tooling**, **network-centric threat hunting**  etc.
 
 I teach a number of workshops and courses about C2 development in Golang with AntiSyphon, you can find info on these [here](https://www.antisyphontraining.com/instructor/faan-ross/).
 
