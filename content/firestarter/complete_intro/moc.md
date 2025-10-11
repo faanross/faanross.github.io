@@ -38,11 +38,11 @@ type: "page"
 - [Part 3A - Virtual Memory Management: Memory Regions + Protections]({{< ref "module01/lesson1_3/memoryA.md" >}})
 - [Part 3B - Virtual Memory Management: VADs + Memory Scanner (Practical Lab)]({{< ref "module01/lesson1_3/memoryB.md" >}})
 
-
 - [Part 4A - Windows Security Model: Access Tokens, Checks, Privileges]({{< ref "module01/lesson1_3/securityA.md" >}})
 - [Part 4B - Lab: SeDebugPrivilege]({{< ref "module01/lesson1_3/securityA.md" >}})
 - [Part 4C - Lab: Token Theft]({{< ref "module01/lesson1_3/securityA.md" >}})
 - [Part 4D - Integrity Levels and UAC]({{< ref "module01/lesson1_3/securityA.md" >}})
+
 - [Part 5 - PE File Format]({{< ref "module01/lesson1_3/pe.md" >}})
 - [Part 6 - PEB and TEB]({{< ref "module01/lesson1_3/peb_teb.md" >}})
 - [Part 7 - Practical Exercises]({{< ref "module01/lesson1_3/exercises.md" >}})
