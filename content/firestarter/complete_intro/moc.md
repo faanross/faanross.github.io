@@ -34,8 +34,7 @@ type: "page"
 ### Lesson 1.3 - Windows Internals Review For Offensive Operations
 - [Part 1 - Process Architecture]({{< ref "module01/lesson1_3/process.md" >}})
 - [Part 2 - Thread Architecture]({{< ref "module01/lesson1_3/thread.md" >}})
-- [Part 3A - Virtual Memory Management: Memory Regions + Protections]({{< ref "module01/lesson1_3/memoryA.md" >}})
-- [Part 3B - Virtual Memory Management: VADs + Memory Scanner (Practical Lab)]({{< ref "module01/lesson1_3/memoryB.md" >}})
+- [Part 3 - Virtual Memory Management]({{< ref "module01/lesson1_3/memory.md" >}})
 - [Part 4A - Windows Security Model: Access Tokens, Checks, Privileges]({{< ref "module01/lesson1_3/securityA.md" >}})
 - [Part 4B - Lab: SeDebugPrivilege]({{< ref "module01/lesson1_3/securityB.md" >}})
 - [Part 4C - Lab: Token Theft]({{< ref "module01/lesson1_3/securityC.md" >}})
