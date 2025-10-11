@@ -60,7 +60,8 @@ sudo apt install -y build-essential cmake git
 
 # Required libraries
 sudo apt install -y libpcap-dev libssl-dev python3-dev \
-    swig zlib1g-dev libmaxminddb-dev
+    swig zlib1g-dev libmaxminddb-dev libgoogle-perftools-dev \
+    libzmq3-dev
 
 # Optional but recommended libraries
 sudo apt install -y flex bison libkrb5-dev
@@ -96,6 +97,12 @@ sudo apt install -y flex bison libkrb5-dev
 │                                                              │
 │  libmaxminddb-dev                                            │
 │  • GeoIP database library for IP geolocation                 │
+│                                                              │
+│  libgoogle-perftools-dev                                     │
+│  • Allows us to build Zeek with performance tools            │                                        
+│                                                              │
+│  libzmq3-dev                                                 │
+│  • Required for ZeroMQ cluster backend support               │                                        
 │                                                              │
 │  flex, bison                                                 │
 │  • Parser generators used in building analyzers              │
