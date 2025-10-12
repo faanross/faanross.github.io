@@ -193,23 +193,23 @@ The type system is your friend here. By choosing the most semantically appropria
 ┌──────────────────────────────────────────────────────────────┐
 │              INT TYPE USE CASES                              │
 ├──────────────────────────────────────────────────────────────┤
-│                                                                │
-│  Deltas and Differences                                       │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│  local byte_diff: int = current_bytes - previous_bytes;       │
-│  # Could be negative if connection decreased (retransmit)     │
-│                                                                │
-│  Relative Positions                                           │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│  local offset: int = -5;  # 5 positions before current        │
-│                                                                │
-│  Directional Values                                           │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│  local direction: int = -1;  # Backwards                      │
-│                                                                │
+│                                                              │
+│  Deltas and Differences                                      │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │
+│  local byte_diff: int = current_bytes - previous_bytes;      │
+│  # Could be negative if connection decreased (retransmit)    │
+│                                                              │
+│  Relative Positions                                          │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │
+│  local offset: int = -5;  # 5 positions before current       │
+│                                                              │
+│  Directional Values                                          │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │
+│  local direction: int = -1;  # Backwards                     │
+│                                                              │
 │  In practice: count is used 90% of the time in Zeek scripts  │
-│  Use int only when you specifically need negative values      │
-│                                                                │
+│  Use int only when you specifically need negative values     │
+│                                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
 
