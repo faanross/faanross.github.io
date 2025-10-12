@@ -115,10 +115,10 @@ cd ~/src
 # Clone the Zeek repository
 git clone --recursive https://github.com/zeek/zeek
 cd zeek
-git submodule update --init –recursive
 
 # Check out the latest stable release
 git checkout v8.0.1  # Or whatever the latest stable version is
+git submodule update --init –recursive # To ensure all submodules are initialized
 ```
 
 The `--recursive` flag is important - it ensures that Zeek's submodules (auxiliary repositories it depends on) are also cloned.
