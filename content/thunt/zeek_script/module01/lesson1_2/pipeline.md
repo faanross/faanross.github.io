@@ -322,7 +322,7 @@ When packets arrive at the event engine, Zeek doesn't just look at their raw byt
                      │
 ┌────────────────────▼────────────────────────────────────────┐
 │                  TRANSPORT PROTOCOLS                        │
-│                    TCP, UDP, ICMP                           │
+│                    TCP, UDP,                                │
 └────────────────────┬────────────────────────────────────────┘
                      │
                      ├─→ Track: Sequence numbers, ACKs
@@ -331,7 +331,7 @@ When packets arrive at the event engine, Zeek doesn't just look at their raw byt
                      │
 ┌────────────────────▼────────────────────────────────────────┐
 │                   NETWORK PROTOCOLS                         │
-│                      IP, IPv6                               │
+│                      IP, IPv6, ICMP                         │
 └────────────────────┬────────────────────────────────────────┘
                      │
                      └─→ Extract: Addresses, TTL, flags
