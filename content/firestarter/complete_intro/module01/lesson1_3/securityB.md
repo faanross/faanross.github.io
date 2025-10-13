@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 4 - Windows Security Model"
+title: "Part 4B - Lab: SeDebugPrivilege"
 type: "page"
 ---
 
@@ -22,5 +22,5 @@ type: "page"
 ---
 
 [|TOC|]({{< ref "../../moc.md" >}})
-[|PREV|]({{< ref "./memory.md" >}})
-[|NEXT|]({{< ref "./pe.md" >}})
+[|PREV|]({{< ref "./securityA.md" >}})
+[|NEXT|]({{< ref "./securityC.md" >}})

@@ -569,4 +569,4 @@ The kernel maintains one **VAD tree per process**, rooted in the `EPROCESS` str
 
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "./thread.md" >}})
-[|NEXT|]({{< ref "./security.md" >}})
+[|NEXT|]({{< ref "./securityA.md" >}})

@@ -22,5 +22,5 @@ type: "page"
 ---
 
 [|TOC|]({{< ref "../../moc.md" >}})
-[|PREV|]({{< ref "./memory.md" >}})
-[|NEXT|]({{< ref "./pe.md" >}})
+[|PREV|]({{< ref "./securityB.md" >}})
+[|NEXT|]({{< ref "./securityD.md" >}})
