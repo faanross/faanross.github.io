@@ -39,8 +39,8 @@ type: "page"
 
 #### Part 2 - Scalar Types: Single Values
 - [Part 2A - Introduction: Understanding Scalar Types in Zeek]({{< ref "module02/lesson2_1/scalar/intro.md" >}})
-- [Part 2B - Writing and Loading Your First Script]({{< ref "module02/lesson2_1/intro/first.md" >}})
-- [Part 2C - The Count Type: Non-Negative Integers]({{< ref "module02/lesson2_1/intro/count.md" >}})
+- [Part 2B - Writing and Loading Your First Script]({{< ref "module02/lesson2_1/scalar/first.md" >}})
+- [Part 2C - The Count Type: Non-Negative Integers]({{< ref "module02/lesson2_1/scalar/count.md" >}})
 
 
 
