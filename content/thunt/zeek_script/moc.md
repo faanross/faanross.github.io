@@ -44,15 +44,22 @@ type: "page"
 
 
 
-
-- [Part 2 - Scalar Types: Single Values]({{< ref "module02/lesson2_1/scalar.md" >}})
-
-
+#### Part 3 - Complex Types: Structured Data
 - [Part 3 - Complex Types: Structured Data]({{< ref "module02/lesson2_1/complex.md" >}})
+
+#### Part 4 - Variable Scoping and Namespace
 - [Part 4 - Variable Scoping and Namespace]({{< ref "module02/lesson2_1/scoping.md" >}})
+
+#### Part 5 - Type Inference and Type Casting
 - [Part 5 - Type Inference and Type Casting]({{< ref "module02/lesson2_1/inference.md" >}})
+
+#### Part 6 - Operators and Expressions
 - [Part 6 - Operators and Expressions]({{< ref "module02/lesson2_1/operators.md" >}})
+
+#### Part 7 - Working with Zeek's Built-in Data Structures
 - [Part 7 - Working with Zeek's Built-in Data Structures]({{< ref "module02/lesson2_1/builtin.md" >}})
+
+#### Parts 8 + 9 - Practical Exercises + Knowledge Validation
 - [Part 8 - Practical Exercises]({{< ref "module02/lesson2_1/exercises.md" >}})
 - [Part 9 - Knowledge Validation]({{< ref "module02/lesson2_1/validation.md" >}})
 
