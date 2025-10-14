@@ -174,5 +174,5 @@ By the end, you'll understand not just _what_ Zeek's types are, but _why_ th
 
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "../../module01/lesson1_3/validation.md" >}})
-[|NEXT|]({{< ref "./scalar.md" >}})
+[|NEXT|]({{< ref "./scalar/intro.md" >}})
 

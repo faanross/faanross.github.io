@@ -924,6 +924,702 @@ As you develop more sophisticated Zeek scripts, temporal analysis will become on
 
 
 
+## **The interval Type: Time Durations**
+
+The `interval` type represents durations - lengths or spans of time. While the `time` type answers "when did this happen?" (a point on the timeline), the `interval` type answers "how long did this last?" (a distance along the timeline). Understanding this distinction is fundamental: a timestamp locates an event in time, while an interval measures elapsed time between events or the duration of an event.
+
+### **Why Durations Matter in Security**
+
+Security analysis constantly deals with questions of duration: How long did that connection last? How much time elapsed between failed login attempts? How long has this host been silent? What's the timeout window for this detection? How frequently should we check for suspicious patterns?
+
+Durations are critical for distinguishing normal from abnormal. A connection lasting three seconds might be a normal web request. A connection lasting three hours could be a persistent backdoor. Failed logins spaced 10 minutes apart might be a forgetful user. Failed logins spaced 2 seconds apart is a brute force attack. Understanding duration and timing patterns is essential to accurate detection.
+
+### **Basic Usage and Declaration**
+
+Zeek makes working with intervals intuitive by supporting natural time unit notation:
+
+```c
+# Declaring intervals
+local five_minutes: interval = 5min;
+local one_hour: interval = 1hr;
+local thirty_seconds: interval = 30sec;
+local one_day: interval = 1day;
+
+# Multiple units
+local complex_interval: interval = 1hr + 30min + 15sec;
+
+# From calculations
+local duration: interval = end_time - start_time;
+```
+
+Notice how readable this is. You don't write `300` and hope someone remembers that's seconds - you write `5min` and the meaning is immediately clear. This readability extends to maintenance: when you revisit code months later, `30sec` is instantly understandable while `30000` requires you to figure out whether that's milliseconds, microseconds, or something else.
+
+**Creating intervals through arithmetic** is equally common. When you subtract one `time` from another, you get an `interval` - the duration between those two moments.
+
+
+### **Available Time Units**
+
+Zeek provides a comprehensive set of time units covering the full range from microseconds to days:
+
+```c
+# Available time units (can be mixed)
+# Microsecond
+1usec   
+
+# Millisecond 
+1msec   
+
+# Second
+1sec    
+
+# Minute
+1min   
+
+# Hour
+1hr   
+
+# Day  
+1day    
+
+# Examples
+local short: interval = 100msec;
+local medium: interval = 5min;
+local long: interval = 24hr;
+local very_long: interval = 7day;
+```
+
+You can **mix units freely** to express complex durations: `1hr + 30min + 15sec` is perfectly valid and represents exactly one hour, thirty minutes, and fifteen seconds. Zeek handles all the unit conversion automatically.
+
+These units cover every practical timescale for network security:
+
+- **Microseconds/milliseconds:** Network latency, packet timing, sub-second response analysis
+- **Seconds/minutes:** Connection durations, brute force attack windows, event clustering
+- **Hours/days:** Long-running connections, behavioral baselines, retention periods
+
+
+### **Interval Arithmetic and Comparisons**
+
+The `interval` type supports intuitive arithmetic operations that let you build sophisticated temporal logic:
+
+**Addition and subtraction** combine or reduce durations:
+
+```c
+# Addition
+local total: interval = 5min + 30sec;  
+# 5 minutes 30 seconds
+
+# Subtraction
+local difference: interval = 1hr - 15min;  
+# 45 minutes
+```
+
+**Multiplication and division** by scalars let you scale durations:
+
+```c
+# Multiplication by scalar
+local triple: interval = 10sec * 3;  
+# 30 seconds
+
+# Division
+local half: interval = 1hr / 2;  
+# 30 minutes
+```
+
+These operations are useful for calculating timeouts ("wait twice as long as last time"), adjusting thresholds ("reduce the detection window by half"), or building schedules ("check every N minutes where N changes based on load").
+
+**Comparison operations** let you implement threshold-based detection:
+
+```c
+# Comparison
+if ( interval1 > 5min )
+    print "More than 5 minutes";
+    
+if ( interval2 < 1sec )
+    print "Sub-second duration";
+```
+
+You can check if a duration is longer than, shorter than, or equal to a threshold. This is the foundation of time-based alerting: "alert if connection lasts longer than X" or "alert if events happen faster than Y."
+
+
+
+
+### **Real-World Example: Connection Duration Analysis**
+
+Connection duration is one of the most informative characteristics for detecting malicious activity. Let's examine how to use intervals to build duration-based detections:
+
+```c
+# Detect suspiciously long connections (persistent backdoor)
+event connection_state_remove(c: connection)
+{
+    # Only check if we have timing info
+    if ( !c?$duration )
+        return;
+    
+    local duration = c$duration;
+    local src = c$id$orig_h;
+    local dst = c$id$resp_h;
+    
+    # Connections lasting over 1 hour are unusual
+    if ( duration > 1hr )
+    {
+        print fmt("Long connection: %s -> %s lasted %s",
+                  src, dst, duration);
+    }
+    
+    # Very short connections with data transfer (scanning?)
+    if ( duration < 1sec && c$orig_bytes + c$resp_bytes > 0 )
+    {
+        print fmt("Fast connection: %s -> %s completed in %s",
+                  src, dst, duration);
+    }
+}
+```
+
+**Understanding this detection:** We're examining connections as they close (the `connection_state_remove` event). First, we check if duration information is available - not all connections have complete timing data.
+
+**Long connections** (over one hour) are statistically unusual. Most legitimate traffic consists of relatively short connections: web requests complete in seconds, email retrieval takes seconds to minutes, file transfers rarely exceed 30 minutes unless they're very large. A connection lasting hours could indicate a persistent shell, a backdoor maintaining a connection, or data exfiltration over a slow channel to avoid detection.
+
+**Very short connections with data** (under one second but transferring bytes) might indicate scanning or automated probing. Normal connections usually involve some handshaking and data exchange that takes at least a second or two. When you see connections completing in milliseconds but still transferring data, it might be a scanner that connects, sends a probe, gets a response, and immediately disconnects - all in a fraction of a second.
+
+### **Scheduling and Periodic Checks**
+
+Intervals are also essential for scheduling recurring tasks - checking for patterns periodically:
+
+```c
+# Detect beaconing based on connection regularity
+global connection_schedule: table[addr] of interval;
+
+event new_connection(c: connection)
+{
+    local src = c$id$orig_h;
+    
+    # Schedule check for regular connections
+    if ( src !in connection_schedule )
+    {
+        connection_schedule[src] = 1min;  # Check every minute
+        schedule connection_schedule[src] {
+            check_for_beaconing(src)
+        };
+    }
+}
+```
+
+**Understanding scheduled checks:** We're using the `schedule` statement to arrange future execution of code. The `connection_schedule[src]` interval (one minute) tells Zeek to wait that long before executing the scheduled code block. This pattern is common for periodic analysis: "every minute, check if this host is beaconing" or "every five minutes, summarize activity and look for anomalies."
+
+Scheduling with intervals lets you build detections that aggregate data over time windows, check for patterns that only emerge across multiple events, or implement rate limiting and throttling of alerts.
+
+### **Practical Patterns with Intervals**
+
+Here are common patterns you'll use repeatedly in Zeek scripts:
+
+**Timeout windows:** Define how long to wait before considering something "timed out"
+
+```c
+local timeout: interval = 5min;
+if ( network_time() - last_seen_time > timeout )
+    print "Connection timed out";
+```
+
+**Rate limiting:** Ensure events don't happen too frequently
+
+```c
+local min_interval: interval = 1sec;
+if ( current_time - last_event_time < min_interval )
+    return;  
+    # Too soon, ignore this event
+```
+
+**Time windows:** Aggregate or analyze data within sliding windows
+
+```c
+local window: interval = 10min;
+# Count events in the last 10 minutes
+```
+
+**Threshold checking:** Alert when durations exceed or fall below limits
+
+```c
+if ( connection_duration > 30min )
+    alert("Long-running connection detected");
+```
+
+### **Why This Matters for Security**
+
+The `interval` type transforms how you think about time in security analysis. Instead of dealing with raw timestamp differences or converting everything to seconds manually, you work with durations as first-class values. This makes your code more readable, more maintainable, and less error-prone.
+
+Consider the difference:
+
+```c
+# Without interval type (error-prone)
+if ( (end_time - start_time) > 300.0 )  
+# What unit is 300?
+    
+# With interval type (self-documenting)
+if ( (end_time - start_time) > 5min )   
+# Obviously 5 minutes
+```
+
+The second version is instantly clear to anyone reading the code. The first requires mental conversion and assumes you know the time is in seconds.
+
+More importantly, intervals let you build temporal logic that mirrors how security analysts think: "alert if the connection lasts longer than an hour," "check for patterns every five minutes," "ignore events that happen within one second of each other," "baseline activity over 24-hour windows." These natural expressions of time-based rules translate directly into clean, understandable Zeek code.
+
+As you develop advanced detections, you'll find yourself using intervals constantly - for rate limiting to reduce alert fatigue, for defining behavioral baselines ("normal connections last between 30 seconds and 5 minutes"), for implementing adaptive thresholds that change based on observed patterns, and for scheduling periodic analysis tasks. The `interval` type isn't just a convenience - it's a fundamental building block of sophisticated temporal analysis.
+
+
+
+
+## **The string Type: Text Data**
+
+The `string` type represents text - sequences of characters that make up hostnames, URLs, user agents, email addresses, file names, HTTP headers, DNS queries, and countless other pieces of textual data flowing through network protocols. In network security analysis, strings are everywhere because most application-layer protocols use human-readable text. Understanding how to work with strings effectively is essential for building detections that analyze protocol content rather than just packet headers.
+
+### **Why Strings Matter in Security**
+
+While lower-level network analysis focuses on IP addresses and port numbers, sophisticated security detection examines the actual content of communications. Is this URL trying to exploit a vulnerability? Does this User-Agent string match known malware? Is this hostname trying to masquerade as a legitimate domain? Does this HTTP request contain SQL injection attempts?
+
+All of these questions require analyzing textual data. Attackers embed malicious code in URLs, disguise malware with convincing User-Agent strings, use domain names that look legitimate but contain subtle typos (typosquatting), and hide exploits in seemingly normal text fields. The `string` type gives you the tools to inspect, compare, search, and manipulate this textual content to uncover threats.
+
+### **Basic Usage and Declaration**
+
+Working with strings in Zeek is straightforward and similar to most programming languages:
+
+```c
+# String literals
+local hostname: string = "www.example.com";
+local user_agent: string = "Mozilla/5.0...";
+local empty: string = "";
+
+# Strings from events
+event http_request(c: connection, method: string, original_URI: string,
+                   unescaped_URI: string, version: string)
+{
+    local url: string = original_URI;
+    local host: string = c$http$host;
+}
+```
+
+String literals use double quotes. Most of the time, though, you won't be declaring string constants - you'll be extracting strings from network events. Every HTTP request contains multiple string fields: the method ("GET", "POST"), the URI, the hostname, the User-Agent header, cookies, and more. DNS queries contain domain names. SMTP traffic contains email addresses. These all come to you as `string` values ready for analysis.
+
+### **Essential String Operations**
+
+Zeek provides a rich set of operations for working with textual data:
+
+**Concatenation** builds new strings by joining existing ones:
+
+```c
+# Concatenation
+local full_url = "http://" + hostname + "/path";
+```
+
+This is useful for reconstructing full URLs, building log messages, or creating composite identifiers.
+
+**Comparison** checks for exact matches:
+
+```c
+# Comparison
+if ( hostname == "www.evil.com" )
+    print "Matched malicious domain";
+```
+
+Exact comparison is the foundation of allow/deny lists - checking if a string matches a known good or known bad value.
+
+**Length** tells you how many characters a string contains:
+
+```c
+# Length
+local len = |hostname|;  # Number of characters
+```
+
+String length is useful for detecting anomalies - excessively long URLs might indicate buffer overflow attempts, unusually short hostnames might be suspicious, and zero-length fields might indicate protocol violations.
+
+**Substring checking** searches for patterns within strings:
+
+```c
+# Substring check
+if ( "evil" in hostname )
+    print "Suspicious string found";
+```
+
+The `in` operator checks if one string appears anywhere within another. This is simpler than regular expressions for straightforward substring matching.
+
+**Case conversion** normalizes strings for comparison:
+
+```c
+# Case conversion
+local lower = to_lower(hostname);  # "WWW.EXAMPLE.COM" -> "www.example.com"
+local upper = to_upper(hostname);  # "www.example.com" -> "WWW.EXAMPLE.COM"
+```
+
+Case conversion is essential because attackers often use mixed case to evade simple string matching. Converting everything to lowercase before comparison prevents evasion through capitalization tricks.
+
+**String formatting** creates readable messages:
+
+```c
+# String formatting
+local message = fmt("User %s from %s accessed %s", 
+                    username, src_ip, url);
+```
+
+The `fmt()` function works like printf in C or format strings in Python - placeholders like `%s` (string), `%d` (integer), `%f`(float) get replaced with actual values. This makes log messages and alerts readable and informative.
+
+### **Regular Expressions: The Power Tool**
+
+Regular expressions are pattern-matching mini-languages that let you express complex textual patterns concisely. They're incredibly powerful for security detection because attacks often follow recognizable patterns:
+
+**Pattern matching for common exploits:**
+
+```c
+# Pattern matching - VERY powerful for detection
+local url: string = "/admin/../../etc/passwd";
+
+# Check for path traversal
+if ( /\.\.[\/\\]/ in url )
+    print "Path traversal detected!";
+
+# Match SQL injection patterns
+if ( /union.*select|or.*1=1|'; drop/i in url )
+    print "SQL injection detected!";
+```
+
+Let's break down these patterns:
+
+- `/\.\.[\/\\]/` matches ".." followed by either a forward slash or backslash - the classic path traversal pattern trying to escape directory boundaries
+- `/union.*select|or.*1=1|'; drop/i` matches common SQL injection patterns: "union" followed eventually by "select", or "or" followed by "1=1", or "'; drop". The trailing `i` makes the match case-insensitive
+
+**Extracting parts of strings:**
+
+```c
+# Extract parts of strings
+local email = "user@example.com";
+local parts = split_string(email, /@/);
+# parts[0] = "user", parts[1] = "example.com"
+```
+
+The `split_string()` function breaks a string into pieces based on a delimiter (here, the `@` symbol). This is useful for parsing structured text - email addresses, URLs, CSV data, or any delimited format.
+
+**File extension checking:**
+
+```c
+# Check for suspicious file extensions
+if ( /.exe$|.scr$|.bat$/ in filename )
+    print "Executable file detected";
+```
+
+The `$` anchor matches the end of the string, ensuring these extensions are actually at the end of the filename, not embedded in the middle.
+
+Regular expressions deserve deep study - they're one of the most powerful tools in your security detection arsenal. The patterns you can express range from simple substring matches to complex multi-condition rules that would take dozens of lines of code to implement manually.
+
+### **Real-World Example: User-Agent Analysis**
+
+User-Agent strings identify the browser or application making HTTP requests. Legitimate browsers have characteristic User-Agent formats, while malware, scanners, and automation tools often use distinctive patterns or unusual User-Agents. Let's build detection logic around this:
+
+```c
+# Detect suspicious user agents
+global legitimate_browsers = set(
+    "Mozilla",
+    "Chrome", 
+    "Safari",
+    "Firefox",
+    "Edge"
+);
+
+event http_request(c: connection, method: string, original_URI: string,
+                   unescaped_URI: string, version: string)
+{
+    if ( !c$http?$user_agent )
+        return;
+    
+    local ua = c$http$user_agent;
+    local suspicious = T;
+    
+    # Check if it looks like a legitimate browser
+    for ( browser in legitimate_browsers )
+    {
+        if ( browser in ua )
+        {
+            suspicious = F;
+            break;
+        }
+    }
+    
+    # Also check for known malicious patterns
+    if ( /curl|wget|python|powershell|scanner/i in ua )
+        suspicious = T;
+    
+    if ( suspicious )
+    {
+        print fmt("Suspicious User-Agent: %s from %s",
+                  ua, c$id$orig_h);
+    }
+}
+```
+
+**Understanding this detection:** We're analyzing every HTTP request's User-Agent header. First, we assume it's suspicious until proven otherwise. Then we check if it contains any of the strings typical of legitimate browsers - "Mozilla", "Chrome", etc. Most real browsers include "Mozilla" for historical compatibility reasons, so this catches most legitimate traffic.
+
+However, we then apply an additional check for known tool patterns. Command-line tools like `curl` and `wget`, scripting languages like `python`, shells like `powershell`, and explicit scanner tools often appear in User-Agent strings when attackers use automation. If we detect these patterns, we flag it as suspicious regardless of browser string presence.
+
+This isn't perfect - legitimate automation exists, and attackers can forge User-Agents - but it's a useful signal. Unusual User-Agents warrant closer inspection, especially when combined with other suspicious indicators like accessing sensitive paths or generating unusual traffic patterns.
+
+### **String Safety and Sanitization**
+
+Strings from network traffic are fundamentally **untrusted input**. Attackers control this data and may craft it maliciously. You must handle strings carefully to avoid security issues in your own scripts:
+
+```c
+# Always sanitize strings before using in external commands or logs
+function sanitize_string(s: string): string
+{
+    # Remove potentially dangerous characters
+    local safe = gsub(s, /[^a-zA-Z0-9._-]/, "_");
+    return safe;
+}
+
+# Truncate long strings to prevent log bloat
+function truncate_string(s: string, max_len: count): string
+{
+    if ( |s| <= max_len )
+        return s;
+    
+    return s[0:max_len] + "...";
+}
+```
+
+**Why sanitization matters:** If you're writing strings to log files, you need to ensure they don't contain characters that could break your log format or inject false log entries (like newlines). If you're passing strings to external programs (generally discouraged), you must prevent command injection. The `gsub()` function (global substitute) replaces all characters that don't match the safe pattern with underscores.
+
+**Why truncation matters:** Attackers sometimes send extremely long strings (kilobytes or even megabytes) to exploit buffer overflows or cause denial of service. Even if your Zeek script handles them safely, logging these enormous strings can fill your disk, slow down log processing, and make analysis difficult. Truncating strings to reasonable lengths (maybe 200-500 characters) keeps logs manageable while preserving enough context for analysis.
+
+### **Why This Matters for Security**
+
+The `string` type is your window into application-layer protocols - the actual content attackers manipulate. While network-layer analysis (IPs, ports, connection patterns) catches broad categories of threats, string analysis detects sophisticated attacks that operate within legitimate protocols: SQL injection hidden in HTTP parameters, cross-site scripting in URLs, path traversal in file paths, command injection in form fields, malware callbacks disguised as browser traffic.
+
+Effective string handling combines multiple techniques:
+
+- **Exact matching** for known bad values (malicious domains, exploit signatures)
+- **Regular expressions** for pattern-based detection (attack techniques that vary in detail but follow recognizable patterns)
+- **Substring searching** for simple indicators (keywords associated with threats)
+- **Length checks** for anomaly detection (unusually long or short values)
+- **Case normalization** to prevent evasion
+- **Sanitization** to protect your own systems
+
+As you develop more advanced Zeek scripts, you'll find yourself analyzing strings constantly - parsing URLs to extract suspicious components, correlating hostnames with threat intelligence, detecting encoded or obfuscated attack payloads, and building signatures for emerging threats. The `string` type and its associated operations are fundamental tools you'll use in almost every detection you build.
+
+
+
+
+
+
+
+
+
+## **The bool Type: Boolean Values**
+
+The `bool` type represents binary truth values - something is either true or false, yes or no, on or off. Booleans are the fundamental building blocks of logic and decision-making in programs. In Zeek, true is written as `T` and false as `F` (note the capital letters, unlike many languages that use lowercase `true` and `false`). While this might seem like a simple type, booleans are absolutely essential for expressing security logic: "Is this IP address suspicious?" "Has the threshold been exceeded?" "Should we alert on this behavior?"
+
+### **Why Booleans Matter in Security**
+
+Security detection is fundamentally about making decisions based on conditions. Every detection you write ultimately answers a yes/no question: "Is this traffic malicious?" "Does this behavior match a known attack pattern?" "Have multiple indicators aligned to suggest a threat?"
+
+Booleans let you express these binary decisions clearly and combine them using logical operations. A sophisticated detection might check: "Is the source internal AND the destination external AND the connection is encrypted AND the volume is high AND the timing is suspicious?" Each of these conditions evaluates to a boolean, and you combine them with logical operators to make a final determination.
+
+Boolean flags also let you track state over time: "Have we seen scanning from this IP?" "Is this connection still active?" "Has this alert already fired?" This state tracking is essential for building detections that aggregate information across multiple events.
+
+### **Basic Usage and Declaration**
+
+Working with booleans in Zeek is straightforward:
+
+```c
+# Boolean literals
+local is_suspicious: bool = T;
+local is_encrypted: bool = F;
+
+# From comparisons
+local is_local: bool = (ip in local_networks);
+local exceeded_threshold: bool = (count > 100);
+
+# Boolean operations
+local detected = is_suspicious && exceeded_threshold;  # AND
+local flagged = is_local || is_external;  # OR
+local not_safe = !is_encrypted;  # NOT
+```
+
+**Direct assignment** gives you explicit true/false values using `T` and `F`. Remember these are capitalized in Zeek - lowercase won't work.
+
+**From comparisons**, any comparison operation produces a boolean result. Testing if an IP is in a subnet, checking if a count exceeds a threshold, comparing strings - all of these evaluate to `T` or `F`.
+
+**Boolean operators** let you combine simple conditions into complex logic:
+
+- `&&` (AND) returns true only if both operands are true
+- `||` (OR) returns true if either operand is true
+- `!` (NOT) inverts the boolean value
+
+These operators let you express sophisticated multi-condition rules concisely.
+
+### **Using Booleans in Conditionals**
+
+Booleans drive control flow - they determine which code executes:
+
+```c
+# Direct use (preferred)
+if ( is_suspicious )
+    print "Suspicious activity";
+
+# Explicit comparison (unnecessary but valid)
+if ( is_suspicious == T )
+    print "Suspicious activity";
+
+# Negation
+if ( !is_encrypted )
+    print "Unencrypted traffic";
+
+# Complex boolean logic
+if ( is_internal(src) && !is_internal(dst) && port == 443/tcp )
+    print "Outbound HTTPS from internal to external";
+```
+
+**Style note:** In Zeek (and most languages), directly testing a boolean is preferred over explicitly comparing to `T`. Write `if ( is_suspicious )` rather than `if ( is_suspicious == T )` - it's cleaner and more idiomatic. The boolean value itself is the condition.
+
+**Negation** with `!` is common for checking the opposite: "if not encrypted," "if not local," "if not already processed." This reads naturally and avoids the awkwardness of negative variable names.
+
+**Complex conditions** combine multiple checks with `&&` (all must be true) and `||` (at least one must be true). The example above checks three conditions simultaneously: the source is internal, the destination is external, and the port is 443/tcp. Only when all three are true does the detection fire. This precision prevents false positives.
+
+### **Operator Precedence and Clarity**
+
+When combining boolean operators, understand their precedence:
+
+- `!` (NOT) has highest precedence
+- `&&` (AND) has medium precedence
+- `||` (OR) has lowest precedence
+
+This means `!a && b || c` is evaluated as `((!a) && b) || c`. While you can rely on precedence, explicit parentheses often make complex conditions clearer: `((!a) && b) || c` is unambiguous and easier to understand at a glance.
+
+For security logic, **clarity is more important than brevity**. When you're building a detection that will run in production, potentially generating alerts that trigger incident response, you want your boolean logic to be crystal clear. Use parentheses liberally to make your intent obvious.
+
+### **Real-World Example: Multi-Flag Threat Assessment**
+
+Security detection often involves tracking multiple indicators and assessing overall threat level based on how many indicators are present. Booleans are perfect for this:
+
+```c
+# Multiple detection flags
+type DetectionFlags: record {
+    is_scanning: bool &default=F;
+    is_brute_forcing: bool &default=F;
+    is_beaconing: bool &default=F;
+    high_volume: bool &default=F;
+};
+
+global threat_flags: table[addr] of DetectionFlags;
+
+function assess_threat(ip: addr): string
+{
+    if ( ip !in threat_flags )
+        return "clean";
+    
+    local flags = threat_flags[ip];
+    
+    # Count how many flags are set
+    local flag_count = 0;
+    if ( flags$is_scanning ) ++flag_count;
+    if ( flags$is_brute_forcing ) ++flag_count;
+    if ( flags$is_beaconing ) ++flag_count;
+    if ( flags$high_volume ) ++flag_count;
+    
+    if ( flag_count == 0 )
+        return "clean";
+    else if ( flag_count == 1 )
+        return "low";
+    else if ( flag_count == 2 )
+        return "medium";
+    else
+        return "high";
+}
+```
+
+**Understanding this pattern:** We're tracking multiple behavioral indicators for each IP address using boolean flags. Each flag represents a different suspicious behavior detected by various parts of our analysis: scanning (connecting to many ports), brute-forcing (many failed authentications), beaconing (regular connection patterns), and high volume (transferring unusual amounts of data).
+
+**Why this approach works:** Individual indicators can produce false positives. Maybe a host scans because it's a legitimate security scanner. Maybe high volume is normal for a file server. But when multiple indicators align - a host is both scanning AND beaconing AND generating high volume - the probability of malicious activity increases dramatically.
+
+The `assess_threat()` function counts how many flags are set and returns a threat level. Zero flags means clean, one flag is low confidence (might be legitimate), two flags is medium confidence (investigate), and three or more flags is high confidence (likely malicious). This graduated response lets you prioritize alerts and resources appropriately.
+
+### **Boolean Patterns in Security Detection**
+
+Several common patterns use booleans effectively:
+
+**Allow/deny list checking:**
+
+```c
+local is_allowed: bool = (ip in allow_list);
+if ( !is_allowed )
+    # Block or alert
+```
+
+**Multi-condition validation:**
+
+```c
+if ( is_internal(src) && !is_internal(dst) && is_sensitive_port(port) )
+    # Data exfiltration concern
+```
+
+**State tracking:**
+
+```c
+global alerted: set[addr] = set();
+
+if ( is_malicious && src !in alerted )
+{
+    alert(src);
+    add alerted[src];  # Don't alert again
+}
+```
+
+**Threshold crossing:**
+
+```c
+local exceeded: bool = (count > threshold);
+if ( exceeded && !previously_exceeded )
+    # First time crossing threshold
+```
+
+**Feature flags:**
+
+```c
+const enable_experimental_detection: bool = F;
+
+if ( enable_experimental_detection )
+    # Run new detection logic
+```
+
+### **Short-Circuit Evaluation**
+
+Understanding how boolean operators evaluate is important for both correctness and performance:
+
+**AND (`&&`) short-circuits:** If the left operand is false, the right operand isn't evaluated because the result is already false:
+
+```c
+if ( ip in local_networks && check_expensive_condition(ip) )
+    # check_expensive_condition() only called if ip is local
+```
+
+Put cheaper or more likely-to-fail conditions first to avoid unnecessary computation.
+
+**OR (`||`) short-circuits:** If the left operand is true, the right operand isn't evaluated because the result is already true:
+
+```c
+if ( ip in deny_list || is_known_malicious(ip) )
+    # is_known_malicious() not called if already in deny_list
+```
+
+This isn't just an optimization - it can affect correctness. If the right-side function has side effects or could error on certain inputs, short-circuit evaluation protects you.
+
+### **Why This Matters for Security**
+
+The `bool` type might seem simple, but it's the foundation of all decision logic in security detection. Every sophisticated detection ultimately reduces to a series of boolean questions: "Does this match criterion A?" "Does it also match criterion B?" "Should we alert?"
+
+Effective use of booleans makes your detections more readable, maintainable, and correct. When you return to code months later (or when a colleague reads it for the first time), clear boolean logic with well-named variables tells a story: `if ( is_suspicious && exceeds_threshold && !is_whitelisted )` immediately conveys the detection's logic without needing to decipher complex nested conditions.
+
+Boolean flags let you implement stateful detection - tracking what you've seen from each host, correlating indicators across events, and building comprehensive threat profiles. This state tracking is what elevates simple signature matching to sophisticated behavioral analysis.
+
+As you build more complex detections, you'll find yourself using booleans constantly: as function return values ("does this condition hold?"), as record fields (tracking multiple attributes), in tables (mapping entities to their states), and as the glue that combines simple checks into powerful compound detections. Master booleans, and you master the logic of security analysis.
+
+
+
 
 
 ---

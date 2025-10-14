@@ -36,7 +36,18 @@ type: "page"
 ## MODULE 2: Zeek Scripting Fundamentals
 ### Lesson 2.1: Script Language Basics
 - [Part 1 - Understanding Zeek's Type System]({{< ref "module02/lesson2_1/type.md" >}})
+
+#### Part 2 - Scalar Types: Single Values
+- [Part 2A - Introduction: Understanding Scalar Types in Zeek]({{< ref "module02/lesson2_1/scalar/intro.md" >}})
+- [Part 2B - Writing and Loading Your First Script]({{< ref "module02/lesson2_1/intro/first.md" >}})
+- [Part 2C - The Count Type: Non-Negative Integers]({{< ref "module02/lesson2_1/intro/count.md" >}})
+
+
+
+
 - [Part 2 - Scalar Types: Single Values]({{< ref "module02/lesson2_1/scalar.md" >}})
+
+
 - [Part 3 - Complex Types: Structured Data]({{< ref "module02/lesson2_1/complex.md" >}})
 - [Part 4 - Variable Scoping and Namespace]({{< ref "module02/lesson2_1/scoping.md" >}})
 - [Part 5 - Type Inference and Type Casting]({{< ref "module02/lesson2_1/inference.md" >}})
