@@ -52,19 +52,34 @@ When you perform **division** with counts, remember that Zeek uses integer divis
 
 Let's see `count` in action with a realistic security use case - monitoring failed connection attempts per IP address to detect potential brute force or scanning activity:
 
-```c  
-# Track failed connection attempts per IP  
-global failed_attempts: table[addr] of count;  
-  
-event connection_rejected(c: connection)  
-{  
-    local src = c$id$orig_h;        # Initialize if first time seeing this IP  
-    if ( src !in failed_attempts )        failed_attempts[src] = 0;        # Increment count  
-    failed_attempts[src] += 1;        # Check threshold  
-    if ( failed_attempts[src] >= 10 )    {        print fmt("%s has %d failed connections", src, failed_attempts[src]);    }}  
-```  
 
-**Walking through this example:** We're maintaining a table that maps IP addresses to their count of failed connection attempts. Each time a connection is rejected, we check if we've seen this source IP before. If not, we initialize its count to zero. Then we increment the count and check if it's reached our threshold of 10 failed attempts. This simple pattern - initialize, increment, compare - is fundamental to countless security detection scripts.
+```zeek
+# Track failed connection attempts per IP
+global failed_attempts: table[addr] of count;
+
+event connection_rejected(c: connection)
+    {
+    # Initialize if first time seeing this IP
+    local src = c$id$orig_h;
+    
+    if ( src !in failed_attempts )
+        failed_attempts[src] = 0;
+    
+    # Increment count
+    failed_attempts[src] += 1;
+    
+    # Check threshold
+    if ( failed_attempts[src] >= 10 )
+        {
+        print fmt("%s has %d failed connections", src, failed_attempts[src]);
+        }
+    }
+```
+
+
+**Walking through this example:** 
+
+We're maintaining a table that maps IP addresses to their count of failed connection attempts. Each time a connection is rejected, we check if we've seen this source IP before. If not, we initialize its count to zero. Then we increment the count and check if it's reached our threshold of 10 failed attempts. This simple pattern - initialize, increment, compare - is fundamental to countless security detection scripts.
 
 Notice how the `count` type makes this code clean and safe. We don't need to worry about accidentally storing negative numbers or handling type conversions. The type system ensures our counter behaves correctly.
 
