@@ -488,6 +488,443 @@ This distinction is fundamental to security. Many detections only care about one
 
 
 
+## **Subnet Masking and Address Aggregation**
+
+Sometimes you need to extract just the network portion of an IP address - essentially converting an address into its parent subnet. This is useful for **aggregating statistics by network block** or **grouping related addresses**.
+
+Zeek provides the `mask_addr()` function for this:
+
+```c
+# Get network address from IP
+local ip: addr = 192.168.1.100;
+local net: subnet = 192.168.1.0/24;
+
+# Extract network portion
+local network_addr = mask_addr(ip, 24);  # Returns 192.168.1.0
+```
+
+The second parameter to `mask_addr()` is the prefix length - how many bits of the address to keep. A `/24` keeps the first three octets and zeros out the last octet, giving you the network address.
+
+**Practical use case - grouping connections by /24 subnet:**
+
+```c
+# Useful for aggregating by /24 blocks
+global connections_per_subnet: table[addr] of count;
+
+event new_connection(c: connection)
+{
+    local src = c$id$orig_h;
+    local subnet_addr = mask_addr(src, 24);  # Group by /24
+    
+    if ( subnet_addr !in connections_per_subnet )
+        connections_per_subnet[subnet_addr] = 0;
+    
+    connections_per_subnet[subnet_addr] += 1;
+}
+```
+
+**Why this is useful:** Instead of tracking connections per individual IP address (which could be millions of entries), you're grouping by /24 subnets (about 16 million possible values for IPv4, but typically far fewer in practice). This aggregation helps identify which network blocks are most active, which subnets might be compromised, or which ranges are generating suspicious patterns.
+
+This technique is especially valuable for detecting scanning activity. If you see hundreds of connections from different IPs within the same /24, it might indicate a distributed scan from a botnet or compromised subnet rather than isolated individual hosts.
+
+### **Why This Matters for Security Analysis**
+
+The `subnet` type embodies a fundamental truth about network security: **context is everything**. An IP address means different things depending on whether it's internal or external, whether it's in your DMZ or your corporate network, whether it's a single host or part of a larger cloud provider range.
+
+By making subnets first-class citizens in the type system, Zeek lets you express network context naturally and correctly. You don't fight with bit manipulation or mask arithmetic - you write clear, declarative logic about network boundaries and membership.
+
+As you build more sophisticated detections, you'll use subnets for increasingly nuanced purposes: defining trusted networks that skip certain detections, identifying networks with different security postures (guest WiFi vs employee networks vs servers), tracking activity by provider networks to detect cloud-based threats, and aggregating statistics at the subnet level to find patterns invisible at the per-IP level.
+
+Mastering the `subnet` type means mastering one of the most fundamental abstractions in network security. Every professional Zeek deployment relies heavily on proper subnet definitions and membership testing - it's the foundation on which almost everything else builds.
+
+
+
+## **The port Type: Network Ports**
+
+The `port` type represents network ports - those numbers between 0 and 65535 that identify specific services or applications on a host. But Zeek's `port` type does something crucial that simple integers can't: it **binds the port number to its transport protocol** (TCP or UDP). This protocol awareness is essential because port 80 over TCP (HTTP web traffic) is completely different from port 80 over UDP (which might be something else entirely).
+
+### **Why Protocol Context Matters**
+
+In the real world of network security, port numbers without protocol context are almost meaningless. When you see traffic on port 53, you need to know: is it 53/tcp or 53/udp? DNS primarily uses UDP, so 53/udp is normal DNS traffic. But 53/tcp is typically DNS zone transfers or responses too large for UDP - much rarer and potentially interesting from a security perspective.
+
+Similarly, 80/tcp is standard HTTP web traffic you'd expect everywhere. But 80/udp? That's unusual and worth investigating. By making protocol an intrinsic part of the `port` type, Zeek ensures you're always working with the complete picture. You can't accidentally compare TCP ports to UDP ports or forget to check which protocol you're dealing with - the type system enforces correctness.
+
+### **Basic Usage and Declaration**
+
+Declaring ports in Zeek uses an intuitive notation: the port number followed by a slash and the protocol:
+
+```c
+# Port with protocol
+local http_port: port = 80/tcp;
+local dns_port: port = 53/udp;
+local https_port: port = 443/tcp;
+```
+
+The syntax reads naturally: "port 80 over TCP," "port 53 over UDP." This is exactly how network engineers and security analysts think and talk about ports in practice.
+
+**Critically, the same number with different protocols creates different values:**
+
+```c
+# Same number, different protocols are DIFFERENT
+local port1: port = 80/tcp;
+local port2: port = 80/udp;
+
+# port1 != port2  (they're different!)
+```
+
+This distinction prevents an entire class of bugs. If you're checking for HTTP traffic on port 80, you're checking for `80/tcp`, and you won't accidentally match unrelated UDP traffic that happens to use the same port number.
+
+### **Working with Port Values**
+
+The `port` type supports several useful operations for security analysis:
+
+**Comparison** is straightforward - you can check if a port matches a specific value:
+
+```c
+# Comparison
+if ( http_port == 80/tcp )
+    print "Standard HTTP port";
+```
+
+**Extracting the numeric portion** when you need to do arithmetic or range checks:
+
+```c
+# Extract port number
+local port_num = port_to_count(443/tcp);  # Returns 443 as count
+```
+
+The `port_to_count()` function gives you the raw port number as a `count` type, which you can then use in numeric comparisons or calculations. This is useful when you need to categorize ports by range (well-known, registered, ephemeral) or perform other numeric operations.
+
+**Protocol information** is intrinsic to the port type itself. While you can't extract the protocol as a separate string value directly, you test against protocol-specific port values to determine what you're dealing with.
+
+**Range checking** helps categorize ports by their IANA designation:
+
+```c
+# Check if port is in range
+if ( port_num >= 1024 )
+    print "Ephemeral or registered port";
+```
+
+Ports 0-1023 are "well-known" ports requiring root privileges on Unix systems. Ports 1024-49151 are "registered" ports for specific services. Ports 49152-65535 are "dynamic/ephemeral" ports used by clients for outbound connections.
+
+
+
+### **Real-World Example: Detecting Protocol Mismatches**
+
+One common evasion technique attackers use is running services on non-standard ports to avoid detection. Here's how to detect HTTP traffic on unusual ports:
+
+```c
+# Detect HTTP on non-standard ports (potential evasion)
+event http_request(c: connection, method: string, original_URI: string,
+                   unescaped_URI: string, version: string)
+{
+    local resp_port = c$id$resp_p;
+    
+    # HTTP detected on non-80, non-443 port
+    if ( resp_port != 80/tcp && resp_port != 443/tcp && resp_port != 8080/tcp )
+    {
+        print fmt("ALERT: HTTP on unusual port %s from %s", 
+                  resp_port, c$id$orig_h);
+    }
+}
+```
+
+**Understanding this detection:** Zeek's HTTP analyzer has identified HTTP protocol traffic based on the actual content of the packets - it's truly HTTP regardless of port. But the server is listening on something other than the standard ports 80, 443, or 8080. This could be legitimate (maybe it's a development server on port 8000), or it could be an attacker trying to evade simple port-based filtering.
+
+**Detecting service/port mismatches more generally:**
+
+```c
+# Detect services on unexpected ports
+global expected_services: table[port] of string = {
+    [22/tcp] = "ssh",
+    [80/tcp] = "http",
+    [443/tcp] = "https",
+    [53/udp] = "dns",
+};
+
+event connection_established(c: connection)
+{
+    local dst_port = c$id$resp_p;
+    
+    if ( dst_port in expected_services )
+    {
+        # We expect certain services on these ports
+        # Check if actual service matches
+        if ( c?$service && c$service != expected_services[dst_port] )
+        {
+            print fmt("Port/Service mismatch: %s service on port %s",
+                      c$service, dst_port);
+        }
+    }
+}
+```
+
+**Why this matters:** We've defined a table mapping ports to the services we expect on them. When a connection uses one of these ports, we check if Zeek's protocol detection identifies it as the expected service. If SSH traffic appears on port 80, or HTTP appears on port 22, something unusual is happening - either misconfiguration or intentional misdirection.
+
+This detection leverages Zeek's deep packet inspection. Unlike simple port-based filtering that just looks at the port number, Zeek analyzes the actual protocol content. The `port` type lets us express the expected relationship between ports and protocols clearly.
+
+### **Practical Helper Functions**
+
+When working with ports in security analysis, you often need to categorize or filter them. Here are common patterns:
+
+**Categorizing ports by range:**
+
+```c
+# Function to categorize ports
+function categorize_port(p: port): string
+{
+    local port_num = port_to_count(p);
+    
+    if ( port_num < 1024 )
+        return "well-known";
+    else if ( port_num < 49152 )
+        return "registered";
+    else
+        return "ephemeral";
+}
+```
+
+
+
+This function tells you whether a port falls in the well-known range (typically servers), registered range (also servers, but less privileged), or ephemeral range (typically client-side ports for outbound connections). Knowing this helps filter noise - you probably don't care about ephemeral ports as much as well-known ones.
+
+**Identifying commonly targeted ports:**
+
+```c
+# Function to check if port is commonly attacked
+function is_interesting_port(p: port): bool
+{
+    return p in set(
+        21/tcp,    # FTP
+        22/tcp,    # SSH
+        23/tcp,    # Telnet
+        80/tcp,    # HTTP
+        443/tcp,   # HTTPS
+        445/tcp,   # SMB
+        3389/tcp,  # RDP
+        1433/tcp,  # MSSQL
+        3306/tcp   # MySQL
+    );
+}
+```
+
+This function checks if a port is in your "interesting" set - ports that are frequently targeted by attackers or represent critical services. You might use this to prioritize alerts, focusing on connection attempts to these ports over connections to random high-numbered ports.
+
+Notice how we're using complete `port` values (with protocols) in the set, not just numbers. This precision matters - 22/tcp is SSH and interesting, but if there were a 22/udp service (uncommon), you might treat it differently.
+
+### **Why This Matters for Security**
+
+The `port` type reflects a fundamental reality of network security: **services are defined by both port and protocol**. Treating ports as just numbers loses critical context and leads to imprecise detections.
+
+Consider scanning detection. If you just count "connections to port 22," you're mixing TCP (SSH) with any UDP traffic that might coincidentally use port 22. Your counts become meaningless. But if you count connections to `22/tcp`specifically, you're tracking actual SSH access attempts - much more valuable.
+
+Or consider allow/deny lists. If you want to permit HTTP but block everything else, you need to specify `80/tcp` and `443/tcp`. Just blocking "port 80" without protocol context could inadvertently block legitimate UDP traffic.
+
+By making protocol an integral part of the `port` type, Zeek ensures your security logic is precise and correct. You're forced to think about ports the way they actually work on networks - as protocol-specific endpoints - rather than as abstract numbers. This design choice prevents countless subtle bugs and makes your detections more accurate.
+
+As you build more sophisticated Zeek scripts, you'll use ports extensively: detecting services on non-standard ports (evasion), tracking which services are most accessed (baseline), identifying port scans (reconnaissance), correlating port usage with protocol detection (validation), and building service-specific detections. The `port` type's protocol awareness makes all of these tasks cleaner and more reliable.
+
+
+
+
+## **The time Type: Timestamps**
+
+The `time` type represents absolute points in time - specific moments on the timeline. If you think of time as a number line stretching from the past into the future, a `time` value is a single point on that line. Zeek uses the `time` type extensively because network security analysis is fundamentally about understanding **when** things happen: when a connection started, when a packet arrived, when an alert fired, when suspicious behavior began.
+
+### **Why Timestamps Matter in Security**
+
+Time is one of the most critical dimensions in security analysis. Attacks unfold over time. Patterns emerge when you look at sequences of events. A single connection might seem innocent, but fifty connections spaced exactly 60 seconds apart suggests beaconing - a hallmark of command-and-control traffic.
+
+Consider what you can detect with accurate timestamps: **brute force attacks** (many attempts in a short window), **beaconing malware** (periodic connections with regular intervals), **data exfiltration** (sustained transfers over time), reconnaissance (rapid connections to many targets), **time-based evasion** (attacks timed to avoid monitoring periods), and **coordinated attacks** (simultaneous activity across multiple hosts).
+
+Without precise time tracking, you're flying blind. The `time` type gives you the foundation to build these temporal detections.
+
+
+
+
+### **Basic Usage: Getting Time Values**
+
+In Zeek scripts, time values typically come from the network events you're analyzing, but you can also get the current time when needed:
+
+```c
+# Current time
+local now: time = network_time();  # Current time from packet timestamps
+local current: time = current_time();  # Actual current time
+
+# Time from events (most common)
+event connection_established(c: connection)
+{
+    local conn_start: time = c$start_time;
+    print fmt("Connection started at %s", conn_start);
+}
+
+# Specific time (rarely used, usually comes from events)
+# Time is represented as seconds since Unix epoch (1970-01-01 00:00:00 UTC)
+```
+
+**Understanding network_time() vs current_time():** This distinction is crucial. `network_time()` returns the timestamp from the packet currently being processed - it's the time according to the network traffic itself. `current_time()` returns the actual wall clock time right now.
+
+For almost all security detection logic, **you should use network_time()**. Here's why: When analyzing live traffic, `network_time()` gives you precise timing from the packets themselves, accounting for any processing delays. More importantly, when analyzing saved packet captures (PCAPs) offline, `network_time()` works correctly - it uses the timestamps from when the traffic was originally captured. If you used `current_time()` in offline analysis, all your timing logic would be wrong because you'd be comparing 2024 packet timestamps to 2025 processing timestamps.
+
+Think of `network_time()` as "when did this happen on the network?" and `current_time()` as "what time is it right now in the real world?" For security analysis, you almost always care about the former.
+
+### **Working with Time Values**
+
+The `time` type supports several essential operations that let you build temporal logic:
+
+**Time arithmetic** with intervals lets you calculate future or past moments:
+
+```c
+# Time arithmetic
+local start: time = network_time();
+local duration: interval = 5min;
+local end: time = start + duration;  # time + interval = time
+```
+
+Adding an interval (a duration) to a time produces a new time. This is useful for calculating expiration times, timeout windows, or future scheduled events. The type system enforces correctness - you can only add intervals to times, not arbitrary numbers.
+
+**Time comparison** tells you the ordering of events:
+
+```c
+# Time comparison
+if ( end > start )
+    print "End is after start";  
+    # Obviously true
+```
+
+You can check if one event happened before, after, or at the same time as another. This is fundamental for detecting sequences ("Did the login happen before the file access?") or temporal proximity ("Did these two events happen within seconds of each other?").
+
+**Time differences** produce intervals:
+
+```c
+# Time difference (produces interval)
+local elapsed: interval = end - start;  # time - time = interval
+```
+
+Subtracting one time from another gives you the duration between them as an `interval` type. This is how you measure how long something took or how much time elapsed between events.
+
+**Converting time to human-readable strings** for logging or display:
+
+```c
+# Convert time to readable string
+local time_str = strftime("%Y-%m-%d %H:%M:%S", start);
+```
+
+The `strftime()` function formats timestamps using standard format codes - the same ones used in C, Python, and many other languages.
+
+
+### **Understanding Time's Representation and Precision**
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                 TIME TYPE CHARACTERISTICS                    │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Representation: Double-precision floating point             │
+│  └─ Seconds since Unix epoch (Jan 1, 1970)                   │
+│  └─ Example: 1696348338.423                                  │
+│                                                              │
+│  Precision: Microseconds (6 decimal places)                  │
+│  └─ Sufficient for sub-millisecond timing analysis           │
+│                                                              │
+│  Range: ~1970 to ~2106                                       │
+│  └─ Sufficient for security monitoring purposes              │
+│                                                              │
+│  Time vs Current Time:                                       │
+│  • network_time(): Time from packet being processed          │
+│  • current_time(): Actual clock time now                     │
+│                                                              │
+│  Almost always use network_time() in detection logic!        │
+│  └─ Uses packet timestamps for accurate timing               │
+│  └─ Works correctly when analyzing PCAPs offline             │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+Internally, Zeek represents time as a **double-precision floating-point number** storing seconds since the Unix epoch (January 1, 1970, 00:00:00 UTC). A value like `1696348338.423` means "1,696,348,338 seconds and 423 milliseconds since the epoch."
+
+The **precision** is microseconds - six decimal places. This means Zeek can distinguish events that occur within millionths of a second of each other. For network security, this is more than sufficient. Most network events are separated by milliseconds or more, and even microsecond precision is overkill for detecting most attacks. However, having this precision ensures you never lose timing information due to rounding.
+
+The **range** extends from approximately 1970 to 2106 - far beyond any practical security monitoring timeframe. You'll never hit range limits in normal operation.
+
+**Key principle:** Always prefer `network_time()` over `current_time()` in detection logic. It works correctly both in real-time monitoring and offline PCAP analysis, and it gives you the actual time events occurred on the network rather than when Zeek processed them.
+
+### **Real-World Example: Detecting Beaconing Behaviour**
+
+One of the most powerful applications of time analysis is detecting beaconing - when malware periodically "phones home" to a command-and-control server. Beaconing creates a distinctive pattern: connections with regular, predictable intervals. Here's one way we can detect it:
+
+```c
+# Track connection timing to detect beaconing C2
+global last_connection_time: table[addr] of time;
+global connection_intervals: table[addr] of vector of interval;
+
+event connection_established(c: connection)
+{
+    local src = c$id$orig_h;
+    local now = network_time();
+    
+    # If we've seen this IP before
+    if ( src in last_connection_time )
+    {
+        # Calculate interval since last connection
+        local interval_between = now - last_connection_time[src];
+        
+        # Store interval
+        if ( src !in connection_intervals )
+            connection_intervals[src] = vector();
+        
+        connection_intervals[src][|connection_intervals[src]|] = interval_between;
+        
+        # If we have enough samples, check for regularity
+        if ( |connection_intervals[src]| >= 10 )
+        {
+            # Analyze intervals for consistency (beaconing indicator)
+            local intervals = connection_intervals[src];
+            local sum: interval = 0sec;
+            local i: count;
+            
+            for ( i in intervals )
+                sum += intervals[i];
+            
+            local avg = sum / |intervals|;
+            
+            # Check if intervals are consistent (low jitter = beaconing)
+            # This is simplified; real detection would calculate std deviation
+            print fmt("Average interval for %s: %s", src, avg);
+        }
+    }
+    
+    # Update last seen time
+    last_connection_time[src] = now;
+}
+```
+
+**Understanding this detection:** We're tracking when each source IP makes connections. For each IP, we store the time of its last connection and build a history of the intervals between consecutive connections. Once we have at least 10 samples, we calculate the average interval.
+
+The key insight is this: **legitimate user traffic has irregular timing**, but **automated malware beaconing has regular timing**. A human browsing the web might connect at intervals like 3s, 45s, 2s, 120s - highly variable. But malware configured to beacon every 60 seconds will produce intervals like 60.1s, 59.8s, 60.2s, 60.0s - remarkably consistent.
+
+In a production version, you'd calculate standard deviation to measure consistency mathematically. Low standard deviation relative to the mean indicates regular beaconing. High standard deviation indicates normal irregular human behavior.
+
+This example showcases the power of the `time` type: we're doing precise timestamp arithmetic (subtracting times to get intervals), aggregating temporal data over multiple observations, and using statistical analysis to detect patterns invisible in individual events.
+
+### **Why This Matters for Security**
+
+The `time` type isn't just about knowing when things happened - it's about understanding the **temporal dimension of threats**. Attacks have timing characteristics:
+
+- **Speed:** How quickly did the attacker move from reconnaissance to exploitation?
+- **Persistence:** How long has this suspicious activity been going on?
+- **Periodicity:** Does this behavior repeat on a schedule?
+- **Sequence:** Did event A happen before event B, establishing causality?
+- **Duration:** How long did this connection or session last?
+- **Clustering:** Are events happening in suspicious bursts or patterns?
+
+All of these questions require precise time tracking and the ability to perform temporal arithmetic and comparisons. Zeek's `time` type, combined with the `interval` type (which we'll cover next), gives you the tools to build detections that understand time as more than just a log field - time becomes a dimension you can analyze, correlate, and use to distinguish attacks from normal activity.
+
+As you develop more sophisticated Zeek scripts, temporal analysis will become one of your most powerful techniques. Master the `time` type, and you unlock an entire category of detections impossible with simple signature-based approaches.
+
+
+
+
 
 ---
 [|TOC|]({{< ref "../../moc.md" >}})
