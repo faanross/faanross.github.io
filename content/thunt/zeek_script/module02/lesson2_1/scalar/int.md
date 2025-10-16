@@ -1,27 +1,25 @@
 ---
 showTableOfContents: true
-title: "Part 2C - The Count Type: Non-Negative Integers"
+title: "Part 2D - The int Type: Signed Integers"
 type: "page"
 ---
 
 
-
-
 ## The int Type: Signed Integers
 
-The `int` type represents signed integers - whole numbers that can be positive, negative, or zero. While the `count` type is far more common in Zeek scripts, `int` fills an important niche: it's the type to reach for when negative values are not just possible but actually meaningful in your analysis.
+The `int` type represents signed integers - whole numbers that can be positive, negative, or zero. While the `count` type is far more common in Zeek scripts, `int` fills an important niche: it's the type to reach for when negative values are not just possible but actually meaningful in your analysis.
 
 ### When Do You Need Signed Integers?
 
-Most quantities in network security analysis are inherently non-negative. You can't observe negative three packets or have negative seven connections. This is why `count` dominates Zeek scripts. However, certain calculations and concepts naturally produce or require negative numbers, and that's where `int` becomes essential.
+Most quantities in network security analysis are inherently non-negative. You can't observe negative three packets or have negative seven connections. This is why `count` dominates Zeek scripts. However, certain calculations and concepts naturally produce or require negative numbers, and that's where `int` becomes essential.
 
-Think about **differences and deltas**. If you're comparing the current byte count of a connection to a previous measurement, the difference could be negative - perhaps due to retransmissions or measurement timing. When you're tracking **relative positions or offsets**, negative values indicate direction: -5 might mean "five positions before the current point." When you're working with **time differences in certain contexts**, a negative value might represent "in the past" versus positive for "in the future."
+Think about **differences and deltas**. If you're comparing the current byte count of a connection to a previous measurement, the difference could be negative - perhaps due to retransmissions or measurement timing. When you're tracking **relative positions or offsets**, negative values indicate direction: -5 might mean "five positions before the current point." When you're working with **time differences in certain contexts**, a negative value might represent "in the past" versus positive for "in the future."
 
-The key principle: use `int` when negative numbers carry semantic meaning in your logic, and use `count` when they don't.
+The key principle: use `int` when negative numbers carry semantic meaning in your logic, and use `count` when they don't.
 
 ### Basic Usage
 
-Working with `int` is straightforward and similar to `count`, except you can freely work with negative values:
+Working with `int` is straightforward and similar to `count`, except you can freely work with negative values:
 
 ```c
 local temperature: int = -40;
@@ -29,7 +27,7 @@ local delta: int = 100 - 150;  # Result: -50
 local offset: int = -5;
 ```
 
-All the arithmetic operations you'd expect work naturally: addition, subtraction, multiplication, division (integer division, rounding toward zero), and modulo. Comparisons work identically to `count`, letting you check if one integer is greater than, less than, or equal to another.
+All the arithmetic operations you'd expect work naturally: addition, subtraction, multiplication, division (integer division, rounding toward zero), and modulo. Comparisons work identically to `count`, letting you check if one integer is greater than, less than, or equal to another.
 
 ### Choosing Between int and count
 
@@ -68,13 +66,13 @@ local connection_count: int = -10;
 # ✗ Nonsensical (negative connections?)
 ```
 
-Declaring a packet count or connection count as `int` isn't a syntax error - Zeek will allow it - but it's a **logical error**. It suggests your code might produce or accept negative values for something that can't be negative, which will lead to bugs and confusion later.
+Declaring a packet count or connection count as `int` isn't a syntax error - Zeek will allow it - but it's a **logical error**. It suggests your code might produce or accept negative values for something that can't be negative, which will lead to bugs and confusion later.
 
 ### Practical Guidance
 
-Here's the bottom line: **in practice, you'll use count about 90% of the time** in Zeek scripts. Network security analysis is fundamentally about counting things - packets, bytes, connections, events, alerts. The `count` type's non-negativity constraint actually helps you write more correct code by preventing logical errors.
+Here's the bottom line: **in practice, you'll use count about 90% of the time** in Zeek scripts. Network security analysis is fundamentally about counting things - packets, bytes, connections, events, alerts. The `count` type's non-negativity constraint actually helps you write more correct code by preventing logical errors.
 
-Reserve `int` for those specific situations where negative values genuinely make sense in your domain. If you're unsure, start with `count`. If you later find yourself needing to represent negative values and the type system complains, that's your signal to switch to `int`. This approach - defaulting to `count` and using `int` only when necessary - will lead to clearer, more maintainable security scripts.
+Reserve `int` for those specific situations where negative values genuinely make sense in your domain. If you're unsure, start with `count`. If you later find yourself needing to represent negative values and the type system complains, that's your signal to switch to `int`. This approach - defaulting to `count` and using `int` only when necessary - will lead to clearer, more maintainable security scripts.
 
 The type system is your friend here. By choosing the most semantically appropriate type, you make your code's intent obvious and let Zeek catch mistakes before they become runtime bugs.
 
@@ -104,11 +102,9 @@ The type system is your friend here. By choosing the most semantically appropria
 ```
 
 
-___
-
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
-[|NEXT|]({{< ref "./intro.md" >}})
+[|PREV|]({{< ref "./count.md" >}})
+[|NEXT|]({{< ref "./addr.md" >}})
 
