@@ -177,6 +177,6 @@ A: Use these functions when you need version-specific logic - for example, apply
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
-[|NEXT|]({{< ref "./intro.md" >}})
+[|PREV|]({{< ref "./int.md" >}})
+[|NEXT|]({{< ref "./port.md" >}})
 

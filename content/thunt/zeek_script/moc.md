@@ -47,7 +47,7 @@ type: "page"
 - [Part 2G - The time Type: Timestamps]({{< ref "module02/lesson2_1/scalar/time.md" >}})
 - [Part 2H - The interval Type: Time Durations]({{< ref "module02/lesson2_1/scalar/interval.md" >}})
 - [Part 2I - The string Type: Text Data]({{< ref "module02/lesson2_1/scalar/string.md" >}})
-- [Part 2J - ]({{< ref "module02/lesson2_1/scalar/bool.md" >}})
+- [Part 2J - The bool Type: Boolean Values]({{< ref "module02/lesson2_1/scalar/bool.md" >}})
 - [Part 2K - Scalar Types Practical Exercises]({{< ref "module02/lesson2_1/scalar/exercises.md" >}})
 - [Part 2L - Conclusion]({{< ref "module02/lesson2_1/scalar/conclusion.md" >}})
 

@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2C - The Count Type: Non-Negative Integers"
+title: "Part 2K - Scalar Types Practical Exercises"
 type: "page"
 ---
 
