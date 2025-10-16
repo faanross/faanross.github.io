@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2C - The Count Type: Non-Negative Integers"
+title: "Part 2B - The Count Type: Non-Negative Integers"
 type: "page"
 ---
 
@@ -157,6 +157,6 @@ A: Count makes code safer by enforcing non-negativity at the language level, cat
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
+[|PREV|]({{< ref "./intro.md" >}})
 [|NEXT|]({{< ref "./int.md" >}})
 

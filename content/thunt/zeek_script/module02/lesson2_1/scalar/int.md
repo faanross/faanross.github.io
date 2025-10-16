@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2D - The int Type: Signed Integers"
+title: "Part 2C - The int Type: Signed Integers"
 type: "page"
 ---
 

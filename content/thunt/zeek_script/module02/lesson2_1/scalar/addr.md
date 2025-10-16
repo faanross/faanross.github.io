@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2E - The addr Type: IP Addresses"
+title: "Part 2D - The addr Type: IP Addresses"
 type: "page"
 ---
 
@@ -61,7 +61,7 @@ if ( ip1 != ip2 )
 This is essential for allow lists, deny lists, and detecting known malicious or trusted hosts.
 
 #### Lexicographic Ordering
-allows you to sort addresses and perform range comparisons. While this might seem abstract, it's useful when building ordered data structures or implementing IP-based indexes:
+Allows you to sort addresses and perform range comparisons. While this might seem abstract, it's useful when building ordered data structures or implementing IP-based indexes:
 
 ```c
 # Lexicographic comparison (useful for sorting)
@@ -74,7 +74,8 @@ Is straightforward when you need to log or display addresses in human-readable f
 
 ```c
 # String conversion
-local ip_string = fmt("%s", ip1);  # "192.168.1.100"
+local ip_string = fmt("%s", ip1);  
+# Prints to terminal: "192.168.1.100"
 ```
 
 #### Subnet membership testing
@@ -131,10 +132,10 @@ local ipv4: addr = 192.168.1.1;
 local ipv6: addr = 2001:db8::1;
 
 # Same operations work on both
-if ( ipv4 == 192.168.1.1 )  # Works
+if ( ipv4 == 192.168.1.1 )  
     print "IPv4 matched";
     
-if ( ipv6 == 2001:db8::1 )  # Works
+if ( ipv6 == 2001:db8::1 )  
     print "IPv6 matched";
 ```
 

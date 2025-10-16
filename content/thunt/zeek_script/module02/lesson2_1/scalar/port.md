@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2F - The port Type: Network Ports"
+title: "Part 2E - The port Type: Network Ports"
 type: "page"
 ---
 

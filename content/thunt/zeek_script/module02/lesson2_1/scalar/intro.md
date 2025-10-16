@@ -74,5 +74,5 @@ Don't rush through this section. These scalar types are the vocabulary of Zeek -
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
 [|PREV|]({{< ref "../type.md" >}})
-[|NEXT|]({{< ref "./first.md" >}})
+[|NEXT|]({{< ref "./count.md" >}})
 
