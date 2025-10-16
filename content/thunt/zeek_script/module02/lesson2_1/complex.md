@@ -7,6 +7,6 @@ type: "page"
 
 ---
 [|TOC|]({{< ref "../../moc.md" >}})
-[|PREV|]({{< ref "./scalar.md" >}})
+[|PREV|]({{< ref "./scalar/conclusion.md" >}})
 [|NEXT|]({{< ref "./scoping.md" >}})
 
