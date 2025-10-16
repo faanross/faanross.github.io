@@ -179,7 +179,8 @@ event new_connection(c: connection)
     # Schedule check for regular connections
     if ( src !in connection_schedule )
     {
-        connection_schedule[src] = 1min;  # Check every minute
+        # Check every minute
+        connection_schedule[src] = 1min;  
         schedule connection_schedule[src] {
             check_for_beaconing(src)
         };
@@ -209,7 +210,7 @@ if ( network_time() - last_seen_time > timeout )
 local min_interval: interval = 1sec;
 if ( current_time - last_event_time < min_interval )
     return;  
-    # Too soon, ignore this event
+# Too soon, ignore this event
 ```
 
 **Time windows:** Aggregate or analyze data within sliding windows
@@ -244,7 +245,14 @@ if ( (end_time - start_time) > 5min )
 
 The second version is instantly clear to anyone reading the code. The first requires mental conversion and assumes you know the time is in seconds.
 
-More importantly, intervals let you build temporal logic that mirrors how security analysts think: "alert if the connection lasts longer than an hour," "check for patterns every five minutes," "ignore events that happen within one second of each other," "baseline activity over 24-hour windows." These natural expressions of time-based rules translate directly into clean, understandable Zeek code.
+More importantly, intervals let you build temporal logic that mirrors how security analysts think:
+- "Alert if the connection lasts longer than an hour," 
+- "Check for patterns every five minutes," 
+- "Ignore events that happen within one second of each other," 
+- "Baseline activity over 24-hour windows." 
+
+
+These natural expressions of time-based rules translate directly into clean, understandable Zeek code.
 
 As you develop advanced detections, you'll find yourself using intervals constantly - for rate limiting to reduce alert fatigue, for defining behavioral baselines ("normal connections last between 30 seconds and 5 minutes"), for implementing adaptive thresholds that change based on observed patterns, and for scheduling periodic analysis tasks. The `interval` type isn't just a convenience - it's a fundamental building block of sophisticated temporal analysis.
 
