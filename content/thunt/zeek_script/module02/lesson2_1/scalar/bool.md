@@ -251,6 +251,6 @@ A: (1) Allow/deny list checking - testing if an entity is in an allowed set (boo
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
-[|NEXT|]({{< ref "./intro.md" >}})
+[|PREV|]({{< ref "./string.md" >}})
+[|NEXT|]({{< ref "./first.md" >}})
 

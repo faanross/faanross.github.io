@@ -276,6 +276,6 @@ A: Intervals define time delays for the `schedule` statement, allowing you to 
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
-[|NEXT|]({{< ref "./intro.md" >}})
+[|PREV|]({{< ref "./time.md" >}})
+[|NEXT|]({{< ref "./string.md" >}})
 

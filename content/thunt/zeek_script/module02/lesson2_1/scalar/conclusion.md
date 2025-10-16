@@ -11,6 +11,6 @@ type: "page"
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
-[|NEXT|]({{< ref "./intro.md" >}})
+[|PREV|]({{< ref "./exercises.md" >}})
+[|NEXT|]({{< ref "../complex.md" >}})
 

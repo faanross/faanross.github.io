@@ -514,6 +514,6 @@ You now have all the infrastructure knowledge needed to focus on the security lo
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./intro.md" >}})
-[|NEXT|]({{< ref "./count.md" >}})
+[|PREV|]({{< ref "./bool.md" >}})
+[|NEXT|]({{< ref "./exercises.md" >}})
 

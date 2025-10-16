@@ -227,6 +227,6 @@ A: Time is critical because attacks unfold over time and patterns emerge in sequ
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
-[|NEXT|]({{< ref "./intro.md" >}})
+[|PREV|]({{< ref "./port.md" >}})
+[|NEXT|]({{< ref "./interval.md" >}})
 

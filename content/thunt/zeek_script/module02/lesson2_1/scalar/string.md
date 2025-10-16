@@ -268,6 +268,6 @@ A: Legitimate browsers have characteristic User-Agent formats (containing "Mozil
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
-[|NEXT|]({{< ref "./intro.md" >}})
+[|PREV|]({{< ref "./interval.md" >}})
+[|NEXT|]({{< ref "./bool.md" >}})
 
