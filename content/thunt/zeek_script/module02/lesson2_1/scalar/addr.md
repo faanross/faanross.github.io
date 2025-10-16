@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2C - The Count Type: Non-Negative Integers"
+title: "Part 2E - The addr Type: IP Addresses"
 type: "page"
 ---
 
@@ -153,7 +153,27 @@ By making IP addresses first-class citizens with rich built-in operations, Zeek 
 
 As you work through more complex Zeek scripts, you'll find the `addr` type appearing everywhere: as table keys for tracking host behavior, as set members for allow/deny lists, in subnet comparisons for network segmentation enforcement, and in logging for forensic analysis. Mastering its capabilities and idioms is essential to effective Zeek scripting.
 
-___
+
+---
+
+## Knowledge Check: addr Type
+
+**Q1: Why does Zeek have a dedicated addr type instead of just representing IP addresses as strings?**
+
+A: The addr type stores addresses in optimized binary format and provides built-in intelligence about network topology, address families, and comparison operations. Using strings would require manually parsing, converting to binary, applying subnet masks, and comparing results every time you need to check subnet membership or perform other network operations - tens of lines of error-prone code for conceptually simple questions.
+
+**Q2: How does the addr type handle IPv4 and IPv6 addresses? Do you need different code or operations for each?**
+
+A: The addr type handles both IPv4 and IPv6 transparently and seamlessly. All operations (comparison, subnet membership, string conversion) work identically on both address families. You don't need different code paths or conversion functions. This design choice dramatically simplifies script writing and maintenance.
+
+**Q3: What is the most powerful operation the addr type supports, and why is it significant for security analysis?**
+
+A: Subnet membership testing using the `in` operator (e.g., `if ( ip in 192.168.0.0/16 )`). This single line replaces dozens of lines of bit manipulation and mask logic you'd need in most languages. It's self-documenting, impossible to get wrong, and is fundamental to network boundary logic that appears in virtually every security detection.
+
+**Q4: When would you use the `is_v4_addr()` or `is_v6_addr()` functions, given that addr handles both transparently?**
+
+A: Use these functions when you need version-specific logic - for example, applying different subnet checks to IPv4 private ranges versus IPv6 unique local addresses, or when you need to handle the two address families differently for some reason. Most of the time you don't need them because operations work on both.
+
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
