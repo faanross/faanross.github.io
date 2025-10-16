@@ -41,6 +41,15 @@ type: "page"
 - [Part 2A - Introduction: Understanding Scalar Types in Zeek]({{< ref "module02/lesson2_1/scalar/intro.md" >}})
 - [Part 2B - Writing and Loading Your First Script]({{< ref "module02/lesson2_1/scalar/first.md" >}})
 - [Part 2C - The Count Type: Non-Negative Integers]({{< ref "module02/lesson2_1/scalar/count.md" >}})
+- [Part 2D - The int Type: Signed Integers]({{< ref "module02/lesson2_1/scalar/int.md" >}})
+- [Part 2E - The addr Type: IP Addresses]({{< ref "module02/lesson2_1/scalar/addr.md" >}})
+- [Part 2F - The port Type: Network Ports]({{< ref "module02/lesson2_1/scalar/port.md" >}})
+- [Part 2G - The time Type: Timestamps]({{< ref "module02/lesson2_1/scalar/time.md" >}})
+- [Part 2H - The interval Type: Time Durations]({{< ref "module02/lesson2_1/scalar/interval.md" >}})
+- [Part 2I - The string Type: Text Data]({{< ref "module02/lesson2_1/scalar/string.md" >}})
+- [Part 2J - ]({{< ref "module02/lesson2_1/scalar/bool.md" >}})
+- [Part 2K - Scalar Types Practical Exercises]({{< ref "module02/lesson2_1/scalar/exercises.md" >}})
+- [Part 2L - Conclusion]({{< ref "module02/lesson2_1/scalar/conclusion.md" >}})
 
 
 
