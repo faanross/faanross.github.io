@@ -242,6 +242,27 @@ As you develop more advanced Zeek scripts, you'll find yourself analyzing string
 
 
 
+## Knowledge Check: string Type
+
+**Q1: Why is the string type so important in network security analysis when lower-level analysis focuses on IPs and ports?**
+
+A: Sophisticated attacks operate within legitimate protocols at the application layer. While IP/port analysis catches broad threats, string analysis detects attacks embedded in protocol content: SQL injection in HTTP parameters, cross-site scripting in URLs, path traversal in file paths, command injection in form fields, malware callbacks disguised as browser traffic. Attackers manipulate textual data, so analyzing strings is essential for catching these content-based threats.
+
+**Q2: What's the difference between substring checking with the "in" operator and pattern matching with regular expressions? When would you use each?**
+
+A: Substring checking (`"evil" in hostname`) simply tests if one string appears anywhere within another - it's straightforward and fast. Regular expressions (`/\.\.[\/\\]/ in url`) match complex patterns with wildcards, alternatives, and structure - they're more powerful but more complex. Use substring checking for simple, literal matches (known bad domains, specific keywords). Use regular expressions for pattern-based detection where attacks vary in details but follow recognizable patterns (SQL injection, path traversal, exploit signatures).
+
+**Q3: Why should you always sanitize and truncate strings from network traffic before using them in logs or external commands?**
+
+A: Strings from network traffic are untrusted input controlled by attackers. Without sanitization, they could contain characters that break log formats or inject false log entries (like newlines). Without truncation, attackers could send extremely long strings (kilobytes/megabytes) to fill your disk, slow log processing, or exploit buffer overflows. Sanitization prevents format breaking and injection; truncation prevents resource exhaustion while preserving enough context for analysis.
+
+**Q4: What is the purpose of case conversion (to_lower/to_upper) in security detection, and why is it necessary?**
+
+A: Case conversion normalizes strings for comparison because attackers often use mixed case to evade simple string matching. For example, "EvIl.CoM" would bypass a check for "evil.com" without case normalization. Converting everything to lowercase (or uppercase) before comparison prevents this evasion technique. It's necessary because domain names, URLs, and many protocol fields are case-insensitive, but string comparison is case-sensitive by default.
+
+**Q5: Describe what makes User-Agent analysis valuable for detecting malicious activity.**
+
+A: Legitimate browsers have characteristic User-Agent formats (containing "Mozilla", "Chrome", etc.), while malware, scanners, and automation tools often use distinctive patterns. Command-line tools (curl, wget), scripting languages (python), shells (powershell), and scanner tools often appear in User-Agents when attackers use automation. While not perfect (attackers can forge User-Agents and legitimate automation exists), unusual User-Agents are a valuable signal, especially when combined with other suspicious indicators like accessing sensitive paths or generating unusual traffic patterns.
 
 
 

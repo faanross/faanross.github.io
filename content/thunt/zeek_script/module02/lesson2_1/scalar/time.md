@@ -205,6 +205,24 @@ All of these questions require precise time tracking and the ability to perform 
 As you develop more sophisticated Zeek scripts, temporal analysis will become one of your most powerful techniques. Master the `time` type, and you unlock an entire category of detections impossible with simple signature-based approaches.
 
 
+## Knowledge Check: time Type
+
+**Q1: What's the critical difference between network_time() and current_time(), and which should you use for security detection logic?**
+
+A: `network_time()` returns the timestamp from the packet currently being processed (when the event happened on the network), while `current_time()` returns the actual wall clock time right now. You should almost always use `network_time()` for detection logic because it uses packet timestamps for accurate timing and works correctly when analyzing saved PCAPs offline. Using `current_time()` in offline analysis would compare old packet timestamps to current processing time, breaking all timing logic.
+
+**Q2: How is the time type represented internally, and what precision does it provide?**
+
+A: Time is represented as a double-precision floating-point number storing seconds since Unix epoch (January 1, 1970). For example, 1696348338.423 means 1,696,348,338 seconds and 423 milliseconds since the epoch. It provides microsecond precision (6 decimal places), which is more than sufficient for network security analysis where most events are separated by milliseconds or more.
+
+**Q3: What are the three main operations you can perform with time values, and what type does each operation produce?**
+
+A: (1) Time + interval = time (calculating future or past moments), (2) Time - time = interval (measuring duration between events), (3) Time comparison (>, <, etc.) = bool (determining order of events). Note you cannot add two times together (that wouldn't make semantic sense), and subtracting times produces an interval, not another time.
+
+**Q4: Why is temporal analysis (using time values) so important for security detection? Name three attack characteristics you can only detect with accurate timing.**
+
+A: Time is critical because attacks unfold over time and patterns emerge in sequences of events. Three examples: (1) Brute force attacks - many attempts in a short window, (2) Beaconing malware - periodic connections with regular intervals indicating C2 communication, (3) Coordinated attacks - simultaneous activity across multiple hosts suggesting orchestrated behavior. Without precise timestamps, these patterns are invisible.
+
 
 
 ---

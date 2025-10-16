@@ -182,6 +182,24 @@ Mastering the `subnet` type means mastering one of the most fundamental abstra
 
 
 
+## Knowledge Check: subnet Type
+
+**Q1: What does the "/24" mean in the subnet notation "192.168.1.0/24"? How many addresses does this subnet contain?**
+
+A: The "/24" is the prefix length - the number of network bits. It means the first 24 bits (first three octets) define the network portion. A /24 subnet contains 256 addresses (2^8, since 32-24=8 bits remain for hosts). More generally, a /n prefix leaves (32-n) bits for host addresses in IPv4.
+
+**Q2: Explain why "ip in subnet" is such a powerful and frequently used operation in security detection. Provide a concrete example.**
+
+A: The `in` operator performs all the binary mathematics (converting address to binary, applying subnet mask, comparing network portions) behind the scenes in a single, readable expression. For example, `if ( ip in 192.168.0.0/16 )` instantly tells you if an IP is in your private network, which is fundamental for distinguishing "our network" from "the outside world" - a categorization needed in almost all security detections.
+
+**Q3: What is the purpose of the `mask_addr()` function, and when would you use it?**
+
+A: `mask_addr()` extracts the network portion of an IP address, converting it into its parent subnet address. For example, `mask_addr(192.168.1.100, 24)` returns `192.168.1.0`. This is useful for aggregating statistics by network block (tracking connections per /24 instead of per IP) or grouping related addresses, which helps identify patterns like subnet-wide scanning or compromised network ranges.
+
+**Q4: Why is defining a set of subnets representing "local networks" typically one of the first things you do in a Zeek deployment?**
+
+A: Distinguishing internal traffic from external traffic is a fundamental categorization for almost all security detections. Many detections only care about one direction (e.g., outbound connections to certain ports might indicate data exfiltration, while inbound might be different concerns). Having a centralized definition of local networks ensures consistency across all scripts and makes updates easy when network topology changes.
+
 
 
 ---

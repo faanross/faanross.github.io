@@ -196,6 +196,24 @@ By making protocol an integral part of the `port` type, Zeek ensures your secu
 As you build more sophisticated Zeek scripts, you'll use ports extensively: detecting services on non-standard ports (evasion), tracking which services are most accessed (baseline), identifying port scans (reconnaissance), correlating port usage with protocol detection (validation), and building service-specific detections. The `port` type's protocol awareness makes all of these tasks cleaner and more reliable.
 
 
+## Knowledge Check: port Type
+
+**Q1: Why does Zeek's port type bind the port number to its transport protocol rather than just storing a number?**
+
+A: Because port numbers without protocol context are almost meaningless in network security. Port 53/udp (normal DNS) is completely different from 53/tcp (DNS zone transfers). Port 80/tcp (HTTP) is different from 80/udp (uncommon, potentially suspicious). By making protocol intrinsic to the port type, Zeek ensures you're always working with the complete picture and prevents accidentally comparing TCP ports to UDP ports.
+
+**Q2: Are `80/tcp` and `80/udp` considered the same value or different values in Zeek? Why does this matter?**
+
+A: They are different values. This distinction prevents an entire class of bugs. If you're checking for HTTP traffic on port 80, you're checking for `80/tcp` specifically, and you won't accidentally match unrelated UDP traffic that happens to use the same port number. This precision is essential for accurate detection.
+
+**Q3: What does the `port_to_count()` function do, and when would you use it?**
+
+A: It extracts the numeric portion of a port value and returns it as a count type. You use this when you need to perform numeric operations like range checking (is the port in the ephemeral range 49152-65535?) or categorization (well-known ports < 1024, registered ports 1024-49151, dynamic ports >= 49152).
+
+**Q4: Describe what "protocol/service mismatch detection" means and why the port type's design makes it possible.**
+
+A: It means detecting when a service is running on an unexpected port - like HTTP traffic on port 22 or SSH traffic on port 80. Zeek's deep packet inspection identifies the actual protocol, while the port type tells you what port it's using. By comparing expected service-to-port mappings against what Zeek actually detects, you can identify potential evasion techniques or misconfigurations. The port type's protocol awareness is crucial for expressing these expected relationships clearly.
+
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})

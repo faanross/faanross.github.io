@@ -251,6 +251,27 @@ As you develop advanced detections, you'll find yourself using intervals constan
 
 
 
+## Knowledge Check: interval Type
+
+**Q1: What's the fundamental difference between the time type and the interval type in terms of what they represent?**
+
+A: The time type represents absolute points on the timeline (specific moments - "when did this happen?"), while the interval type represents durations or spans of time (lengths along the timeline - "how long did this last?"). A timestamp locates an event in time; an interval measures elapsed time between events or the duration of an event.
+
+**Q2: What are all the available time units for intervals, and why is it better to write "5min" instead of "300"?**
+
+A: Available units: usec (microsecond), msec (millisecond), sec (second), min (minute), hr (hour), day (day). Writing "5min" is better because it's immediately readable and self-documenting - anyone reading the code knows exactly what duration is meant. Writing "300" requires figuring out what unit is intended (seconds? milliseconds?) and mental conversion, making code harder to maintain and more error-prone.
+
+**Q3: Explain what operations are valid with intervals and what type each produces: interval + interval, interval * 3, time + interval, time - time.**
+
+A: interval + interval = interval (combining durations), interval * 3 = interval (scaling duration by a number), time + interval = time (calculating a future/past moment), time - time = interval (duration between two moments). Note that interval + time also equals time (commutative), but interval - time is not valid (can't subtract a point from a duration).
+
+**Q4: Why is connection duration analysis (using intervals) valuable for security detection? Give examples of suspicious short and suspicious long durations.**
+
+A: Duration reveals behavioral patterns. Suspiciously long connections (>1 hour) might indicate persistent shells, backdoors, or slow data exfiltration designed to evade detection. Suspiciously short connections with data transfer (<1 second) might indicate scanning or automated probing where the attacker connects, sends a probe, gets a response, and immediately disconnects. Normal connections typically have intermediate durations reflecting legitimate data exchange and protocol handshaking.
+
+**Q5: How do intervals enable "scheduled" or "periodic" analysis in Zeek scripts?**
+
+A: Intervals define time delays for the `schedule` statement, allowing you to arrange future code execution. For example, `schedule 5min { check_for_patterns() }` waits 5 minutes then executes the scheduled code. This enables periodic analysis like "every minute, check if this host is beaconing" or "every five minutes, aggregate and analyze activity," which is essential for detections that require looking at patterns over time windows rather than individual events.
 
 
 ---

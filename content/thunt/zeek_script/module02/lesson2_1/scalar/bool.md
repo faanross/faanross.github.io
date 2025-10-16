@@ -222,6 +222,30 @@ As you build more complex detections, you'll find yourself using booleans consta
 
 
 
+## Knowledge Check: bool Type
+
+**Q1: In Zeek, what are the literal values for true and false, and how do they differ from most other programming languages?**
+
+A: In Zeek, true is written as `T` and false as `F` (capital letters). This differs from most languages that use lowercase `true`and `false`. This is a Zeek-specific convention you must remember.
+
+**Q2: What's the difference between writing "if ( is_suspicious )" versus "if ( is_suspicious == T )"? Which is preferred and why?**
+
+A: Both work and produce the same result, but `if ( is_suspicious )` is preferred and more idiomatic. The boolean value itself is the condition - you don't need to explicitly compare it to T. This style is cleaner, more readable, and is the convention in Zeek (and most languages). The boolean variable directly expresses the condition you're testing.
+
+**Q3: Explain what "short-circuit evaluation" means for the && and || operators, and provide an example where this behavior matters.**
+
+A: Short-circuit evaluation means: for `&&`, if the left operand is false, the right isn't evaluated (result is already false); for `||`, if the left operand is true, the right isn't evaluated (result is already true). Example: `if ( ip in local_networks && expensive_check(ip) )` - the expensive_check() only runs if ip is local. This matters for performance (avoiding unnecessary computation) and correctness (if the right-side function could error on certain inputs, short-circuiting protects you).
+
+**Q4: Why is combining multiple boolean indicators (flags) more effective than single-indicator detection? Use the threat assessment example to explain.**
+
+A: Individual indicators often produce false positives - a host might scan legitimately (security scanner), or generate high volume normally (file server). But when multiple indicators align (scanning AND beaconing AND high volume), the probability of malicious activity increases dramatically. The threat assessment pattern counts how many flags are set and returns graduated threat levels: zero flags = clean, one = low confidence, two = medium, three+ = high. This reduces false positives and helps prioritize responses appropriately.
+
+**Q5: List three common security detection patterns that rely heavily on boolean values.**
+
+A: (1) Allow/deny list checking - testing if an entity is in an allowed set (bool result determines whether to block/alert), (2) State tracking - using booleans to remember what you've seen (e.g., "have we already alerted on this host?" stored as bool flag to prevent duplicates), (3) Multi-condition validation - combining several boolean checks with && and || to create precise detection rules (e.g., "is_internal(src) && !is_internal(dst) && is_sensitive_port(port)" to detect potential data exfiltration).
+
+
+
 
 
 
