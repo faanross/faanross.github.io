@@ -6,9 +6,6 @@ type: "page"
 
 
 
-
-
-
 ## **The time Type: Timestamps**
 
 The `time` type represents absolute points in time - specific moments on the timeline. If you think of time as a number line stretching from the past into the future, a `time` value is a single point on that line. Zeek uses the `time` type extensively because network security analysis is fundamentally about understanding **when** things happen: when a connection started, when a packet arrived, when an alert fired, when suspicious behavior began.
@@ -17,7 +14,7 @@ The `time` type represents absolute points in time - specific moments on the t
 
 Time is one of the most critical dimensions in security analysis. Attacks unfold over time. Patterns emerge when you look at sequences of events. A single connection might seem innocent, but fifty connections spaced exactly 60 seconds apart suggests beaconing - a hallmark of command-and-control traffic.
 
-Consider what you can detect with accurate timestamps: **brute force attacks** (many attempts in a short window), **beaconing malware** (periodic connections with regular intervals), **data exfiltration** (sustained transfers over time), reconnaissance (rapid connections to many targets), **time-based evasion** (attacks timed to avoid monitoring periods), and **coordinated attacks** (simultaneous activity across multiple hosts).
+Consider what you can detect with accurate timestamps: **brute force attacks** (many attempts in a short window), **beaconing malware** (periodic connections with regular intervals), **data exfiltration** (sustained transfers over time), **reconnaissance** (rapid connections to many targets), **time-based evasion** (attacks timed to avoid monitoring periods), and **coordinated attacks** (simultaneous activity across multiple hosts).
 
 Without precise time tracking, you're flying blind. The `time` type gives you the foundation to build these temporal detections.
 
@@ -30,8 +27,10 @@ In Zeek scripts, time values typically come from the network events you're analy
 
 ```c
 # Current time
-local now: time = network_time();  # Current time from packet timestamps
-local current: time = current_time();  # Actual current time
+# Current time from packet timestamps
+local now: time = network_time(); 
+# Actual current time 
+local current: time = current_time();  
 
 # Time from events (most common)
 event connection_established(c: connection)
@@ -46,7 +45,7 @@ event connection_established(c: connection)
 
 **Understanding network_time() vs current_time():** This distinction is crucial. `network_time()` returns the timestamp from the packet currently being processed - it's the time according to the network traffic itself. `current_time()` returns the actual wall clock time right now.
 
-For almost all security detection logic, **you should use network_time()**. Here's why: When analyzing live traffic, `network_time()` gives you precise timing from the packets themselves, accounting for any processing delays. More importantly, when analyzing saved packet captures (PCAPs) offline, `network_time()` works correctly - it uses the timestamps from when the traffic was originally captured. If you used `current_time()` in offline analysis, all your timing logic would be wrong because you'd be comparing 2024 packet timestamps to 2025 processing timestamps.
+For almost all security detection logic, **you should use `network_time()`**. Here's why: When analyzing live traffic, `network_time()` gives you precise timing from the packets themselves, accounting for any processing delays. More importantly, when analyzing saved packet captures (PCAPs) offline, `network_time()` works correctly - it uses the timestamps from when the traffic was originally captured. If you used `current_time()` in offline analysis, all your timing logic would be wrong because you'd be comparing 2024 packet timestamps to 2025 processing timestamps.
 
 Think of `network_time()` as "when did this happen on the network?" and `current_time()` as "what time is it right now in the real world?" For security analysis, you almost always care about the former.
 
@@ -60,7 +59,8 @@ The `time` type supports several essential operations that let you build tempo
 # Time arithmetic
 local start: time = network_time();
 local duration: interval = 5min;
-local end: time = start + duration;  # time + interval = time
+local end: time = start + duration;  
+# time + interval = time
 ```
 
 Adding an interval (a duration) to a time produces a new time. This is useful for calculating expiration times, timeout windows, or future scheduled events. The type system enforces correctness - you can only add intervals to times, not arbitrary numbers.
@@ -71,7 +71,6 @@ Adding an interval (a duration) to a time produces a new time. This is useful fo
 # Time comparison
 if ( end > start )
     print "End is after start";  
-    # Obviously true
 ```
 
 You can check if one event happened before, after, or at the same time as another. This is fundamental for detecting sequences ("Did the login happen before the file access?") or temporal proximity ("Did these two events happen within seconds of each other?").
@@ -80,7 +79,8 @@ You can check if one event happened before, after, or at the same time as anothe
 
 ```c
 # Time difference (produces interval)
-local elapsed: interval = end - start;  # time - time = interval
+local elapsed: interval = end - start;  
+# time - time = interval
 ```
 
 Subtracting one time from another gives you the duration between them as an `interval` type. This is how you measure how long something took or how much time elapsed between events.
