@@ -7,7 +7,7 @@ type: "page"
 
 ## Let's Get Scripting!
 
-Before we dive into type-specific sections and start writing our first actual script, let's make sure we understand the practical workflow of Zeek script development. This section covers everything from writing your first line of code to seeing it detect real network activity.
+Before we dive into type-specific sections and start writing our first actual script, let's make sure we understand the practical workflow of Zeek script development. 
 
 ## Setting Up Your Development Environment
 
@@ -150,11 +150,14 @@ Edit `local.zeek`:
 sudo nano /opt/zeek/share/zeek/site/local.zeek
 ```
 
-You'll see it already has content (network definitions, loaded scripts, etc.). **Add your script at the bottom:**
+As we saw before, already has content (network definitions, loaded scripts, etc.). It would be worth spending some time
+at some point reviewing all the content to make sure you understand what everything does, and in general how the
+script is put together and operates.
+
+**For now however, let's import our new script:**
+
 
 ```c
-# At the bottom of local.zeek, add:
-
 # Load our custom hello world script
 @load ./custom/hello.zeek
 ```
@@ -178,7 +181,9 @@ The `@load` directive tells Zeek to load and execute the specified script. The
 
 Now let's verify everything works:
 
-### Method 1: Test in Foreground (Recommended for development)
+### Method 1: Test in Foreground 
+
+Use this to run an instance of Zeek to test it, which is recommended for R&D purposes.
 
 ```bash
 # Run Zeek in foreground on a network interface
@@ -202,16 +207,17 @@ Zeek started at: 0.0
 Zeek is shutting down. Goodbye!
 ```
 
-
-**If you see this output, congratulations! Your workflow is working.**
+We can see both the output when the script starts, and the output when Zeek shuts down.
 
 
 
 ### Method 2: Deploy with ZeekControl (Production method)
 
-For running Zeek as a service (which you learned in the previous section), there's an important difference: **`print`statements don't appear when Zeek runs as a daemon**. The output gets buffered or lost because there's no terminal attached to the background process.
+For running Zeek as a service (which you learned in the previous section), there's an important difference: **`print` statements don't appear when Zeek runs as a daemon**. 
 
-Instead, we need a script that writes to Zeek's logging system. Let's create a daemon-friendly version:
+This is of course because daemons run in the background, so don't have the ability to output to the active terminal.
+
+So instead, we need a script that writes to Zeek's logging system. Let's create a daemon-friendly version:
 
 ```bash
 # Create a new script for daemon mode
@@ -252,7 +258,9 @@ event zeek_done()
 ```
 
 
-**Test to make sure there are no errors (GET IN THE HABIT!):**
+**Test to make sure there are no errors:**
+
+Get in the habit of doing this and develop the muscle memory - ALWAYS run `zeek -a` against a newly minted script.
 
 ```
 zeek -a custom/hello-daemon.zeek
@@ -292,23 +300,25 @@ sudo zeekctl status
 **Verify the script loaded and is working:**
 
 ```bash
-# Method 1: Check our custom log file (should appear immediately)
 cat /opt/zeek/logs/current/hello.log
-
-# You should see output like:
-# #separator \x09
-# #set_separator	,
-# #empty_field	(empty)
-# #unset_field	-
-# #path	hello
-# #open	2024-10-14-07-13-05
-# #fields	ts	message
-# #types	time	string
-# 1728891185.123456	Hello from Zeek daemon! Script loaded successfully.
-
 ```
 
-**To see the shutdown message**, stop Zeek and check the log, remember Zeek will archive the log from the `current` directory to the timestamped directory, since mine will be different than yours you cannot blindly C+P these commands - find your specific log.
+**You should see output like**:
+```bash
+#separator \x09
+#set_separator	,
+#empty_field	(empty)
+#unset_field	-
+#path	hello
+#open	2024-10-14-07-13-05
+#fields	ts	message
+#types	time	string
+1728891185.123456	Hello from Zeek daemon! Script loaded successfully.
+```
+
+
+**To see the shutdown message**: 
+Stop Zeek and check the log, remember Zeek will archive the log from the `current` directory to the timestamped directory, since mine will be different than yours you cannot blindly C+P this command - find your specific log.
 
 ```bash
 sudo zeekctl stop
@@ -419,7 +429,7 @@ sudo zeekctl restart
 
 **2. Use Descriptive Names**
 
-```zeek
+```c
 # Good
 local suspicious_connection_count: count = 0;
 
@@ -429,7 +439,7 @@ local x: count = 0;
 
 **3. Comment Your Code**
 
-```zeek
+```c
 # Track failed SSH attempts per IP
 # Alert when threshold exceeded
 global ssh_failures: table[addr] of count;
@@ -443,7 +453,7 @@ global ssh_failures: table[addr] of count;
 
 **5. Log Your Detections**
 
-```zeek
+```c
 # Don't just print - write to notice framework or custom logs
 # We'll cover this more later, but for now:
 print fmt("DETECTION: Suspicious activity from %s", ip);
@@ -463,7 +473,7 @@ site/
 
 **7. Version Control Your Scripts**
 
-```bash
+```c
 cd /opt/zeek/share/zeek/site/custom/
 git init
 git add .
@@ -476,7 +486,7 @@ This lets you track changes, roll back mistakes, and collaborate.
 
 Before moving to the type-specific exercises, verify your environment:
 
-```bash
+```c
 # 1. Check Zeek is installed and version
 zeek --version
 
@@ -496,20 +506,9 @@ sudo zeek -i eth0 local.zeek
 sudo zeekctl status
 ```
 
-If all of these work, **you're ready to start building real detections!**
+If all of these work, you're ready to start building real detections!
 
-## What's Next
-
-In the following sections, each scalar type will have practical exercises where you'll:
-
-- Write detection scripts using that type
-- Generate test traffic to trigger detections
-- Observe and verify your detections work
-- Learn to refine and tune them
-
-You now have all the infrastructure knowledge needed to focus on the security logic itself. Let's start detecting some attacks!
-
-
+**LET'S DO IT!**
 
 
 ---
