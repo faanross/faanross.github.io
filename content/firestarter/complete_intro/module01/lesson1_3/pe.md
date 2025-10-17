@@ -287,6 +287,38 @@ If you did not build the application on your target machine, transfer it over us
 ![lab 1 data directory](../img/lab1_01.png)
 
 
+**You can see here in my case the values are:**
+- Import Directory RVA: `0x0028C000`
+- Import Directory Size: `0x53E` (1342 bytes)
+
+
+Why do we care about this again? This is where the Import Directory exists **in memory** when the PE is loaded.
+
+Note please your values are going to be different, write them down and USE YOUR VALUES in the steps below, NOT MINE.
+
+
+### Try to Find It Using RVA as File Offset
+
+1. Open `simple.exe` in **HxD** (or your hex editor)
+2. Go to address `0x0028C000` (Ctrl+G → enter your RVA)
+
+![lab 1 hex rva fail](../img/lab1_02.png)
+
+As you can see, we get the error that the offset does not even exist... Which is of course the whole point of this exercise.
+
+We were expecting this to fail. The error "invalid digit" is because `0x0028C000` is **2,670,592 bytes** in decimal. Let's look at the actual size of our binary:
+
+![simple.exe size](../img/lab1_03.png)
+
+
+
+We can see our file is **2,473,984 bytes** (about 2.35 MB). And since were trying to jump to `0x0028C000` which is **2,670,592 bytes** - that's **196,608 bytes PAST the end of the file**!
+
+This is why HxD gave us the error - you literally asked it to go to a position that doesn't exist in the file.
+
+Note that in the case that the file was larger than our offset we would not get this error, we would actually expect to be taken to a position in the file. But we'll encounter random-looking bytes, definitely not an import directory structure.
+
+So to review - The RVA `0x0028C000` only makes sense **in memory** when Windows loads the executable with proper 4KB alignment. On disk, that same data is stored at a much earlier position (probably around offset `0x0028A000` or so, but we'll calculate the exact position shortly).
 
 
 
