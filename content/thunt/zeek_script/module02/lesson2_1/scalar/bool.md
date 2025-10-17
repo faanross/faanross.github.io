@@ -13,7 +13,12 @@ type: "page"
 
 ## **The bool Type: Boolean Values**
 
-The `bool` type represents binary truth values - something is either true or false, yes or no, on or off. Booleans are the fundamental building blocks of logic and decision-making in programs. In Zeek, true is written as `T` and false as `F` (note the capital letters, unlike many languages that use lowercase `true` and `false`). While this might seem like a simple type, booleans are absolutely essential for expressing security logic: "Is this IP address suspicious?" "Has the threshold been exceeded?" "Should we alert on this behavior?"
+The `bool` type represents binary truth values - something is either true or false, yes or no, on or off. Booleans are the fundamental building blocks of logic and decision-making in programs. In Zeek, true is written as `T` and false as `F` (note the capital letters, unlike many languages that use lowercase `true` and `false`). 
+
+While this might seem like a simple type, booleans are essential for expressing security logic, for example: 
+- "Is this IP address suspicious?" 
+- "Has the threshold been exceeded?" 
+- "Should we alert on this behavior?"
 
 ### **Why Booleans Matter in Security**
 
@@ -37,9 +42,14 @@ local is_local: bool = (ip in local_networks);
 local exceeded_threshold: bool = (count > 100);
 
 # Boolean operations
-local detected = is_suspicious && exceeded_threshold;  # AND
-local flagged = is_local || is_external;  # OR
-local not_safe = !is_encrypted;  # NOT
+# AND
+local detected = is_suspicious && exceeded_threshold;  
+
+# OR
+local flagged = is_local || is_external; 
+
+# NOT 
+local not_safe = !is_encrypted;  
 ```
 
 **Direct assignment** gives you explicit true/false values using `T` and `F`. Remember these are capitalized in Zeek - lowercase won't work.
@@ -140,6 +150,9 @@ function assess_threat(ip: addr): string
 
 The `assess_threat()` function counts how many flags are set and returns a threat level. Zero flags means clean, one flag is low confidence (might be legitimate), two flags is medium confidence (investigate), and three or more flags is high confidence (likely malicious). This graduated response lets you prioritize alerts and resources appropriately.
 
+NOTE: This example is admittedly somewhat contrived since we don't usually expect there to be a relationship between a host being scanned, and hosting a beacon per se. I'm just trying to illustrate the general principle here that using multiple proxies for malicious behaviours help us develop robust detections that minimize false positives.
+
+
 ### **Boolean Patterns in Security Detection**
 
 Several common patterns use booleans effectively:
@@ -167,7 +180,8 @@ global alerted: set[addr] = set();
 if ( is_malicious && src !in alerted )
 {
     alert(src);
-    add alerted[src];  # Don't alert again
+    add alerted[src];  
+    # Don't alert again
 }
 ```
 
@@ -218,7 +232,7 @@ Effective use of booleans makes your detections more readable, maintainable, and
 
 Boolean flags let you implement stateful detection - tracking what you've seen from each host, correlating indicators across events, and building comprehensive threat profiles. This state tracking is what elevates simple signature matching to sophisticated behavioral analysis.
 
-As you build more complex detections, you'll find yourself using booleans constantly: as function return values ("does this condition hold?"), as record fields (tracking multiple attributes), in tables (mapping entities to their states), and as the glue that combines simple checks into powerful compound detections. Master booleans, and you master the logic of security analysis.
+As you build more complex detections, you'll find yourself using booleans constantly: as function return values ("does this condition hold?"), as record fields (tracking multiple attributes), in tables (mapping entities to their states), and as the glue that combines simple checks into powerful compound detections. 
 
 
 
@@ -236,13 +250,17 @@ A: Both work and produce the same result, but `if ( is_suspicious )` is prefer
 
 A: Short-circuit evaluation means: for `&&`, if the left operand is false, the right isn't evaluated (result is already false); for `||`, if the left operand is true, the right isn't evaluated (result is already true). Example: `if ( ip in local_networks && expensive_check(ip) )` - the expensive_check() only runs if ip is local. This matters for performance (avoiding unnecessary computation) and correctness (if the right-side function could error on certain inputs, short-circuiting protects you).
 
-**Q4: Why is combining multiple boolean indicators (flags) more effective than single-indicator detection? Use the threat assessment example to explain.**
+**Q4: Why is combining multiple boolean indicators (flags) more effective than single-indicator detection? Use a threat assessment example to explain.**
 
 A: Individual indicators often produce false positives - a host might scan legitimately (security scanner), or generate high volume normally (file server). But when multiple indicators align (scanning AND beaconing AND high volume), the probability of malicious activity increases dramatically. The threat assessment pattern counts how many flags are set and returns graduated threat levels: zero flags = clean, one = low confidence, two = medium, three+ = high. This reduces false positives and helps prioritize responses appropriately.
 
 **Q5: List three common security detection patterns that rely heavily on boolean values.**
 
-A: (1) Allow/deny list checking - testing if an entity is in an allowed set (bool result determines whether to block/alert), (2) State tracking - using booleans to remember what you've seen (e.g., "have we already alerted on this host?" stored as bool flag to prevent duplicates), (3) Multi-condition validation - combining several boolean checks with && and || to create precise detection rules (e.g., "is_internal(src) && !is_internal(dst) && is_sensitive_port(port)" to detect potential data exfiltration).
+A: **(1) Allow/deny list checking** - testing if an entity is in an allowed set (bool result determines whether to block/alert), 
+
+**(2) State tracking** - using booleans to remember what you've seen (e.g., "have we already alerted on this host?" stored as bool flag to prevent duplicates), 
+
+**(3) Multi-condition validation** - combining several boolean checks with && and || to create precise detection rules (e.g., "is_internal(src) && !is_internal(dst) && is_sensitive_port(port)" to detect potential data exfiltration).
 
 
 
