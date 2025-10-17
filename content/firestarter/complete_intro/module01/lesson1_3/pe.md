@@ -284,7 +284,7 @@ If you did not build the application on your target machine, transfer it over us
     - Import Directory Address (this is the RVA)
     - Import Directory Size
 
-![lab 1 data directory](./img/lab1_01.png)
+![lab 1 data directory](../img/lab1_01.png)
 
 
 
