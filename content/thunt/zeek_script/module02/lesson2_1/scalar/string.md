@@ -65,7 +65,8 @@ Exact comparison is the foundation of allow/deny lists - checking if a string ma
 
 ```c
 # Length
-local len = |hostname|;  # Number of characters
+local len = |hostname|;  
+# Number of characters
 ```
 
 String length is useful for detecting anomalies - excessively long URLs might indicate buffer overflow attempts, unusually short hostnames might be suspicious, and zero-length fields might indicate protocol violations.
@@ -83,9 +84,11 @@ The `in` operator checks if one string appears anywhere within another. This i
 **Case conversion** normalizes strings for comparison:
 
 ```c
-# Case conversion
-local lower = to_lower(hostname);  # "WWW.EXAMPLE.COM" -> "www.example.com"
-local upper = to_upper(hostname);  # "www.example.com" -> "WWW.EXAMPLE.COM"
+# "WWW.EXAMPLE.COM" -> "www.example.com"
+local lower = to_lower(hostname); 
+
+# "www.example.com" -> "WWW.EXAMPLE.COM" 
+local upper = to_upper(hostname);  
 ```
 
 Case conversion is essential because attackers often use mixed case to evade simple string matching. Converting everything to lowercase before comparison prevents evasion through capitalization tricks.
@@ -122,7 +125,7 @@ if ( /union.*select|or.*1=1|'; drop/i in url )
 Let's break down these patterns:
 
 - `/\.\.[\/\\]/` matches ".." followed by either a forward slash or backslash - the classic path traversal pattern trying to escape directory boundaries
-- `/union.*select|or.*1=1|'; drop/i` matches common SQL injection patterns: "union" followed eventually by "select", or "or" followed by "1=1", or "'; drop". The trailing `i` makes the match case-insensitive
+- `/union.*select|or.*1=1|'; drop/i` matches common SQL injection patterns: "union" followed eventually by "select", or "or" followed by "1=1", or "'; drop". The trailing `i` makes the match case-insensitive.
 
 **Extracting parts of strings:**
 
