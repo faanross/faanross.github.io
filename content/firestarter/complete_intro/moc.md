@@ -9,6 +9,14 @@ type: "page"
 
 <br>
 
+**PLEASE NOTE: This course is not yet completed and is actively being worked on.**
+```
+It is currently completed up until -> Lesson 1.3, Part 4D
+It was last updated ->  Friday 18 October
+It intends to conclude at -> Module 16, Lesson 16.6
+```
+<br>
+
 ## MODULE 1: Foundations
 ### Lesson 1.1 - Offensive Tooling Landscape & Career Paths
 - [Part 1 - The Offensive Tooling Landscape]({{< ref "module01/lesson1_1/landscape.md" >}})

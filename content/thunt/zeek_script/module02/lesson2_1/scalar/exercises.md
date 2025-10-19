@@ -525,8 +525,6 @@ zeek@zeek-sensor:~/test_scan$ cat port_scan.log
 1760876062.226688	70.27.237.44	138.197.134.43	20
 ```
 
-
-
 ---
 
 
