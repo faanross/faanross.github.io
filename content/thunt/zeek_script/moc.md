@@ -3,6 +3,14 @@ showTableOfContents: true
 title: "The Complete Zeek Scripting Course for Network Threat Hunting"
 type: "page"
 ---
+<br>
+**PLEASE NOTE: This course is not yet completed and is actively being worked on.**
+```
+It is currently completed up until -> Lesson 2.1, Part 2J
+It was last updated ->  Sunday 20 October
+It intends to conclude at -> Module 13, Lesson 13.3
+```
+<br>
 
 ## MODULE 1: Foundations
 ### Lesson 1.1: Zeek Ecosystem Overview
