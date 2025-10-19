@@ -5,6 +5,7 @@ type: "page"
 ---
 <br>
 **PLEASE NOTE: This course is not yet completed and is actively being worked on.**
+
 ```
 It is currently completed up until -> Lesson 2.1, Part 2J
 It was last updated ->  Sunday 20 October
