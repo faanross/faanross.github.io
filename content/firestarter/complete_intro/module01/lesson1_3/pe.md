@@ -321,6 +321,181 @@ Note that in the case that the file was larger than our offset we would not get 
 So to review - The RVA `0x0028C000` only makes sense **in memory** when Windows loads the executable with proper 4KB alignment. On disk, that same data is stored at a much earlier position (probably around offset `0x0028A000` or so, but we'll calculate the exact position shortly).
 
 
+### Find the Correct File Offset
+
+Now let's do it properly using section headers.
+
+**In PEBear:**
+
+1. Click on the **Section Hdrs** tab.
+2. You should see the following.
+
+
+![section headers size](../img/lab1_04.png)
+
+
+
+We can see here for all the sections, we have both the virtual address, as well as virtual size which we can use to determine the range for the section.
+
+As an example, for `.text` we have a VA of `0x1000` and a size of `0xAAAF1`, this means the range for `.text `is `0x1000` to `0xABAF1`.
+
+Now we ask ourselves -  **which section contains your Import Directory RVA** of `0x28C000`.
+
+Well, since `0x0028C000` > `0xABAF1` we know it's not `.text`. So now we go through each section, determine it's range in a similar fashion to determine where the Import  Directory RVA is.
+
+
+In this case it's actually pretty easy since when we get down to `.idata` we can see that its Virtual Address `0x28C000` **exactly matches** our Import Directory RVA. This makes perfect sense because `.idata` (import data) is specifically the section that contains "import data".
+
+
+
+
+### Now Calculate the File Offset
+
+Using the formula from our instructions:
+
+```
+RVA of Import Directory:     0x0028C000
+Section Virtual Address:     0x0028C000  (.idata)
+Offset within section:       0x0028C000 - 0x0028C000 = 0x00000000
+
+Section Raw Address (file):  0x0023C800  (.idata Raw Addr)
+Offset within section:       0x00000000
+File Offset:                 0x0023C800 + 0x00000000 = 0x0023C800
+```
+
+
+**So Our Import Directory File Offset is: `0x0023C800`**
+
+### Verify in Hex Editor
+
+Now we can proceed to verify this in our hex editr.
+
+1. Open **HxD**
+2. Press **Ctrl+G** and go to address `0x23C800` (in `HxD` you need to drop the `0x` - just use `23C800`)
+3. This time it should work since this offset is well within your file size of 2,473,984 bytes
+
+You should see the following:
+
+![hxd results](../img/lab1_05.png)
+
+### Verify with PEBear's Import View
+
+1. In **PEBear**, click **Imports** in the left panel
+2. You should see the list of imported DLLs (kernel32.dll, etc.)
+3. PEBear automatically did the RVA→File Offset conversion for you
+
+![pebear imports](../img/lab1_06.png)
+
+
+**Key insight:** PEBear shows you the imports, but it had to perform the exact same conversion we just did manually to find them in the file.
+
+
+
+
+## Analyzing the PE in Memory (Dynamic Analysis)
+
+Now let's see how addresses work when the PE is actually loaded and running.
+
+### Load in x64dbg
+
+1. Launch **x64dbg**
+2. **File → Open** and select `simple.exe`
+3. The debugger will break at the entry point
+4. **Do not press F9 (run) yet** - we want to examine memory first
+
+### Find the ImageBase
+
+1. On the top, click on the **Memory Map** tab
+2. In the Info column, find `simple.exe`
+3. Note the address here - this is our `ImageBase`
+4. In my case it is - `0x00007FF716BB0000`
+
+**NOTE:** This address is randomized by ASLR. This means not only will mine be different from yours, but yours will change every time you run it!
+
+
+
+### Calculate the Import Directory Virtual Address
+
+Before we calculate our Import Directory RVA: `0x0028C000`
+
+So now let's calculate the Virtual Address (VA) in memory:
+```
+VA = ImageBase + RVA
+VA = 0x00007FF716BB0000 + 0x0028C000
+VA = 0x00007FF716E3C000
+```
+
+So in this case my Import Directory VA in memory: `0x00007FF716E3C000`
+
+Let's confirm this back in x64dbg.
+
+### Examine Memory at the Virtual Address
+
+Now let's verify this is correct:
+
+1. In `x64dbg`, click on `Dump 1` tab, then hit press **Ctrl+G** (Go to expression)
+2. Enter: `0x00007FF716E3C000` (or just `7FF716E3C000`)
+3. Press Enter
+
+This should take you to the memory location where the Import Directory is loaded.
+
+![x64dbg results](../img/lab1_07.png)
+
+
+
+- Now look what we see in memory at `0x00007FF716E3C000`
+- We once again see the module name (`kernel32`) and our functions names for example `WriteConsole`
+- In other words, exactly what we saw in **HxD**.
+
+
+### The Key Insight - Same Data, Different Addresses
+
+| Location                | Tool   | Address              | Data                                                  |
+| ----------------------- | ------ | -------------------- | ----------------------------------------------------- |
+| **On Disk (File)**      | HxD    | `0x0023C800`         | Import directory with kernel32.dll and function names |
+| **In Memory (Running)** | x64dbg | `0x00007FF716E3C000` | **Same exact data!**                                  |
+
+
+**They're different because:**
+
+1. **On disk**: Data stored sequentially in the .exe file (file offset)
+2. **In memory**: Windows loader maps sections to virtual addresses (RVA + ImageBase)
+3. **Section alignment**: 512 bytes on disk vs 4KB pages in memory
+
+
+
+## Key Takeaways
+
+### What We Just Learned
+
+1. **RVAs in headers are NOT file offsets** - using them directly in a hex editor gives garbage
+2. **You must convert:** RVA → Section → Calculate offset → File offset
+3. **In memory, RVAs work differently:** ImageBase + RVA = Virtual Address
+4. **Tools like PEBear hide this complexity** - but now you know what they're doing behind the scenes
+5. **When manually loading PEs** (process hollowing, reflective DLL injection), you must handle both:
+   - Reading from file offsets (disk)
+   - Writing to virtual addresses (memory)
+
+### Common Mistakes (That You Now Avoid)
+
+❌ Using an RVA as a file offset in a hex editor
+❌ Forgetting to add ImageBase when calculating memory addresses
+❌ Ignoring section alignment differences between disk and memory
+❌ Assuming all sections start at the same relative positions on disk and in memory
+
+### Why This Matters for Offensive Security
+
+When you implement:
+- **Process Hollowing:** You copy sections from disk offsets to memory VAs
+- **Reflective DLL Injection:** You must apply relocations using RVAs
+- **Import Resolution:** You read import names from file offsets, write addresses to IAT using VAs
+- **Manual PE Loading:** Every step requires converting between these address types
+
+
+
+
+
+
 
 ---
 
