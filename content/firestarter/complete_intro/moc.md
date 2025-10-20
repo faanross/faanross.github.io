@@ -11,8 +11,8 @@ type: "page"
 
 **PLEASE NOTE: This course is not yet completed and is actively being worked on.**
 ```
-It is currently completed up until -> Lesson 1.3, Part 4D
-It was last updated ->  Friday 18 October
+It is currently completed up until -> Lesson 1.3, Part 5A
+It was last updated ->  Monday 20 October 2025
 It intends to conclude at -> Module 16, Lesson 16.6
 ```
 <br>
