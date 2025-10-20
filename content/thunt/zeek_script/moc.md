@@ -4,6 +4,7 @@ title: "The Complete Zeek Scripting Course for Network Threat Hunting"
 type: "page"
 ---
 <br>
+
 **PLEASE NOTE: This course is not yet completed and is actively being worked on.**
 
 ```
