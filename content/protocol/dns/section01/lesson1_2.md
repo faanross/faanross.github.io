@@ -37,6 +37,7 @@ Each delegation point represents a zone boundary. A zone is a contiguous portion
 **The DNS hierarchy typically displays a three-tier structure**. At the top sit the root DNS servers, which direct queries to the appropriate TLD (Top-Level Domain) servers like .com, .org, and .net. These TLD servers then point to the authoritative nameservers that hold the actual DNS records for specific domains. When you look up a website like example.com, your query travels down this hierarchy - from root to TLD to authoritative server - until it finds the IP address you need. This distributed system ensures the internet's naming infrastructure remains scalable and resilient.
 
 
+
 ---
 
 [|TOC|]({{< ref "../../moc.md" >}})
