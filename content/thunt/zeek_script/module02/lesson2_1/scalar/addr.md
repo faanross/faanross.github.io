@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2D - The addr Type: IP Addresses"
+title: "The addr Type: IP Addresses"
 type: "page"
 ---
 

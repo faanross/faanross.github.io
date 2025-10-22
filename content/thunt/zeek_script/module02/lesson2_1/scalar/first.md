@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2J - Writing and Loading Your First Script"
+title: "Writing and Loading Your First Script"
 type: "page"
 ---
 
@@ -514,5 +514,5 @@ If all of these work, you're ready to start building real detections!
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
 [|PREV|]({{< ref "./bool.md" >}})
-[|NEXT|]({{< ref "./exercises.md" >}})
+[|NEXT|]({{< ref "./exercise01.md" >}})
 

@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2L - Conclusion"
+title: "Conclusion"
 type: "page"
 ---
 
@@ -11,6 +11,6 @@ type: "page"
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./exercises.md" >}})
+[|PREV|]({{< ref "./exercise01.md" >}})
 [|NEXT|]({{< ref "../complex.md" >}})
 

@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2I - The bool Type: Boolean Values"
+title: "The bool Type: Boolean Values"
 type: "page"
 ---
 

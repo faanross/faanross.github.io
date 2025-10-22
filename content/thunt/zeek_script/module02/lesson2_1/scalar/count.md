@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2B - The Count Type: Non-Negative Integers"
+title: "The Count Type: Non-Negative Integers"
 type: "page"
 ---
 

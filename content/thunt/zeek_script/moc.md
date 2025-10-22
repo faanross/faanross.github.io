@@ -48,18 +48,18 @@ It intends to conclude at -> Module 13, Lesson 13.3
 - [Part 1 - Understanding Zeek's Type System]({{< ref "module02/lesson2_1/type.md" >}})
 
 #### Part 2 - Scalar Types: Single Values
-- [Part 2A - Introduction: Understanding Scalar Types in Zeek]({{< ref "module02/lesson2_1/scalar/intro.md" >}})
-- [Part 2B - The Count Type: Non-Negative Integers]({{< ref "module02/lesson2_1/scalar/count.md" >}})
-- [Part 2C - The int Type: Signed Integers]({{< ref "module02/lesson2_1/scalar/int.md" >}})
-- [Part 2D - The addr Type: IP Addresses]({{< ref "module02/lesson2_1/scalar/addr.md" >}})
-- [Part 2E - The port Type: Network Ports]({{< ref "module02/lesson2_1/scalar/port.md" >}})
-- [Part 2F - The time Type: Timestamps]({{< ref "module02/lesson2_1/scalar/time.md" >}})
-- [Part 2G - The interval Type: Time Durations]({{< ref "module02/lesson2_1/scalar/interval.md" >}})
-- [Part 2H - The string Type: Text Data]({{< ref "module02/lesson2_1/scalar/string.md" >}})
-- [Part 2I - The bool Type: Boolean Values]({{< ref "module02/lesson2_1/scalar/bool.md" >}})
-- [Part 2J - Writing and Loading Your First Script]({{< ref "module02/lesson2_1/scalar/first.md" >}})
-- [Part 2K - Scalar Types Practical Exercises]({{< ref "module02/lesson2_1/scalar/exercises.md" >}})
-- [Part 2L - Conclusion]({{< ref "module02/lesson2_1/scalar/conclusion.md" >}})
+- [Introduction: Understanding Scalar Types in Zeek]({{< ref "module02/lesson2_1/scalar/intro.md" >}})
+- [The Count Type: Non-Negative Integers]({{< ref "module02/lesson2_1/scalar/count.md" >}})
+- [The int Type: Signed Integers]({{< ref "module02/lesson2_1/scalar/int.md" >}})
+- [The addr Type: IP Addresses]({{< ref "module02/lesson2_1/scalar/addr.md" >}})
+- [The port Type: Network Ports]({{< ref "module02/lesson2_1/scalar/port.md" >}})
+- [The time Type: Timestamps]({{< ref "module02/lesson2_1/scalar/time.md" >}})
+- [The interval Type: Time Durations]({{< ref "module02/lesson2_1/scalar/interval.md" >}})
+- [The string Type: Text Data]({{< ref "module02/lesson2_1/scalar/string.md" >}})
+- [The bool Type: Boolean Values]({{< ref "module02/lesson2_1/scalar/bool.md" >}})
+- [Writing and Loading Your First Script]({{< ref "module02/lesson2_1/scalar/first.md" >}})
+- [Exercises 01: Port Scan Detection]({{< ref "module02/lesson2_1/scalar/exercise01.md" >}})
+- [Scalar Types Conclusion]({{< ref "module02/lesson2_1/scalar/conclusion.md" >}})
 
 
 
