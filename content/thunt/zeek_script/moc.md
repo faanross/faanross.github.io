@@ -52,6 +52,7 @@ It intends to conclude at -> Module 13, Lesson 13.3
 - [The Count Type: Non-Negative Integers]({{< ref "module02/lesson2_1/scalar/count.md" >}})
 - [The int Type: Signed Integers]({{< ref "module02/lesson2_1/scalar/int.md" >}})
 - [The addr Type: IP Addresses]({{< ref "module02/lesson2_1/scalar/addr.md" >}})
+- [The subnet Type: Network Ranges]({{< ref "module02/lesson2_1/scalar/subnet.md" >}})
 - [The port Type: Network Ports]({{< ref "module02/lesson2_1/scalar/port.md" >}})
 - [The time Type: Timestamps]({{< ref "module02/lesson2_1/scalar/time.md" >}})
 - [The interval Type: Time Durations]({{< ref "module02/lesson2_1/scalar/interval.md" >}})

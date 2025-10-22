@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2C - The Count Type: Non-Negative Integers"
+title: "The subnet Type: Network Ranges"
 type: "page"
 ---
 
@@ -204,6 +204,6 @@ A: Distinguishing internal traffic from external traffic is a fundamental catego
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./first.md" >}})
-[|NEXT|]({{< ref "./intro.md" >}})
+[|PREV|]({{< ref "./addr.md" >}})
+[|NEXT|]({{< ref "./port.md" >}})
 

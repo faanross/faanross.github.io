@@ -228,6 +228,6 @@ A: It means detecting when a service is running on an unexpected port - like HTT
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
-[|PREV|]({{< ref "./addr.md" >}})
+[|PREV|]({{< ref "./subnet.md" >}})
 [|NEXT|]({{< ref "./time.md" >}})
 
