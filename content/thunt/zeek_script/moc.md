@@ -57,8 +57,6 @@ It intends to conclude at -> Module 13, Lesson 13.3
 - [The interval Type: Time Durations]({{< ref "module02/lesson2_1/scalar/interval.md" >}})
 - [The string Type: Text Data]({{< ref "module02/lesson2_1/scalar/string.md" >}})
 - [The bool Type: Boolean Values]({{< ref "module02/lesson2_1/scalar/bool.md" >}})
-- [Writing and Loading Your First Script]({{< ref "module02/lesson2_1/scalar/first.md" >}})
-- [Exercises 01: Port Scan Detection]({{< ref "module02/lesson2_1/scalar/exercise01.md" >}})
 - [Scalar Types Conclusion]({{< ref "module02/lesson2_1/scalar/conclusion.md" >}})
 
 
@@ -77,6 +75,10 @@ It intends to conclude at -> Module 13, Lesson 13.3
 
 #### Part 7 - Working with Zeek's Built-in Data Structures
 - [Part 7 - Working with Zeek's Built-in Data Structures]({{< ref "module02/lesson2_1/builtin.md" >}})
+
+
+
+
 
 #### Parts 8 + 9 - Practical Exercises + Knowledge Validation
 - [Part 8 - Practical Exercises]({{< ref "module02/lesson2_1/exercises.md" >}})
