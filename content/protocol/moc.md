@@ -12,8 +12,7 @@ type: "page"
 - [LESSON 1.1 - History and Background of DNS]({{< ref "./dns/section01/lesson1_1.md" >}})
 - [LESSON 1.2 - DNS Resolution]({{< ref "./dns/section01/lesson1_2.md" >}})
 - [LESSON 1.3 - DNS Packet Structure]({{< ref "./dns/section01/lesson1_3.md" >}})
-
-
+- [LESSON 1.4 - Record Types Deep Dive]({{< ref "./dns/section01/lesson1_4.md" >}})
 
 
 ___

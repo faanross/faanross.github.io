@@ -256,6 +256,202 @@ In negative answers (NXDOMAIN or NODATA), the authority section typically contai
 
 
 
+## The Additional Section
+
+Provides supplementary information that might be useful. Most commonly, glue records:
+
+```
+Authority Section:
+  example.com.  172800  IN  NS  ns1.example.com.
+Additional Section:
+  ns1.example.com.  172800  IN  A  192.0.2.1
+```
+
+This breaks circular dependencies - without the glue record, you'd need to resolve `ns1.example.com` to contact example.com's nameservers, but you need to contact example.com's nameservers to resolve names in example.com.
+
+The additional section can also contain OPT pseudo-RRs for EDNS0, advertising extended capabilities like larger UDP buffers or DNSSEC support.
+
+## The Query/Response Cycle
+
+Let's trace a complete resolution through the packet structure. Your system queries `www.example.com A`:
+
+### Step 1: Client Sends Query
+
+```
+Header:
+  ID: 0x1a2b (random)
+  QR: 0 (query)
+  Opcode: 0 (standard query)
+  RD: 1 (recursion desired)
+  QDCOUNT: 1
+  ANCOUNT: 0
+  NSCOUNT: 0
+  ARCOUNT: 0
+
+Question:
+  QNAME: www.example.com
+  QTYPE: 1 (A)
+  QCLASS: 1 (IN)
+```
+
+The stub resolver sends this to its configured recursive resolver. The header's ID is randomly chosen, QR indicates it's a query, and RD requests recursion. Only the question section is populated - the resolver is asking a question, not providing answers.
+
+### Step 2: Recursive Resolver → Root Server
+
+The recursive resolver checks its cache, finds nothing, and queries a root server. It constructs a new query:
+
+```
+Header:
+  ID: 0x5c7d (different random ID)
+  QR: 0 (query)
+  Opcode: 0
+  RD: 0 (recursion NOT desired - requesting iterative resolution)
+  QDCOUNT: 1
+  ANCOUNT: 0
+  NSCOUNT: 0
+  ARCOUNT: 0
+
+Question:
+  QNAME: www.example.com
+  QTYPE: 1 (A)
+  QCLASS: 1 (IN)
+```
+
+Notice `RD=0` - the recursive resolver wants an iterative answer, not for the root to recurse on its behalf. The root doesn't know about `www.example.com` specifically, so it returns a referral:
+
+```
+Header:
+  ID: 0x5c7d (matches query)
+  QR: 1 (response)
+  Opcode: 0
+  AA: 0 (not authoritative for this name)
+  RD: 0 (mirroring query)
+  RA: 0 (recursion not available)
+  RCODE: 0 (NOERROR)
+  QDCOUNT: 1
+  ANCOUNT: 0 (no direct answer)
+  NSCOUNT: 13 (referring to .com nameservers)
+  ARCOUNT: 13 (glue records for those NSes)
+
+Question:
+  (echoed from query)
+
+Authority Section:
+  com.  172800  IN  NS  a.gtld-servers.net.
+  com.  172800  IN  NS  b.gtld-servers.net.
+  ...
+
+Additional Section:
+  a.gtld-servers.net.  172800  IN  A  192.5.6.30
+  b.gtld-servers.net.  172800  IN  A  192.33.14.30
+  ...
+```
+
+The header's QR bit flips to 1 (response), but ANCOUNT remains 0 - there's no answer. Instead, NSCOUNT and ARCOUNT are populated with a referral to `.com` servers. The question section is echoed back unchanged.
+
+### Step 3: Recursive Resolver → .com TLD
+
+The resolver queries a `.com` server using the glue records from the additional section. Similar packet structure, but querying a different server. The TLD responds:
+
+```
+Header:
+  ID: 0x9f3a (new random ID for this query)
+  QR: 1 (response)
+  AA: 0 (not authoritative for www.example.com)
+  RCODE: 0
+  QDCOUNT: 1
+  ANCOUNT: 0
+  NSCOUNT: 2 (referring to example.com's nameservers)
+  ARCOUNT: 2 (glue records)
+
+Authority Section:
+  example.com.  172800  IN  NS  ns1.example.com.
+  example.com.  172800  IN  NS  ns2.example.com.
+
+Additional Section:
+  ns1.example.com.  172800  IN  A  192.0.2.1
+  ns2.example.com.  172800  IN  A  192.0.2.2
+```
+
+Another referral, this time to `example.com`'s authoritative nameservers.
+
+### Step 4: Recursive Resolver → Authoritative Server
+
+The resolver queries `ns1.example.com` using the glue record. Finally, an authoritative answer:
+
+```
+Header:
+  ID: 0x2e8f (new random ID)
+  QR: 1 (response)
+  AA: 1 (AUTHORITATIVE - this is the key bit)
+  RD: 0
+  RA: 0
+  RCODE: 0
+  QDCOUNT: 1
+  ANCOUNT: 1 (finally, an answer!)
+  NSCOUNT: 2 (authority info)
+  ARCOUNT: 2 (nameserver addresses)
+
+Question:
+  (echoed from query)
+
+Answer Section:
+  www.example.com.  3600  IN  A  192.0.2.10
+
+Authority Section:
+  example.com.  172800  IN  NS  ns1.example.com.
+  example.com.  172800  IN  NS  ns2.example.com.
+
+Additional Section:
+  ns1.example.com.  172800  IN  A  192.0.2.1
+  ns2.example.com.  172800  IN  A  192.0.2.2
+```
+
+Now `AA=1` (authoritative answer) and ANCOUNT is non-zero. The answer section contains the requested A record. The authority section lists the zone's nameservers (for reference), and additional provides their addresses.
+
+### Step 5: Recursive Resolver → Client
+
+The recursive resolver caches all received records according to their TTLs, then responds to the original client query:
+
+```
+Header:
+  ID: 0x1a2b (MATCHES THE ORIGINAL CLIENT QUERY)
+  QR: 1 (response)
+  AA: 0 (resolver isn't authoritative, even if it got authoritative data)
+  RD: 1 (echoing the client's request)
+  RA: 1 (recursion IS available from this resolver)
+  RCODE: 0
+  QDCOUNT: 1
+  ANCOUNT: 1
+  NSCOUNT: 2
+  ARCOUNT: 2
+
+Question:
+  (echoed from original query)
+
+Answer Section:
+  www.example.com.  3600  IN  A  192.0.2.10
+
+Authority/Additional sections:
+  (may be included, may be omitted - not required for client)
+```
+
+The ID matches the client's original query (`0x1a2b`), allowing correlation. The recursive resolver sets `RA=1` (indicating recursion is available) but leaves `AA=0` because the resolver itself isn't authoritative. The answer section contains the result.
+
+## Key Observations
+
+**Header stability**: Most header fields are set once in the query and preserved in responses. The server flips QR, sets AA/RCODE as appropriate, and updates the counts, but leaves RD, opcode, and ID untouched.
+
+**Section evolution**: Queries populate only header + question. Responses add answer/authority/additional sections progressively. The question section is always echoed unchanged.
+
+**ID matching**: Every query/response pair shares an ID. This is critical for security - without cryptographic validation (DNSSEC), the ID is the only thing preventing trivial response forgery.
+
+**Compression matters**: Real-world DNS packets use name compression heavily. A response with 10 RRs from the same domain doesn't repeat `example.com` 10 times - it encodes it once and uses pointers. This keeps packets under the 512-byte UDP limit (traditionally) or modern EDNS0 limits (4096+ bytes).
+
+**Flags tell the story**: You can diagnose DNS issues by examining flags. `AA=0` with `ANCOUNT>0`? Cached data. `TC=1`? Retry over TCP. `RCODE=2`? Server failure, try another NS. `RCODE=3`? Name doesn't exist, cache the negative response.
+
+
+
 ---
 
 [|TOC|]({{< ref "../../moc.md" >}})
