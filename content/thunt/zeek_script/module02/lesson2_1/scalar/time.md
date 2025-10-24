@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2F - The time Type: Timestamps"
+title: "The time Type: Timestamps"
 type: "page"
 ---
 

@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2H - The string Type: Text Data"
+title: "The string Type: Text Data"
 type: "page"
 ---
 

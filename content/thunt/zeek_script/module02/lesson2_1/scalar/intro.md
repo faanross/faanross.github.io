@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2A - Introduction: Understanding Scalar Types in Zeek"
+title: "Introduction: Understanding Scalar Types in Zeek"
 type: "page"
 ---
 

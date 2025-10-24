@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 2G - The interval Type: Time Durations"
+title: "The interval Type: Time Durations"
 type: "page"
 ---
 
