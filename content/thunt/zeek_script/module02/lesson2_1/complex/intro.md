@@ -129,5 +129,5 @@ Each complex type gets a comprehensive deep dive covering:
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
 [|PREV|]({{< ref "../scalar/conclusion.md" >}})
-[|NEXT|]({{< ref "../scalar/conclusion.md" >}})
+[|NEXT|]({{< ref "./table.md" >}})
 

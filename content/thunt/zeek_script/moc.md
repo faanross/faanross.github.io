@@ -8,8 +8,8 @@ type: "page"
 **PLEASE NOTE: This course is not yet completed and is actively being worked on.**
 
 ```
-It is currently completed up until -> Lesson 2.1, Part 2, Scalar Types Conclusion
-It was last updated ->  Thursday 23 October
+It is currently completed up until -> Lesson 2.1, Part 3, Intro to Complex Types 
+It was last updated ->  Friday 24 October
 It intends to conclude at -> Module 13, Lesson 13.3
 ```
 <br>
@@ -64,11 +64,11 @@ It intends to conclude at -> Module 13, Lesson 13.3
 
 #### Part 3 - Complex Types: Structured Data
 - [Introduction: Complex Types]({{< ref "module02/lesson2_1/complex/intro.md" >}})
-- [The table Type: Key-Value Mappings]({{< ref "module02/lesson2_1/complex/intro.md" >}})
-- [The set Type: Unique Collections]({{< ref "module02/lesson2_1/complex/intro.md" >}})
-- [The record Type: Structured Composite Data]({{< ref "module02/lesson2_1/complex/intro.md" >}})
-- [The vector Type Ordered Collections]({{< ref "module02/lesson2_1/complex/intro.md" >}})
-- [Complex Types Conclusion]({{< ref "module02/lesson2_1/complex/intro.md" >}})
+- [The table Type: Key-Value Mappings]({{< ref "module02/lesson2_1/complex/table.md" >}})
+- [The set Type: Unique Collections]({{< ref "module02/lesson2_1/complex/set.md" >}})
+- [The record Type: Structured Composite Data]({{< ref "module02/lesson2_1/complex/record.md" >}})
+- [The vector Type Ordered Collections]({{< ref "module02/lesson2_1/complex/vector.md" >}})
+- [Complex Types Conclusion]({{< ref "module02/lesson2_1/complex/conclusion.md" >}})
 
 
 
