@@ -263,6 +263,187 @@ for ( [ip, port] in connections )
 The syntax `[ip, port]` in the loop header **destructures** the compound key into its components, making the code cleaner than manual tuple handling.
 
 
+## Automatic Expiration: Memory Management for Long-Running Analysis
+
+In production network monitoring, tables can grow unbounded - a busy network might see millions of unique IP addresses in a day. **Automatic expiration** is Zeek's solution: entries can be configured to **delete themselves** after a time period, preventing memory exhaustion.
+
+### Basic Time-Based Expiration
+
+The **`&create_expire`** attribute sets a **sliding timeout window** - each entry is deleted if not accessed within the specified interval:
+
+
+```c
+# Entries automatically deleted after 1 hour of inactivity
+global recent_scanners: table[addr] of count 
+	# Time interval: 1 hour
+    &create_expire = 1hr;  
+```
+
+**How expiration works:**
+
+- When you add an entry, Zeek starts a timer for `create_expire` duration
+- **Each access** to the entry (read or write) **resets the timer**
+- If the timer expires without access, the entry is automatically deleted
+- This is a **sliding window** - active entries never expire, idle ones do
+
+
+**Time interval syntax:**
+
+- `1sec`, `30sec` (seconds)
+- `5min`, `30min` (minutes)
+- `1hr`, `24hr` (hours)
+- `1day`, `7days` (days)
+
+
+
+### Why Expiration is Critical
+
+
+```c
+# Without expiration: memory grows forever (BAD)
+global all_ips_ever: table[addr] of count;  
+
+# With expiration: only recent activity tracked (GOOD)
+global recent_ips: table[addr] of count 
+    &create_expire = 1hr;  
+```
+
+On a busy network seeing 10,000 unique IPs per hour, the first table would grow to millions of entries within days. The second never exceeds ~10,000 entries because old IPs automatically expire.
+
+### Custom Expiration Logic
+
+For advanced cases, **`&expire_func`** lets you dynamically adjust expiration time per entry:
+
+
+```c
+global suspicious_ips: table[addr] of count
+	# Default expiration
+    &create_expire = 30min  
+    &expire_func = function(t: table[addr] of count, idx: addr): interval
+    {
+        # Function called when entry is about to expire
+        # Can extend expiration based on entry's value
+        
+        if ( t[idx] > 100 )
+            return 2hr;   # High activity: keep longer
+        else
+            return 30min; # Low activity: expire sooner
+    };
+```
+
+**Expiration function parameters:**
+
+|Parameter|Type|Purpose|
+|---|---|---|
+|`t`|`table[addr] of count`|Reference to the entire table|
+|`idx`|`addr`|The specific key being evaluated for expiration|
+|**Returns**|`interval`|New expiration duration (or `0sec` to delete immediately)|
+
+**Use cases for custom expiration:**
+
+- **Adaptive tracking**: Keep high-severity threats in memory longer
+- **Rate limiting**: Expire entries early if table is growing too large
+- **Graduated response**: Short timeout for low-risk indicators, long timeout for confirmed threats
+
+
+## Default Values: Simplifying Initialization
+
+The **`&default`** attribute provides a fallback value for missing keys, eliminating the need for explicit existence checks:
+
+```c
+# Table with default value of 0
+global ssh_failed_attempts: table[addr] of count 
+	# Non-existent keys return 0
+    &default = 0;  
+
+event ssh_auth_failed(c: connection, user: string)
+{
+    local src = c$id$orig_h;
+    
+    # No need to check if key exists!
+    # Accessing missing key returns default (0), then we increment
+    # Safe even on first access
+    ++ssh_failed_attempts[src];  
+    
+    if ( ssh_failed_attempts[src] >= 5 )
+    {
+        print fmt("ALERT: %s has %d failed SSH attempts",
+                  src, ssh_failed_attempts[src]);
+    }
+}
+```
+
+**Without `&default`**, you'd need:
+
+
+```c
+if ( src !in ssh_failed_attempts )
+    ssh_failed_attempts[src] = 0;
+++ssh_failed_attempts[src];  
+```
+
+**With `&default`**, this boilerplate vanishes - the table automatically initializes missing keys with the default value.
+
+
+
+
+## Real-World Example: Brute Force Detection
+
+Here's a complete, production-ready pattern combining expiration and defaults:
+
+
+```c
+# Track failed SSH login attempts with automatic expiration
+global ssh_failed_attempts: table[addr] of count 
+	# Reset count after 1 hour of inactivity
+    &create_expire = 1hr  
+    # Missing keys default to 0 
+    &default = 0;          
+
+event ssh_auth_failed(c: connection, user: string)
+{
+	# Attacker's IP
+    local src = c$id$orig_h;  
+    
+    # Increment failure count (default=0 makes this safe)
+    ++ssh_failed_attempts[src];
+    
+    # Check threshold
+    if ( ssh_failed_attempts[src] >= 5 )
+    {
+        print fmt("ALERT: %s has %d failed SSH attempts in last hour",
+                  src, ssh_failed_attempts[src]);
+        
+        # Could trigger IDS alert, firewall block, etc.
+    }
+}
+```
+
+**Why this pattern is effective:**
+
+- **Automatic cleanup**: After 1 hour of no activity, the IP's count resets (expiration)
+- **No initialization code**: First failed login automatically creates entry with count=1
+- **Memory bounded**: Table only contains IPs with failed logins in the last hour
+- **Simple logic**: No manual reset or cleanup required
+
+
+## Table Size Management and Limits
+
+### Querying Table Size
+
+Use the **size operator `| |`** to get the number of entries:
+
+```c
+local size = |port_counts|;  # Returns count of entries
+print fmt("Tracking %d ports", size);
+```
+
+This is useful for monitoring memory usage or detecting abnormal growth.
+
+
+
+## CONTINUE HERE
+
 
 
 
