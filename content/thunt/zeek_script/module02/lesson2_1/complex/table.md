@@ -206,6 +206,63 @@ event connection_established(c: connection)
 ```
 
 
+## Iterating Over Tables
+
+Tables support **iteration** over their keys, allowing you to process all entries:
+
+### Simple Table Iteration
+
+
+```c
+# Iterate over single-key table
+for ( port in port_counts )
+{
+    # 'port' takes on each key value in turn
+    print fmt("Port %s: %d connections", port, port_counts[port]);
+}
+```
+
+**Output example:**
+
+```bash
+Port 80/tcp: 100 connections
+Port 443/tcp: 250 connections
+Port 22/tcp: 50 connections
+```
+
+**Important characteristics:**
+
+- Iteration order is **undefined** (tables are unordered collections)
+- The loop variable (`port`) receives each key
+- Access the value using the key: `port_counts[port]`
+
+
+### Compound Key Iteration with Destructuring
+
+When iterating over compound keys, you can **destructure** the key tuple into separate variables:
+
+
+```c
+# Iterate over table with compound keys
+for ( [ip, port] in connections )
+{
+    # 'ip' and 'port' are automatically unpacked from the compound key
+    print fmt("%s:%s has %d connections", 
+              ip, port, connections[ip, port]);
+}
+```
+
+**Output example:**
+
+```bash
+192.168.1.100:80/tcp has 5 connections
+192.168.1.100:443/tcp has 10 connections
+192.168.1.200:80/tcp has 3 connections
+```
+
+The syntax `[ip, port]` in the loop header **destructures** the compound key into its components, making the code cleaner than manual tuple handling.
+
+
 
 
 
