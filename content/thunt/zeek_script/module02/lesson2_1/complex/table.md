@@ -169,7 +169,47 @@ if ( [192.168.1.100, 80/tcp] in connections )
 - **Efficient lookup**: Single hash operation instead of two table lookups
 - **Atomic operations**: Check or update multi-dimensional state in one step
 
-## TO BE CONTINUED...
+
+### Practical Example: Tracking Per-Host, Per-Service Connections
+
+
+
+```c
+# Monitor which services each host accesses
+global service_usage: table[addr, port] of count;
+
+# In a connection event handler
+event connection_established(c: connection)
+{
+	# Source IP
+    local src = c$id$orig_h;
+    # Destination port   
+    local dst_port = c$id$resp_p;  
+    
+    # Increment or initialize count for this host/service pair
+    if ( [src, dst_port] !in service_usage )
+        service_usage[src, dst_port] = 0;
+    
+    ++service_usage[src, dst_port];
+    
+    # Detect port scanning: one host touching many services
+    local ports_accessed = 0;
+    for ( [ip, port] in service_usage )
+    {
+        if ( ip == src )
+            ++ports_accessed;
+    }
+    
+    if ( ports_accessed > 20 )
+        print fmt("ALERT: %s scanned %d ports", src, ports_accessed);
+}
+```
+
+
+
+
+
+
 
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
