@@ -7,6 +7,7 @@ I write a monthly report for [Active Countermeasures](activecountermeasures.com)
 subsequent network threat hunt. All **pcap + zeek logs are also provided**, allowing you to get hands-on experience by emulating the investigation
 at home.
 
+- [Command and Control via Google Workspace APIs](https://www.activecountermeasures.com/malware-of-the-day-command-and-control-via-google-workspace-apis/)
 - [Agent-to-Agent Communication via SMB (AdaptixC2)](https://www.activecountermeasures.com/malware-of-the-day-agent-to-agent-communication-via-smb-adaptixc2/)
 - [Velociraptor as C2](https://www.activecountermeasures.com/malware-of-the-day-velociraptor-as-c2)
 - [ZetaSwitch – DNS/HTTP Multi-Modal C2](https://www.activecountermeasures.com/malware-of-the-day-zetaswitch-dns-http-multi-modal-c2/)
