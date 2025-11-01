@@ -459,6 +459,212 @@ print |port_counts|;
 
 
 
+### Enforcing Size Limits
+
+For critical memory control, **`&max_size`** caps the maximum number of entries:
+
+```c
+global large_table: table[addr] of count
+    &create_expire = 1hr
+    &max_size = 10000   
+    &on_size_limit = function(t: table[addr] of count)
+    {
+        # Called when table reaches max_size
+        print "Table size limit reached, clearing old entries";
+        
+        # Could implement LRU eviction, selective pruning, etc.
+        clear_table(t);  # Simple approach: clear everything
+    };
+```
+
+**Size limit behavior:**
+
+|Scenario|Behavior|
+|---|---|
+|Table has < `max_size` entries|New entries added normally|
+|Table reaches `max_size`|`&on_size_limit` function is called|
+|`&on_size_limit` not specified|**Runtime error** if size exceeded|
+|`&on_size_limit` specified|Script handles overflow (clear, evict, alert, etc.)|
+
+**Critical for production**: Always set `&max_size` for tables that could grow unbounded (IP tracking, connection state, etc.) to prevent out-of-memory crashes.
+
+
+
+
+## Advanced Table Patterns
+
+### Nested Tables: Tables of Tables
+
+Sometimes you need hierarchical structures - for example, tracking connections per service, per IP:
+
+
+```c
+# Outer table: service name → inner table
+# Inner table: IP address → connection count
+global connections_per_service: table[string] of table[addr] of count;
+
+# Helper function to safely add entries
+function track_connection(service: string, ip: addr)
+{
+    # Check if service entry exists
+    if ( service !in connections_per_service )
+	    # Create inner table
+        connections_per_service[service] = table();  
+    
+    # Check if IP entry exists in inner table
+    if ( ip !in connections_per_service[service] )
+        connections_per_service[service][ip] = 0;
+    
+    # Increment count
+    ++connections_per_service[service][ip];
+}
+
+# Usage
+track_connection("http", 192.168.1.100);
+track_connection("http", 192.168.1.100);
+track_connection("ssh", 192.168.1.200);
+
+# Access: connections_per_service["http"][192.168.1.100] == 2
+```
+
+**When to use nested tables vs. compound keys:**
+
+|Pattern|Best For|Example|
+|---|---|---|
+|**Compound keys** `table[addr, port]`|Fixed relationships, simple queries|Per-host, per-service tracking|
+|**Nested tables** `table[string] of table[addr]`|Dynamic outer keys, need to iterate outer level|Per-service aggregation|
+
+**Trade-off**: Nested tables require more initialization code but allow independent expiration/sizing of inner tables.
+
+
+
+
+### Tables of Complex Values
+
+Tables can store structured data using **record types**:
+
+
+```c
+# Define a record type for connection metadata
+type ConnectionInfo: record {
+    first_seen: time;    
+    last_seen: time;     
+    total_bytes: count;  
+};
+
+# Table mapping IP to connection info
+global conn_tracking: table[addr] of ConnectionInfo;
+
+# Add an entry
+conn_tracking[192.168.1.100] = ConnectionInfo(
+    $first_seen = network_time(),
+    $last_seen = network_time(),
+    $total_bytes = 0
+);
+
+# Update an existing entry
+if ( 192.168.1.100 in conn_tracking )
+{
+    conn_tracking[192.168.1.100]$last_seen = network_time();
+    conn_tracking[192.168.1.100]$total_bytes += 1024;
+}
+```
+
+**Advantages of record-valued tables:**
+
+- **Semantic clarity**: Named fields are more readable than parallel tables
+- **Atomic updates**: All related data stored together
+- **Type safety**: Compiler ensures field types are correct
+- **Extensibility**: Easy to add new fields to the record definition
+
+
+
+
+
+## Performance and Best Practices
+
+
+### Memory Management Guidelines
+
+**DO:**
+
+- ✓ Always use `&create_expire` for tables tracking network state
+- ✓ Set `&default` when values have natural initialization (counts, booleans)
+- ✓ Use `&max_size` for tables that could grow to millions of entries
+- ✓ Prefer compound keys over nested tables when possible
+
+**DON'T:**
+
+- ✗ Create tables without expiration for per-packet or per-connection state
+- ✗ Access keys without checking existence (unless `&default` is set)
+- ✗ Store entire connection records - store connection UIDs and look up in conn.log
+- ✗ Use tables for small, fixed lookups (use sets or hardcoded if-else)
+
+### Security Considerations
+
+**Offensive perspective (attackers exploiting Zeek):**
+
+- **Memory exhaustion attacks**: Send millions of unique IPs to overflow tables without expiration
+- **Hash collision attacks**: Craft keys that hash to same bucket, degrading lookup to O(n)
+- **Expiration timing attacks**: Trigger activity just before expiration to extend tracking indefinitely
+
+**Defensive perspective (protecting Zeek):**
+
+- **Always set `&max_size`**: Prevents unbounded growth from preventing monitoring
+- **Use appropriate expiration**: Balance detection window vs. memory constraints
+- **Monitor table sizes**: Alert if tables grow unexpectedly large
+- **Rate limit table additions**: In `&on_size_limit`, could drop new entries rather than clearing
+
+
+
+
+## Summary: Tables as the Foundation of Stateful Analysis
+
+Tables are not just a data structure - they're the **fundamental mechanism** by which Zeek maintains state across network events. Every sophisticated detection pattern relies on tables:
+
+- **Anomaly detection**: Track baselines per host, service, or application
+- **Threat correlation**: Link related indicators (IP → domain → hash) across time
+- **Behavioral analysis**: Model normal activity patterns to detect deviations
+- **Attack tracking**: Maintain state machines for multi-stage attacks
+
+Understanding tables deeply - their syntax, expiration semantics, compound keys, and performance characteristics - is essential for writing production-quality Zeek scripts that are both powerful and safe. With proper expiration and size limits, tables provide unbounded analytical capabilities within bounded memory constraints, making them the workhorse of network security monitoring.
+
+
+
+## Knowledge Check: table Type
+
+**Q1: Why is checking key existence with the `in` operator critical before accessing table values, even though some other languages allow direct access that returns null/undefined?**
+
+A: Accessing a non-existent key in a Zeek table causes a **runtime error that crashes your script**. Unlike languages that return null/undefined, Zeek enforces explicit existence checking to prevent logic bugs where you inadvertently process missing data as if it were present. This design choice trades convenience for reliability - forcing you to consciously handle the "key doesn't exist" case prevents an entire class of subtle bugs in security monitoring where silently treating missing data as present could cause false negatives.
+
+
+
+**Q2: What is the fundamental difference between `&create_expire` and `&read_expire`, and when would you choose each for a production deployment?**
+
+A: `&create_expire` starts the expiration timer when an entry is **first created** and never resets it - entries are deleted after a fixed time regardless of whether they're accessed. Use this for **time-windowed detection** (e.g., "failed logins in the last hour") where you want to count events within a specific timeframe.
+
+`&read_expire` resets the timer **every time the entry is accessed** - active entries stay alive indefinitely. Use this for **activity-based tracking** (e.g., "maintain state for IPs we're currently seeing") where ongoing activity should extend tracking. Choosing wrong can mean either premature expiration of active threats or unbounded memory growth for inactive entries.
+
+
+**Q3: How do compound keys in Zeek tables differ from nested tables, and why is `table[addr, port]` preferable to `table[addr] of table[port]`?**
+
+A: Compound keys (`table[addr, port]`) create a **single-level table** indexed by a tuple, requiring one  operation for lookup. Nested tables (`table[addr] of table[port]`) create a **two-level structure** requiring two  operations and explicit initialization of inner tables. Compound keys are simpler (no inner table management), faster (one lookup instead of two), more memory-efficient (one hash table instead of potentially thousands of tiny inner tables), and eliminate the entire class of bugs related to forgetting to initialize inner tables. Use compound keys whenever possible for multi-dimensional indexing.
+
+
+
+
+**Q4: Why must production tables tracking network state always include expiration and/or size limits, and what happens if you don't?**
+
+A: Tables without expiration **grow unbounded** as they accumulate entries for every unique key encountered. In a high-volume network, a table tracking per-IP state could easily reach millions of entries consuming gigabytes of RAM, eventually causing Zeek to exhaust memory and crash with an OOM error.
+
+This stops all monitoring - a **complete security blind spot**. Expiration (`&create_expire`, `&read_expire`) provides time-based cleanup; `&max_size` provides a hard cap as a safety net. Together, they ensure your monitoring system remains stable under all traffic conditions, including potential memory exhaustion attacks.
+
+**Q5: When would you use `&default` on a table, and how does it change the safety requirements for accessing table values?**
+
+A: Use `&default` when table values have a **natural zero/empty state** that's meaningful for your logic - particularly for `count` types that start at zero, `bool` flags that default to false, or empty collections. With `&default` set, accessing a non-existent key returns the default value instead of crashing, eliminating the need for existence checking in initialization-then-increment patterns. However, you lose the distinction between "key never seen" and "key seen but has default value" - if that distinction matters for your detection logic, don't use `&default` and check existence explicitly.
+
+
+
 
 
 
