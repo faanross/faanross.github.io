@@ -441,8 +441,23 @@ print fmt("Tracking %d ports", size);
 This is useful for monitoring memory usage or detecting abnormal growth.
 
 
+### Clearing All Entries
 
-## CONTINUE HERE
+The **`clear_table()`** built-in function removes all entries:
+
+
+```c
+# Remove everything from the table
+clear_table(port_counts);
+
+# After clearing
+# Prints 0
+print |port_counts|;  
+```
+
+**Use case**: Periodic resets, like daily statistics that clear at midnight.
+
+
 
 
 

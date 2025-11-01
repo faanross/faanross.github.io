@@ -211,10 +211,10 @@ To ensure Zeek is performing well, you need to monitor its health and performanc
 
 ```bash
 # Check for dropped packets
-zeek-cut ts dropped captured < capture_loss.log
+zeek-cut ts percent_loss < capture_loss.log
 
 # Monitor Zeek's internal stats
-zeek-cut ts mem event_queue_size < stats.log
+zeek-cut ts mem event_queue < stats.log
 ```
 
 
