@@ -45,7 +45,8 @@ It intends to conclude at -> Module 13, Lesson 13.3
 
 ## MODULE 2: Zeek Scripting Fundamentals
 ### Lesson 2.1: Script Language Basics
-- [Part 1 - Understanding Zeek's Type System]({{< ref "module02/lesson2_1/type.md" >}})
+#### Part 1 - Intro to Zeek Scripting Basics
+- [Understanding Zeek's Type System]({{< ref "module02/lesson2_1/type.md" >}})
 
 #### Part 2 - Scalar Types: Single Values
 - [Introduction: Understanding Scalar Types in Zeek]({{< ref "module02/lesson2_1/scalar/intro.md" >}})
