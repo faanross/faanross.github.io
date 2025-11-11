@@ -1,8 +1,16 @@
 ---
 showTableOfContents: true
-title: "Where To From Here?"
+title: "Lesson 7: Create Agent Command Execution Framework"
 type: "page"
 ---
+## Solutions
+
+The starting solution can be found here.
+
+The final solution can be found here.
+
+
+
 
 
 ___
