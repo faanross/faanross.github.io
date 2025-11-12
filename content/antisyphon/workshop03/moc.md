@@ -44,8 +44,7 @@ lectures available here in markdown format.
 
 
 ## Wrap-Up
-- [Where To From Here?]({{< ref "./12_where_to.md" >}})
-- [Conclusion]({{< ref "./13_conclusion.md" >}})
+- [Conclusion]({{< ref "./12_conclusion.md" >}})
 
 
 ___

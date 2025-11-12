@@ -7,4 +7,4 @@ type: "page"
 
 ___
 [|TOC|]({{< ref "./moc.md" >}})
-[|PREV|]({{< ref "./12_where_to.md" >}})
+[|PREV|]({{< ref "./11_result_ep.md" >}})
