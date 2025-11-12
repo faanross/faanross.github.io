@@ -44,7 +44,7 @@ lectures available here in markdown format.
 
 
 ## Wrap-Up
-- [Conclusion]({{< ref "./12_conclusion.md" >}})
+- [Conclusion and Review]({{< ref "./12_conclusion.md" >}})
 
 
 ___
