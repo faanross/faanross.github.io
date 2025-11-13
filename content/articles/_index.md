@@ -27,6 +27,7 @@ at home.
 ## Active Countermeasures
 In addition to Malware of the Day, I also write articles of a variety of topics related to network threat hunting and command and control.
 
+- [Hunt What Hurts: The Pyramid of Pain](https://www.activecountermeasures.com/hunt-what-hurts-the-pyramid-of-pain)
 - [Threat Hunting and the Philosophy of Assumed Breach](https://www.activecountermeasures.com/threat-hunting-and-the-philosophy-of-assumed-breach/)
 - [A Network Threat Hunter’s Guide to DNS Records](https://www.activecountermeasures.com/a-network-threat-hunters-guide-to-dns-records/)
 - [DNS Packet Inspection for Network Threat Hunters](https://www.activecountermeasures.com/dns-packet-inspection-for-network-threat-hunters/)
