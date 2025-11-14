@@ -7,11 +7,6 @@ type: "page"
 
 **PLEASE NOTE: This course is not yet completed and is actively being worked on.**
 
-```
-It is currently completed up until -> Lesson 2.1, Part 3, The table Type
-It was last updated ->  Saturday 1 November
-It intends to conclude at -> Module 13, Lesson 13.3
-```
 <br>
 
 ## MODULE 1: Foundations
