@@ -96,5 +96,5 @@ Many organizations use multiple solutions:
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
 [|PREV|]({{< ref "./05_market.md" >}})
-[|NEXT|]({{< ref "./01_evolution.md" >}})
+[|NEXT|]({{< ref "./07_role.md" >}})
 

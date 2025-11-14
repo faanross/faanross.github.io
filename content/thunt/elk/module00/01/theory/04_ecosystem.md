@@ -118,11 +118,6 @@ As ELK/Elastic Stack matured, it forced the entire SIEM market to adapt:
 4. Cloud-native architecture is the future
 
 
-NOTE:
-
-
-
-
 
 
 
