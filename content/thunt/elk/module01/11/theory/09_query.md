@@ -158,5 +158,5 @@ That said, Elasticsearch _does_ support query string syntax for ad-hoc searche
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
 [|PREV|]({{< ref "./08_rest.md" >}})
-[|NEXT|]({{< ref "./01_intro.md" >}})
+[|NEXT|]({{< ref "./10_cap.md" >}})
 
