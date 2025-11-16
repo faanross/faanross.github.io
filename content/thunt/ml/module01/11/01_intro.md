@@ -11,6 +11,5 @@ This lesson traces the arc from symbolic AI to today's deep learning revolution,
 
 ---
 [|TOC|]({{< ref "../../moc.md" >}})
-[|PREV|]({{< ref "./01_intro.md" >}})
-[|NEXT|]({{< ref "./01_intro.md" >}})
+[|NEXT|]({{< ref "./02_dawn.md" >}})
 

@@ -39,6 +39,6 @@ This wasn't wasted time. The failure of symbolic AI revealed deep truths:
 
 ---
 [|TOC|]({{< ref "../../moc.md" >}})
-[|PREV|]({{< ref "./01_intro.md" >}})
-[|NEXT|]({{< ref "./01_intro.md" >}})
+[|PREV|]({{< ref "./02_dawn.md" >}})
+[|NEXT|]({{< ref "./04_expert.md" >}})
 

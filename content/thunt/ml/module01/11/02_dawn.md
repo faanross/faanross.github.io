@@ -49,5 +49,5 @@ These systems operated on **symbolic AI**: the idea that intelligence involves 
 ---
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "./01_intro.md" >}})
-[|NEXT|]({{< ref "./01_intro.md" >}})
+[|NEXT|]({{< ref "./03_first.md" >}})
 
