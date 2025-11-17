@@ -61,5 +61,5 @@ When you search, Elasticsearch must decide: which shard copies to query?
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
 [|PREV|]({{< ref "./10_cap.md" >}})
-[|NEXT|]({{< ref "./01_intro.md" >}})
+[|NEXT|]({{< ref "./12_inverted.md" >}})
 

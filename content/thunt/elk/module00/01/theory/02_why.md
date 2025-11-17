@@ -4,7 +4,7 @@ title: "Why ELK Became the De Facto Open-Source SIEM"
 type: "page"
 ---
 
-### 2.1 The Open Source Advantage
+## The Open Source Advantage
 
 **Zero Licensing Costs:** The most obvious advantage - you can download, install, and run ELK at any scale without paying per event, per GB, or per user. Your only costs are:
 
@@ -15,7 +15,7 @@ type: "page"
 
 This meant even small organizations could afford comprehensive security monitoring.
 
-### 2.2 Philosophy: Schema-Less Flexibility
+## Philosophy: Schema-Less Flexibility
 
 Traditional SIEMs require you to define your schema upfront - what fields exist, what types they are, how they relate. If you want to add a new field, you often need to request a schema change, wait for approval, and possibly restart services.
 
@@ -50,7 +50,7 @@ This "schema-on-read" approach (vs. "schema-on-write") means you can ingest data
 
 
 
-### 2.3 The REST API Revolution
+## The REST API Revolution
 
 Every operation in Elasticsearch can be performed via HTTP requests:
 
@@ -82,7 +82,7 @@ curl -X GET "localhost:9200/security-logs/_search" -H 'Content-Type: application
 - You're not locked into vendor-provided interfaces
 - Security orchestration and automation become trivial
 
-### 2.4 Community-Driven Innovation
+## Community-Driven Innovation
 
 The ELK community has grown to millions of users worldwide. This means:
 
@@ -114,7 +114,7 @@ The ELK community has grown to millions of users worldwide. This means:
 
 With commercial SIEMs, you often wait months or years for official support of new log sources.
 
-### 2.5 Transparency and Control
+## Transparency and Control
 
 **You See the Source:** Unlike proprietary SIEMs where processing is a "black box," with ELK:
 

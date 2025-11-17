@@ -6,14 +6,13 @@ type: "page"
 
 ## Module Intro
 
-## Welcome to the Journey
 
 Welcome to the foundational module of your journey from zero to hero in ELK Stack for Network Threat Hunting. This module represents the critical theoretical groundwork that will inform every decision you make throughout this course. Think of this as the architectural blueprint before construction begins - we'll explore why ELK exists, how it evolved, where it fits in the security ecosystem, and how to think about deploying it effectively.
 
 By the end of this module, you'll understand not just _how_ to use ELK, but _why_ organizations choose it, _when_ it's the right tool, and _how_ to architect it for threat hunting success.
 
 
-### 1.1 The Pre-SIEM Era: Scattered Logs and Manual Correlation
+## The Pre-SIEM Era: Scattered Logs and Manual Correlation
 
 To understand where we are, we must first understand where we've been. In the early days of information security (1990s-early 2000s), security monitoring was a fragmented, painful process:
 
@@ -38,7 +37,7 @@ To understand where we are, we must first understand where we've been. In the ea
 This was obviously unsustainable.
 
 
-### 1.2 First-Generation SIEM: Proprietary Solutions
+## First-Generation SIEM: Proprietary Solutions
 
 The security industry recognized this problem and developed the first Security Information and Event Management (SIEM) systems in the early 2000s.
 
@@ -80,7 +79,7 @@ This pricing model made enterprise-grade SIEM inaccessible to smaller organizati
 
 
 
-### 1.3 The Open Source Response: The Birth of ELK
+## The Open Source Response: The Birth of ELK
 
 Around 2009-2010, a revolution began in the logging and search space, driven by several parallel developments:
 

@@ -14,14 +14,14 @@ type: "page"
 **THEORY**
 - [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/01_evolution.md" >}})
 - [Why ELK Became the De Facto Open-Source SIEM]({{< ref "module00/01/theory/02_why.md" >}})
-- [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/03_philosophy.md" >}})
-- [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/04_ecosystem.md" >}})
-- [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/05_market.md" >}})
-- [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/06_when.md" >}})
-- [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/07_role.md" >}})
-- [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/08_integration.md" >}})
-- [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/09_summary.md" >}})
-- [The Evolution of Security Information and Event Management (SIEM)]({{< ref "module00/01/theory/10_review.md" >}})
+- [Traditional SIEM vs. ELK Stack Philosophy]({{< ref "module00/01/theory/03_philosophy.md" >}})
+- [The Elastic Stack Ecosystem Evolution]({{< ref "module00/01/theory/04_ecosystem.md" >}})
+- [Market Positioning: ELK vs. Competitors]({{< ref "module00/01/theory/05_market.md" >}})
+- [When to Use ELK vs. Other Solutions]({{< ref "module00/01/theory/06_when.md" >}})
+- [The Role of ELK in Modern Threat Hunting]({{< ref "module00/01/theory/07_role.md" >}})
+- [Integration Philosophy: ELK as Central Nervous System]({{< ref "module00/01/theory/08_integration.md" >}})
+- [Summary: Key Takeaways]({{< ref "module00/01/theory/09_summary.md" >}})
+- [Module Review]({{< ref "module00/01/theory/10_review.md" >}})
 
 **PRACTICAL**
 - TODO 
