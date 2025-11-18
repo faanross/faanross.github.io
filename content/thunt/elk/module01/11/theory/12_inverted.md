@@ -105,5 +105,5 @@ For security logs (write-once, read-many), this trade-off is perfect.
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
 [|PREV|]({{< ref "./11_read.md" >}})
-[|NEXT|]({{< ref "./01_intro.md" >}})
+[|NEXT|]({{< ref "./13_real.md" >}})
 
