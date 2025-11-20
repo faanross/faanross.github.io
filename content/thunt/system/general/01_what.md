@@ -248,5 +248,5 @@ The threats are out there. The question is: will you wait for them to trigger an
 
 ---
 [|TOC|]({{< ref "../../../thrunt/_index.md" >}})
-[|NEXT|]({{< ref "../../../thrunt/_index.md" >}})
+[|NEXT|]({{< ref "./02_history.md" >}})
 
