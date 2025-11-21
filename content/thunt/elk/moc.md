@@ -29,28 +29,24 @@ type: "page"
 - [Introduction to Module 1.1: Elasticsearch Fundamentals]({{< ref "module01/11/theory/01_intro.md" >}})
 - [What is Elasticsearch? Understanding the Core Concept]({{< ref "module01/11/theory/02_core.md" >}})
 - [Apache Lucene: The Engine Under the Hood]({{< ref "module01/11/theory/03_apache.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/04_paradigm.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/05_json.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/06_core.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/07_index.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/08_rest.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/09_query.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/10_cap.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/11_read.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/12_inverted.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/13_real.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/14_mem.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/15_jvm.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/16_big.md" >}})
-- [Introduction: The Foundation of Modern Search and Analytics]({{< ref "module01/11/theory/17_validation.md" >}})
-
-
-
-
+- [Document-Oriented vs. Relational Databases: A Paradigm Shift]({{< ref "module01/11/theory/04_paradigm.md" >}})
+- [JSON Document Structure: The Language of Elasticsearch]({{< ref "module01/11/theory/05_json.md" >}})
+- [Core Concepts: The Architecture of Distributed Search]({{< ref "module01/11/theory/06_core.md" >}})
+- [Index Lifecycle Management Philosophy]({{< ref "module01/11/theory/07_index.md" >}})
+- [RESTful API Architecture: The Universal Interface]({{< ref "module01/11/theory/08_rest.md" >}})
+- [Query DSL: The Language of Search]({{< ref "module01/11/theory/09_query.md" >}})
+- [CAP Theorem and Elasticsearch]({{< ref "module01/11/theory/10_cap.md" >}})
+- [Read/Write Consistency Models]({{< ref "module01/11/theory/11_read.md" >}})
+- [The Inverted Index: The Secret to Speed]({{< ref "module01/11/theory/12_inverted.md" >}})
+- [How Elasticsearch Achieves Near Real-Time Search]({{< ref "module01/11/theory/13_real.md" >}})
+- [Memory vs. Disk Usage Patterns]({{< ref "module01/11/theory/14_mem.md" >}})
+- [JVM Heap Sizing Philosophy]({{< ref "module01/11/theory/15_jvm.md" >}})
+- [Pulling It All Together: The Big Picture]({{< ref "module01/11/theory/16_big.md" >}})
+- [Knowledge Validation]({{< ref "module01/11/theory/17_validation.md" >}})
 
 
 <br>
-
+**PRACTICAL**
 
 
 ___

@@ -98,5 +98,5 @@ Example: 100GB/day of raw logs → 150-200GB/day stored in Elasticsearch
 ---
 [|TOC|]({{< ref "../../../moc.md" >}})
 [|PREV|]({{< ref "./13_real.md" >}})
-[|NEXT|]({{< ref "./14_mem.md" >}})
+[|NEXT|]({{< ref "./15_jvm.md" >}})
 
