@@ -681,6 +681,178 @@ Overall: MODERN SECURITY
 
 
 
+## Layer 4: Data Directories - Table of Contents
+
+### What We're Looking For
+- Import Directory (what APIs this PE uses)
+- Export Directory (what APIs this PE provides)
+- Resource Directory (icons, strings, potential payload hiding)
+- Relocation Directory (can this PE rebase?)
+- TLS Directory (pre-entry point execution)
+
+### Steps
+
+1. Still in **Optional Hdr**, scroll down to **Data Directories**
+
+
+**Find These Values:**
+
+| Index | Directory Name | RVA | Size | Present? | Purpose |
+|-------|---------------|-----|------|----------|---------|
+| **[0]** | Export | `________` | `________` | Y/N | Functions this DLL exports |
+| **[1]** | Import | `________` | `________` | Y/N | 🔴 APIs this PE imports (critical!) |
+| **[2]** | Resource | `________` | `________` | Y/N | Icons, strings, payload hiding spot |
+| **[5]** | Base Relocation | `________` | `________` | Y/N | 🔴 Required for process hollowing |
+| **[6]** | Debug | `________` | `________` | Y/N | PDB path, build info |
+| **[9]** | TLS | `________` | `________` | Y/N | Pre-entry point callbacks |
+| **[12]** | IAT | `________` | `________` | Y/N | Import Address Table location |
+
+
+**My Results:**
+
+![data directory](../img/data_directory.png)
+
+| Index    | Directory Name  | RVA      | Size    | Present? | Remarks                                                       |
+| -------- | --------------- | -------- | ------- | -------- | ------------------------------------------------------------- |
+| **[0]**  | Export          | `0`      | `0`     | N        | No exported functions - this is an executable, not a library  |
+| **[1]**  | Import          | `836000` | `53E`   | Y        | Imports Windows APIs - check these to understand PE behavior  |
+| **[2]**  | Resource        | `0`      | `0`     | N        | No embedded resources (icons, strings, etc.)                  |
+| **[5]**  | Base Relocation | `837000` | `12868` | Y        | Contains relocation data - supports ASLR functionality        |
+| **[6]**  | Debug           | `0`      | `0`     | N        | No debug info - stripped for release build                    |
+| **[9]**  | TLS             | `0`      | `0`     | N        | No Thread Local Storage callbacks                             |
+| **[12]** | IAT             | `75E560` | `178`   | Y        | Import Address Table present - relatively small (few imports) |
+
+
+**Analysis Questions:**
+
+**Import Directory:**
+
+- RVA: `836000` (if 0, no imports - suspicious!)
+- Size: `53E`
+- ✓ Present - this PE imports external functions
+
+**Base Relocation:**
+
+- RVA: `837000` (if 0, cannot rebase!)
+- Size: `12868`
+- Analysis: `CAN REBASE`
+- Impact: `ASLR WORKS`
+
+**TLS Directory:**
+
+- RVA: `0` (if 0, no TLS callbacks)
+- If present: ⚠️ TLS callbacks execute BEFORE entry point
+- Offensive use: Packers use this for anti-debugging
+
+**Resource Directory:**
+
+- RVA: `0`
+- Size: `0`
+- Potential for payload hiding: `NO`
+
+---
+
+
+
+## Layer 5: Sections - The Memory Map
+
+### What We're Looking For
+- Standard sections (.text, .data, .rdata, etc.)
+- Section permissions (RWX analysis)
+- Section sizes (disk vs memory)
+- Custom sections (packer indicators)
+
+### Steps
+
+1. Click **Section Hdrs** tab in the middle panel
+
+**Map Your Sections:**
+
+For each section, fill in this table:
+
+| Section Name | VirtualAddr (RVA) | VirtualSize | RawAddr (File) | RawSize | Permissions |
+|--------------|-------------------|-------------|----------------|---------|-------------|
+| `.________` | `________` | `________` | `________` | `________` | `R__ / RW_ / R_X / RWX` |
+| `.________` | `________` | `________` | `________` | `________` | `R__ / RW_ / R_X / RWX` |
+| `.________` | `________` | `________` | `________` | `________` | `R__ / RW_ / R_X / RWX` |
+| `.________` | `________` | `________` | `________` | `________` | `R__ / RW_ / R_X / RWX` |
+
+
+**My Results:**
+
+![section](../img/section.png)
+
+
+| Section Name | VirtualAddr (RVA) | VirtualSize | RawAddr (File) | RawSize  | Permissions | Notes                |
+| ------------ | ----------------- | ----------- | -------------- | -------- | ----------- | -------------------- |
+| `.text`      | `1000`            | `3938F1`    | `600`          | `393A00` | `R_X`       | Code section         |
+| `.rdata`     | `395000`          | `3C89C0`    | `394000`       | `3C8A00` | `R__`       | IAT lives here       |
+| `.data`      | `75E000`          | `C00D0`     | `75CA00`       | `69800`  | `RW_`       | Global variables     |
+| `.pdata`     | `81F000`          | `15474`     | `7C6200`       | `15600`  | `R__`       | Function unwind data |
+| `.reloc`     | `837000`          | `12868`     | `7DC000`       | `12A00`  | `R__`       | Relocations          |
+
+**Notes on permissions:**
+
+- `.text` = R_X (Read + Execute) - Contains executable code
+- `.rdata` = R__ (Read only) - Contains read-only data (constants, imports)
+- `.data` = RW_ (Read + Write) - Contains initialized writable data
+- `.pdata` = R__ (Read only) - Contains exception handling data (x64 specific)
+- `.reloc` = R__ (Read only) - Contains base relocation table for ASLR
+
+
+
+Note: Permissions are derive from the `Characteristics` column:
+
+| Flag | Value | Meaning |
+|------|-------|---------|
+| IMAGE_SCN_MEM_READ | `0x40000000` | Readable (R) |
+| IMAGE_SCN_MEM_WRITE | `0x80000000` | Writable (W) |
+| IMAGE_SCN_MEM_EXECUTE | `0x20000000` | Executable (X) |
+
+
+**Security Red Flags:**
+
+Check for these suspicious characteristics:
+
+🔴 **RWX Sections** (all three permissions):
+- Section name: **None found**
+- Why suspicious: Self-modifying code, runtime unpacking
+- Common in: Malware, packers, obfuscators
+
+⚠️ **Custom Section Names** (not standard .text, .data, etc.):
+- Found: **NO**
+- Names: **All standard (.text, .rdata, .data, .pdata, .reloc)**
+- Why suspicious: Often indicates packing (UPX, Themida, etc.)
+
+⚠️ **Unusually Large Sections**:
+- Section: **.rdata**
+- Size: **3C89C0 (≈3.9 MB virtual size)**
+- Why suspicious: May contain hidden payload (though large .rdata is normal for Go binaries with embedded metadata)
+
+**Calculate Section Alignment Differences:**
+
+Pick one section (e.g., .text) and calculate:
+```
+Section: .text
+Virtual Address (RVA):     0x1000
+Raw Address (File Offset): 0x600
+Difference:                0xA00 (2560 bytes)
+
+Why they differ: Different alignment requirements
+- Memory: aligned to SectionAlignment (typically 4KB)
+- Disk: aligned to FileAlignment (typically 512 bytes)
+```
+
+
+
+
+
+
+---
+
+
+
+
 
 
 ---
