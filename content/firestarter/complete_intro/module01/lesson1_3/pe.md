@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: "Part 5A - The PE File Format: Intro + Understanding Address Translation"
+title: "Part 5A - The PE File Format: Understanding Address Translation + Lab"
 type: "page"
 ---
 

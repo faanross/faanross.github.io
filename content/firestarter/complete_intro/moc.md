@@ -10,11 +10,11 @@ type: "page"
 <br>
 
 **PLEASE NOTE: This course is not yet completed and is actively being worked on.**
-```
-It is currently completed up until -> Lesson 1.3, Part 5A
-It was last updated ->  Monday 20 October 2025
-It intends to conclude at -> Module 16, Lesson 16.6
-```
+
+<br>
+
+The repo for this course containing all the lab solutions can be found https://github.com/faanross/complete_go_course. 
+
 <br>
 
 ## MODULE 1: Foundations
@@ -47,8 +47,8 @@ It intends to conclude at -> Module 16, Lesson 16.6
 - [Part 4B - Windows Security Model: SeDebugPrivilege Lab]({{< ref "module01/lesson1_3/securityB.md" >}})
 - [Part 4C - Windows Security Model: Integrity Levels and UAC]({{< ref "module01/lesson1_3/securityC.md" >}})
 - [Part 4D - Windows Security Model: Process Protection Framework]({{< ref "module01/lesson1_3/securityD.md" >}})
-- [Part 5A - The PE File Format: Intro + Understanding Address Translation]({{< ref "module01/lesson1_3/pe.md" >}})
-- [Part 5B - The PE File Format: The 7 Layers]({{< ref "module01/lesson1_3/peB.md" >}})
+- [Part 5A - The PE File Format: Understanding Address Translation + Lab]({{< ref "module01/lesson1_3/pe.md" >}})
+- [Part 5B - The PE File Format: The 7 Layers Theory + Lab]({{< ref "module01/lesson1_3/peB.md" >}})
 - [Part 5C - The PE File Format: Simple PE Parser Lab]({{< ref "module01/lesson1_3/peC.md" >}})
 - [Part 5D - The PE File Format: Process Memory Mapping Lab]({{< ref "module01/lesson1_3/peD.md" >}})
 - [Part 6 - PEB and TEB]({{< ref "module01/lesson1_3/peb_teb.md" >}})

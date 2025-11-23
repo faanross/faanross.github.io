@@ -20,5 +20,3 @@ title = 'Talks'
 {{< youtube U3gIx1Ojo_U >}}
 <br>
 
-## Active Countermeasures
-{{< youtube cy-5XS2uor4 >}}
