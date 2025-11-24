@@ -844,12 +844,217 @@ Why they differ: Different alignment requirements
 ```
 
 
-
-
-
-
 ---
 
+
+## Layer 6: Imports - The API Dependencies
+
+### What We're Looking For
+- Which DLLs this PE imports from
+- Which functions it imports (behavioral indicators)
+- Suspicious API combinations
+
+### Steps
+
+1. Click **Imports** in the left panel
+2. PEBear displays all imported DLLs and their functions
+
+**Map Your Imports:**
+
+List each imported DLL and note suspicious functions.
+
+
+### DLL 1: `________________`
+
+| Function Name | Suspicion Level | Why? |
+|---------------|----------------|------|
+| `________` | 🔴 HIGH / 🟡 MED / 🟢 LOW | ________ |
+| `________` | 🔴 HIGH / 🟡 MED / 🟢 LOW | ________ |
+| `________` | 🔴 HIGH / 🟡 MED / 🟢 LOW | ________ |
+
+NOTE: Perform for each DLL and see if any of these functions are present:
+
+| API Function | Present? | Category | Implication |
+|--------------|----------|----------|-------------|
+| VirtualAlloc | Y/N | Memory | Allocates executable memory |
+| VirtualAllocEx | Y/N | Injection | Remote process memory allocation |
+| VirtualProtect | Y/N | Memory | Changes page permissions (RX→RWX) |
+| WriteProcessMemory | Y/N | Injection | Writes to remote process |
+| CreateRemoteThread | Y/N | Injection | Creates thread in remote process |
+| OpenProcess | Y/N | Injection | Opens handle to target process |
+| LoadLibrary | Y/N | Evasion | Dynamic DLL loading |
+| GetProcAddress | Y/N | Evasion | Dynamic API resolution |
+| NtQuerySystemInformation | Y/N | Recon | System/process enumeration |
+| RegSetValueEx | Y/N | Persistence | Registry modification |
+| CreateService | Y/N | Persistence | Service creation |
+| socket, connect, send | Y/N | Network | C2 communication |
+
+**Behavioral Analysis:**
+
+Based on imports, this executable likely:
+
+```
+Primary Purpose: [BENIGN / SUSPICIOUS / MALICIOUS]
+
+Capabilities Detected:
+□ Process Injection (VirtualAllocEx, WriteProcessMemory, CreateRemoteThread)
+□ Dynamic API Resolution (GetProcAddress, LoadLibrary)
+□ Memory Manipulation (VirtualAlloc, VirtualProtect)
+□ Network Communication (ws2_32.dll functions)
+□ Persistence Mechanisms (Registry, Services)
+□ Anti-Analysis (IsDebuggerPresent, CheckRemoteDebuggerPresent)
+□ System Enumeration (NtQuerySystemInformation)
+
+Overall Assessment: ____________________________________
+```
+
+
+
+
+**My Results:**
+
+![imports](../img/imports.png)
+
+
+NOTE: To make this section a little more interesting I imported a HTTPS beacon I generated with Sliver.
+
+### DLL 1: `KERNEL32.DLL` (40 entries)
+
+|Function Name|Suspicion Level|Why?|
+|---|---|---|
+|`LoadLibraryA`|🔴 HIGH|Enables dynamic loading of any DLL at runtime - core evasion technique|
+|`LoadLibraryW`|🔴 HIGH|Unicode version of LoadLibrary - loads DLLs dynamically|
+|`GetProcAddress`|🔴 HIGH|Resolves function addresses at runtime - bypasses static import analysis|
+|`VirtualAlloc`|🔴 HIGH|Allocates memory with executable permissions - shellcode staging|
+|`VirtualFree`|🟡 MED|Memory cleanup - often paired with VirtualAlloc|
+|`VirtualQuery`|🟡 MED|Queries memory region info - reconnaissance/validation|
+|`CreateThread`|🔴 HIGH|Creates new execution thread - payload execution or injection setup|
+|`ResumeThread`|🟡 MED|Resumes suspended thread - often used in process hollowing|
+|`SuspendThread`|🟡 MED|Suspends thread execution - manipulation technique|
+|`SetThreadContext`|🔴 HIGH|Modifies thread context - process injection indicator|
+|`GetThreadContext`|🔴 HIGH|Retrieves thread context - used in advanced injection|
+|`SwitchToThread`|🟢 LOW|Thread scheduling - can be legitimate|
+|`GetSystemInfo`|🟡 MED|System reconnaissance - gathering environment info|
+|`GetSystemDirectoryA`|🟡 MED|Locates system directory - often for DLL loading paths|
+|`GetEnvironmentStringsW`|🟢 LOW|Accesses environment variables - common in Go runtime|
+|`FreeEnvironmentStringsW`|🟢 LOW|Cleanup function for environment strings|
+|`ExitProcess`|🟢 LOW|Normal process termination|
+|`CreateFileA`|🟡 MED|File operations - could be legitimate or for dropping payloads|
+|`WriteFile`|🟡 MED|Writes data to file - payload dropping or logging|
+|`WriteConsoleW`|🟢 LOW|Console output - debugging or user interaction|
+|`CloseHandle`|🟢 LOW|Resource cleanup - standard practice|
+|`DuplicateHandle`|🟡 MED|Handle duplication - can be used for privilege manipulation|
+|`CreateEventA`|🟢 LOW|Synchronization primitive - normal threading behavior|
+|`SetEvent`|🟢 LOW|Event signaling - synchronization|
+|`WaitForSingleObject`|🟢 LOW|Thread synchronization - common pattern|
+|`WaitForMultipleObjects`|🟢 LOW|Multi-object synchronization|
+|`CreateWaitableTimerExW`|🟢 LOW|Timer creation - scheduling tasks|
+|`SetWaitableTimer`|🟢 LOW|Timer configuration|
+|`CreateIoCompletionPort`|🟡 MED|Async I/O - often used in network communication frameworks|
+|`GetQueuedCompletionStatusEx`|🟡 MED|Async I/O completion - network operations|
+|`PostQueuedCompletionStatus`|🟡 MED|I/O completion posting - async networking|
+|`GetStdHandle`|🟢 LOW|Standard I/O handles - console interaction|
+|`GetConsoleMode`|🟢 LOW|Console properties - normal behavior|
+|`SetConsoleCtrlHandler`|🟡 MED|Console event handling - can catch Ctrl+C for persistence|
+|`SetErrorMode`|🟡 MED|Error handling configuration - can suppress error dialogs|
+|`GetProcessAffinityMask`|🟡 MED|CPU affinity info - system reconnaissance|
+|`SetProcessPriorityBoost`|🟢 LOW|Process scheduling - performance tuning|
+|`SetUnhandledExceptionFilter`|🟡 MED|Exception handling - can be anti-debugging technique|
+|`AddVectoredExceptionHandler`|🟡 MED|Exception handling - anti-debugging or error recovery|
+|`TlsAlloc`|🟢 LOW|Thread-local storage - normal Go runtime behavior|
+
+
+**Suspicious API Checklist:**
+
+|API Function|Present?|Category|Implication|
+|---|---|---|---|
+|VirtualAlloc|**Y**|Memory|Allocates executable memory for shellcode/payloads|
+|VirtualAllocEx|**N**|Injection|Remote process memory allocation (loaded dynamically)|
+|VirtualProtect|**N**|Memory|Changes page permissions (loaded dynamically)|
+|WriteProcessMemory|**N**|Injection|Writes to remote process (loaded dynamically)|
+|CreateRemoteThread|**N**|Injection|Creates thread in remote process (loaded dynamically)|
+|OpenProcess|**N**|Injection|Opens handle to target process (loaded dynamically)|
+|LoadLibrary|**Y**|Evasion|**CRITICAL: Dynamic DLL loading capability**|
+|GetProcAddress|**Y**|Evasion|**CRITICAL: Dynamic API resolution**|
+|NtQuerySystemInformation|**N**|Recon|System/process enumeration (loaded dynamically)|
+|RegSetValueEx|**N**|Persistence|Registry modification (loaded dynamically)|
+|CreateService|**N**|Persistence|Service creation (loaded dynamically)|
+|socket, connect, send|**N**|Network|C2 communication (ws2_32.dll loaded dynamically)|
+
+
+**Behavioral Analysis:**
+
+Based on imports, this executable likely:
+
+```
+Primary Purpose: [MALICIOUS - C2 Beacon]
+
+Capabilities Detected:
+☑ Dynamic API Resolution (LoadLibrary + GetProcAddress) ← PRIMARY RED FLAG
+☑ Memory Manipulation (VirtualAlloc for shellcode staging)
+☑ Thread Context Manipulation (SetThreadContext, GetThreadContext)
+☑ Thread Control (CreateThread, SuspendThread, ResumeThread)
+☑ Asynchronous I/O Framework (CreateIoCompletionPort, GQCS) - Network Comms
+☑ Exception Handling (Anti-debugging potential)
+☑ System Reconnaissance (GetSystemInfo, GetProcessAffinityMask)
+□ Network Communication (ws2_32.dll loaded at RUNTIME - not in imports)
+□ Process Injection APIs (VirtualAllocEx, WriteProcessMemory loaded at RUNTIME)
+□ Persistence Mechanisms (Registry, Services loaded on-demand)
+
+Overall Assessment: 
+This is a SOPHISTICATED MALWARE employing ADVANCED IMPORT OBFUSCATION. 
+The binary shows classic C2 beacon characteristics with deliberate 
+evasion techniques. The combination of LoadLibrary + GetProcAddress 
+with thread manipulation and memory allocation APIs indicates a 
+payload that will dynamically resolve additional capabilities at runtime.
+
+THREAT LEVEL: HIGH
+```
+
+
+**REMARKS: Why Only KERNEL32.DLL?**
+
+This is NOT a limitation - it's a deliberate evasion technique.
+
+**Reasons for Minimal Import Table:**
+
+1. **Go Language Static Compilation**
+
+    - Sliver is written in Go, which statically compiles most of its runtime
+    - Go's runtime handles many OS interactions through minimal syscalls
+    - Standard Go binaries naturally have smaller import tables than C/C++ equivalents
+2. **Dynamic API Resolution Strategy**
+
+    - The presence of `LoadLibraryA/W` + `GetProcAddress` is the **KEY INDICATOR**
+    - These two functions act as "master keys" to access ANY Windows API at runtime
+    - The malware can load any DLL (ws2_32.dll, advapi32.dll, ntdll.dll) dynamically
+    - Functions are resolved by name at runtime, never appearing in the import table
+3. **Direct/Indirect Syscalls**
+
+    - Advanced malware often bypasses high-level APIs entirely
+    - Uses direct syscalls to ntdll.dll functions (NtAllocateVirtualMemory, etc.)
+    - Syscall numbers are resolved dynamically, leaving no import traces
+4. **Evasion Benefits**
+
+    - **Static Analysis Evasion**: Antivirus/EDR scanning imports will see minimal indicators
+    - **Behavioral Signature Evasion**: Suspicious API combinations (VirtualAllocEx + WriteProcessMemory + CreateRemoteThread) aren't visible
+    - **YARA Rule Evasion**: Many detection rules rely on import table patterns
+    - **Analyst Confusion**: Makes static analysis incomplete/misleading
+
+**What's Hidden:**
+
+The beacon likely performs these actions at runtime (not visible in imports):
+
+- Network communication via `ws2_32.dll` (socket, connect, send, recv)
+- Process injection via `kernel32.dll` extended APIs (VirtualAllocEx, WriteProcessMemory, CreateRemoteThread)
+- Persistence via `advapi32.dll` (RegSetValueEx, CreateService)
+- Privilege escalation attempts
+- Anti-analysis checks (debugger detection, VM detection)
+
+
+**This PE demonstrates that a "clean" import table ≠ benign software.**
+
+---
 
 
 
