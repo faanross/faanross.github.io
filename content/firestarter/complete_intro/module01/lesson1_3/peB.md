@@ -1059,6 +1059,234 @@ The beacon likely performs these actions at runtime (not visible in imports):
 
 
 
+## Layer 7: Relocations - ASLR Support
+
+### What We're Looking For
+- Presence of base relocation table
+- Number of relocation blocks
+- Which sections need fixing
+
+### Steps
+
+1. Click **BaseReloc** tab in the middle panel
+2. If present, PEBear shows relocation blocks
+
+**Relocation Analysis:**
+
+```
+Base Relocation Directory Present: [YES / NO]
+
+If YES:
+  Number of Relocation Blocks: ________
+  Total Relocations: ________
+  
+  Sections with relocations:
+  □ .text (code section - expected)
+  □ .data (data section - expected)
+  □ .rdata (read-only data - expected)
+  □ Other: ________
+
+If NO:
+  ⚠️ WARNING: Cannot rebase!
+  - PE must load at exact ImageBase: 0x________
+  - If address taken: Loading fails
+  - ASLR ineffective
+  - Process hollowing risk: [HIGH / MEDIUM / LOW]
+```
+
+**Offensive Implications:**
+
+```
+Can this PE be used in process hollowing? [YES / NO / MAYBE]
+
+Reasoning:
+- Has relocations: [YES / NO]
+- If YES: Can load at any address ✓
+- If NO: Must allocate at ImageBase 0x________ or fail ✗
+
+Manual loading complexity: [LOW / MEDIUM / HIGH]
+```
+
+
+**My Results:**
+
+![relocations](../img/relocations.png)
+
+
+**Relocation Analysis:**
+
+```
+Base Relocation Directory Present: YES ✓
+
+Total Relocations: 139+ entries (shown as "139 entries" in Relocation Block section)
+
+Sections with relocations:
+☑ .text (code section - expected) - Multiple blocks (B00000-B09000 ranges indicate .text)
+☑ .data (data section - expected) - Blocks in AFE000-AFF000 range
+☑ .rdata (read-only data - expected) - Present in various blocks
+□ Other: N/A
+
+Page RVAs with Relocations:
+- AFE000 (192 entries, Block Size: 188)
+- AFF000 (113 entries, Block Size: EA)
+- B00000 (54 entries, Block Size: 74)
+- B01000 (63 entries, Block Size: 86)
+- B02000 (64 entries, Block Size: 88)
+- B03000 (65 entries, Block Size: 8A)
+- B04000 (138 entries, Block Size: 11C)
+- B05000 (179 entries, Block Size: 16E)
+- B06000 (189 entries, Block Size: 182)
+- B07000 (189 entries, Block Size: 182)
+- B08000 (195 entries, Block Size: 18E)
+- B09000+ (additional blocks continue...)
+
+Relocation Type: 64-bit field (IMAGE_REL_BASED_DIR64)
+- Indicates 64-bit absolute addresses that need adjustment
+- Standard for x64 PE files
+```
+
+
+**Security Analysis:**
+
+```
+ASLR Support: FULLY ENABLED ✓
+
+This binary FULLY SUPPORTS Address Space Layout Randomization:
+✓ Base relocation table present and populated
+✓ Extensive relocations across all sections (139+ entries)
+✓ Can load at any memory address
+✓ Windows loader can randomize base address on each execution
+✓ Significantly increases exploitation difficulty
+
+Defense Benefits:
+- Memory corruption exploits must bypass ASLR
+- ROP chains cannot use hardcoded addresses
+- Return addresses randomized per execution
+- Exploitation requires information leaks
+```
+
+
+**Offensive Implications:**
+
+```
+Can this PE be used in process hollowing? YES ✓
+
+Reasoning:
+- Has relocations: YES ✓
+- If YES: Can load at any address ✓ CONFIRMED
+- Relocation table is comprehensive (139+ entries)
+- All necessary sections have relocation entries
+
+Manual loading complexity: MEDIUM
+
+Why MEDIUM complexity:
+✓ PRO: Relocation table present - can rebase to any address
+✓ PRO: Standard PE format - well-documented relocation process
+✗ CON: Manual relocation required when hollowing (must walk relocation blocks)
+✗ CON: Must calculate delta between original ImageBase and injection target
+✗ CON: Must apply fixups to all 139+ relocation entries
+✗ CON: 64-bit relocations require proper pointer arithmetic
+
+Process Hollowing Workflow:
+1. Create suspended process (target)
+2. Unmap target's image
+3. Allocate memory at preferred address (or any available address)
+4. Copy beacon sections to target process
+5. **APPLY RELOCATIONS**: Walk relocation table, calculate delta, fix addresses
+6. Update PEB ImageBase pointer
+7. Set thread context (EntryPoint)
+8. Resume thread
+
+The presence of relocations makes this PE SUITABLE for injection techniques
+but requires the attacker to manually process the relocation table during
+the injection process.
+```
+
+
+**Additional Technical Details:**
+
+```
+Relocation Format: IMAGE_BASE_RELOCATION structure
+- Each block covers one 4KB page (Page RVA)
+- Block Size includes header (8 bytes) + relocation entries
+- Each entry: 2 bytes (4-bit type + 12-bit offset)
+- Type 10 (0xA) = IMAGE_REL_BASED_DIR64 (64-bit absolute address)
+
+Example Block Analysis:
+Page RVA: B00000 (RVA in .text section)
+Block Size: 74 (116 bytes)
+Entries: 36 relocations
+Formula: (116 - 8) / 2 = 54 relocations ✓ (matches "36" in hex = 54 decimal)
+
+This indicates the .text section has hardcoded addresses that need
+adjustment when the PE loads at a different base address.
+```
+
+
+
+**Comparison Note:**
+
+```
+🔍 INTERESTING OBSERVATION:
+
+Many shellcode loaders and malware samples deliberately STRIP relocations
+to make analysis harder and avoid certain detection signatures.
+
+This Sliver beacon KEEPS relocations, which indicates:
+✓ Professional development (maintains PE compatibility)
+✓ Flexibility for various injection scenarios
+✓ Proper ASLR support for defense evasion
+✓ Can be used as standalone executable OR injected payload
+
+Some malware families remove .reloc section entirely to:
+- Reduce file size
+- Complicate memory forensics
+- Force loading at fixed address (predictable for attacker)
+
+Sliver's approach suggests a mature C2 framework designed for
+operational flexibility rather than pure size optimization.
+```
+
+
+**Final Assessment:**
+
+```
+VERDICT: This PE is RELOCATION-AWARE and ASLR-COMPATIBLE
+
+✓ Supports dynamic base address loading
+✓ Compatible with modern Windows security features
+✓ Suitable for process injection/hollowing (with manual relocation)
+✓ Professional PE structure maintained
+✓ Harder to exploit due to ASLR, but also harder to detect static addresses
+
+This is characteristic of SOPHISTICATED MALWARE that maintains
+compatibility with legitimate PE loading mechanisms while supporting
+advanced injection techniques.
+```
+
+
+
+---
+
+## Next Steps
+
+You've now manually located every critical field in a PE file. In new next lab we'll automate this process by building our own PE parser that extracts all these values programmatically.
+
+**What you've learned:**
+- ✓ How to systematically analyze any PE file
+- ✓ Which values matter for offensive operations
+- ✓ How to identify security weaknesses
+- ✓ How to assess behavioral intent from imports
+- ✓ The relationship between PE structure and loading process
+
+Save your completed analysis - you'll compare these values to your parser's output in the next lab!
+
+___
+
+
+
+
+
 
 ---
 
