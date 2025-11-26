@@ -149,5 +149,5 @@ For threat hunters specifically, assumed breach provides clear mandate and purpo
 ---
 [|TOC|]({{< ref "../../../thrunt/_index.md" >}})
 [|PREV|]({{< ref "./02_history.md" >}})
-[|NEXT|]({{< ref "../../../thrunt/_index.md" >}})
+[|NEXT|]({{< ref "./04_other.md" >}})
 
