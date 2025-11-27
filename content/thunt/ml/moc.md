@@ -18,6 +18,8 @@ type: "page"
 - [The Second AI Winter (1987-1993)]({{< ref "module01/11/05_second.md" >}})
 - [The Rise of Machine Learning (1993-2010)]({{< ref "module01/11/06_rise.md" >}})
 - [The Deep Learning Revolution (2010-2018)]({{< ref "module01/11/07_deep.md" >}})
+- [The Transformer Era and Foundation Models (2018-2025)]({{< ref "module01/11/08_transformer.md" >}})
+- [Key Patterns in AI's Evolution]({{< ref "module01/11/09_key.md" >}})
 
 
 

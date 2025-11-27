@@ -94,5 +94,5 @@ Despite these limitations, the trajectory is clear: foundation models have estab
 ---
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "./07_deep.md" >}})
-[|NEXT|]({{< ref "./01_intro.md" >}})
+[|NEXT|]({{< ref "./09_key.md" >}})
 
