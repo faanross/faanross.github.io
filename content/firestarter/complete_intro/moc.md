@@ -52,9 +52,8 @@ The repo for this course containing all the lab solutions can be found https://g
 - [Part 5C - The PE File Format: Simple PE Parser Lab]({{< ref "module01/lesson1_3/peC.md" >}})
 - [Part 5D - The PE File Format: Process Memory Mapping Lab]({{< ref "module01/lesson1_3/peD.md" >}})
 - [Part 6 - PEB and TEB]({{< ref "module01/lesson1_3/peb_teb.md" >}})
-- [Part 7 - Practical Exercises]({{< ref "module01/lesson1_3/exercises.md" >}})
-- [Part 8 - Knowledge Validation]({{< ref "module01/lesson1_3/validation.md" >}})
-- [Part 9 - Conclusion + Next Steps]({{< ref "module01/lesson1_3/conclusion.md" >}})
+- [Part 7 - Knowledge Validation]({{< ref "module01/lesson1_3/validation.md" >}})
+- [Part 8 - Conclusion + Next Steps]({{< ref "module01/lesson1_3/conclusion.md" >}})
 
 
 <br>
