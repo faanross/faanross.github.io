@@ -9,6 +9,7 @@ title = 'Threat Hunting'
 - [Historical Context and Evolution]({{< ref "thunt/system/general/02_history.md" >}})
 - [Threat Hunting and the Philosophy of Assumed Breach]({{< ref "thunt/system/general/03_breach.md" >}})
 - [Threat Hunting vs. Other Security Functions]({{< ref "thunt/system/general/04_other.md" >}})
+- [The Threat Hunting Core Loop]({{< ref "thunt/system/general/05_loop.md" >}})
 
 
 
