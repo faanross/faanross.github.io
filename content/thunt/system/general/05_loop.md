@@ -302,5 +302,5 @@ Understanding this core loop provides the conceptual foundation for effective hu
 ---
 [|TOC|]({{< ref "../../../thrunt/_index.md" >}})
 [|PREV|]({{< ref "./04_other.md" >}})
-[|NEXT|]({{< ref "../../../thrunt/_index.md" >}})
+[|NEXT|]({{< ref "./06_maturity.md" >}})
 

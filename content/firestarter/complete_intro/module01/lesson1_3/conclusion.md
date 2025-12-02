@@ -71,4 +71,4 @@ With this knowledge, you're not just using offensive tools - you're creating the
 
 [|TOC|]({{< ref "../../moc.md" >}})
 [|PREV|]({{< ref "./validation.md" >}})
-[|NEXT|]({{< ref "../../moc.md" >}})
+[|NEXT|]({{< ref "../lesson1_4/intro.md" >}})

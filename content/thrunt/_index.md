@@ -10,6 +10,7 @@ title = 'Threat Hunting'
 - [Threat Hunting and the Philosophy of Assumed Breach]({{< ref "thunt/system/general/03_breach.md" >}})
 - [Threat Hunting vs. Other Security Functions]({{< ref "thunt/system/general/04_other.md" >}})
 - [The Threat Hunting Core Loop]({{< ref "thunt/system/general/05_loop.md" >}})
+- [The Threat Hunting Maturity Model]({{< ref "thunt/system/general/06_maturity.md" >}})
 
 
 
