@@ -4,7 +4,7 @@ title: "Review of Starting Code"
 type: "page"
 ---
 
-The starting code can be found https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_00_starting_code. 
+The starting code can be found [here](https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_00_starting_code). 
 
 # Lesson A: Review of Starting Code
 
