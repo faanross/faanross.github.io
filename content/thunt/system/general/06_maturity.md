@@ -154,5 +154,5 @@ The Hunting Maturity Model provides a roadmap, but each organization's journey i
 ---
 [|TOC|]({{< ref "../../../thrunt/_index.md" >}})
 [|PREV|]({{< ref "./05_loop.md" >}})
-[|NEXT|]({{< ref "../../../thrunt/_index.md" >}})
+[|NEXT|]({{< ref "./07_hunter.md" >}})
 
