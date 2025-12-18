@@ -34,7 +34,7 @@ customHeadHTML = """
     """
 
   # Resource URL for the site avatar (home page and header)
-  avatarURL = "/images/firestarter.png"
+  avatarURL = "/images/moi.png"
   avatarAltText = "cest_moi"
 
   # Set the avatar's size: size-xs, size-s, size-m, size-l & size-xl
