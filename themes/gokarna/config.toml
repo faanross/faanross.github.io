@@ -34,8 +34,8 @@ customHeadHTML = """
     """
 
   # Resource URL for the site avatar (home page and header)
-  avatarURL = "/images/firestarter.png"
-  avatarAltText = "firestarter"
+  avatarURL = "/images/moi.png"
+  avatarAltText = "cest_moi"
 
   # Set the avatar's size: size-xs, size-s, size-m, size-l & size-xl
   avatarSize = "size-l"
@@ -53,7 +53,7 @@ customHeadHTML = """
   footer = "faan rossouw"
 
   # Define SEO keywords
-  metaKeywords = ["faan rossouw", "command and control", "cyber security", "malware"]
+  metaKeywords = ["faan rossouw", "command and control", "cyber security", "malware", "threat hunting"]
 
   # Define how many posts are displayed on the home page
   # showPostsOnHomePage must be "popular" or "recent"
