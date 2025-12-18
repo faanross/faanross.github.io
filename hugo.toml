@@ -66,7 +66,6 @@ weight = 3
     identifier = "linkedin"
     url = "www.linkedin.com/in/faan-rossouw"
     weight = 10
-
     pre = "<span data-feather='linkedin'></span>"
     post = ""
 
