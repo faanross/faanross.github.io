@@ -4,7 +4,7 @@ draft = false
 title = 'hi.'
 +++
 
-I'm a security researcher at [Active Countermeasures](https://www.activecountermeasures.com) specializing in **post-exploitation 
+I'm a security researcher specializing in **post-exploitation 
 malware development** and **network-centric threat hunting**. While these disciplines may appear divergent, I see them as two sides of 
 the same coin - cultivating competence in one deepens insight into the other.
 
