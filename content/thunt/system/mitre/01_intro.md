@@ -4,7 +4,7 @@ title: "Using MITRE ATT&CK for Threat Hunting"
 type: "page"
 ---
 
-## Introduction
+## Introduction to Using MITRE ATT&CK for Threat Hunting
 When you first encounter the MITRE ATT&CK framework, it can feel overwhelming. Hundreds of techniques, thousands of procedures, an ever-expanding matrix of adversary behaviours - it's easy to wonder whether this massive knowledge base is truly practical for day-to-day threat hunting, or just an abstract academic exercise.
 
 Many security professionals initially struggle to see how ATT&CK translates from theory to action. Is it just another compliance checklist? A taxonomy for writing reports? A nice-to-have reference that sits unused while we tackle real security problems?
@@ -25,5 +25,5 @@ In this article, we'll explore each of the fourteen tactics with a threat hunter
 
 ---
 [|TOC|]({{< ref "../../../thrunt/_index.md" >}})
-[|NEXT|]({{< ref "./02_history.md" >}})
+[|NEXT|]({{< ref "./02_recon.md" >}})
 
