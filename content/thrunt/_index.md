@@ -18,3 +18,7 @@ title = 'Threat Hunting'
 <br>
 <br>
 
+## The MITRE ATT&CK Framework: A Threat Hunter's Strategic Compass
+- [The Threat Hunting Core Loop]({{< ref "thunt/system/general/01_intro.md" >}})
+
+
