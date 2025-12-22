@@ -1,6 +1,6 @@
 ---
 showTableOfContents: true
-title: ""Does My AI Offend You?""
+title: "Does My AI Offend You?"
 type: "page"
 ---
 
