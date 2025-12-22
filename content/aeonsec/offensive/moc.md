@@ -32,6 +32,9 @@ By course completion, students will be able to:
 
 ---
 
+## **MODULE 1: Introduction to Offensive Agentic AI**
+
+### **1.1 The Convergence of AI and Offensive Security**
 
 
 
