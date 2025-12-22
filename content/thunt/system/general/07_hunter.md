@@ -83,9 +83,7 @@ Invest in tools, absolutely. But invest more in people. Develop hunting expertis
 
 The algorithm won't save you. But a skilled human hunter just might.
 
-Happy Hunting!
 
-Faan
 
 
 
