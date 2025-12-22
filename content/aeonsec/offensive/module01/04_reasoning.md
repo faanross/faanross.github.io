@@ -7,7 +7,7 @@ Modern offensive AI is no longer a collection of static scripts. It has evolved 
 
 Historically, automation was linear: a tool ran, provided output, and stopped. The **Offensive Agent**, however, utilizes a **circular logic model** known as the **ReAct (Reasoning and Acting) Framework**. This allows the system to manage uncertainty - the defining characteristic of any real-world security environment.
 
-
+![react fw](./img/react.png)
 
 
 
