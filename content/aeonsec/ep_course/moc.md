@@ -4,8 +4,9 @@ title: "Endpoint Threat Hunting Master Course"
 type: "page"
 ---
 
-## MODULE 0: Environment Setup
-### Lesson 0.1: Lab Environment Architecture & Design (THEORY)
+## MODULE 0: Lab Environment Architecture & Design
+### THEORY
+- [Introduction to Lab Environment Architecture & Design]({{< ref "./module00/theory/01_intro.md" >}})
 
 
 
