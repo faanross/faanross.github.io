@@ -1,6 +1,6 @@
 baseURL = 'https://www.faanross.com/'
 languageCode = 'en-us'
-title = 'Faan Rossouw - Agentic Threat Hunting Expert'
+title = 'Faan Rossouw'
 theme = 'gokarna'
 
 [markup]
