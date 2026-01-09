@@ -13,5 +13,12 @@ export const projects: Project[] = [
 		url: "https://github.com/faanross/goMESA",
 		language: "Go",
 		topics: ["c2", "ntp", "covert-channel", "offensive-security", "threat-hunting"]
+	},
+	{
+		name: "ICMP-GOSH",
+		description: "Covert command and control channel using ICMP. Demonstrates how C2 traffic can be tunneled through ping requests and replies.",
+		url: "https://github.com/faanross/ICMP-GOSH",
+		language: "Go",
+		topics: ["c2", "icmp", "covert-channel", "offensive-security", "threat-hunting"]
 	}
 ];
