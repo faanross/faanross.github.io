@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --aion-yellow: #F5E663;
+    --aion-yellow-light: #FAF0A0;
+    --aion-yellow-dark: #D4C44A;
+    --aion-purple: #bd93f9;
+    --aion-purple-light: #d4b8fc;
+    --aion-accent: #bd93f9;
+    --aion-grey: #3D3D47;
+    --aion-grey-light: #5A5A66;
+    --aion-grey-dark: #2A2A32;
+    --gradient-yellow: linear-gradient(135deg, #F5E663 0%, #D4C44A 100%);
+    --gradient-purple: linear-gradient(135deg, #bd93f9 0%, #9d6df5 100%);
+    --gradient-accent: linear-gradient(135deg, #bd93f9 0%, #9d6df5 100%);
+    --gradient-grey: linear-gradient(135deg, #5A5A66 0%, #3D3D47 100%);
+    --white: #ffffff;
+    --black: #000000;
+}
+
+html {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    background: transparent;
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Typography */
+h1 {
+    font-weight: 700;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.2;
+    background: linear-gradient(135deg, #bd93f9 0%, #d4b8fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: clamp(24px, 3vw, 36px);
+    line-height: 1.25;
+    background: linear-gradient(135deg, #bd93f9 0%, #d4b8fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+h3 {
+    font-weight: 600;
+    font-size: clamp(16px, 1.8vw, 20px);
+    color: var(--aion-purple);
+}
+
+p {
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+a {
+    color: var(--aion-purple);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--aion-yellow);
+}
+
+/* Glass Card */
+.glass-card {
+    background: rgba(61, 61, 71, 0.4);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(189, 147, 249, 0.3);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+    border-color: rgba(189, 147, 249, 0.5);
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--gradient-yellow);
+    border: none;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--aion-grey-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    box-shadow: 0 4px 16px rgba(245, 230, 99, 0.25);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(245, 230, 99, 0.4);
+    color: var(--aion-grey-dark);
+}
+
+.btn-cta {
+    background: linear-gradient(135deg, #bd93f9 0%, #9d6df5 100%);
+    color: var(--black);
+    box-shadow: 0 4px 16px rgba(189, 147, 249, 0.3);
+}
+
+.btn-cta:hover {
+    box-shadow: 0 8px 24px rgba(189, 147, 249, 0.5);
+    color: var(--black);
+}
+
+/* Glow text */
+.glow-text {
+    color: var(--aion-yellow);
+    text-shadow: 0 0 20px rgba(245, 230, 99, 0.6);
+    -webkit-text-fill-color: var(--aion-yellow);
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(189, 147, 249, 0.15);
+    color: var(--aion-purple);
+    border: 1px solid rgba(189, 147, 249, 0.25);
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .glass-card {
+        padding: 16px;
+    }
+
+    .btn-primary {
+        padding: 14px 28px;
+        font-size: 13px;
+    }
+}
