@@ -18,12 +18,12 @@ export const talkSeries: TalkSeries[] = [
 			{
 				videoId: "G2QYJFalj38",
 				title: "AntiCast Episode 1",
-				description: "Threat hunting fundamentals and methodology"
+				description: "Let's Build A Covert C2 Channel"
 			},
 			{
 				videoId: "6Nl3uKlIReI",
 				title: "AntiCast Episode 2",
-				description: "Network-centric threat detection"
+				description: "Developing a C2 Framework"
 			}
 		]
 	},
@@ -33,33 +33,33 @@ export const talkSeries: TalkSeries[] = [
 		talks: [
 			{
 				videoId: "aD8w0Q_IZJc",
-				title: "C2 Webcast Part 1",
-				description: "Introduction to command and control"
+				title: "C2 Webcast Episode 1",
+				description: "Fiesta"
 			},
 			{
 				videoId: "0xHfMzIEh-U",
-				title: "C2 Webcast Part 2",
-				description: "C2 communication patterns"
+				title: "C2 Webcast Episode 2",
+				description: "Merlin and Data Jitter"
 			},
 			{
 				videoId: "xN7DG6pxFZk",
-				title: "C2 Webcast Part 3",
-				description: "Protocol analysis and detection"
+				title: "C2 Webcast Episode 3",
+				description: "DNS Tunneling (dnscat2)"
 			},
 			{
 				videoId: "U3gIx1Ojo_U",
-				title: "C2 Webcast Part 4",
-				description: "Advanced C2 techniques"
+				title: "C2 Webcast Episode 4",
+				description: "Building Your Own Threat Hunting Home Lab"
 			},
 			{
 				videoId: "wlZfypMkOGc",
-				title: "C2 Webcast Part 5",
-				description: "Hunting C2 in practice"
+				title: "C2 Webcast Episode 5",
+				description: "Tunneled C2 Communication with Ligolo-ng"
 			},
 			{
 				videoId: "x_X1o22yXRA",
-				title: "C2 Webcast Part 6",
-				description: "C2 covert channels"
+				title: "C2 Webcast Episode 6",
+				description: "Velociraptor as C2"
 			}
 		]
 	}
