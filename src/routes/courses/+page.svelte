@@ -50,7 +50,7 @@
 		{#if mounted}
 			<h1 in:fly={{ y: 30, duration: 800, delay: 200 }}>Courses</h1>
 			<p class="lead" in:fly={{ y: 20, duration: 600, delay: 400 }}>
-				Hands-on workshops and courses on C2 development, reflective loading, and offensive techniques
+				Hands-on workshops and courses on offensive tooling development and threat hunting
 			</p>
 		{/if}
 	</div>

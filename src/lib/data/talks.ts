@@ -13,7 +13,7 @@ export interface TalkSeries {
 export const talkSeries: TalkSeries[] = [
 	{
 		name: "AntiCasts",
-		description: "Podcast discussions on threat hunting and security research",
+		description: "Discussions on C2, threat hunting, and security research",
 		talks: [
 			{
 				videoId: "G2QYJFalj38",
