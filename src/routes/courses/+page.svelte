@@ -16,7 +16,7 @@
 			date: "April 25, 2025",
 			duration: "4 hours",
 			githubUrl: "https://github.com/faanross/workshop_antisyphon_25042025",
-			antisyphonUrl: "https://www.antisyphontraining.com/course/lets-build-a-simple-c2-in-golang-and-vuejs-w-faan-ross/"
+			courseUrl: "/courses/workshop"
 		},
 		{
 			title: "Let's Build a Multi-Modal C2 Covert Channel in Golang",
@@ -25,7 +25,7 @@
 			date: "September 18, 2025",
 			duration: "4 hours",
 			githubUrl: "https://github.com/faanross/workshop_antisyphon_18092025",
-			antisyphonUrl: "https://www.antisyphontraining.com/course/lets-build-a-multimodal-c2-covert-channel-in-golang-w-faan-ross/"
+			courseUrl: "/courses/workshop02"
 		},
 		{
 			title: "Let's Build a Reflective Loader + C2 Channel in Golang",
@@ -34,8 +34,8 @@
 			description: "Build a reflective DLL loader integrated with a C2 channel. Learn PE parsing, memory mapping, relocations, and how to execute payloads without touching disk.",
 			date: "January 23, 2026",
 			duration: "4 hours",
-			githubUrl: null,
-			antisyphonUrl: "https://www.antisyphontraining.com/instructor/faan-ross/"
+			githubUrl: "https://github.com/faanross/workshop_antisyphon_23012026",
+			courseUrl: "/courses/workshop03"
 		}
 	];
 </script>
@@ -72,9 +72,9 @@
 							<span class="date">{course.date}</span>
 						</div>
 						<div class="course-links">
-							{#if course.antisyphonUrl}
-								<a href={course.antisyphonUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">
-									View on AntiSyphon
+							{#if course.courseUrl}
+								<a href={course.courseUrl} class="btn-primary">
+									View Course
 								</a>
 							{/if}
 							{#if course.githubUrl}
@@ -85,7 +85,7 @@
 									Solutions
 								</a>
 							{/if}
-							{#if !course.antisyphonUrl && !course.githubUrl && !course.courseUrl}
+							{#if !course.courseUrl && !course.githubUrl}
 								<span class="coming-soon">Coming Soon</span>
 							{/if}
 						</div>
