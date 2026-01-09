@@ -36,15 +36,6 @@
 			duration: "4 hours",
 			githubUrl: null,
 			antisyphonUrl: "https://www.antisyphontraining.com/instructor/faan-ross/"
-		},
-		{
-			title: "Reflective Loader Deep Dive",
-			badge: "Firestarter",
-			description: "Comprehensive course covering reflective DLL loading from first principles. 8 modules covering DLLs, PE format, memory mapping, relocations, imports, obfuscation, and key derivation.",
-			date: "Self-paced",
-			duration: "8 modules",
-			githubUrl: null,
-			courseUrl: null
 		}
 	];
 </script>

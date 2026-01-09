@@ -12,7 +12,7 @@ export interface ArticleSeries {
 export const articleSeries: ArticleSeries[] = [
 	{
 		name: "Malware of the Day",
-		description: "Monthly intrusion simulations with pcap + Zeek logs for hands-on threat hunting practice",
+		description: "Intrusion simulations with pcap + Zeek logs",
 		articles: [
 			{
 				title: "TXT Record Abuse in DNS C2 (Joker Screenmate)",
@@ -86,8 +86,12 @@ export const articleSeries: ArticleSeries[] = [
 	},
 	{
 		name: "Network Threat Hunting",
-		description: "Deep dives into C2 detection, DNS analysis, and threat hunting methodology",
+		description: "C2 detection, DNS analysis, and threat hunting",
 		articles: [
+			{
+				title: "Context Over Code: The Irreplaceable Role of Human Hunters",
+				url: "https://www.activecountermeasures.com/context-over-code-the-irreplaceable-role-of-human-hunters/"
+			},
 			{
 				title: "Hunt What Hurts: The Pyramid of Pain",
 				url: "https://www.activecountermeasures.com/hunt-what-hurts-the-pyramid-of-pain"

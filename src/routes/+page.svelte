@@ -150,8 +150,9 @@
 	}
 
 	.sections-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
 		gap: 24px;
 		max-width: 1200px;
 		margin: 0 auto;
@@ -159,6 +160,8 @@
 	}
 
 	.section-card {
+		flex: 0 1 280px;
+		max-width: 320px;
 		background: rgba(61, 61, 71, 0.4);
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
