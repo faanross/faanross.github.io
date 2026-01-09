@@ -94,8 +94,8 @@
 
 <style>
 	.hero-avatar {
-		width: 120px;
-		height: 120px;
+		width: 180px;
+		height: 180px;
 		border-radius: 50%;
 		object-fit: cover;
 		border: 3px solid rgba(189, 147, 249, 0.4);
