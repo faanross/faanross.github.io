@@ -55,6 +55,11 @@ export const talkSeries: TalkSeries[] = [
 				videoId: "wlZfypMkOGc",
 				title: "C2 Webcast Part 5",
 				description: "Hunting C2 in practice"
+			},
+			{
+				videoId: "x_X1o22yXRA",
+				title: "C2 Webcast Part 6",
+				description: "C2 covert channels"
 			}
 		]
 	}
