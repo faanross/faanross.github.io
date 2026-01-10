@@ -30,26 +30,23 @@
 
 <section class="sections-grid">
 	{#if mounted}
+		<!-- Triangle - Courses -->
 		<a href="/courses" class="section-card" in:fly={{ y: 30, duration: 600, delay: 800 }}>
 			<div class="card-icon">
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-					<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="12,3 22,21 2,21" />
 				</svg>
 			</div>
 			<h3>Courses</h3>
-			<p>Workshops on C2 development, reflective loading, and malware techniques in Golang</p>
+			<p>Hands-on workshops and courses on offensive tooling development and threat hunting</p>
 			<span class="card-link">View courses</span>
 		</a>
 
+		<!-- Square - Articles -->
 		<a href="/articles" class="section-card" in:fly={{ y: 30, duration: 600, delay: 900 }}>
 			<div class="card-icon">
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-					<polyline points="14 2 14 8 20 8"></polyline>
-					<line x1="16" y1="13" x2="8" y2="13"></line>
-					<line x1="16" y1="17" x2="8" y2="17"></line>
-					<line x1="10" y1="9" x2="8" y2="9"></line>
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+					<rect x="3" y="3" width="18" height="18" />
 				</svg>
 			</div>
 			<h3>Articles</h3>
@@ -57,11 +54,11 @@
 			<span class="card-link">Read articles</span>
 		</a>
 
+		<!-- Pentagon - Talks -->
 		<a href="/talks" class="section-card" in:fly={{ y: 30, duration: 600, delay: 1000 }}>
 			<div class="card-icon">
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<polygon points="23 7 16 12 23 17 23 7"></polygon>
-					<rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="12,2 22,9 18.5,21 5.5,21 2,9" />
 				</svg>
 			</div>
 			<h3>Talks</h3>
@@ -69,22 +66,35 @@
 			<span class="card-link">Watch talks</span>
 		</a>
 
+		<!-- Hexagon - Projects -->
 		<a href="/projects" class="section-card" in:fly={{ y: 30, duration: 600, delay: 1100 }}>
 			<div class="card-icon">
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
 				</svg>
 			</div>
 			<h3>Projects</h3>
 			<p>Open-source C2 tools and research projects for the security community</p>
 			<span class="card-link">View projects</span>
 		</a>
+
+		<!-- Heptagon - Claude -->
+		<a href="/claude" class="section-card" in:fly={{ y: 30, duration: 600, delay: 1200 }}>
+			<div class="card-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="12,2 19.8,5.5 22,13 17.5,20 6.5,20 2,13 4.2,5.5" />
+				</svg>
+			</div>
+			<h3>Claude</h3>
+			<p>Chronicling my journey optimizing workflows with Claude Code and Obsidian</p>
+			<span class="card-link">Explore</span>
+		</a>
 	{/if}
 </section>
 
 <section class="cta-section">
 	{#if mounted}
-		<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 1200 }}>
+		<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 1300 }}>
 			<h2>Let's Connect</h2>
 			<p>Questions, ideas, or just want to chat about threat hunting and AI? I'm always happy to connect.</p>
 			<a href="mailto:moi@faanross.com" class="btn-primary">Get in Touch</a>

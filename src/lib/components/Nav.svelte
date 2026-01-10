@@ -5,6 +5,7 @@
 		{ href: '/', label: 'Home' },
 		{ href: '/courses', label: 'Courses' },
 		{ href: '/articles', label: 'Articles' },
+		{ href: '/claude', label: 'Claude' },
 		{ href: '/talks', label: 'Talks' },
 		{ href: '/projects', label: 'Projects' },
 		{ href: '/about', label: 'About' }
