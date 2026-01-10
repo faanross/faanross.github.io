@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>Faan Rossouw | Security Research</title>
+	<title>Faan Rossouw | Research. Build. Teach.</title>
 </svelte:head>
 
 <section class="hero">
