@@ -214,9 +214,9 @@
 
 	.social-links {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+		grid-template-columns: repeat(3, 1fr);
 		gap: 16px;
-		max-width: 800px;
+		max-width: 600px;
 		margin: 0 auto;
 	}
 
