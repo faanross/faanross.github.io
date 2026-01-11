@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "I Discovered Claude Code Has a Hidden Memory",
+			description: "Claude Code stores complete conversation transcripts locally. Here's how to unlock persistent memory across sessions with one addition to your CLAUDE.md.",
+			url: "/claude/hidden-memory",
+			date: "2025-01-11"
+		},
+		{
 			title: "I Taught Claude to Text Me When It Needs Help",
 			description: "Setting up async notifications and bidirectional control for Claude Code via Telegram.",
 			url: "/claude/iphone-notifications",
