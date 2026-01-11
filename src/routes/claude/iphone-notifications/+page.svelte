@@ -55,7 +55,7 @@
 			<div class="article-content" in:fly={{ y: 20, duration: 600, delay: 400 }}>
 				<p>I've been using LLMs since day one. ChatGPT 3.5, the whole journey. Always saw the potential, found genuine use cases, stayed curious about where it was heading.</p>
 
-				<p>But when I started using Claude Code a few weeks ago, something shifted. And once I integrated it with Obsidian into my daily workflow, I stopped seeing potential and started seeing the thing itself.</p>
+				<p>But when I started using Claude Code a few weeks ago, something shifted. And once I integrated it with Obsidian into my daily workflow, I stopped seeing potential and started seeing what's coming.</p>
 
 				<p>But there was a problem I kept ignoring.</p>
 
