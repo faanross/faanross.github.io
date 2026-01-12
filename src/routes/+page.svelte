@@ -16,7 +16,7 @@
 <section class="hero">
 	{#if mounted}
 		<div class="hero-content" in:fade={{ duration: 800 }}>
-			<img src="/images/moi.png" alt="Faan Rossouw" class="hero-avatar" in:fly={{ y: 20, duration: 600, delay: 100 }} />
+			<img src="/images/potential.png" alt="Faan Rossouw" class="hero-avatar" in:fly={{ y: 20, duration: 600, delay: 100 }} />
 			<span class="tagline" in:fly={{ y: 20, duration: 600, delay: 200 }}>Threat Hunting + Agentic AI</span>
 			<h1 in:fly={{ y: 20, duration: 600, delay: 400 }}>
 				Never Stop <span class="gradient-text">Hunting</span>
@@ -104,8 +104,8 @@
 
 <style>
 	.hero-avatar {
-		width: 180px;
-		height: 180px;
+		width: 234px;
+		height: 234px;
 		border-radius: 50%;
 		object-fit: cover;
 		border: 3px solid rgba(189, 147, 249, 0.4);
