@@ -4,6 +4,31 @@
 	import Background from '$lib/components/Background.svelte';
 
 	let { children } = $props();
+
+	let footerFormSubmitted = $state(false);
+	let footerFormLoading = $state(false);
+
+	async function handleFooterSubmit(event: Event) {
+		event.preventDefault();
+		const form = event.target as HTMLFormElement;
+		const formData = new FormData(form);
+
+		footerFormLoading = true;
+
+		try {
+			await fetch(form.action, {
+				method: 'POST',
+				body: formData,
+				mode: 'no-cors'
+			});
+			footerFormSubmitted = true;
+		} catch (error) {
+			console.error('Form submission error:', error);
+			footerFormSubmitted = true;
+		} finally {
+			footerFormLoading = false;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -23,7 +48,32 @@
 
 <footer>
 	<div class="container">
-		<p>&copy; 2026 Faan Rossouw</p>
+		<div class="footer-newsletter">
+			{#if !footerFormSubmitted}
+				<span class="footer-newsletter-label">Stay updated</span>
+				<form
+					class="footer-newsletter-form"
+					action="https://assets.mailerlite.com/jsonp/1462037/forms/152012474066929011/subscribe"
+					method="post"
+					onsubmit={handleFooterSubmit}
+				>
+					<input
+						type="email"
+						name="fields[email]"
+						placeholder="Email"
+						required
+						autocomplete="email"
+					/>
+					<input type="hidden" name="ml-submit" value="1" />
+					<input type="hidden" name="anticsrf" value="true" />
+					<button type="submit" disabled={footerFormLoading}>
+						{footerFormLoading ? '...' : 'Subscribe'}
+					</button>
+				</form>
+			{:else}
+				<span class="footer-newsletter-success">You're in!</span>
+			{/if}
+		</div>
 		<div class="footer-links">
 			<a href="https://github.com/faanross" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
 			<a href="https://www.youtube.com/@FaanRoss" target="_blank" rel="noopener noreferrer" class="footer-link">YouTube</a>
@@ -31,6 +81,7 @@
 			<a href="https://www.linkedin.com/in/faan-rossouw" target="_blank" rel="noopener noreferrer" class="footer-link">LinkedIn</a>
 			<a href="https://discord.gg/fdDPBnEC" target="_blank" rel="noopener noreferrer" class="footer-link">Discord</a>
 		</div>
+		<p>&copy; 2026 Faan Rossouw</p>
 	</div>
 </footer>
 
@@ -81,9 +132,94 @@
 		color: var(--aion-yellow-light);
 	}
 
+	.footer-newsletter {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 16px;
+	}
+
+	.footer-newsletter-label {
+		font-size: 12px;
+		color: rgba(255, 255, 255, 0.6);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.footer-newsletter-form {
+		display: flex;
+		gap: 8px;
+	}
+
+	.footer-newsletter-form input[type="email"] {
+		padding: 8px 12px;
+		font-size: 13px;
+		border: 1px solid rgba(189, 147, 249, 0.3);
+		border-radius: 6px;
+		background: rgba(0, 0, 0, 0.3);
+		color: var(--white);
+		width: 180px;
+		transition: border-color 0.2s;
+	}
+
+	.footer-newsletter-form input[type="email"]::placeholder {
+		color: rgba(255, 255, 255, 0.4);
+	}
+
+	.footer-newsletter-form input[type="email"]:focus {
+		outline: none;
+		border-color: var(--aion-purple);
+	}
+
+	.footer-newsletter-form button {
+		padding: 8px 16px;
+		font-size: 12px;
+		font-weight: 600;
+		color: var(--black);
+		background: var(--aion-yellow);
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+
+	.footer-newsletter-form button:hover:not(:disabled) {
+		background: var(--aion-yellow-light);
+	}
+
+	.footer-newsletter-form button:disabled {
+		opacity: 0.7;
+		cursor: not-allowed;
+	}
+
+	.footer-newsletter-success {
+		font-size: 13px;
+		color: var(--aion-purple-light);
+		font-weight: 500;
+	}
+
 	@media (max-width: 768px) {
 		.footer-links {
 			gap: 12px;
+		}
+
+		.footer-newsletter {
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.footer-newsletter-form {
+			flex-direction: column;
+			width: 100%;
+			max-width: 250px;
+		}
+
+		.footer-newsletter-form input[type="email"] {
+			width: 100%;
+		}
+
+		.footer-newsletter-form button {
+			width: 100%;
 		}
 	}
 </style>
