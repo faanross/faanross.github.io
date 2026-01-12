@@ -193,7 +193,7 @@
 			backdrop-filter: blur(20px);
 			-webkit-backdrop-filter: blur(20px);
 			padding: 32px 24px;
-			gap: 44px;
+			gap: 32px;
 			transform: translateX(100%);
 			transition: transform 0.3s ease;
 		}
@@ -203,7 +203,7 @@
 		}
 
 		.nav-links a {
-			font-size: 28px;
+			font-size: 21px;
 		}
 	}
 </style>
