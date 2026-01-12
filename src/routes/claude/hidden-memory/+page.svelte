@@ -57,9 +57,7 @@
 
 				<p>I'd been setting up a Stop Hook - a script that fires when a Claude session ends. The idea was to automatically log session summaries to my daily notes. Keep a record of what Claude and I worked on each day.</p>
 
-				<p>It failed.</p>
-
-				<p>The Stop Hook only receives minimal JSON from Claude Code - a session ID and stop reason. No conversation content. No summary. Just noise.</p>
+				<p>I couldn't quite get it to do what I intended.</p>
 
 				<p>But in debugging why it wasn't working, I stumbled onto something better.</p>
 
@@ -81,7 +79,7 @@
 
 				<p>Every message I'd sent. Every response Claude gave. Every tool call, every file read, every edit. Timestamps. Token counts. The complete record of every conversation I'd ever had with Claude Code.</p>
 
-				<p>I checked the dates. Files going back to December 30th - the day I started using Claude Code. Nothing deleted. All of it still there.</p>
+				<p>I checked the dates. Files going back to the very first conversation I had with Claude Code. Nothing deleted. All of it still there.</p>
 
 				<p>Permanent. Local. Mine.</p>
 
@@ -137,7 +135,7 @@
 
 				<h2>The comparison that made me realize this is gold</h2>
 
-				<p>I'd seen Artem Zhutov posting about analyzing his Claude conversations. He uses Wispr Flow - a voice dictation tool that captures everything he speaks into any app. 956K words across all applications. 147K words to Claude Desktop alone.</p>
+				<p>I'd seen <a href="https://www.linkedin.com/in/artemxtech" target="_blank" rel="noopener noreferrer">Artem Zhutov</a> posting about analyzing his Claude conversations. He uses Wispr Flow - a voice dictation tool that captures everything he speaks into any app. 956K words across all applications. 147K words to Claude Desktop alone.</p>
 
 				<p>Impressive stats. But here's what I realized:</p>
 
@@ -263,7 +261,11 @@ Use grep for keyword searches, jq for parsing specific sessions.`}</code></pre>
 
 				<p>Now when I ask "What did we discuss about authentication last week?" - Claude knows where to look.</p>
 
-				<p>It's not perfect retrieval. Claude has to search and parse like any other file operation. But it works. The memory exists and is accessible.</p>
+				<p>Want to test it? After adding this to your CLAUDE.md, start a new session and ask: "Claude, what was the very first conversation we ever had about?" It's a simple way to verify the memory is working.</p>
+
+				<p>The snippet above is the minimum to get started. For a more complete version with trigger phrases, query examples, and use cases, see the <a href="#full-snippet">full CLAUDE.md snippet</a> at the bottom of this article.</p>
+
+				<p>It's not perfect retrieval—at least not yet. Claude has to search and parse like any other file operation. But it works, and I have <a href="#building-next">plans to make it better</a>. The memory exists and is accessible.</p>
 
 				<figure class="article-image">
 					<img src="/images/claude-memory-005.png" alt="Data flow showing conversation history being accessed" />
@@ -319,21 +321,114 @@ Use grep for keyword searches, jq for parsing specific sessions.`}</code></pre>
 
 				<hr />
 
-				<h2>What I'm building next</h2>
+				<h2 id="building-next">What I'm building next</h2>
 
-				<p>The raw data is there. Now I want analytics on top of it:</p>
+				<p>The raw data is there, but grep and jq only get you so far. I'm building two things:</p>
 
-				<ul>
-					<li>Weekly digest of Claude collaboration activity</li>
-					<li>Project attention breakdown</li>
-					<li>Peak productivity hours</li>
-					<li>Conversation search that's easier than grep</li>
-					<li>Maybe even a fancy dashboard</li>
-				</ul>
+				<h3>Smarter retrieval</h3>
 
-				<p>The data is a goldmine, now I just need to build the tools to mine it.</p>
+				<p>Right now Claude searches my history with basic text matching. I'm moving the data into <strong>DuckDB</strong> - a fast analytical database that can slice through hundreds of megabytes in milliseconds. On top of that, I'm adding <strong>semantic search</strong> via vector embeddings. The goal: find past conversations by <em>meaning</em>, not just keywords. "Find when I solved something like this before" - even if I used completely different words.</p>
+
+				<h3>Visual dashboard</h3>
+
+				<p>A Svelte-based interface for exploring my conversation history, using <a href="https://layercake.graphics/" target="_blank" rel="noopener noreferrer">Layercake</a> for visualizations. Activity heatmaps, project breakdowns, topic patterns over time. The kind of insights that are invisible when everything lives in flat files. Think: "Which projects get most of my attention?" or "When am I most productive with Claude?"</p>
+
+				<figure class="article-image">
+					<img src="/images/claude-memory-007.png" alt="Memory to insights flow: raw JSONL files to DuckDB with semantic search to visual dashboard" />
+				</figure>
+
+				<p>The data is a goldmine. Now I'm building the tools to actually mine it.</p>
+
+				<hr />
+
+				<h2>The bigger picture</h2>
+
+				<p>My mantra: reduce friction to the minimum required to fully manifest an idea. Every unnecessary step between thought and creation is a leak in the system.</p>
+
+				<p>Starting every session from scratch is friction. Re-explaining context. Repeating decisions. Losing the thread of what you solved last week. That's cognitive overhead that doesn't serve the work.</p>
+
+				<p>This discovery - that the memory already exists, just waiting to be accessed - removes that friction. Claude can now remember. Not perfectly, not magically. But the data is there. The continuity is possible.</p>
 
 				<p>If you're using Claude Code, you have this too. Check <code>~/.claude/projects/</code>. Your history is waiting.</p>
+
+				<hr />
+
+				<h2 id="full-snippet">Bonus: Full CLAUDE.md snippet</h2>
+
+				<p>Here's the complete conversation history section from my CLAUDE.md. Copy, paste, and adapt for your own setup:</p>
+
+				<pre><code>{`## Conversation History Access (Long-Term Memory)
+
+Claude Code automatically stores **complete conversation transcripts** locally. This gives you persistent memory across sessions.
+
+### Location
+
+\`\`\`
+~/.claude/projects/
+\`\`\`
+
+Files are organized by working directory path. Each session creates a JSONL file containing:
+- All user messages (typed and voice-transcribed)
+- All Claude responses
+- Tool calls and results
+- Timestamps
+- Token usage
+
+### Data Retention
+
+**PERMANENT** - stored locally on disk, no cloud retention policy. Files stay until manually deleted.
+
+### When to Access
+
+If user asks about:
+- "What did we work on last week?"
+- "What did we discuss on [date]?"
+- "Remember when we talked about X?"
+- "What was that solution for Y?"
+- "Show me our conversation history"
+- "Search our past sessions for [topic]"
+
+### How to Access
+
+1. **List sessions for a project:**
+   \`\`\`bash
+   ls -la ~/.claude/projects/-Users-yourname-project/
+   \`\`\`
+
+2. **Find sessions by date:**
+   \`\`\`bash
+   find ~/.claude/projects -name "*.jsonl" -type f ! -path "*/subagents/*" -newermt "2026-01-10" -exec ls -la {} \\;
+   \`\`\`
+
+3. **Search for keywords across all sessions:**
+   \`\`\`bash
+   grep -r "keyword" ~/.claude/projects/ --include="*.jsonl"
+   \`\`\`
+
+4. **Parse a specific session:**
+   \`\`\`bash
+   cat [session-file].jsonl | jq -s '[.[] | select(.type == "user" or .type == "assistant")]'
+   \`\`\`
+
+### JSONL Structure
+
+Each line is a JSON object with:
+\`\`\`json
+{
+  "type": "user" | "assistant",
+  "message": { "role": "...", "content": "..." },
+  "timestamp": "2026-01-07T22:26:33.425Z",
+  "sessionId": "6a704ab6-...",
+  "cwd": "/path/to/working/directory"
+}
+\`\`\`
+
+### Use Cases
+
+- Recall specific decisions or explanations from past sessions
+- Find code snippets or solutions discussed previously
+- Track patterns in what topics you work on
+- Search for that "thing we talked about" without remembering exactly when`}</code></pre>
 
 			</div>
 		{/if}
