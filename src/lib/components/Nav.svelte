@@ -25,7 +25,7 @@
 <nav class="nav">
 	<div class="nav-container">
 		<a href="/" class="logo" onclick={closeMenu}>
-			<img src="/images/moi.png" alt="Faan Rossouw" class="logo-img" />
+			<img src="/images/potential.png" alt="Faan Rossouw" class="logo-img" />
 			<span>Faan Rossouw</span>
 		</a>
 
