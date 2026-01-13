@@ -48,7 +48,7 @@
 					Back to Claude
 				</a>
 				<span class="date">2026-01-13</span>
-				<h1>I'm Building a Memory System for My AI Pair Programmer</h1>
+				<h1>I'm Building a Memory System for Claude Code</h1>
 			</header>
 
 			<div class="article-content" in:fly={{ y: 20, duration: 600, delay: 400 }}>
