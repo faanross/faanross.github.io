@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "Building a Memory System for Claude Code",
+			description: "An 8-phase system to turn conversation transcripts into queryable, searchable, actionable memory. From DuckDB analytics to semantic search to a self-aware agent.",
+			url: "/claude/memory-system",
+			date: "2026-01-13"
+		},
+		{
 			title: "I Discovered Claude Code Has a Hidden Memory",
 			description: "Claude Code stores complete conversation transcripts locally. Here's how to unlock persistent memory across sessions with one addition to your CLAUDE.md.",
 			url: "/claude/hidden-memory",
