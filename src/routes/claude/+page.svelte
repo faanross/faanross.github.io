@@ -10,7 +10,13 @@
 
 	const articles = [
 		{
-			title: "Building a Memory System for Claude Code",
+			title: "I Turned Claude's Hidden Memory Into a Queryable Database",
+			description: "Building the analytics foundation for Claude's conversation history. 500MB of JSONL compressed to 69MB in DuckDB, with millisecond queries.",
+			url: "/claude/duckdb-foundation",
+			date: "2026-01-14"
+		},
+		{
+			title: "I'm Building a Memory System for Claude Code",
 			description: "An 8-phase system to turn conversation transcripts into queryable, searchable, actionable memory. From DuckDB analytics to semantic search to a self-aware agent.",
 			url: "/claude/memory-system",
 			date: "2026-01-13"
