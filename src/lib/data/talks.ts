@@ -24,6 +24,11 @@ export const talkSeries: TalkSeries[] = [
 				videoId: "6Nl3uKlIReI",
 				title: "AntiCast Episode 2",
 				description: "Developing a C2 Framework"
+			},
+			{
+				videoId: "4u5X2R-FQsU",
+				title: "AntiCast Episode 3",
+				description: "Threat Hunting Malware Communication over DNS"
 			}
 		]
 	},
