@@ -48,7 +48,7 @@
 					</svg>
 					Back to Claude
 				</a>
-				<span class="date">2026-01-14</span>
+				<span class="date">2026-01-15</span>
 				<h1>I Gave My Memory System Ranked Search</h1>
 			</header>
 

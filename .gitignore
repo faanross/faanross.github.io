@@ -21,3 +21,16 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Local data (conversation history - contains PII)
+/static/data/
+*.parquet
+*.duckdb
+*.jsonl
+*.lance
+*.db
+
+# Backup and temp data
+*.bak
+*.tmp
+**/memory.*/
