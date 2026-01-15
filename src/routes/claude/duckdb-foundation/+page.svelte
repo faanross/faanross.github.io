@@ -235,6 +235,10 @@ LIMIT 5;`}</code></pre>
 FROM messages WHERE type = 'user'
 GROUP BY hour ORDER BY messages DESC LIMIT 3;`}</code></pre>
 
+				<figure class="article-image">
+					<img src="/images/duckdb-scr-hours.png" alt="Terminal showing peak productivity hours query results" />
+				</figure>
+
 				<p>9pm and 11am. Two distinct windows - late morning and late evening. Not what I would have guessed.</p>
 
 				<p><strong>How I actually use Claude:</strong></p>
@@ -244,6 +248,10 @@ GROUP BY hour ORDER BY messages DESC LIMIT 3;`}</code></pre>
 FROM tool_calls
 GROUP BY tool_name
 ORDER BY uses DESC LIMIT 5;`}</code></pre>
+
+				<figure class="article-image">
+					<img src="/images/duckdb-scr-tools.png" alt="Terminal showing tool usage query results" />
+				</figure>
 
 				<div class="data-table">
 					<table>
@@ -270,6 +278,10 @@ ORDER BY uses DESC LIMIT 5;`}</code></pre>
 
 				<pre><code>{`SELECT project_name, message_count, DATE(first_message_at) as date
 FROM sessions ORDER BY message_count DESC LIMIT 3;`}</code></pre>
+
+				<figure class="article-image">
+					<img src="/images/duckdb-scr-projects.png" alt="Terminal showing deep work sessions query results" />
+				</figure>
 
 				<p>One session hit nearly 10,000 messages. A single conversation, sustained over hours. I remember that day (working on my C2 framework Numinon) - deep in a complex build, completely in flow. The data captured the trace of what that felt like.</p>
 
