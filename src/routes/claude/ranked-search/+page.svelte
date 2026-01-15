@@ -178,6 +178,10 @@ LIMIT 5;`}</code></pre>
 					</table>
 				</div>
 
+				<figure class="article-image">
+					<img src="/images/fts5-scr-bm25-auth.png" alt="Terminal showing BM25 ranked search results for authentication" />
+				</figure>
+
 				<p>Notice the scores. 4.32 vs 3.80 isn't a huge spread, but it's meaningful. The top result is <em>about</em> authentication. The bottom result just mentions it while discussing something else (deleting repos).</p>
 
 				<p>That's BM25 working. Term frequency, document length, rarity across the corpus - all factored into a single relevance score.</p>
@@ -198,11 +202,19 @@ LIMIT 5;`}</code></pre>
 
 				<p>When I'm looking for DuckDB-specific insights, I don't want comparison discussions. This filters them out.</p>
 
+				<figure class="article-image">
+					<img src="/images/fts5-scr-boolean-andnot.png" alt="Terminal showing DuckDB AND NOT sqlite query results" />
+				</figure>
+
 				<p><strong>Find either authentication or authorization:</strong></p>
 
 				<pre><code>{`WHERE fts_main_messages.match_bm25(m.id, 'authentication OR authorization') IS NOT NULL`}</code></pre>
 
 				<p>Related concepts, both relevant. One query catches both.</p>
+
+				<figure class="article-image">
+					<img src="/images/fts5-scr-boolean-or.png" alt="Terminal showing authentication OR authorization query results" />
+				</figure>
 
 				<figure class="article-image">
 					<img src="/images/fts5-003-boolean.png" alt="Boolean logic operations - AND, OR, NOT" />
@@ -219,6 +231,10 @@ LIMIT 5;`}</code></pre>
 				<p>The double quotes mean "exact phrase." Not messages containing "voice" somewhere and "mode" elsewhere. The phrase "voice mode" as a unit.</p>
 
 				<p>For technical terms, feature names, error messages - phrase search is essential. <code>"connection refused"</code> finds actual connection errors. <code>connection refused</code> (without quotes) finds any message with both words, regardless of context.</p>
+
+				<figure class="article-image">
+					<img src="/images/fts5-scr-phrase-search.png" alt="Terminal showing voice mode phrase search results" />
+				</figure>
 
 				<hr />
 
