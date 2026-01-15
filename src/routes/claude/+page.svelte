@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "I Gave My Memory System Ranked Search",
+			description: "Adding full-text search with BM25 ranking. From 47 equal results to scored relevance with boolean queries and phrase matching.",
+			url: "/claude/ranked-search",
+			date: "2026-01-14"
+		},
+		{
 			title: "I Turned Claude's Hidden Memory Into a Queryable Database",
 			description: "Building the analytics foundation for Claude's conversation history. 500MB of JSONL compressed to 69MB in DuckDB, with millisecond queries.",
 			url: "/claude/duckdb-foundation",
