@@ -62,7 +62,7 @@
 				<p>But in debugging why it wasn't working, I stumbled onto something better.</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-memory-001.png" alt="Hidden treasure chest revealing glowing data" />
+					<img src="/images/claude/hidden-memory/001.png" alt="Hidden treasure chest revealing glowing data" />
 				</figure>
 
 				<hr />
@@ -140,7 +140,7 @@
 				<p>Impressive stats. But here's what I realized:</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-memory-003.png" alt="Comparison between partial and complete conversation capture" />
+					<img src="/images/claude/hidden-memory/003.png" alt="Comparison between partial and complete conversation capture" />
 				</figure>
 
 				<div class="comparison-table">
@@ -268,7 +268,7 @@ Use grep for keyword searches, jq for parsing specific sessions.`}</code></pre>
 				<p>It's not perfect retrieval—at least not yet. Claude has to search and parse like any other file operation. But it works, and I have <a href="#building-next">plans to make it better</a>. The memory exists and is accessible.</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-memory-005.png" alt="Data flow showing conversation history being accessed" />
+					<img src="/images/claude/hidden-memory/005.png" alt="Data flow showing conversation history being accessed" />
 				</figure>
 
 				<hr />
@@ -316,7 +316,7 @@ Use grep for keyword searches, jq for parsing specific sessions.`}</code></pre>
 				<p>Sometimes the feature you want already exists.</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-memory-006.png" alt="Analytics dashboard visualization" />
+					<img src="/images/claude/hidden-memory/006.png" alt="Analytics dashboard visualization" />
 				</figure>
 
 				<hr />
@@ -334,7 +334,7 @@ Use grep for keyword searches, jq for parsing specific sessions.`}</code></pre>
 				<p>A Svelte-based interface for exploring my conversation history, using <a href="https://layercake.graphics/" target="_blank" rel="noopener noreferrer">Layercake</a> for visualizations. Activity heatmaps, project breakdowns, topic patterns over time. The kind of insights that are invisible when everything lives in flat files. Think: "Which projects get most of my attention?" or "When am I most productive with Claude?"</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-memory-007.png" alt="Memory to insights flow: raw JSONL files to DuckDB with semantic search to visual dashboard" />
+					<img src="/images/claude/hidden-memory/007.png" alt="Memory to insights flow: raw JSONL files to DuckDB with semantic search to visual dashboard" />
 				</figure>
 
 				<p>The data is a goldmine. Now I'm building the tools to actually mine it.</p>

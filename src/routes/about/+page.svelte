@@ -51,7 +51,7 @@
 			</div>
 
 			<div class="profile-image" in:fly={{ y: 30, duration: 600, delay: 600 }}>
-				<img src="/images/profpic.png" alt="Faan Rossouw" />
+				<img src="/images/site/profpic.png" alt="Faan Rossouw" />
 			</div>
 
 			<div class="quote-block glass-card" in:fly={{ y: 30, duration: 600, delay: 800 }}>

@@ -61,7 +61,7 @@
 				<p>That's about to change.</p>
 
 				<figure class="article-image">
-					<img src="/images/IMG-001-HERO.png" alt="AI Memory System visualization" />
+					<img src="/images/claude/memory-system/hero.png" alt="AI Memory System visualization" />
 				</figure>
 
 				<hr />
@@ -87,7 +87,7 @@
 				<p>Here's the architecture:</p>
 
 				<figure class="article-image">
-					<img src="/images/IMG-002-ARCHITECTURE.png" alt="8-phase memory system architecture" />
+					<img src="/images/claude/memory-system/architecture.png" alt="8-phase memory system architecture" />
 				</figure>
 
 				<p>Eight phases. Each one adds a capability layer. Each one is independently useful.</p>
@@ -99,7 +99,7 @@
 				<h3>Phase 1: Analytics Foundation (DuckDB)</h3>
 
 				<figure class="article-image">
-					<img src="/images/IMG-003-PHASE1-DUCKDB.png" alt="DuckDB analytics foundation" />
+					<img src="/images/claude/memory-system/phase1-duckdb.png" alt="DuckDB analytics foundation" />
 				</figure>
 
 				<p>Parse the JSONL files into a proper database. Enable SQL queries.</p>
@@ -120,7 +120,7 @@
 				<h3>Phase 2: Keyword Search (FTS5)</h3>
 
 				<figure class="article-image">
-					<img src="/images/IMG-004-PHASE2-FTS5.png" alt="Full-text search with ranking" />
+					<img src="/images/claude/memory-system/phase2-fts5.png" alt="Full-text search with ranking" />
 				</figure>
 
 				<p>Add full-text search with BM25 ranking.</p>
@@ -141,7 +141,7 @@
 				<h3>Phase 3: Local LLM Setup (Mac Mini + Llama)</h3>
 
 				<figure class="article-image">
-					<img src="/images/IMG-005-PHASE3-LOCALLLM.png" alt="Local LLM setup" />
+					<img src="/images/claude/memory-system/phase3-localllm.png" alt="Local LLM setup" />
 				</figure>
 
 				<p>Set up Ollama on my Mac Mini for two things:</p>
@@ -164,7 +164,7 @@
 				<h3>Phase 4: Semantic Search (LanceDB)</h3>
 
 				<figure class="article-image">
-					<img src="/images/IMG-006-PHASE4-LANCEDB.png" alt="Semantic vector search" />
+					<img src="/images/claude/memory-system/phase4-lancedb.png" alt="Semantic vector search" />
 				</figure>
 
 				<p>This is where it gets interesting.</p>
@@ -185,7 +185,7 @@
 				<h3>Phase 5: Agent Access (MCP Server)</h3>
 
 				<figure class="article-image">
-					<img src="/images/IMG-007-PHASE5-MCP.png" alt="MCP server for agent access" />
+					<img src="/images/claude/memory-system/phase5-mcp.png" alt="MCP server for agent access" />
 				</figure>
 
 				<p>Build an MCP server so Claude can query its own history.</p>
@@ -206,7 +206,7 @@
 				<h3>Phase 6: Visual Dashboard (SvelteKit + Layercake)</h3>
 
 				<figure class="article-image">
-					<img src="/images/IMG-008-PHASE6-DASHBOARD.png" alt="Visual dashboard" />
+					<img src="/images/claude/memory-system/phase6-dashboard.png" alt="Visual dashboard" />
 				</figure>
 
 				<p>A proper UI for exploring the data.</p>
@@ -226,7 +226,7 @@
 				<h3>Phase 7: Voice Control</h3>
 
 				<figure class="article-image">
-					<img src="/images/IMG-009-PHASE7-VOICE.png" alt="Voice control interface" />
+					<img src="/images/claude/memory-system/phase7-voice.png" alt="Voice control interface" />
 				</figure>
 
 				<p>Ask questions out loud. Get visual answers.</p>
@@ -242,7 +242,7 @@
 				<h3>Phase 8: Go Backend</h3>
 
 				<figure class="article-image">
-					<img src="/images/IMG-010-PHASE8-GOBACKEND.png" alt="Go backend infrastructure" />
+					<img src="/images/claude/memory-system/phase8-gobackend.png" alt="Go backend infrastructure" />
 				</figure>
 
 				<p>At my current usage rate, I'm generating over a gigabyte of conversation history per month.</p>

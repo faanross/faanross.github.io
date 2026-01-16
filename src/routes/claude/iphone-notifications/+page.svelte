@@ -68,7 +68,7 @@
 				<p>This is the full story - every wrong turn, every "why isn't this working" moment, and the final setup that actually works. If you're going to build this yourself, you deserve the real version. Not the sanitized tutorial. The messy one.</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-article-001.png" alt="Claude Code and human collaboration" />
+					<img src="/images/claude/iphone-notifications/001.png" alt="Claude Code and human collaboration" />
 				</figure>
 
 				<hr />
@@ -84,7 +84,7 @@
 				<p>That's the human bottleneck. And it breaks the promise of async AI assistance.</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-article-003.png" alt="Sync vs Async - wizard stuck at desk versus wizard relaxed on couch" />
+					<img src="/images/claude/iphone-notifications/003.png" alt="Sync vs Async - wizard stuck at desk versus wizard relaxed on couch" />
 				</figure>
 
 				<p>The obvious fix is notifications. Get a ping on your phone when Claude needs you.</p>
@@ -137,7 +137,7 @@
 				<p>Here's the data flow:</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-article-002.png" alt="Data flow diagram showing Claude to Telegram to phone" />
+					<img src="/images/claude/iphone-notifications/002.png" alt="Data flow diagram showing Claude to Telegram to phone" />
 				</figure>
 
 				<p>Claude gets blocked → Claude hook fires → Sends Telegram message with token → Your phone buzzes</p>
@@ -364,7 +364,7 @@ INJECTION_MODE=tmux</code></pre>
 				<p>Claude continues. I don't stand up.</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-article-screenshot.jpeg" alt="Telegram notification on phone" />
+					<img src="/images/claude/iphone-notifications/screenshot.jpeg" alt="Telegram notification on phone" />
 				</figure>
 
 				<p>One more thing: the last thing I want is to walk away from my desk and find out the tunnel or webhook server was down the whole time. So I added an auto-check to my project's <code>CLAUDE.md</code> file. Every time Claude starts a session, it checks if ngrok and the webhook server are running. If either is down, it offers to start them. And since free ngrok gives you a new URL every restart, it automatically re-registers the webhook with Telegram using the new URL.</p>
@@ -398,7 +398,7 @@ INJECTION_MODE=tmux</code></pre>
 				<p>My mantra has become simple: reduce friction to the minimum required to fully manifest an idea. Every unnecessary step between thought and creation is a leak in the system.</p>
 
 				<figure class="article-image">
-					<img src="/images/claude-article-004.png" alt="Optimized flow versus congestion - wizard channeling streamlined workflow" />
+					<img src="/images/claude/iphone-notifications/004.png" alt="Optimized flow versus congestion - wizard channeling streamlined workflow" />
 				</figure>
 
 				<p>That's what this was about. The human bottleneck - me sitting at my desk waiting for Claude to need me - was friction. Now it's gone. I can start a task, walk away, and stay in the loop from my phone.</p>

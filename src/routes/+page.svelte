@@ -16,7 +16,7 @@
 <section class="hero">
 	{#if mounted}
 		<div class="hero-content" in:fade={{ duration: 800 }}>
-			<img src="/images/potential.png" alt="Faan Rossouw" class="hero-avatar" in:fly={{ y: 20, duration: 600, delay: 100 }} />
+			<img src="/images/site/potential.png" alt="Faan Rossouw" class="hero-avatar" in:fly={{ y: 20, duration: 600, delay: 100 }} />
 			<span class="tagline" in:fly={{ y: 20, duration: 600, delay: 200 }}><em>Panta rhei</em> (πάντα ῥεῖ)</span>
 			<h1 in:fly={{ y: 20, duration: 600, delay: 400 }}>
 				Research. Build. Teach.

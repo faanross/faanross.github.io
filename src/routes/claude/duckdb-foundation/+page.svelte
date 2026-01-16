@@ -66,7 +66,7 @@
 				<p>That's when the frustration crystallized into something specific: having the data isn't enough. I needed to make it <em>accessible</em>.</p>
 
 				<figure class="article-image">
-					<img src="/images/duckdb-001-hero.png" alt="Converting raw conversation data into a queryable database" />
+					<img src="/images/claude/duckdb-foundation/hero.png" alt="Converting raw conversation data into a queryable database" />
 				</figure>
 
 				<hr />
@@ -149,7 +149,7 @@
 				<p>I spent longer than I'd like to admit handling all the edge cases. Recursive flattening. Type checking. Null handling. The kind of grunt work that doesn't feel like progress until suddenly everything works.</p>
 
 				<figure class="article-image">
-					<img src="/images/duckdb-002-dataflow.png" alt="Data flow from JSONL files through parsing to DuckDB" />
+					<img src="/images/claude/duckdb-foundation/dataflow.png" alt="Data flow from JSONL files through parsing to DuckDB" />
 				</figure>
 
 				<hr />
@@ -220,7 +220,7 @@ LIMIT 5;`}</code></pre>
 				<p>The raw JSONL files weighed around 500MB. The DuckDB database? 69MB. Seven-to-one compression, and queries that would have taken grep minutes now returned in milliseconds.</p>
 
 				<figure class="article-image">
-					<img src="/images/duckdb-003-compression.png" alt="Compression comparison: 500MB JSONL to 69MB DuckDB" />
+					<img src="/images/claude/duckdb-foundation/compression.png" alt="Compression comparison: 500MB JSONL to 69MB DuckDB" />
 				</figure>
 
 				<hr />
@@ -236,7 +236,7 @@ FROM messages WHERE type = 'user'
 GROUP BY hour ORDER BY messages DESC LIMIT 3;`}</code></pre>
 
 				<figure class="article-image">
-					<img src="/images/duckdb-scr-hours.png" alt="Terminal showing peak productivity hours query results" />
+					<img src="/images/claude/duckdb-foundation/scr-hours.png" alt="Terminal showing peak productivity hours query results" />
 				</figure>
 
 				<p>9pm and 11am. Two distinct windows - late morning and late evening. Not what I would have guessed.</p>
@@ -250,7 +250,7 @@ GROUP BY tool_name
 ORDER BY uses DESC LIMIT 5;`}</code></pre>
 
 				<figure class="article-image">
-					<img src="/images/duckdb-scr-tools.png" alt="Terminal showing tool usage query results" />
+					<img src="/images/claude/duckdb-foundation/scr-tools.png" alt="Terminal showing tool usage query results" />
 				</figure>
 
 				<div class="data-table">
@@ -280,7 +280,7 @@ ORDER BY uses DESC LIMIT 5;`}</code></pre>
 FROM sessions ORDER BY message_count DESC LIMIT 3;`}</code></pre>
 
 				<figure class="article-image">
-					<img src="/images/duckdb-scr-projects.png" alt="Terminal showing deep work sessions query results" />
+					<img src="/images/claude/duckdb-foundation/scr-projects.png" alt="Terminal showing deep work sessions query results" />
 				</figure>
 
 				<p>One session hit nearly 10,000 messages. A single conversation, sustained over hours. I remember that day (working on my C2 framework Numinon) - deep in a complex build, completely in flow. The data captured the trace of what that felt like.</p>
