@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "I Set Up a Local LLM and Learned to Design Around Its Limitations",
+			description: "Setting up Ollama on Mac Mini for local embeddings and SQL generation. Why a 3B model with validation beats 8B alone.",
+			url: "/claude/local-llm",
+			date: "2026-01-16"
+		},
+		{
 			title: "I Gave My Memory System Ranked Search",
 			description: "Adding full-text search with BM25 ranking. From 47 equal results to scored relevance with boolean queries and phrase matching.",
 			url: "/claude/ranked-search",
@@ -55,7 +61,7 @@
 				Documenting my journey optimizing how I work with AI
 			</p>
 			<div class="hero-image" in:fade={{ duration: 600, delay: 500 }}>
-				<img src="/images/claude-hero.png" alt="Claude Code and Obsidian integration" />
+				<img src="/images/claude/hero.png" alt="Claude Code and Obsidian integration" />
 			</div>
 		{/if}
 	</div>
