@@ -11,7 +11,7 @@
 
 <svelte:head>
 	<title>About | Faan Rossouw</title>
-	<meta name="description" content="Building the future of threat hunting at the intersection of agentic AI and security. Researcher at Active Countermeasures, instructor at AntiSyphon." />
+	<meta name="description" content="Security researcher at the intersection of threat hunting and agentic AI. Building aionsec.ai to help practitioners navigate the AI shift." />
 </svelte:head>
 
 <section class="about-hero">
@@ -32,8 +32,8 @@
 					impossible before: continuous hunting at machine speed with human intuition.
 				</p>
 				<p>
-					I'm currently building <a href="https://aionsec.ai" target="_blank" rel="noopener noreferrer">aionsec.ai</a>,
-					an open-source platform to make elite threat hunting accessible to everyone.
+					I'm currently building <a href="https://aionsec.ai" target="_blank" rel="noopener noreferrer">aionsec.ai</a>
+					to help security practitioners navigate the AI shift.
 				</p>
 				<p>
 					I also do research at <a href="https://www.activecountermeasures.com" target="_blank" rel="noopener noreferrer">Active Countermeasures</a>
