@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "Your CLAUDE.md Is Probably Too Big",
+			description: "How I reduced my CLAUDE.md from 570 lines to 187 - same functionality, 67% less context usage.",
+			url: "/claude/claude-md-optimization",
+			date: "2026-01-17"
+		},
+		{
 			title: "I Set Up a Local LLM and Learned to Design Around Its Limitations",
 			description: "Setting up Ollama on Mac Mini for local embeddings and SQL generation. Why a 3B model with validation beats 8B alone.",
 			url: "/claude/local-llm",
