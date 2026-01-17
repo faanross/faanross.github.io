@@ -28,8 +28,7 @@
 			<div class="content-block" in:fly={{ y: 30, duration: 600, delay: 400 }}>
 				<p>
 					I'm a security researcher focused on the intersection of <strong>threat hunting</strong>
-					and <strong>agentic AI</strong>. The convergence of these fields is unlocking what was
-					impossible before: continuous hunting at machine speed with human intuition.
+					and <strong>agentic AI</strong>.
 				</p>
 				<p>
 					I'm currently building <a href="https://aionsec.ai" target="_blank" rel="noopener noreferrer">aionsec.ai</a>
