@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 
 	let mounted = $state(false);
 
@@ -35,6 +36,8 @@
 	<title>Building a Memory System for Claude Code | Faan Rossouw</title>
 	<meta name="description" content="An 8-phase project to make Claude Code conversation history searchable, queryable, and useful for optimization." />
 </svelte:head>
+
+<ScrollProgress />
 
 <article class="article">
 	<div class="container">

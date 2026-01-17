@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 
 	let mounted = $state(false);
 
@@ -36,6 +37,8 @@
 	<title>Your CLAUDE.md Is Probably Too Big | Faan Rossouw</title>
 	<meta name="description" content="How I reduced my CLAUDE.md from 570 lines to 187 - same functionality, 67% less context usage." />
 </svelte:head>
+
+<ScrollProgress />
 
 <article class="article">
 	<div class="container">

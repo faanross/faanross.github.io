@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 
 	let mounted = $state(false);
 
@@ -36,6 +37,8 @@
 	<title>I Turned Claude's Hidden Memory Into a Queryable Database | Faan Rossouw</title>
 	<meta name="description" content="Building the analytics foundation for Claude's conversation history. 500MB of JSONL compressed to 69MB in DuckDB, with millisecond queries." />
 </svelte:head>
+
+<ScrollProgress />
 
 <article class="article">
 	<div class="container">

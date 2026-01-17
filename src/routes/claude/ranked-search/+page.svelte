@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 
 	let mounted = $state(false);
 
@@ -36,6 +37,8 @@
 	<title>I Gave My Memory System Ranked Search | Faan Rossouw</title>
 	<meta name="description" content="Adding full-text search with BM25 ranking to Claude's conversation history. From 47 equal results to scored relevance." />
 </svelte:head>
+
+<ScrollProgress />
 
 <article class="article">
 	<div class="container">

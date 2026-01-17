@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 
 	let mounted = $state(false);
 
@@ -35,6 +36,8 @@
 	<title>I Set Up a Local LLM and Learned to Design Around Its Limitations | Faan Rossouw</title>
 	<meta name="description" content="Setting up Ollama on Mac Mini for local embeddings and SQL generation. Why a 3B model with validation beats 8B alone." />
 </svelte:head>
+
+<ScrollProgress />
 
 <article class="article">
 	<div class="container">

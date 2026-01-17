@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 
 	let mounted = $state(false);
 
@@ -36,6 +37,8 @@
 	<title>I Taught Claude to Text Me When It Needs Help | Faan Rossouw</title>
 	<meta name="description" content="Setting up async notifications and bidirectional control for Claude Code via Telegram." />
 </svelte:head>
+
+<ScrollProgress />
 
 <article class="article">
 	<div class="container">
