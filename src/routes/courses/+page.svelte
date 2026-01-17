@@ -30,7 +30,6 @@
 		{
 			title: "Let's Build a Reflective Loader + C2 Channel in Golang",
 			badge: "AntiSyphon",
-			badgeColor: "yellow",
 			description: "Build a reflective DLL loader integrated with a C2 channel. Learn PE parsing, memory mapping, relocations, and how to execute payloads without touching disk.",
 			date: "January 23, 2026",
 			duration: "4 hours",
