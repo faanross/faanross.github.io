@@ -551,3 +551,11 @@ Our system can now:
 - ✓ Handle both "job available" and "no job" scenarios
 
 The agent now receives commands, but doesn't execute them yet. In the next lessons, we'll implement the agent-side command execution infrastructure!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/queue">← Previous: Lesson 5 - Queue Commands</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/execute-task">Next: Lesson 7 - Agent Command Execution Framework →</a></div>
+</div>

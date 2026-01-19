@@ -233,3 +233,11 @@ In this lesson, we've implemented command validation:
 - Tested both valid and invalid commands
 
 In the next lesson, we'll add command-specific argument validation to ensure that each command receives the correct parameters.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/endpoint">← Previous: Lesson 1 - Implement Command Endpoint</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/validate-argument">Next: Lesson 3 - Validate Command Arguments →</a></div>
+</div>

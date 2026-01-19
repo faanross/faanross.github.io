@@ -317,3 +317,11 @@ In this lesson, we've implemented command queuing:
 
 
 In the next lesson, we'll implement the server-side logic to dequeue commands and send them to the agent when it checks in.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/process-arguments">← Previous: Lesson 4 - Process Command Arguments</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/dequeue">Next: Lesson 6 - Dequeue and Send Commands →</a></div>
+</div>

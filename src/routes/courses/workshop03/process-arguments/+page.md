@@ -444,3 +444,11 @@ We've now done everything on the server side after receiving a command:
 - ✓ Processed arguments into agent-ready format
 
 In the next lesson, we'll implement the command queue so validated and processed commands can wait for the agent to check in.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/validate-argument">← Previous: Lesson 3 - Validate Command Arguments</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/queue">Next: Lesson 5 - Queue Commands →</a></div>
+</div>

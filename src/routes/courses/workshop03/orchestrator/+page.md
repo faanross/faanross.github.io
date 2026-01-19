@@ -383,3 +383,11 @@ In this lesson, we've implemented our shellcode orchestrator:
 
 
 In the next two lessons, we'll create the actual shellcode doer interface and stub implementations for different operating systems!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/execute-task">← Previous: Lesson 7 - Agent Command Execution Framework</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/interface">Next: Lesson 9 - Shellcode Doer Interface →</a></div>
+</div>

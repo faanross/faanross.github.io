@@ -172,3 +172,11 @@ Run these commands to make sure your **development** environment is ready:
 If you completed the development setup (Go + IDE + repo), you're ready for the workshop. The test machine is a nice-to-have for the final step, but don't let it hold you back from attending.
 
 See you at the workshop!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/starting">Next: Review of Starting Code →</a></div>
+</div>

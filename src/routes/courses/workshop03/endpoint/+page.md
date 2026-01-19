@@ -270,3 +270,11 @@ In this lesson, we've laid the groundwork for our command infrastructure:
 - Tested the entire flow with `curl`
 
 In the next lesson, we'll add command validation to ensure that only valid commands are accepted by our server.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/overview">← Previous: Conceptual Overview</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/validate-command">Next: Lesson 2 - Validate Command Exists →</a></div>
+</div>

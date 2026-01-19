@@ -548,3 +548,11 @@ Perfect! The agent is checking in, and the server is responding.
 ## Conclusion
 
 This is a good "vanilla" foundation for us to build upon, most of the basic housekeeping is done and we can now implement most of the features listed above under "What's Missing". Let's review exactly what we'll implement in the next lesson.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/setup">← Previous: Setup Guide</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/overview">Next: Conceptual Overview →</a></div>
+</div>

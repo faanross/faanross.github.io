@@ -576,3 +576,11 @@ Our agent can now:
 - ✓ Marshal and send results back to server
 
 In the next lesson, we'll implement the actual shellcode orchestrator that will prepare arguments and call the OS-specific doer!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/dequeue">← Previous: Lesson 6 - Dequeue and Send Commands</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/orchestrator">Next: Lesson 8 - Implement Shellcode Orchestrator →</a></div>
+</div>

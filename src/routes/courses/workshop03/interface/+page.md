@@ -439,3 +439,11 @@ Our system now has:
 - ✓ Ready for Windows implementation
 
 In the next lesson, we'll implement the actual Windows shellcode loader - the complex part where we'll parse PE files, allocate memory, process relocations, resolve imports, and execute the shellcode!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/orchestrator">← Previous: Lesson 8 - Implement Shellcode Orchestrator</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/doer">Next: Lesson 10 - Implement Windows Shellcode Doer →</a></div>
+</div>

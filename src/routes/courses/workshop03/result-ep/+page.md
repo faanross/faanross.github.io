@@ -437,3 +437,11 @@ Our system is now complete:
 - ✓ **Receive and display results** ← NEW!
 
 We have a fully functional command and control system! In the next lesson, we'll wrap up with a comprehensive review and discuss potential extensions.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/doer">← Previous: Lesson 10 - Implement Windows Shellcode Doer</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/conclusion">Next: Conclusion and Review →</a></div>
+</div>

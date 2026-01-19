@@ -398,3 +398,11 @@ In this lesson, we've implemented command argument validation:
 - Tested with both invalid and valid arguments
 
 In the next lesson, we'll add command argument **processing** - transforming arguments into the format needed by the agent.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/validate-command">← Previous: Lesson 2 - Validate Command Exists</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/process-arguments">Next: Lesson 4 - Process Command Arguments →</a></div>
+</div>

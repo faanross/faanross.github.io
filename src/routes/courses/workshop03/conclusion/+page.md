@@ -496,3 +496,11 @@ Thank you for working through this workshop! Building a C2 framework is challeng
 Keep learning, keep building, and use this knowledge responsibly.
 
 LIVE LONG AND PROSPER.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/result-ep">← Previous: Lesson 11 - Server Receives Results</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div></div>
+</div>

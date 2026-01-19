@@ -269,3 +269,11 @@ Operator → Command → Server → Queue → Agent → Execute → Result → S
 ## Conclusion
 
 That's it for our preview. I don't want to get lost in conceptual previews, so now the time is perfect for us to jump in and build on our starting code.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/starting">← Previous: Review of Starting Code</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/endpoint">Next: Lesson 1 - Implement Command Endpoint →</a></div>
+</div>

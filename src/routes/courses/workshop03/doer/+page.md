@@ -826,3 +826,11 @@ Our system can now:
 - ✓ Send results back to server (though server doesn't display them yet)
 
 In the next lesson, we'll create the server-side results handler so we can see the execution results displayed on the server!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/workshop03/interface">← Previous: Lesson 9 - Shellcode Doer Interface</a></div>
+<div><a href="/courses/workshop03">↑ Table of Contents</a></div>
+<div><a href="/courses/workshop03/result-ep">Next: Lesson 11 - Server Receives Results →</a></div>
+</div>
