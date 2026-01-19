@@ -36,7 +36,33 @@ workshop3_dev/
 └── go.mod                   # Go module dependencies
 ```
 
+**Note:** The `certs/` directory shown above won't be included in the repo. You'll need to generate the self-signed certificates yourself using the instructions below.
 
+### Generating Self-Signed Certificates
+
+Create the `certs/` directory first, then generate the certificate and key:
+
+**macOS / Linux:**
+
+```bash
+mkdir -p certs
+openssl req -x509 -newkey rsa:4096 -keyout certs/server.key -out certs/server.crt -days 365 -nodes -subj "/CN=localhost"
+```
+
+**Windows (PowerShell):**
+
+```powershell
+mkdir certs
+openssl req -x509 -newkey rsa:4096 -keyout certs/server.key -out certs/server.crt -days 365 -nodes -subj "/CN=localhost"
+```
+
+If you don't have OpenSSL on Windows, you can install it via [chocolatey](https://chocolatey.org/):
+
+```powershell
+choco install openssl
+```
+
+Or download it from [slproweb.com/products/Win32OpenSSL.html](https://slproweb.com/products/Win32OpenSSL.html).
 
 ## Server Components
 
