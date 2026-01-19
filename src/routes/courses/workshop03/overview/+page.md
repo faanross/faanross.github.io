@@ -215,7 +215,7 @@ OS-specific implementation
 
 
 
-### Lessons 10-11: Windows Shellcode Loader
+### Lesson 10: Windows Shellcode Loader
 
 **What we add:**
 
@@ -240,7 +240,7 @@ Raw DLL bytes
 ```
 
 
-### After Lesson 12: Results Display
+### Lesson 11: Results Display
 
 **What we add:**
 
