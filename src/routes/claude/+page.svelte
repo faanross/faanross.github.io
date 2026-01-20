@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "I Built Search That Finds What I Mean, Not What I Type",
+			description: "Adding semantic search to my Claude memory system with LanceDB. Find conversations by concept, not just keywords.",
+			url: "/claude/semantic-search",
+			date: "2026-01-19"
+		},
+		{
 			title: "Your CLAUDE.md Is Probably Too Big",
 			description: "How I reduced my CLAUDE.md from 570 lines to 187 - same functionality, 67% less context usage.",
 			url: "/claude/claude-md-optimization",
