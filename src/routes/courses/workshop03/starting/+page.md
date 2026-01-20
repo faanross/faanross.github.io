@@ -5,8 +5,6 @@ title: "Review of Starting Code"
 
 The starting code can be found [here](https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_00_starting_code).
 
-# Lesson A: Review of Starting Code
-
 ## Overview
 
 Before we begin building our command and control system, let's review the code we're starting with. Understanding this foundation will help you see how we'll extend and enhance it throughout the workshop.

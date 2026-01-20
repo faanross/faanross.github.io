@@ -3,8 +3,6 @@ layout: workshop03
 title: "Lesson 1: Implement Command Endpoint"
 ---
 
-# Lesson 1: Implement Command Endpoint
-
 ## Solutions
 
 The starting solution can be found here.
