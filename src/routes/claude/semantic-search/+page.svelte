@@ -502,6 +502,36 @@ integration tests, and manual tests...</code></pre>
 		margin-top: 2rem;
 	}
 
+	:global(.code-block) {
+		position: relative;
+		margin-bottom: 1.5rem;
+	}
+
+	:global(.code-block pre) {
+		margin-bottom: 0;
+	}
+
+	:global(.copy-btn) {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		padding: 4px 10px;
+		font-size: 12px;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.7);
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 4px;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	:global(.copy-btn:hover) {
+		color: var(--color-text);
+		background: rgba(255, 255, 255, 0.15);
+		border-color: rgba(255, 255, 255, 0.3);
+	}
+
 	@media (max-width: 640px) {
 		h1 {
 			font-size: 1.75rem;
