@@ -215,14 +215,14 @@ integration tests, and manual tests...</code></pre>
 
 				<p>Each row in LanceDB stores everything needed for a useful search result:</p>
 
-				<pre><code class="language-python">{
+				<pre><code class="language-python">{'{'}
     "id": "message-uuid",
     "session_id": "session-uuid",
     "content": "original text (truncated for display)",
     "vector": [0.31, 0.42, ...],  # 768 dimensions
     "timestamp": "2026-01-13T...",
     "project_name": "vault"
-}</code></pre>
+{'}'}</code></pre>
 
 				<p>I store the content and metadata alongside the vector so search results are immediately useful. No second query to DuckDB needed. When you search, you get back everything you need to understand what the result is and where it came from.</p>
 
