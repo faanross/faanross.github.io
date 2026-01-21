@@ -35,6 +35,15 @@
 			duration: "4 hours",
 			githubUrl: "https://github.com/faanross/workshop_antisyphon_23012026",
 			courseUrl: "/courses/workshop03"
+		},
+		{
+			title: "Let's Build a Reflective Loader in Golang",
+			badge: "Faan Ross",
+			badgeColor: "yellow",
+			description: "Comprehensive self-paced course covering DLLs, PE format, reflective loading, relocations, imports, and obfuscation techniques. Build a reflective DLL loader from the ground up.",
+			date: "Self-Paced",
+			duration: "8 Modules",
+			courseUrl: "/courses/reflective"
 		}
 	];
 </script>
