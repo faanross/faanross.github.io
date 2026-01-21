@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Call Exported Function (Lab 5.2)"
 ---
 
@@ -286,3 +286,11 @@ In these first 5 modules we have now successfully constructed a functional refle
 So while functional, our current loader operates on a locally stored, unobfuscated DLL. So in our following modules we'll learn both how to properly obfuscate, and then transfer our payload across a network to ensure it stays in-memory on the target machine. We'll then bring everything together in a final project in Module 09.
 
 I hope you are as pumped as I am!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module05-lab01">← Previous: Call DllMain (Lab 5.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module06-theory01">Next: Introduction to Obfuscation (Theory 6.1) →</a></div>
+</div>

@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Create a Basic DLL (Lab 1.1)"
 ---
 
@@ -202,3 +202,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
     return TRUE; // Successful. Returning FALSE during DLL_PROCESS_ATTACH would cause loading to fail.
 }
 ```
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module01-theory03">← Previous: Standard DLL Loading in Windows (Theory 1.3)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module01-lab02">Next: Create a Basic Loader in Go (Lab 1.2) →</a></div>
+</div>

@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Mapping the DLL Image (Theory 3.3)"
 ---
 ## Overview
@@ -63,3 +63,11 @@ Before we proceed with our lab, I thought it would be useful to distill what we'
 14. Calculate the destination address for copying (`AllocatedBase + VirtualAddress`).
 15. Copy `SizeOfRawData` bytes from the calculated source address to the calculated destination address.
 16. Continue the loop for the next section until all sections are processed.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module03-theory02">← Previous: Memory Allocation (Theory 3.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module03-lab01">Next: Manual DLL Mapping in Go (Lab 3.1) →</a></div>
+</div>

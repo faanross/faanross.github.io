@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Rolling XOR (Theory 7.1)"
 ---
 
@@ -180,3 +180,11 @@ Where `rollingKeyByte` is calculated identically using the `baseKey` and the pos
 While rolling XOR is still not cryptographically secure in a formal sense (it's a form of stream cipher susceptible to certain attacks if parts of the plaintext/key are known), it provides a significant improvement over simple XOR for basic obfuscation purposes by defeating simple frequency analysis. The next challenge, however, remains key management – how do the encrypting and decrypting sides securely agree on the `baseKey`?
 
 In the next section we'll explore more secure key derivation concepts to generate a shared secret and derive the final XOR key.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module06-lab02">← Previous: Obfuscated Loading (Lab 6.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module07-theory02">Next: Key Derivation Logic (Theory 7.2) →</a></div>
+</div>

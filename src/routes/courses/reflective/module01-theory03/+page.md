@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Standard DLL Loading in Windows (Theory 1.3)"
 ---
 
@@ -74,3 +74,11 @@ These drawbacks are the primary motivation for developing alternative loading te
 In the next chapter, we will begin exploring the PE file format in more detail, laying the groundwork necessary to understand how one might manually replicate the actions of the Windows loader, which is the core idea behind reflective loading.
 
 For now however let's do two practical labs to better understand what we've been discussing thus far.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module01-theory02">← Previous: Introduction to Shellcode (Theory 1.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module01-lab01">Next: Create a Basic DLL (Lab 1.1) →</a></div>
+</div>

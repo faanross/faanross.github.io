@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Key Derivation Logic (Theory 7.2)"
 ---
 
@@ -88,3 +88,11 @@ Even if an analyst intercepts one payload and its corresponding key derivation p
 While the specific key derivation function shared here is still relatively simple and not cryptographically strong by modern standards (a proper key derivation function like PBKDF2 or HKDF would be more secure), it demonstrates the principle of combining a shared, embedded secret with dynamic data to generate session-specific keys, significantly improving upon hardcoded or static keys for obfuscation.
 
 Let's now implement our newfound knowledge of rolling XOR and this key derivation logic in our reflective loader.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module07-theory01">← Previous: Rolling XOR (Theory 7.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module07-lab01">Next: Implementing Rolling XOR (Lab 7.1) →</a></div>
+</div>

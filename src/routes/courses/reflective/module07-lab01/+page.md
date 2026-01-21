@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Implementing Rolling XOR (Lab 7.1)"
 ---
 
@@ -134,3 +134,11 @@ Everything is pretty self-explanatory in our output, bit we can confirm of cours
 
 ## Conclusion
 So that was not terribly exciting, but at least we confirmed that rolling XOR offered the same self-inverting ability as simple XOR did. Now let's go and integrate this and key derivation logic into our reflective loader.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module07-theory02">← Previous: Key Derivation Logic (Theory 7.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module07-lab02">Next: Implementing Key Derivation (Lab 7.2) →</a></div>
+</div>

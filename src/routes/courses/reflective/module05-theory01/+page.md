@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "The DLL Entry Point (Theory 5.1)"
 ---
 ## Overview
@@ -78,3 +78,11 @@ Calling `DllMain` correctly allows the reflectively loaded DLL to perform any ne
 ## Conclusion
 
 Once `DllMain` (if present) has been called successfully, the DLL is fully initialized and ready. The next step is to locate and call a specific _exported_ function within the DLL to trigger its main payload or functionality, in our case this is of course `LaunchCalc()`.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module04-lab02">← Previous: IAT Processing (Lab 4.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module05-theory02">Next: Exported Functions (Theory 5.2) →</a></div>
+</div>

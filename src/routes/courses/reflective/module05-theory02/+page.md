@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Exported Functions (Theory 5.2)"
 ---
 
@@ -79,3 +79,11 @@ Calling the target exported function typically triggers the main intended action
 ## Conclusion
 
 This concludes the core theory behind finding and calling exported functions. We can now implement these last two crucial steps into our application, which will give us a complete and functional reflective loader.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module05-theory01">← Previous: The DLL Entry Point (Theory 5.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module05-lab01">Next: Call DllMain (Lab 5.1) →</a></div>
+</div>

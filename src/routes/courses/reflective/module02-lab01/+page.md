@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "PE Header Inspection with PE-Bear (Lab 2.1)"
 ---
 
@@ -93,3 +93,11 @@ To get going: download PE-Bear, start the application, and open the dll we creat
 - But of course, it does not stop here - now that you know how to navigate the tool and what's important, it's now up to you to get into the habit of analyzing PE files of interest to really solidify this knowledge.
 - This is table-stakes: having a clear, deep, and intuitive grasp of these values, what they mean, and why thy are important is foundational knowledge for malware development, there's no shortcut here.
 - Finally note that [PEExplorerV2](https://github.com/zodiacon/AllTools), a tool by Pavel Yosifovich, is also excellent and will give you the same information as PE-Bear, so if for any reason you'd like to explore an alternative feel free to do so.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module02-theory02">← Previous: Addressing in PE Files (Theory 2.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module02-lab02">Next: PE Header Parser in Go (Lab 2.2) →</a></div>
+</div>

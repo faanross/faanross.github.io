@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Memory Allocation (Theory 3.2)"
 ---
 ## Overview
@@ -56,3 +56,11 @@ The `VirtualAlloc` function (or its Go wrapper `windows.VirtualAlloc`) takes sev
 ## Conclusion
 - The key takeaway here is that successfully calling `VirtualAlloc` provides the loader with a base address in the process's virtual memory space, pointing to a newly allocated block of the correct size (`SizeOfImage`) with appropriate initial permissions (`PAGE_EXECUTE_READWRITE`).
 - This newly allocated block is the foundation upon which our reflective loader will build the DLL's structure by copying the headers and sections we learned about in Module 2.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module03-theory01">← Previous: Intro to Reflective DLL Loading (Theory 3.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module03-theory03">Next: Mapping the DLL Image (Theory 3.3) →</a></div>
+</div>

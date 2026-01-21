@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Intentional Base Relocation (Lab 4.1)"
 ---
 
@@ -577,3 +577,11 @@ Given that we've intentionally occupied ImageBase, the output is exactly what we
 
 ## Conclusion
 Most excellent. Let's move on ahead and get cracking with our IAT resolution.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module04-theory02">← Previous: IAT Resolution (Theory 4.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module04-lab02">Next: IAT Processing (Lab 4.2) →</a></div>
+</div>

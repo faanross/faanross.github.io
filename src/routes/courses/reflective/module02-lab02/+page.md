@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "PE Header Parser in Go (Lab 2.2)"
 ---
 
@@ -469,3 +469,11 @@ Executing the Go PE parser script (`peparser.exe`) on `calc_dll.dll` successfull
 Our application successfully interprets the fundamental structures of a PE file,
 extracting the information necessary to understand how to map the file into memory. This logic will be essential
 to our reflective loader, which we'll now begin discussing in Module 03.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module02-lab01">← Previous: PE Header Inspection with PE-Bear (Lab 2.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module03-theory01">Next: Intro to Reflective DLL Loading (Theory 3.1) →</a></div>
+</div>

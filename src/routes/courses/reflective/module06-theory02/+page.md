@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Simple XOR (Theory 6.2)"
 ---
 
@@ -69,3 +69,11 @@ Because of these two weaknesses the entire security of XOR relies on the secrecy
 
 ## Conclusion
 We'll now move ahead with a basic, and therefor pretty vulnerable, implementation of XOR in the following two labs. This does however set us up nicely to employ more sophisticated techniques to mitigate these weaknesses by adding more robust layers on top of the basic XOR concept in Module 7.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module06-theory01">← Previous: Introduction to Obfuscation (Theory 6.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module06-lab01">Next: XOR Functions in Go (Lab 6.1) →</a></div>
+</div>

@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Call DllMain (Lab 5.1)"
 ---
 
@@ -198,3 +198,11 @@ We can see are result was a success - the loader correctly found and invoked the
 ## Conclusion
 We'll now proceed with the final lab for this first part of our curriculum: finding and calling the exported function within our mapped DLL.
 This should bring everything together for a successful execution. Hell Yes!!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module05-theory02">← Previous: Exported Functions (Theory 5.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module05-lab02">Next: Call Exported Function (Lab 5.2) →</a></div>
+</div>

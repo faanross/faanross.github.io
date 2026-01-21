@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Implementing Key Derivation (Lab 7.2)"
 ---
 
@@ -311,3 +311,11 @@ Our results are as expected, the output has not changed from before, but of cour
 
 ## Conclusion
 In the penultimate module next we'll integrate a client + server model. This will finally allow us to inject and execute our DLL directly into memory, without it ever needing to touch disk.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module07-lab01">← Previous: Implementing Rolling XOR (Lab 7.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module08-theory01">Next: Client + Server Communication (Theory 8.1) →</a></div>
+</div>

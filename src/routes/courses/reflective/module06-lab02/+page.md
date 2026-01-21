@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Obfuscated Loading (Lab 6.2)"
 ---
 
@@ -202,3 +202,11 @@ The fact that we could once again get `calc.exe` to launch confirms that our loa
 ## Conclusion
 
 This lab completes our integration of a  a simple obfuscation layer. In our next module we're going to layer in a number of methods to improve the security of our decryption layer - let's go!
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module06-lab01">← Previous: XOR Functions in Go (Lab 6.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module07-theory01">Next: Rolling XOR (Theory 7.1) →</a></div>
+</div>

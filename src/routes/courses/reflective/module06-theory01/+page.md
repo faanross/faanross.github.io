@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Introduction to Obfuscation (Theory 6.1)"
 ---
 
@@ -145,3 +145,11 @@ For this course we'll explore a relatively simple technique, XOR-based transform
 So it provides a good springboard for us to then explore other interesting and creative ways to obtain non-trivial levels of protection, and we know it is still quite effective sine many malware simples are still using variations of it to this day.
 
 In the next section, we'll delve into the details of simple XOR obfuscation, how it works, and its limitations.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module05-lab02">← Previous: Call Exported Function (Lab 5.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module06-theory02">Next: Simple XOR (Theory 6.2) →</a></div>
+</div>

@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "IAT Resolution (Theory 4.2)"
 ---
 ## Why is IAT Resolution Necessary?
@@ -76,3 +76,11 @@ After this process completes, the Import Address Table within our reflectively m
 With both internal address references (relocations) and external dependencies (imports) resolved, the DLL is almost ready for execution. The final steps involve potentially calling its entry point (`DllMain`) and then invoking any specific exported function we need.
 
 We'll cover this in Module 5, for now let's dip into some practical labs where we'll ensure our reflective loader is capable of relocations, and constructing an IAT table.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module04-theory01">← Previous: Base Relocations (Theory 4.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module04-lab01">Next: Intentional Base Relocation (Lab 4.1) →</a></div>
+</div>

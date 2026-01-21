@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Addressing in PE Files (Theory 2.2)"
 ---
 
@@ -78,3 +78,11 @@ This process is repeated for every section, effectively copying the relevant par
 With this foundational understanding of PE structure and addressing mechanisms, let's now do a lab in which we can explore these
 values directly using an application called PEBear (Lab 2.1), after which we'll create our very own PE Header parser (Lab 2.2),
 which is going to be a core part of the logic of our final reflective loader.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module02-theory01">← Previous: PE File Structure Essentials (Theory 2.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module02-lab01">Next: PE Header Inspection with PE-Bear (Lab 2.1) →</a></div>
+</div>

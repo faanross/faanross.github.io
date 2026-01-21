@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "PE File Structure Essentials (Theory 2.1)"
 ---
 
@@ -101,3 +101,11 @@ Now that we have a basic overview of the structure of a PE file we need to delve
 ## Reference - **Corkami**
 While understanding the PE format through its defined structures and fields is essential, the complexity can sometimes be overwhelming.
 For an excellent visual perspective, I highly recommend exploring the work of Ange Albertini, available through the [Corkami project](https://github.com/corkami/pics/blob/master/binary/pe101/README.md).
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module01-lab02">← Previous: Create a Basic Loader in Go (Lab 1.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module02-theory02">Next: Addressing in PE Files (Theory 2.2) →</a></div>
+</div>

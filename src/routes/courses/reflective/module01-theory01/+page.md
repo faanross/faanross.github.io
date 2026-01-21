@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Introduction to DLLs (Theory 1.1)"
 ---
 
@@ -43,3 +43,11 @@ Though this is really an extremely brief introduction to DLLs, it's enough to ge
 
 ## References
 [CppCon 2017: James McNellis "Everything You Ever Wanted to Know about DLLs"](https://www.youtube.com/watch?v=JPQWQfDhICA)
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module01-theory02">Next: Introduction to Shellcode (Theory 1.2) →</a></div>
+</div>

@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Introduction to Shellcode (Theory 1.2)"
 ---
 
@@ -97,3 +97,11 @@ In this variation, the DLL acts more like a passive data file once loaded.
 [Shellcode Execution with GoLang - Joff Thyer](https://www.youtube.com/watch?v=gH9qyHVc9-M)
 
 [pwn.college - Shellcode Injection - Introduction](https://www.youtube.com/watch?v=715v_-YnpT8)
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module01-theory01">← Previous: Introduction to DLLs (Theory 1.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module01-theory03">Next: Standard DLL Loading in Windows (Theory 1.3) →</a></div>
+</div>

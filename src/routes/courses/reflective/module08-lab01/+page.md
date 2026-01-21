@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Client + Server Logic (Lab 8.1)"
 ---
 ## Goal
@@ -476,3 +476,11 @@ We have now implemented basic client-server communication over HTTPS. The agent 
 
 ## Conclusion
 Our next, final lab of the course, we'll replace our placeholder clientID value in the agent with the ability to derive it from the hostname + HD serial number, as we outlined in the theoretical section.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module08-theory03">← Previous: Environmental Keying + Client ID (Theory 8.3)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module08-lab02">Next: Implement Client ID and Key Derivation (Lab 8.2) →</a></div>
+</div>

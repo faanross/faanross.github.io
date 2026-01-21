@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Environmental Keying + Client ID (Theory 8.3)"
 ---
 ## Client ID Generation
@@ -33,3 +33,11 @@ Our `getEnvironmentalID` function will combine these two pieces of information t
 This approach generates an ID based on relatively stable system characteristics (volume serial number is less likely to change than hostname, but both are fairly constant for a given machine). It provides a reasonable balance between reproducibility and uniqueness for the purpose of deriving distinct session keys per client in the context of our project's design. Other environmental factors could also be incorporated (e.g., MAC address, CPU information, specific registry keys, username) to create more complex or robust fingerprints if needed - again I encourage you to explore alternatives.
 
 This concludes the theory sections for Module 8, we're now ready to integrate client/server communication,  key derivation, and obfuscation to our existing reflective loading logic.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module08-theory02">← Previous: Communication Protocol Design (Theory 8.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module08-lab01">Next: Client + Server Logic (Lab 8.1) →</a></div>
+</div>

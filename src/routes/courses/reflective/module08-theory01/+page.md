@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Client + Server Communication (Theory 8.1)"
 ---
 ## Overview
@@ -46,3 +46,11 @@ When transmitting potentially sensitive data like a DLL payload (even an obfusca
 
 
 In the next section we'll look at our specific communication protocol, including how the client identifies itself and how the server responds.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module07-lab02">← Previous: Implementing Key Derivation (Lab 7.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module08-theory02">Next: Communication Protocol Design (Theory 8.2) →</a></div>
+</div>

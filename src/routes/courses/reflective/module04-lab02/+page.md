@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "IAT Processing (Lab 4.2)"
 ---
 
@@ -663,3 +663,11 @@ GOOS=windows GOARCH=amd64 go build
 Let's take stock: We've parsed the important PE information, we've loaded our DLL into memory, base internal addresses will be relocated if need be, and external dependencies are resolved (IAT patched).
 
 The only remaining step is to actually _execute_ code within it.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module04-lab01">← Previous: Intentional Base Relocation (Lab 4.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module05-theory01">Next: The DLL Entry Point (Theory 5.1) →</a></div>
+</div>

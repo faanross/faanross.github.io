@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Manual DLL Mapping in Go (Lab 3.1)"
 ---
 
@@ -498,3 +498,11 @@ In the next module we're going to cover two important steps:
 - Next, it's more often than not the case that our DLL in turn uses function from other system DLLs, meaning we need to resolve those imports.
 
 Let's roll on.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module03-theory03">← Previous: Mapping the DLL Image (Theory 3.3)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module04-theory01">Next: Base Relocations (Theory 4.1) →</a></div>
+</div>

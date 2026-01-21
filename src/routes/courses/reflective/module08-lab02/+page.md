@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Implement Client ID and Key Derivation (Lab 8.2)"
 ---
 ## Goal
@@ -125,3 +125,11 @@ And of course the fact that we are able to once again launch `calc.exe` confirms
 
 ## Conclusion
 That wraps it up it for this course, in the next section we'll review what we've done, as well as discuss the weakness of our current implementation, which we will then improve on in our next course :D
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module08-lab01">← Previous: Client + Server Logic (Lab 8.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div></div>
+</div>

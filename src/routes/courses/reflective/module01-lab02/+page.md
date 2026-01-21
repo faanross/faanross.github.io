@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Create a Basic Loader in Go (Lab 1.2)"
 ---
 
@@ -220,3 +220,11 @@ func main() {
 	fmt.Println("[+] Loader finished.")
 }
 ```
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module01-lab01">← Previous: Create a Basic DLL (Lab 1.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module02-theory01">Next: PE File Structure Essentials (Theory 2.1) →</a></div>
+</div>

@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Intro to Reflective DLL Loading (Theory 3.1)"
 ---
 ## Overview
@@ -48,3 +48,11 @@ Why go through the considerable effort of reimplementing parts of the Windows lo
 5. **Facilitates Obfuscation/Encryption:** By loading from memory, it becomes straightforward to store or transmit the DLL in an encrypted or obfuscated state. The loader code can then decrypt or deobfuscate the DLL image in memory immediately before parsing and mapping it, ensuring the payload's true form is only revealed transiently within the process's memory space.
 
 These advantages make reflective loading a popular technique for scenarios where stealth and evasion are paramount. However, implementing it correctly requires a thorough understanding of the PE file format and the steps the Windows loader takes, which we will explore in the subsequent sections.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module02-lab02">← Previous: PE Header Parser in Go (Lab 2.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module03-theory02">Next: Memory Allocation (Theory 3.2) →</a></div>
+</div>

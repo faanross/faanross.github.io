@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "XOR Functions in Go (Lab 6.1)"
 ---
 
@@ -140,3 +140,11 @@ We can clearly see that our `xorEncryptDecrypt` function successfully transforme
 
 ## Conclusion
 Let's now integrate this concept into our shellcode-containing DLL.
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module06-theory02">← Previous: Simple XOR (Theory 6.2)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module06-lab02">Next: Obfuscated Loading (Lab 6.2) →</a></div>
+</div>

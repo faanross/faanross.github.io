@@ -1,5 +1,5 @@
 ---
-layout: workshop
+layout: reflective
 title: "Base Relocations (Theory 4.1)"
 ---
 ## Overview
@@ -77,3 +77,11 @@ After successfully processing all relocation blocks, any hardcoded absolute addr
 
 ## Conclusion
 With relocations handled, the DLL's internal addressing should now be self-consistent. However, it likely still depends on functions from _other_ DLLs, so our next critical step is resolving these external dependencies by processing the Import Address Table (IAT).
+
+---
+
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/reflective/module03-lab01">← Previous: Manual DLL Mapping in Go (Lab 3.1)</a></div>
+<div><a href="/courses/reflective">↑ Table of Contents</a></div>
+<div><a href="/courses/reflective/module04-theory02">Next: IAT Resolution (Theory 4.2) →</a></div>
+</div>
