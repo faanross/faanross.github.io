@@ -18,7 +18,8 @@ const config = {
 			layout: {
 				workshop: join(__dirname, 'src/lib/layouts/workshop.svelte'),
 				workshop02: join(__dirname, 'src/lib/layouts/workshop02.svelte'),
-				workshop03: join(__dirname, 'src/lib/layouts/workshop03.svelte')
+				workshop03: join(__dirname, 'src/lib/layouts/workshop03.svelte'),
+				reflective: join(__dirname, 'src/lib/layouts/reflective.svelte')
 			}
 		})
 	],
