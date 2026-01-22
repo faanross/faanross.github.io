@@ -5,9 +5,9 @@ title: "Lesson 5: Queue Commands"
 
 ## Solutions
 
-The starting solution can be found here.
+The starting solution can be found [here](https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_05_Begin).
 
-The final solution can be found here.
+The final solution can be found [here](https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_05_End).
 
 ## Overview
 

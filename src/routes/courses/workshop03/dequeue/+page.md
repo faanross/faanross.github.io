@@ -5,9 +5,9 @@ title: "Lesson 6: Dequeue and Send Commands to Agent"
 
 ## Solutions
 
-The starting solution can be found here.
+The starting solution can be found [here](https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_06_Begin).
 
-The final solution can be found here.
+The final solution can be found [here](https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_06_End).
 
 
 ## Overview

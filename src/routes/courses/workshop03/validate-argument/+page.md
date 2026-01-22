@@ -5,9 +5,9 @@ title: "Lesson 3: Validate Command Arguments"
 
 ## Solutions
 
-The starting solution can be found here.
+The starting solution can be found [here](https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_03_Begin).
 
-The final solution can be found here.
+The final solution can be found [here](https://github.com/faanross/workshop_antisyphon_23012026/tree/main/lesson_03_End).
 
 ## Overview
 
