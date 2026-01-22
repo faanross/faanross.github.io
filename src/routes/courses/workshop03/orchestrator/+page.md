@@ -354,7 +354,7 @@ Return the complete result to `ExecuteTask`, which will marshal and send it to t
 
 ## Register the Command
 
-Now we can uncomment the registration line. Update `registerCommands()` in `agent/commands.go`:
+Now we can uncomment the registration line. Update `registerCommands()` in `agent/agent.go`:
 
 ```go
 func registerCommands(agent *Agent) {
