@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "Quality Over Volume",
+			description: "The trap of mistaking volume for value when working with Claude Code. Why incremental validation beats autopilot generation.",
+			url: "/claude/quality-over-volume",
+			date: "2026-01-23"
+		},
+		{
 			title: "I Built Search That Finds What I Mean, Not What I Type",
 			description: "Adding semantic search to my Claude memory system with LanceDB. Find conversations by concept, not just keywords.",
 			url: "/claude/semantic-search",
