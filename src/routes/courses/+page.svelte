@@ -44,6 +44,15 @@
 			date: "Self-Paced",
 			duration: "8 Modules",
 			courseUrl: "/courses/reflective"
+		},
+		{
+			title: "Building a C2 Framework in Go",
+			badge: "AntiSyphon",
+			description: "Comprehensive 16-hour course building a complete C2 framework from scratch. Multi-protocol communication (HTTPS/DNS), dynamic protocol switching, encrypted channels, command infrastructure, and shellcode execution.",
+			date: "January 2026",
+			duration: "16 hours",
+			githubUrl: "https://github.com/faanross/antisyphon_course_c2_golang",
+			courseUrl: "/courses/course01"
 		}
 	];
 </script>

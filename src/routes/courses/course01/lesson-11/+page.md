@@ -1,0 +1,417 @@
+---
+layout: course01
+title: "Lesson 11: HMAC Authentication"
+---
+
+
+## Solutions
+
+- **Starting Code:** [lesson_11_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_11_begin)
+- **Completed Code:** [lesson_11_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_11_end)
+
+## Overview
+
+Right now, any application that knows our server address can connect to it. There's no way for the server to verify that the agent checking in is actually *our* agent versus a security researcher probing the infrastructure, a curious sysadmin, or even a competing red team.
+
+This is a fundamental problem in C2 architecture: **how do you establish trust between the server and agent?**
+
+In this lesson, we'll implement HMAC-based authentication - a simple but effective way to verify that requests come from agents that possess a shared secret. This is the same principle used by AWS request signing, API authentication systems, and countless other security-critical applications.
+
+## What is Authentication?
+
+Before we write code, let's understand what we're trying to achieve.
+
+**Authentication** answers the question: *"Are you who you claim to be?"*
+
+There are several ways to prove identity:
+
+1. **Something you know** - Passwords, PINs, shared secrets
+2. **Something you have** - Certificates, hardware tokens
+3. **Something you are** - Biometrics
+
+For our C2, we'll use a **shared secret** - a key that only the server and legitimate agents know. If an agent can prove it knows this secret (without revealing it), we can trust it's legitimate.
+
+## What is HMAC?
+
+**HMAC (Hash-based Message Authentication Code)** is a cryptographic construction that combines:
+
+- A cryptographic hash function (like SHA-256)
+- A secret key
+
+The result is a **signature** that proves two things:
+
+1. **The sender knows the secret key** - Only someone with the key could produce this signature
+2. **The message hasn't been tampered with** - Any change to the message invalidates the signature
+
+**How it works conceptually:**
+
+```
+HMAC = Hash(key + message)  // Simplified - actual construction is more complex
+```
+
+If you have the same key and the same message, you get the same HMAC. If either differs, you get a completely different result.
+
+**Why HMAC instead of just hashing?**
+
+Plain hashes are vulnerable to **length extension attacks**. HMAC's construction prevents this. Always use HMAC for authentication, never raw hashes.
+
+## What We'll Create
+
+- Shared secret configuration for both server and agent
+- HMAC signature generation on the agent side
+- HMAC signature verification on the server side
+- Replay protection using timestamps
+
+## The Authentication Flow
+
+```
+1. Agent prepares request
+   |-- Gets current timestamp
+   |-- Computes: HMAC-SHA256(secret, timestamp + body)
+   |-- Adds headers: X-Auth-Timestamp, X-Auth-Signature
+
+2. Agent sends request
+   |-- Headers contain timestamp and signature
+   |-- Body contains normal data
+
+3. Server receives request
+   |-- Extracts timestamp from header
+   |-- Checks timestamp is within tolerance (e.g., +/-5 minutes)
+   |-- Recomputes HMAC with same inputs
+   |-- Compares signatures
+
+4. Server decision
+   |-- Signatures match + timestamp valid -> Process request
+   |-- Anything else -> Reject with 401 Unauthorized
+```
+
+## Part 1: Configure the Shared Secret
+
+Both the server and agent need access to the same secret. In production, you'd inject this at build time or via secure configuration. For now, we'll define it as a constant.
+
+### Agent Configuration
+
+In `internals/config/config.go`, add:
+
+```go
+const SharedSecret = "your-super-secret-key-change-in-production"
+```
+
+### Server Configuration
+
+Add the same constant to your server's config:
+
+```go
+const SharedSecret = "your-super-secret-key-change-in-production"
+```
+
+**Important:** In production, use a cryptographically random key (at least 32 bytes), and never commit it to source control. Consider embedding it at compile time using build flags.
+
+## Part 2: Agent-Side Signature Generation
+
+Create a new file `internals/agent/auth.go`:
+
+```go
+package agent
+
+import (
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"net/http"
+	"strconv"
+	"time"
+
+	"your-module/internals/config"
+)
+
+// SignRequest adds HMAC authentication headers to an HTTP request
+func SignRequest(req *http.Request, body []byte) {
+	// Get current timestamp
+	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
+
+	// Create the message to sign: timestamp + body
+	message := timestamp + string(body)
+
+	// Compute HMAC-SHA256
+	signature := computeHMAC(message, config.SharedSecret)
+
+	// Add headers
+	req.Header.Set("X-Auth-Timestamp", timestamp)
+	req.Header.Set("X-Auth-Signature", signature)
+}
+
+// computeHMAC calculates HMAC-SHA256 and returns hex-encoded result
+func computeHMAC(message, secret string) string {
+	mac := hmac.New(sha256.New, []byte(secret))
+	mac.Write([]byte(message))
+	return hex.EncodeToString(mac.Sum(nil))
+}
+```
+
+**Understanding the code:**
+
+1. **Timestamp** - We use Unix timestamp (seconds since 1970) as a string
+2. **Message** - Concatenate timestamp + body to sign both
+3. **HMAC computation** - `hmac.New` creates an HMAC instance, `Write` feeds data, `Sum(nil)` produces the final hash
+4. **Hex encoding** - Convert binary hash to hexadecimal string for HTTP headers
+
+### Update the Agent's Send Method
+
+Modify the `Send()` method in `agent/agent_https.go` to sign requests:
+
+```go
+func (agent *HTTPSAgent) Send(ctx context.Context) ([]byte, error) {
+	url := fmt.Sprintf("https://%s/", agent.serverAddr)
+
+	// For GET requests, body is empty
+	var body []byte = nil
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+
+	// Sign the request
+	SignRequest(req, body)
+
+	resp, err := agent.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("sending request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	// Check for authentication failure
+	if resp.StatusCode == http.StatusUnauthorized {
+		return nil, fmt.Errorf("authentication failed - check shared secret")
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("server returned status %d: %s", resp.StatusCode, body)
+	}
+
+	return io.ReadAll(resp.Body)
+}
+```
+
+## Part 3: Server-Side Signature Verification
+
+Create a new file `internals/server/auth.go`:
+
+```go
+package server
+
+import (
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"io"
+	"net/http"
+	"strconv"
+	"time"
+
+	"your-module/internals/config"
+)
+
+const (
+	// TimestampTolerance is how far off the timestamp can be (in seconds)
+	TimestampTolerance = 300 // 5 minutes
+)
+
+// VerifyRequest checks HMAC signature and timestamp validity
+func VerifyRequest(r *http.Request) error {
+	// Extract headers
+	timestamp := r.Header.Get("X-Auth-Timestamp")
+	signature := r.Header.Get("X-Auth-Signature")
+
+	if timestamp == "" || signature == "" {
+		return fmt.Errorf("missing authentication headers")
+	}
+
+	// Verify timestamp is within tolerance
+	if err := verifyTimestamp(timestamp); err != nil {
+		return err
+	}
+
+	// Read the body
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		return fmt.Errorf("reading body: %w", err)
+	}
+
+	// Recompute the signature
+	message := timestamp + string(body)
+	expectedSignature := computeHMAC(message, config.SharedSecret)
+
+	// Constant-time comparison to prevent timing attacks
+	if !hmac.Equal([]byte(signature), []byte(expectedSignature)) {
+		return fmt.Errorf("invalid signature")
+	}
+
+	return nil
+}
+
+// verifyTimestamp checks if timestamp is within acceptable range
+func verifyTimestamp(timestampStr string) error {
+	timestamp, err := strconv.ParseInt(timestampStr, 10, 64)
+	if err != nil {
+		return fmt.Errorf("invalid timestamp format")
+	}
+
+	now := time.Now().Unix()
+	diff := now - timestamp
+
+	// Check if timestamp is too old or too far in the future
+	if diff < -TimestampTolerance || diff > TimestampTolerance {
+		return fmt.Errorf("timestamp outside acceptable range")
+	}
+
+	return nil
+}
+
+// computeHMAC calculates HMAC-SHA256 (same as agent)
+func computeHMAC(message, secret string) string {
+	mac := hmac.New(sha256.New, []byte(secret))
+	mac.Write([]byte(message))
+	return hex.EncodeToString(mac.Sum(nil))
+}
+```
+
+**Critical security detail:**
+
+```go
+if !hmac.Equal([]byte(signature), []byte(expectedSignature)) {
+```
+
+We use `hmac.Equal` instead of `==` for comparison. This performs **constant-time comparison** to prevent timing attacks. With `==`, an attacker could measure response times to guess the signature byte-by-byte.
+
+### Why Timestamp Tolerance?
+
+The timestamp serves two purposes:
+
+1. **Replay protection** - An attacker who captures a valid request can't replay it hours later
+2. **Clock skew handling** - Systems may have slightly different clocks; 5 minutes tolerance handles this
+
+## Part 4: Add Middleware to Server
+
+Create authentication middleware in `internals/server/middleware.go`:
+
+```go
+package server
+
+import (
+	"log"
+	"net/http"
+)
+
+// AuthMiddleware wraps a handler with HMAC authentication
+func AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := VerifyRequest(r); err != nil {
+			log.Printf("Authentication failed: %v", err)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+```
+
+### Apply Middleware to Routes
+
+Update your server's `Start()` method:
+
+```go
+func (s *HTTPSServer) Start() error {
+	r := chi.NewRouter()
+
+	// Apply authentication middleware to agent routes
+	r.With(AuthMiddleware).Get("/", RootHandler)
+	r.With(AuthMiddleware).Post("/results", ResultHandler)
+
+	// Control API doesn't need agent auth (operator uses different auth)
+	// r.Post("/command", commandHandler)
+
+	s.server = &http.Server{
+		Addr:    s.addr,
+		Handler: r,
+	}
+
+	return s.server.ListenAndServeTLS(s.tlsCert, s.tlsKey)
+}
+```
+
+## Test
+
+**Start the server:**
+
+```bash
+go run ./cmd/server
+```
+
+**Start the agent:**
+
+```bash
+go run ./cmd/agent
+```
+
+**Expected agent output (successful auth):**
+
+```bash
+2025/11/10 14:29:05 Starting Agent Run Loop
+2025/11/10 14:29:05 Response from server: {"job": false}
+```
+
+**Test with wrong secret (modify agent's secret temporarily):**
+
+```bash
+2025/11/10 14:29:05 Error sending request: authentication failed - check shared secret
+```
+
+**Expected server output (failed auth):**
+
+```bash
+2025/11/10 14:29:05 Authentication failed: invalid signature
+```
+
+## Security Considerations
+
+### What This Protects Against
+
+- **Random probing** - Scanners won't have valid signatures
+- **Request forgery** - Can't create valid requests without the secret
+- **Replay attacks** - Old signatures expire due to timestamp checks
+- **Tampering** - Modified requests have invalid signatures
+
+### What This Doesn't Protect Against
+
+- **Secret compromise** - If the secret leaks, all bets are off
+- **Traffic analysis** - Attacker can still see that communication is happening
+- **Endpoint discovery** - URLs are not hidden
+
+### Production Improvements
+
+1. **Unique secrets per agent** - Different key for each deployed agent
+2. **Key rotation** - Periodically change secrets
+3. **Nonce tracking** - Prevent replay within the timestamp window
+4. **Rate limiting** - Slow down brute force attempts
+
+## Conclusion
+
+In this lesson, we implemented HMAC-based authentication:
+
+- Created a shared secret configuration
+- Implemented signature generation on the agent
+- Implemented signature verification on the server
+- Added timestamp-based replay protection
+- Applied authentication as middleware
+
+Our C2 now verifies that connecting agents possess the shared secret. In the next lesson, we'll add encryption to protect the actual content of our communications.
+
+---
+
+[Previous: Lesson 10 - Protocol Transition](/courses/course01/lesson-10) | [Next: Lesson 12 - Payload Encryption](/courses/course01/lesson-12) | [Course Home](/courses/course01)
