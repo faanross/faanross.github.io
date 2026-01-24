@@ -18,7 +18,7 @@ We've made it! Our final lesson in the protocol switching section.
 - State tracking variables (`currentProtocol`, `currentAgent`) in RunLoop
 - `detectTransition()` helper function to check for transition signals
 - Protocol switching logic that creates new agents dynamically
-- Complete bidirectional transition capability (HTTPS <-> DNS)
+- Complete bidirectional transition capability (HTTPS ↔ DNS)
 
 To tie everything together, we need our agent to take a specific action based on the response it receives. Right now it does not do anything, whatever value is received, it will just print it to terminal and continue with business as usual.
 
