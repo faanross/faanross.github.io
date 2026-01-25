@@ -6,8 +6,8 @@ title: "Lesson 3: HTTPS Agent"
 
 ## Solutions
 
-- **Starting Code:** [lesson_03_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_03_begin)
-- **Completed Code:** [lesson_03_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_03_end)
+- **Starting Code:** [lesson_03_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_03_begin)
+- **Completed Code:** [lesson_03_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_03_end)
 
 ## Overview
 

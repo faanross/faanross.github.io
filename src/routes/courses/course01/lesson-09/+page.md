@@ -6,8 +6,8 @@ title: "Lesson 9: Dual Server Startup"
 
 ## Solutions
 
-- **Starting Code:** [lesson_09_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_09_begin)
-- **Completed Code:** [lesson_09_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_09_end)
+- **Starting Code:** [lesson_09_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_09_begin)
+- **Completed Code:** [lesson_09_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_09_end)
 
 ## Overview
 

@@ -6,8 +6,8 @@ title: "Lesson 8: API Switch Client"
 
 ## Solutions
 
-- **Starting Code:** [lesson_08_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_08_begin)
-- **Completed Code:** [lesson_08_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_08_end)
+- **Starting Code:** [lesson_08_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_08_begin)
+- **Completed Code:** [lesson_08_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_08_end)
 
 ## Overview
 

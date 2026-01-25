@@ -6,8 +6,8 @@ title: "Lesson 12: Payload Encryption"
 
 ## Solutions
 
-- **Starting Code:** [lesson_12_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_12_begin)
-- **Completed Code:** [lesson_12_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_12_end)
+- **Starting Code:** [lesson_12_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_12_begin)
+- **Completed Code:** [lesson_12_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_12_end)
 
 ## Overview
 

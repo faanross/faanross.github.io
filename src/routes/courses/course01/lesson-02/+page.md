@@ -6,8 +6,8 @@ title: "Lesson 2: HTTPS Server"
 
 ## Solutions
 
-- **Starting Code:** [lesson_02_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_02_begin)
-- **Completed Code:** [lesson_02_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_02_end)
+- **Starting Code:** [lesson_02_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_02_begin)
+- **Completed Code:** [lesson_02_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_02_end)
 
 ## Overview
 

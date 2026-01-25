@@ -6,8 +6,8 @@ title: "Lesson 23: Persistence"
 
 ## Solutions
 
-- **Starting Code:** [lesson_23_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_23_begin)
-- **Completed Code:** [lesson_23_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_23_end)
+- **Starting Code:** [lesson_23_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_23_begin)
+- **Completed Code:** [lesson_23_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_23_end)
 
 ## Overview
 

@@ -6,8 +6,8 @@ title: "Lesson 13: Command Endpoint"
 
 ## Solutions
 
-- **Starting Code:** [lesson_13_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_13_begin)
-- **Completed Code:** [lesson_13_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_13_end)
+- **Starting Code:** [lesson_13_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_13_begin)
+- **Completed Code:** [lesson_13_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_13_end)
 
 ## Overview
 

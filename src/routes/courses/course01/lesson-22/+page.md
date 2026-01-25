@@ -6,8 +6,8 @@ title: "Lesson 22: Download Command"
 
 ## Solutions
 
-- **Starting Code:** [lesson_22_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_22_begin)
-- **Completed Code:** [lesson_22_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_22_end)
+- **Starting Code:** [lesson_22_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_22_begin)
+- **Completed Code:** [lesson_22_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_22_end)
 
 ## Overview
 

@@ -6,8 +6,8 @@ title: "Lesson 4: Run Loop with HTTPS"
 
 ## Solutions
 
-- **Starting Code:** [lesson_04_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_04_begin)
-- **Completed Code:** [lesson_04_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_04_end)
+- **Starting Code:** [lesson_04_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_04_begin)
+- **Completed Code:** [lesson_04_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_04_end)
 
 ## Overview
 

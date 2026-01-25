@@ -6,8 +6,8 @@ title: "Lesson 17: Agent Execution Framework"
 
 ## Solutions
 
-- **Starting Code:** [lesson_17_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_17_begin)
-- **Completed Code:** [lesson_17_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_17_end)
+- **Starting Code:** [lesson_17_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_17_begin)
+- **Completed Code:** [lesson_17_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_17_end)
 
 ## Overview
 

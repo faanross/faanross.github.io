@@ -6,8 +6,8 @@ title: "Lesson 16: Dequeue and Send Commands"
 
 ## Solutions
 
-- **Starting Code:** [lesson_16_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_16_begin)
-- **Completed Code:** [lesson_16_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_16_end)
+- **Starting Code:** [lesson_16_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_16_begin)
+- **Completed Code:** [lesson_16_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_16_end)
 
 ## Overview
 

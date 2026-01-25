@@ -6,8 +6,8 @@ title: "Lesson 5: DNS Server"
 
 ## Solutions
 
-- **Starting Code:** [lesson_05_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_05_begin)
-- **Completed Code:** [lesson_05_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_05_end)
+- **Starting Code:** [lesson_05_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_05_begin)
+- **Completed Code:** [lesson_05_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_05_end)
 
 ## Overview
 

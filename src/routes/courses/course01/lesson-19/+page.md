@@ -6,8 +6,8 @@ title: "Lesson 19: Shellcode Doer Interface"
 
 ## Solutions
 
-- **Starting Code:** [lesson_19_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_19_begin)
-- **Completed Code:** [lesson_19_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_19_end)
+- **Starting Code:** [lesson_19_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_19_begin)
+- **Completed Code:** [lesson_19_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_19_end)
 
 ## Overview
 

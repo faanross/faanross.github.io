@@ -6,8 +6,8 @@ title: "Lesson 1: Interfaces and Factory Functions"
 
 ## Solutions
 
-- **Starting Code:** [lesson_01_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_01_begin)
-- **Completed Code:** [lesson_01_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_01_end)
+- **Starting Code:** [lesson_01_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_01_begin)
+- **Completed Code:** [lesson_01_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_01_end)
 
 ## Overview
 

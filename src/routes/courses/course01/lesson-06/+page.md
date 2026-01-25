@@ -6,8 +6,8 @@ title: "Lesson 6: DNS Agent"
 
 ## Solutions
 
-- **Starting Code:** [lesson_06_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_06_begin)
-- **Completed Code:** [lesson_06_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_06_end)
+- **Starting Code:** [lesson_06_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_06_begin)
+- **Completed Code:** [lesson_06_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_06_end)
 
 ## Overview
 

@@ -6,8 +6,8 @@ title: "Lesson 20: Windows Shellcode Doer"
 
 ## Solutions
 
-- **Starting Code:** [lesson_20_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_20_begin)
-- **Completed Code:** [lesson_20_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_20_end)
+- **Starting Code:** [lesson_20_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_20_begin)
+- **Completed Code:** [lesson_20_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_20_end)
 
 ## Overview
 

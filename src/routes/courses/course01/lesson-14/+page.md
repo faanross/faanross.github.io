@@ -6,8 +6,8 @@ title: "Lesson 14: Command Validation and Processing"
 
 ## Solutions
 
-- **Starting Code:** [lesson_14_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_14_begin)
-- **Completed Code:** [lesson_14_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_14_end)
+- **Starting Code:** [lesson_14_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_14_begin)
+- **Completed Code:** [lesson_14_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_14_end)
 
 ## Overview
 

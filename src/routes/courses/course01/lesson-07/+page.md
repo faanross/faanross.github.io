@@ -6,8 +6,8 @@ title: "Lesson 7: Add DNS to Run Loop"
 
 ## Solutions
 
-- **Starting Code:** [lesson_07_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_07_begin)
-- **Completed Code:** [lesson_07_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_07_end)
+- **Starting Code:** [lesson_07_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_07_begin)
+- **Completed Code:** [lesson_07_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_07_end)
 
 ## Overview
 

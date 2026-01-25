@@ -6,8 +6,8 @@ title: "Lesson 21: Server Receives Results"
 
 ## Solutions
 
-- **Starting Code:** [lesson_21_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_21_begin)
-- **Completed Code:** [lesson_21_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_21_end)
+- **Starting Code:** [lesson_21_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_21_begin)
+- **Completed Code:** [lesson_21_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_21_end)
 
 ## Overview
 

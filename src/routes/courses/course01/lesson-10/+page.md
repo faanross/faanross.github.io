@@ -6,8 +6,8 @@ title: "Lesson 10: Protocol Transition"
 
 ## Solutions
 
-- **Starting Code:** [lesson_10_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_10_begin)
-- **Completed Code:** [lesson_10_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_10_end)
+- **Starting Code:** [lesson_10_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_10_begin)
+- **Completed Code:** [lesson_10_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_10_end)
 
 ## Overview
 

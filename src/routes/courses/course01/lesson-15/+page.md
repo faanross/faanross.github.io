@@ -6,8 +6,8 @@ title: "Lesson 15: Queue Commands"
 
 ## Solutions
 
-- **Starting Code:** [lesson_15_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_15_begin)
-- **Completed Code:** [lesson_15_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/main/lesson_15_end)
+- **Starting Code:** [lesson_15_begin](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_15_begin)
+- **Completed Code:** [lesson_15_end](https://github.com/faanross/antisyphon_course_c2_golang/tree/master/lesson_15_end)
 
 ## Overview
 
