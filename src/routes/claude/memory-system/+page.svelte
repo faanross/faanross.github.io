@@ -83,6 +83,24 @@
 
 				<hr />
 
+				<h2>Why Not Just Use Grep?</h2>
+
+				<p>Fair question. I could add instructions to my CLAUDE.md telling Claude to grep through <code>~/.claude/projects/</code> whenever I ask about past conversations. It would work. So why build something more complex?</p>
+
+				<p><strong>Token efficiency.</strong> Every time Claude greps through gigabytes of JSONL files, those results flow through the conversation. That's tokens - and cost. A dedicated query system returns only what's needed, keeping the context window lean.</p>
+
+				<p><strong>Privacy.</strong> When Claude searches via grep, my conversation history travels through Anthropic's servers as part of the prompt/response cycle. With a local MCP server, queries execute entirely on my machine. The search happens locally; only the results enter the conversation.</p>
+
+				<p><strong>Speed.</strong> Grep is O(n) - it reads every byte of every file. An indexed database query is O(log n) or better. As my history grows past hundreds of megabytes, this difference becomes visceral. Milliseconds vs seconds.</p>
+
+				<p><strong>Structured queries.</strong> Grep finds text matches. SQL lets me ask: "What projects did I work on between 10pm and 2am last month, sorted by total tokens used?" Aggregations, date ranges, joins across tables - things grep simply can't do.</p>
+
+				<p><strong>Semantic search.</strong> "Find conversations about handling failures gracefully" can't be done with keyword grep. It requires embeddings and vector similarity - a fundamentally different capability.</p>
+
+				<p>And honestly? <strong>I want to learn this stuff.</strong> Building MCP servers, embedding pipelines, local LLM infrastructure, analytical dashboards. Even if the practical benefits were marginal, the learning isn't. This is an excuse to build something real while exploring technologies I want to understand better.</p>
+
+				<hr />
+
 				<h2>What I'm Building</h2>
 
 				<p>A complete memory system. Not just search - a full stack for understanding and retrieving my conversation history.</p>
@@ -135,7 +153,7 @@
 					<li>Ranked results instead of "here's 500 matches, good luck"</li>
 				</ul>
 
-				<p>DuckDB has a built-in FTS extension. Porter stemming means "running" matches "run", "runs", "runner". Case-insensitive by default.</p>
+				<p>DuckDB supports full-text search via a loadable extension (<code>LOAD fts;</code>). Porter stemming means "running" matches "run", "runs", "runner". Case-insensitive by default.</p>
 
 				<p>The limitation: you need to know the exact keywords. "auth" won't find "login".</p>
 
@@ -147,20 +165,18 @@
 					<img src="/images/claude/memory-system/phase3-localllm.png" alt="Local LLM setup" />
 				</figure>
 
-				<p>Set up Ollama on my Mac Mini for two things:</p>
-				<ol>
-					<li><strong>Embeddings</strong> - Convert text to vectors for semantic search</li>
-					<li><strong>NL→SQL</strong> - Generate database queries from natural language</li>
-				</ol>
+				<p>Set up Ollama on my Mac Mini for embeddings - converting text to vectors for semantic search.</p>
 
-				<p><strong>Why local:</strong></p>
+				<p>I'm planning to use <code>nomic-embed-text</code> or a similar embedding model. The choice will depend on quality vs speed tradeoffs I'll discover during implementation.</p>
+
+				<p><strong>Why local instead of cloud APIs:</strong></p>
 				<ul>
-					<li>Gigabytes of conversation history = significant embedding cost if using cloud APIs</li>
-					<li>Everything stays on my network</li>
-					<li>Zero ongoing cost</li>
+					<li>Embedding hundreds of megabytes of conversation history via OpenAI's API would cost real money. Local is free after setup.</li>
+					<li>Everything stays on my network - no conversation data leaving my machines.</li>
+					<li>No rate limits, no API quotas, no ongoing costs.</li>
 				</ul>
 
-				<p>The Mac Mini runs the models. My main Mac calls the API remotely. Inference stays off my workstation.</p>
+				<p>The Mac Mini runs the models. My main Mac calls the Ollama API over the local network. Inference stays off my workstation, keeping it responsive.</p>
 
 				<hr />
 
@@ -172,7 +188,11 @@
 
 				<p>This is where it gets interesting.</p>
 
-				<p>Embed every message as a vector. Store in LanceDB. Now search by <em>meaning</em>, not keywords.</p>
+				<p>LanceDB is an embedded vector database - same philosophy as DuckDB (file-based, no server, just works) but designed for vector similarity search rather than SQL queries.</p>
+
+				<p>The pipeline: extract messages from DuckDB → generate embeddings via Ollama → store vectors in LanceDB. DuckDB remains the source of truth for structured data; LanceDB handles the semantic layer.</p>
+
+				<p>Now I can search by <em>meaning</em>, not keywords.</p>
 
 				<p><strong>What it unlocks:</strong></p>
 				<ul>
@@ -248,7 +268,7 @@
 					<img src="/images/claude/memory-system/phase8-gobackend.png" alt="Go backend infrastructure" />
 				</figure>
 
-				<p>At my current usage rate, I'm generating over a gigabyte of conversation history per month.</p>
+				<p>At my current heavy usage rate - multiple long sessions daily - I'm generating several hundred megabytes of conversation history per month, trending toward a gigabyte as usage increases.</p>
 
 				<p>Browser-only won't scale. Phase 8 adds a proper Go backend:</p>
 				<ul>
