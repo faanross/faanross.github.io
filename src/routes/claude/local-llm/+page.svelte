@@ -69,6 +69,8 @@
 
 				<p>This is what I'm working with: entry-level M4 Mac Mini. 10-core CPU, 10-core GPU, and - crucially - <strong>16GB of unified memory</strong>. That RAM constraint shaped every decision that followed.</p>
 
+				<p><em>(For non-Apple readers: "unified memory" means the CPU and GPU share the same RAM pool. Unlike discrete GPUs with their own VRAM, Apple Silicon can load large models directly into this shared memory. The 16GB is split between system use, the OS, and whatever models you're running - so every gigabyte counts.)</em></p>
+
 				<hr />
 
 				<h2>The Setup Plan</h2>
@@ -157,10 +159,12 @@ ollama pull llama3.2:3b`}</code></pre>
 
 				<p>But my use case isn't general-purpose. I'm not having philosophical debates with this model. I'm asking it to convert sentences into SQL queries. A structured, bounded task.</p>
 
-				<p><strong>8B model:</strong> 6-8GB RAM, "smarter"<br/>
-				<strong>3B model:</strong> 2-4GB RAM, leaves headroom</p>
+				<p><strong>8B model:</strong> ~4-5GB RAM (with default Q4 quantization), "smarter"<br/>
+				<strong>3B model:</strong> ~2GB RAM, leaves headroom</p>
 
-				<p>My Mac Mini has 16GB total. macOS needs 4-6GB just to run. With 8B, the machine would be tight. With 3B, there's room to breathe.</p>
+				<p><em>(A note on quantization: Ollama models are typically 4-bit quantized by default - the Q4_K_M format. This compresses the model weights, trading a small amount of quality for significant memory savings. A full-precision 8B model would need ~16GB; quantized, it fits in ~5GB. The RAM numbers above assume default quantization.)</em></p>
+
+				<p>My Mac Mini has 16GB total. macOS needs 4-6GB just to run. With 8B, the machine would be tight - especially if I want to run embeddings simultaneously. With 3B, there's room to breathe.</p>
 
 				<p>I went with 3B. Conservative choice. Easy to upgrade if quality lacks.</p>
 
@@ -180,6 +184,14 @@ ollama pull llama3.2:3b`}</code></pre>
 
 				<pre><code>{`# Set Ollama to listen on all interfaces (not just localhost)
 launchctl setenv OLLAMA_HOST "0.0.0.0"`}</code></pre>
+
+				<p><strong>Important:</strong> This only works for the current session. After a reboot, Ollama reverts to localhost. For a persistent solution, add this to your shell profile:</p>
+
+				<pre><code>{`# Add to ~/.zshrc (or ~/.bash_profile for bash)
+export OLLAMA_HOST="0.0.0.0"
+
+# Then source it
+source ~/.zshrc`}</code></pre>
 
 				<p>Then restart Ollama for the change to take effect. You can quit it from the menubar and relaunch, or:</p>
 
@@ -313,6 +325,8 @@ Hint: Did you mean s.project_name?`}</code></pre>
 
 				<pre><code class="language-json">{`{"embedding":[0.311543..., 0.424029..., -3.988341..., ... (768 floats)]}`}</code></pre>
 
+				<p><em>(The output above is simplified - actual response contains all 768 values. The 768 dimensions match BERT-base, a common standard. Higher dimensions capture more semantic nuance but require more storage and compute. For conversation search, 768 is plenty.)</em></p>
+
 				<p>Two texts with similar meanings produce similar vectors. "authentication errors" and "login problems" would have vectors close together in this 768-dimensional space. That's how semantic search finds related content even when the words differ.</p>
 
 				<h3>Generation API</h3>
@@ -334,6 +348,13 @@ Hint: Did you mean s.project_name?`}</code></pre>
   "load_duration": 8235500584,
   "eval_duration": 2463605841
 }`}</code></pre>
+
+				<p>The timing fields are in nanoseconds:</p>
+				<ul>
+					<li><strong><code>total_duration</code></strong> - Wall clock time for the entire request (~11.5 seconds here)</li>
+					<li><strong><code>load_duration</code></strong> - Time to load model into memory (~8.2 seconds - only significant on cold start)</li>
+					<li><strong><code>eval_duration</code></strong> - Actual inference time (~2.5 seconds - the "real" work)</li>
+				</ul>
 
 				<p>The <code>stream: false</code> flag gives you the complete response at once instead of token-by-token.</p>
 
@@ -357,7 +378,15 @@ Hint: Did you mean s.project_name?`}</code></pre>
 					<li>Keep the model loaded (Ollama does this automatically if there's recent activity)</li>
 				</ul>
 
-				<p>I'll address this in Phase 7 (Voice Control). For now, knowing about it is enough.</p>
+				<p><em>Tip: Ollama keeps models loaded for 5 minutes by default after the last request. You can extend this with <code>OLLAMA_KEEP_ALIVE</code>:</em></p>
+
+				<pre><code>{`# Keep model loaded for 1 hour after last request
+export OLLAMA_KEEP_ALIVE="1h"
+
+# Or keep it loaded indefinitely (until Ollama restarts)
+export OLLAMA_KEEP_ALIVE="-1"`}</code></pre>
+
+				<p>I'll address this more thoroughly in Phase 7 (Voice Control). For now, knowing about it is enough.</p>
 
 				<hr />
 
