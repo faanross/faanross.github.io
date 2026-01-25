@@ -120,9 +120,9 @@ Claude: "Ah yes, based on that context..."</code></pre>
 
 				<h2>Building the Server</h2>
 
-				<p>I chose Go. The planned backend will be in Go and it's the language I'm most experienced in, so it just made sense. Plus go-duckdb is fairly mature, and a single binary is easier to deploy than a Node runtime.</p>
+				<p>I chose Go. The planned backend will be in Go and it's the language I'm most experienced in, so it just made sense. Plus <a href="https://github.com/marcboeker/go-duckdb" target="_blank" rel="noopener">go-duckdb</a> is mature enough for production use, and a single binary is easier to deploy than a Node runtime.</p>
 
-				<p>The official MCP SDK had just hit v1.2.0 - stable, maintained with Google, cleaner API with generics. Good timing.</p>
+				<p>The official MCP SDK had just hit v1.2.0 (as of January 2026) - stable, maintained with Google, cleaner API with generics. Good timing.</p>
 
 				<pre><code>mkdir -p ~/repos/claude-memory-mcp
 cd ~/repos/claude-memory-mcp
@@ -187,11 +187,14 @@ go mod init github.com/faanross/claude-memory-mcp</code></pre>
 					</table>
 				</div>
 
-				<p>The keyword search was straightforward - just wrapping the FTS5 queries I'd already built. Connect to DuckDB, run the query, return formatted results.</p>
+				<p>The keyword search was straightforward - just wrapping the FTS queries I'd already built. (Note: I keep calling it "FTS5" out of habit from SQLite, but DuckDB has its own FTS extension with similar functionality - not actually SQLite's FTS5.) Connect to DuckDB, run the query, return formatted results.</p>
 
 				<p>But one decision shaped everything: read-only access.</p>
 
-				<pre><code class="language-go">db, err := sql.Open("duckdb", dbPath+"?access_mode=read_only")</code></pre>
+				<pre><code class="language-go">db, err := sql.Open("duckdb", dbPath+"?access_mode=read_only")
+if err != nil {'{'}
+    return nil, fmt.Errorf("failed to open database: %w", err)
+{'}'}</code></pre>
 
 				<p>This wasn't just a technical choice - it was a trust boundary. I was building a tool that Claude would use autonomously, without me reviewing every action. The MCP server needed to be safe by design.</p>
 
@@ -228,9 +231,13 @@ go mod init github.com/faanross/claude-memory-mcp</code></pre>
 
 				<p>Then from Go:</p>
 
-				<pre><code class="language-go">
-cmd := exec.Command(pythonPath, scriptPath, query, "--json", "--limit", strconv.Itoa(limit))
-output, err := cmd.Output()</code></pre>
+				<pre><code class="language-go">cmd := exec.Command(pythonPath, scriptPath, query, "--json", "--limit", strconv.Itoa(limit))
+output, err := cmd.Output()
+if err != nil {'{'}
+    return nil, fmt.Errorf("semantic search failed: %w", err)
+{'}'}</code></pre>
+
+				<p><em>(Security note: <code>exec.Command</code> passes arguments separately - no shell interpolation. This is intentionally safe from injection attacks. If I'd used <code>exec.Command("bash", "-c", "python " + query)</code>, that would be vulnerable. The pattern above is the secure approach.)</em></p>
 
 				<p>Not beautiful, a bit of a hack TBH. But functional. Ships today, not someday.</p>
 
@@ -279,6 +286,8 @@ cat ~/.claude.json | jq '.mcpServers | keys'</code></pre>
 
 				<p>"What are my memory stats?"</p>
 
+				<p><em>(The outputs below are formatted for readability. Claude receives JSON from the MCP tools and formats it for display - the exact formatting varies by session.)</em></p>
+
 				<pre><code>┌────────────────────┬─────────────────────────────────────┐
 │       Metric       │                Value                │
 ├────────────────────┼─────────────────────────────────────┤
@@ -288,7 +297,7 @@ cat ~/.claude.json | jq '.mcpServers | keys'</code></pre>
 │ Date Range         │ Dec 30, 2025 → Jan 13, 2026         │
 └────────────────────┴─────────────────────────────────────┘</code></pre>
 
-				<p>Claude called the tool, got structured data back, formatted it nicely. No terminal. No copy-paste. Just a question and an answer.</p>
+				<p>Claude called the tool, got structured JSON back, formatted it into this table. No terminal. No copy-paste. Just a question and an answer.</p>
 
 				<p>Then I pushed harder: "Search for past conversations about DuckDB."</p>
 
@@ -335,7 +344,7 @@ Skill Focus Areas:
 
 				<p>This is the shift. Not "a tool I can ask to search" but "an assistant that remembers."</p>
 
-				<p>Admittedly, this does not always work so well - sometimes I have to <em>insist</em> that it has memory access when it <em>insists</em> it does not.</p>
+				<p>Admittedly, this doesn't always work smoothly. Sometimes Claude forgets the MCP tools exist and says "I don't have access to previous conversations" - even though it does. When this happens, I either remind it explicitly ("use your memory tools") or reference the tools by name ("call search_memory"). It's not perfect. The proactive behavior emerges inconsistently. But when it works, it's genuinely useful.</p>
 
 				<figure class="article-image">
 					<img src="/images/claude/mcp-server/IMG-004-UNEXPECTED.png" alt="Claude proactively searching its memory" />
