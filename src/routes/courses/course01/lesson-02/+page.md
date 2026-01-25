@@ -40,20 +40,9 @@ So let's add it with:
 go get github.com/go-chi/chi/v5
 ```
 
-## Let's Generate Some Certs
+## TLS Certificates
 
-Since we'll be using HTTPS, we'll need some certs. In this case I'll generate some self-signed ones using openssl, of course if you have alternative source or method you prefer - by all means go ahead.
-
-First I'll create a directory called `./certs`, then `cd` into it. Let's then run the following:
-
-```bash
-# Generate private key
-openssl genrsa -out server.key 2048
-
-# Generate certificate
-openssl req -new -x509 -sha256 -key server.key -out server.crt -days 365 \
-    -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
-```
+We'll need TLS certificates for HTTPS. If you haven't already generated and copied them to this lesson directory, refer back to the [Setup Guide](/courses/course01/setup#4-generate-tls-certificates) for instructions.
 
 ## Server Design
 

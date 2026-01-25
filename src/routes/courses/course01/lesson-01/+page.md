@@ -18,7 +18,7 @@ Go's interfaces provide an awesome way for us to implement a generalized feature
 
 In "**general-speak**": this is a **modular** design that allows for both **maintainability** (change something) and **extensibility** (add something).
 
-And in our case we have 2 different generalized features that would benefit from this - both our agent (client) and server. Since we want to allow these two components to communicate to one another using either DNS or HTTPS, this is a perfect application of an interface. Plus, as an added bonus, we can then easily add other protocols in the future without tinkering with our main application code, they are separated via a modular design.
+And in our case we have 2 different generalized features that would benefit from this - both our agent (client) and server. Since we want to allow these two components to communicate to one another using either DNS or HTTPS, this is a perfect application of an interface. Plus, as an added bonus, we can then easily add other protocols in the future without tinkering with our main application code, they are separated via a modular design. We'll also use interfaces later when implementing our commands, allowing for cross-platform execution across Windows, macOS, and Linux.
 
 ## What We'll Create
 

@@ -102,9 +102,9 @@ As we saw on the server-side, we just need to send a GET request to the root end
 
 We'll read the response body using `io.ReadAll()`, we're of course expecting this to be the JSON with the `change` field. Right now all we'll do is return this value to the caller, in a later lesson we'll also parse this to see whether it's `true` or `false`, and implement conditional logic based on that.
 
-## Update factory
+## Update Factory
 
-Now that we have our Agent type, constructor, and method to satisfy the interface we can go ahead and wire this into our `NewAgent` factory function.
+Now that we have our Agent type, constructor, and method to satisfy the interface we can go ahead and wire this into our `NewAgent` factory function. We're back in `internals/agent/models.go` for this.
 
 ```go
 // NewAgent creates a new agent based on the protocol
