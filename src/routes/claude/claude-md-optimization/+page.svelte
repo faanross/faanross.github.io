@@ -66,6 +66,8 @@
 
 				<p>My CLAUDE.md file just hit 570 lines. Session startup checks, skill routing tables, notification configs, planning system docs, memory access commands, troubleshooting guides. Everything I'd taught Claude about my workflow, accumulated over weeks.</p>
 
+				<p><em>(Quick check: <code>wc -l CLAUDE.md</code> tells you your line count. For a rough token estimate, divide by 4 - or paste into a tokenizer. My 570 lines were roughly 2,800 tokens.)</em></p>
+
 				<p>It worked. But every session loaded all 570 lines into context - even when most of it was conditional.</p>
 
 				<p>That's a leak. Here's how I fixed it.</p>
@@ -134,7 +136,9 @@ Async workflow - get notifications, reply from phone.
 
 				<p>The fix is simple: keep the trigger inline, move the details elsewhere.</p>
 
-				<p>I use Obsidian, so wikilinks make this trivial. Here's another example - my memory system health check. The original looked like this:</p>
+				<p>I use Obsidian, so wikilinks (<code>[[ref_memory_health]]</code>) make this trivial. But the pattern works with any reference system - file paths, imports, even just "see X file for details". The point is separation of concerns, not the specific syntax.</p>
+
+				<p>Here's another example - my memory system health check. The original looked like this:</p>
 
 				<pre><code>{`## Memory System Health Check
 
@@ -206,12 +210,6 @@ If tools fail or user says \`memory health\` → [[ref_memory_health]]`}</code><
 								<td>5 lines</td>
 								<td>35</td>
 							</tr>
-							<tr>
-								<td>...</td>
-								<td>...</td>
-								<td>...</td>
-								<td>...</td>
-							</tr>
 							<tr class="total-row">
 								<td><strong>Total</strong></td>
 								<td>570 lines</td>
@@ -230,7 +228,7 @@ If tools fail or user says \`memory health\` → [[ref_memory_health]]`}</code><
 
 				<p>This isn't just housekeeping. Context windows have real performance implications.</p>
 
-				<p><strong>The capacity myth:</strong> A 200K context window doesn't mean you should use 200K tokens. Performance degrades as you approach capacity. Most practitioners report noticeable quality drops around 60-70% utilization - some say earlier.</p>
+				<p><strong>The capacity myth:</strong> A 200K context window doesn't mean you should use 200K tokens. Performance degrades as you approach capacity. Anecdotally, many practitioners report noticeable quality drops around 60-70% utilization - though this varies by task type and hasn't been rigorously studied.</p>
 
 				<p><strong>Compaction helps, but has costs:</strong> Claude Code compacts conversation history to stay within limits. But compaction loses information. The more you rely on compaction, the more context gets summarized away. Better to not need it.</p>
 
