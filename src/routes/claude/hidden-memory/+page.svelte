@@ -84,8 +84,6 @@
 
 				<p>I checked the dates. Files going back to the very first conversation I had with Claude Code. Nothing deleted. All of it still there.</p>
 
-				<p>Permanent. Local. Mine.</p>
-
 				<hr />
 
 				<h2>Quick primer: What is JSONL?</h2>
