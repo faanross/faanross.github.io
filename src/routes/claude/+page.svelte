@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "I Gave My AI Access to Its Own Memory",
+			description: "Building an MCP server so Claude can search its own conversation history. From manual queries to autonomous memory access.",
+			url: "/claude/mcp-server",
+			date: "2026-01-25"
+		},
+		{
 			title: "Quality Over Volume",
 			description: "The trap of mistaking volume for value when working with Claude Code. Why incremental validation beats autopilot generation.",
 			url: "/claude/quality-over-volume",
