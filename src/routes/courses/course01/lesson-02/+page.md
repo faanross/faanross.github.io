@@ -42,7 +42,7 @@ go get github.com/go-chi/chi/v5
 
 ## TLS Certificates
 
-We'll need TLS certificates for HTTPS. If you haven't already generated and copied them to this lesson directory, refer back to the [Setup Guide](/courses/course01/setup#4-generate-tls-certificates) for instructions.
+We'll need TLS certificates for HTTPS. If you haven't already generated and copied them to this lesson directory, refer back to the [Setup Guide](/courses/course01/setup) for instructions.
 
 ## Server Design
 
