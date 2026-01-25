@@ -1,153 +1,104 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
-	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
-
-	let mounted = $state(false);
-
-	onMount(async () => {
-		mounted = true;
-		await tick();
-
-		// Small delay to ensure transitions complete
-		setTimeout(() => {
-			document.querySelectorAll('pre').forEach((pre) => {
-				const wrapper = document.createElement('div');
-				wrapper.className = 'code-block';
-
-				const button = document.createElement('button');
-				button.className = 'copy-btn';
-				button.textContent = 'Copy';
-				button.addEventListener('click', async () => {
-					const code = pre.querySelector('code')?.textContent || pre.textContent || '';
-					await navigator.clipboard.writeText(code);
-					button.textContent = 'Copied!';
-					setTimeout(() => button.textContent = 'Copy', 2000);
-				});
-
-				pre.parentNode?.insertBefore(wrapper, pre);
-				wrapper.appendChild(button);
-				wrapper.appendChild(pre);
-			});
-		}, 100);
-	});
+	import ArticleLayout from '$lib/components/ArticleLayout.svelte';
 </script>
 
-<svelte:head>
-	<title>I Discovered Claude Code Has a Hidden Memory | Faan Rossouw</title>
-	<meta name="description" content="Claude Code stores complete conversation transcripts locally. Here's how to unlock persistent memory across sessions with one addition to your CLAUDE.md." />
-</svelte:head>
+<ArticleLayout
+	title="I Discovered Claude Code Has a Hidden Memory"
+	date="2025-01-11"
+	description="Claude Code stores complete conversation transcripts locally. Here's how to unlock persistent memory across sessions with one addition to your CLAUDE.md."
+>
+	<p>I wasn't looking for this. I was trying to build something else entirely.</p>
 
-<ScrollProgress />
+	<p>I'd been setting up a Stop Hook - a script that fires when a Claude session ends. The idea was to automatically log session summaries to my daily notes. Keep a record of what Claude and I worked on each day.</p>
 
-<article class="article">
-	<div class="container">
-		{#if mounted}
-			<header class="article-header" in:fly={{ y: 30, duration: 800, delay: 200 }}>
-				<a href="/claude" class="back-link">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<line x1="19" y1="12" x2="5" y2="12"></line>
-						<polyline points="12 19 5 12 12 5"></polyline>
-					</svg>
-					Back to Claude
-				</a>
-				<span class="date">2025-01-11</span>
-				<h1>I Discovered Claude Code Has a Hidden Memory</h1>
-			</header>
+	<p>I couldn't quite get it to do what I intended.</p>
 
-			<div class="article-content" in:fly={{ y: 20, duration: 600, delay: 400 }}>
-				<p>I wasn't looking for this. I was trying to build something else entirely.</p>
+	<p>But in debugging why it wasn't working, I stumbled onto something better.</p>
 
-				<p>I'd been setting up a Stop Hook - a script that fires when a Claude session ends. The idea was to automatically log session summaries to my daily notes. Keep a record of what Claude and I worked on each day.</p>
+	<figure class="article-image">
+		<img src="/images/claude/hidden-memory/001.png" alt="Hidden treasure chest revealing glowing data" />
+	</figure>
 
-				<p>I couldn't quite get it to do what I intended.</p>
+	<hr />
 
-				<p>But in debugging why it wasn't working, I stumbled onto something better.</p>
+	<h2>The accidental discovery</h2>
 
-				<figure class="article-image">
-					<img src="/images/claude/hidden-memory/001.png" alt="Hidden treasure chest revealing glowing data" />
-				</figure>
+	<p>I was digging through Claude Code's internals, trying to figure out what data the hooks actually receive, when I noticed a folder I'd never paid attention to:</p>
 
-				<hr />
+	<pre><code>~/.claude/projects/</code></pre>
 
-				<h2>The accidental discovery</h2>
+	<p>I opened it expecting config files. Instead, I found something else entirely.</p>
 
-				<p>I was digging through Claude Code's internals, trying to figure out what data the hooks actually receive, when I noticed a folder I'd never paid attention to:</p>
+	<p>JSONL files. Hundreds of them. Organized by working directory. Each one containing... everything.</p>
 
-				<pre><code>~/.claude/projects/</code></pre>
+	<p>Every message I'd sent. Every response Claude gave. Every tool call, every file read, every edit. Timestamps. Token counts. The complete record of every conversation I'd ever had with Claude Code.</p>
 
-				<p>I opened it expecting config files. Instead, I found something else entirely.</p>
+	<p>I checked the dates. Files going back to the very first conversation I had with Claude Code. Nothing deleted. All of it still there.</p>
 
-				<p>JSONL files. Hundreds of them. Organized by working directory. Each one containing... everything.</p>
+	<hr />
 
-				<p>Every message I'd sent. Every response Claude gave. Every tool call, every file read, every edit. Timestamps. Token counts. The complete record of every conversation I'd ever had with Claude Code.</p>
+	<h2>Quick primer: What is JSONL?</h2>
 
-				<p>I checked the dates. Files going back to the very first conversation I had with Claude Code. Nothing deleted. All of it still there.</p>
+	<p>JSONL (JSON Lines) is a simple format where each line of a file is a complete, valid JSON object. Unlike regular JSON which wraps everything in one structure, JSONL lets you append new records without parsing the entire file.</p>
 
-				<hr />
-
-				<h2>Quick primer: What is JSONL?</h2>
-
-				<p>JSONL (JSON Lines) is a simple format where each line of a file is a complete, valid JSON object. Unlike regular JSON which wraps everything in one structure, JSONL lets you append new records without parsing the entire file.</p>
-
-				<pre><code>{`{"type": "user", "message": "first message", "timestamp": "..."}
+	<pre><code>{`{"type": "user", "message": "first message", "timestamp": "..."}
 {"type": "assistant", "message": "response", "timestamp": "..."}
 {"type": "user", "message": "second message", "timestamp": "..."}`}</code></pre>
 
-				<p>One object per line. No commas between lines. No wrapping array.</p>
+	<p>One object per line. No commas between lines. No wrapping array.</p>
 
-				<p>When you <code>cat</code> a JSONL file and it looks like a wall of text, that's because each JSON object can be thousands of characters long - they wrap visually in your terminal but are still single lines. A typical Claude response might be 70,000+ characters on one line.</p>
+	<p>When you <code>cat</code> a JSONL file and it looks like a wall of text, that's because each JSON object can be thousands of characters long - they wrap visually in your terminal but are still single lines. A typical Claude response might be 70,000+ characters on one line.</p>
 
-				<p>This format is perfect for logs and conversation history - new messages just append to the file, and you can stream through gigabytes of data line by line without loading everything into memory.</p>
+	<p>This format is perfect for logs and conversation history - new messages just append to the file, and you can stream through gigabytes of data line by line without loading everything into memory.</p>
 
-				<hr />
+	<hr />
 
-				<h2>What's actually in there</h2>
+	<h2>What's actually in there</h2>
 
-				<p>Each session creates a JSONL file named with its session UUID. But it's not just messages - there are <strong>five distinct record types</strong>:</p>
+	<p>Each session creates a JSONL file named with its session UUID. But it's not just messages - there are <strong>five distinct record types</strong>:</p>
 
-				<div class="data-table">
-					<table>
-						<thead>
-							<tr>
-								<th>Type</th>
-								<th>What It Captures</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><code>user</code></td>
-								<td>Your messages (typed or voice-transcribed)</td>
-							</tr>
-							<tr>
-								<td><code>assistant</code></td>
-								<td>Claude's responses (including thinking blocks)</td>
-							</tr>
-							<tr>
-								<td><code>progress</code></td>
-								<td>Tool execution progress (MCP calls, file operations)</td>
-							</tr>
-							<tr>
-								<td><code>system</code></td>
-								<td>Internal events (hooks firing, stop reasons)</td>
-							</tr>
-							<tr>
-								<td><code>file-history-snapshot</code></td>
-								<td>Snapshots of file state during edits</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+	<div class="data-table">
+		<table>
+			<thead>
+				<tr>
+					<th>Type</th>
+					<th>What It Captures</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>user</code></td>
+					<td>Your messages (typed or voice-transcribed)</td>
+				</tr>
+				<tr>
+					<td><code>assistant</code></td>
+					<td>Claude's responses (including thinking blocks)</td>
+				</tr>
+				<tr>
+					<td><code>progress</code></td>
+					<td>Tool execution progress (MCP calls, file operations)</td>
+				</tr>
+				<tr>
+					<td><code>system</code></td>
+					<td>Internal events (hooks firing, stop reasons)</td>
+				</tr>
+				<tr>
+					<td><code>file-history-snapshot</code></td>
+					<td>Snapshots of file state during edits</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-				<p>In a typical session, you'll see roughly 2x as many assistant messages as user messages, plus progress events for every tool call, system events for hooks, and file snapshots when Claude edits files.</p>
+	<p>In a typical session, you'll see roughly 2x as many assistant messages as user messages, plus progress events for every tool call, system events for hooks, and file snapshots when Claude edits files.</p>
 
-				<p><em>Note: The examples below are sanitized and simplified to illustrate the structure. Real entries contain additional metadata fields and much longer content.</em></p>
+	<p><em>Note: The examples below are sanitized and simplified to illustrate the structure. Real entries contain additional metadata fields and much longer content.</em></p>
 
-				<h3>1. User messages</h3>
+	<h3>1. User messages</h3>
 
-				<p>Every message you send, whether typed or spoken via voice mode:</p>
+	<p>Every message you send, whether typed or spoken via voice mode:</p>
 
-				<pre><code>{`{
+	<pre><code>{`{
   "type": "user",
   "message": {
     "role": "user",
@@ -161,11 +112,11 @@
   "version": "2.1.11"
 }`}</code></pre>
 
-				<h3>2. Assistant messages</h3>
+	<h3>2. Assistant messages</h3>
 
-				<p>Claude's responses, including the full content and thinking blocks (if extended thinking is enabled):</p>
+	<p>Claude's responses, including the full content and thinking blocks (if extended thinking is enabled):</p>
 
-				<pre><code>{`{
+	<pre><code>{`{
   "type": "assistant",
   "message": {
     "role": "assistant",
@@ -188,11 +139,11 @@
   }
 }`}</code></pre>
 
-				<h3>3. Progress events</h3>
+	<h3>3. Progress events</h3>
 
-				<p>Every tool call generates progress events - when MCP servers are invoked, when files are read, when bash commands run:</p>
+	<p>Every tool call generates progress events - when MCP servers are invoked, when files are read, when bash commands run:</p>
 
-				<pre><code>{`{
+	<pre><code>{`{
   "type": "progress",
   "data": {
     "type": "mcp_progress",
@@ -205,11 +156,11 @@
   "sessionId": "c4bdaf0d-e808-42ce-90d0-6536fbf7983b"
 }`}</code></pre>
 
-				<h3>4. System events</h3>
+	<h3>4. System events</h3>
 
-				<p>Internal events like hooks firing, session stops, and other system-level signals:</p>
+	<p>Internal events like hooks firing, session stops, and other system-level signals:</p>
 
-				<pre><code>{`{
+	<pre><code>{`{
   "type": "system",
   "subtype": "stop_hook_summary",
   "hookCount": 1,
@@ -222,11 +173,11 @@
   "sessionId": "c4bdaf0d-e808-42ce-90d0-6536fbf7983b"
 }`}</code></pre>
 
-				<h3>5. File history snapshots</h3>
+	<h3>5. File history snapshots</h3>
 
-				<p>When Claude edits files, snapshots capture the state - enabling the undo functionality:</p>
+	<p>When Claude edits files, snapshots capture the state - enabling the undo functionality:</p>
 
-				<pre><code>{`{
+	<pre><code>{`{
   "type": "file-history-snapshot",
   "messageId": "7e91a3ea-e6b5-4ddb-a944-4faad3eb24ec",
   "isSnapshotUpdate": false,
@@ -239,13 +190,13 @@
   }
 }`}</code></pre>
 
-				<hr />
+	<hr />
 
-				<h2>File organization</h2>
+	<h2>File organization</h2>
 
-				<p>The files are organized by the directory you're working in. So all your sessions in <code>/Users/you/project-a/</code> live in one folder, sessions in <code>/Users/you/project-b/</code> in another. The folder names use dashes instead of slashes:</p>
+	<p>The files are organized by the directory you're working in. So all your sessions in <code>/Users/you/project-a/</code> live in one folder, sessions in <code>/Users/you/project-b/</code> in another. The folder names use dashes instead of slashes:</p>
 
-				<pre><code>{`~/.claude/projects/
+	<pre><code>{`~/.claude/projects/
 ├── -Users-you-project-a/
 │   ├── c4bdaf0d-e808-42ce-90d0-6536fbf7983b.jsonl
 │   ├── a1b2c3d4-e5f6-7890-abcd-ef1234567890.jsonl
@@ -256,164 +207,164 @@
 └── -Users-you-Documents-work/
     └── ...`}</code></pre>
 
-				<p>You'll also notice <code>subagents/</code> folders within project directories. These contain conversations from spawned sub-agents - separate Claude instances that handle delegated tasks. For most queries, you'll want to exclude these (hence <code>! -path "*/subagents/*"</code> in the commands below) to focus on your direct conversations.</p>
+	<p>You'll also notice <code>subagents/</code> folders within project directories. These contain conversations from spawned sub-agents - separate Claude instances that handle delegated tasks. For most queries, you'll want to exclude these (hence <code>! -path "*/subagents/*"</code> in the commands below) to focus on your direct conversations.</p>
 
-				<hr />
+	<hr />
 
-				<h2>Privacy and security considerations</h2>
+	<h2>Privacy and security considerations</h2>
 
-				<p>Before you get too excited about this data goldmine, some things to keep in mind:</p>
+	<p>Before you get too excited about this data goldmine, some things to keep in mind:</p>
 
-				<p><strong>No encryption at rest.</strong> These are plain text JSON files. Anyone with access to your machine - or your backups - can read your complete conversation history.</p>
+	<p><strong>No encryption at rest.</strong> These are plain text JSON files. Anyone with access to your machine - or your backups - can read your complete conversation history.</p>
 
-				<p><strong>File snapshots contain actual file contents.</strong> The <code>file-history-snapshot</code> records store the content of files Claude edits. If you're working with sensitive code, API keys, credentials, or proprietary information, that content lives in your JSONL files too.</p>
+	<p><strong>File snapshots contain actual file contents.</strong> The <code>file-history-snapshot</code> records store the content of files Claude edits. If you're working with sensitive code, API keys, credentials, or proprietary information, that content lives in your JSONL files too.</p>
 
-				<p><strong>Your prompts reveal your thinking.</strong> Every question you've asked, every problem you've described, every piece of context you've provided - it's all there. Consider what that history reveals about your projects, your knowledge gaps, and your workflow.</p>
+	<p><strong>Your prompts reveal your thinking.</strong> Every question you've asked, every problem you've described, every piece of context you've provided - it's all there. Consider what that history reveals about your projects, your knowledge gaps, and your workflow.</p>
 
-				<p>This isn't a reason not to use the feature - just be aware of what you're storing and where. If you're on a shared machine or backing up to cloud storage, factor this into your security posture.</p>
+	<p>This isn't a reason not to use the feature - just be aware of what you're storing and where. If you're on a shared machine or backing up to cloud storage, factor this into your security posture.</p>
 
-				<hr />
+	<hr />
 
-				<h2>Why this matters</h2>
+	<h2>Why this matters</h2>
 
-				<p>I'd been wanting something like this since I started using AI assistants. A way to go back and find "that thing Claude explained last week." A searchable record of decisions and solutions.</p>
+	<p>I'd been wanting something like this since I started using AI assistants. A way to go back and find "that thing Claude explained last week." A searchable record of decisions and solutions.</p>
 
-				<p>But I assumed I'd have to build it. Export conversations manually. Set up logging. Create some elaborate capture system.</p>
+	<p>But I assumed I'd have to build it. Export conversations manually. Set up logging. Create some elaborate capture system.</p>
 
-				<p>Turns out it already existed. I just didn't know where to look.</p>
+	<p>Turns out it already existed. I just didn't know where to look.</p>
 
-				<p>And it's better than what I would have built:</p>
+	<p>And it's better than what I would have built:</p>
 
-				<ul>
-					<li><strong>Complete</strong> - both sides of every conversation, not just my input</li>
-					<li><strong>Automatic</strong> - no export step, no manual logging</li>
-					<li><strong>Local</strong> - stored on your disk, no cloud retention policy eating your history after 30 days (though future Claude Code updates could change the storage format or location)</li>
-					<li><strong>Parseable</strong> - standard JSONL format, easy to query with basic tools</li>
-				</ul>
+	<ul>
+		<li><strong>Complete</strong> - both sides of every conversation, not just my input</li>
+		<li><strong>Automatic</strong> - no export step, no manual logging</li>
+		<li><strong>Local</strong> - stored on your disk, no cloud retention policy eating your history after 30 days (though future Claude Code updates could change the storage format or location)</li>
+		<li><strong>Parseable</strong> - standard JSONL format, easy to query with basic tools</li>
+	</ul>
 
-				<hr />
+	<hr />
 
-				<h2>The comparison that made me realize this is gold</h2>
+	<h2>What I realized when comparing approaches</h2>
 
-				<p>I'd seen <a href="https://www.linkedin.com/in/artemxtech" target="_blank" rel="noopener noreferrer">Artem Zhutov</a> posting about analyzing his Claude conversations. He uses Wispr Flow - a voice dictation tool that captures everything he speaks into any app. 956K words across all applications. 147K words to Claude Desktop alone.</p>
+	<p>I'd seen <a href="https://www.linkedin.com/in/artemxtech" target="_blank" rel="noopener noreferrer">Artem Zhutov</a> posting about analyzing his Claude conversations. He uses Wispr Flow - a voice dictation tool that captures everything he speaks into any app. 956K words across all applications. 147K words to Claude Desktop alone.</p>
 
-				<p>Impressive stats. But here's what I realized:</p>
+	<p>That's a lot of data. But look at what each approach actually captures:</p>
 
-				<figure class="article-image">
-					<img src="/images/claude/hidden-memory/003.png" alt="Comparison between partial and complete conversation capture" />
-				</figure>
+	<figure class="article-image">
+		<img src="/images/claude/hidden-memory/003.png" alt="Comparison between partial and complete conversation capture" />
+	</figure>
 
-				<div class="comparison-table">
-					<table>
-						<thead>
-							<tr>
-								<th>Aspect</th>
-								<th>Wispr Flow</th>
-								<th>Claude Code Built-in</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>What's captured</td>
-								<td>Your input only</td>
-								<td>Full conversations (both sides)</td>
-							</tr>
-							<tr>
-								<td>Claude's responses</td>
-								<td>No</td>
-								<td>Yes</td>
-							</tr>
-							<tr>
-								<td>Tool calls</td>
-								<td>No</td>
-								<td>Yes</td>
-							</tr>
-							<tr>
-								<td>Token usage</td>
-								<td>No</td>
-								<td>Yes</td>
-							</tr>
-							<tr>
-								<td>Storage</td>
-								<td>Cloud, 30-day default</td>
-								<td>Local disk, no auto-expiry</td>
-							</tr>
-							<tr>
-								<td>Requires setup</td>
-								<td>Yes (subscription)</td>
-								<td>Already there</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+	<div class="comparison-table">
+		<table>
+			<thead>
+				<tr>
+					<th>Aspect</th>
+					<th>Wispr Flow</th>
+					<th>Claude Code Built-in</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>What's captured</td>
+					<td>Your input only</td>
+					<td>Full conversations (both sides)</td>
+				</tr>
+				<tr>
+					<td>Claude's responses</td>
+					<td>No</td>
+					<td>Yes</td>
+				</tr>
+				<tr>
+					<td>Tool calls</td>
+					<td>No</td>
+					<td>Yes</td>
+				</tr>
+				<tr>
+					<td>Token usage</td>
+					<td>No</td>
+					<td>Yes</td>
+				</tr>
+				<tr>
+					<td>Storage</td>
+					<td>Cloud, 30-day default</td>
+					<td>Local disk, no auto-expiry</td>
+				</tr>
+				<tr>
+					<td>Requires setup</td>
+					<td>Yes (subscription)</td>
+					<td>Already there</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-				<p>Wispr Flow captures what you <em>say</em>. Claude Code captures everything that <em>happened</em>.</p>
+	<p>Wispr Flow captures what you <em>say</em>. Claude Code captures everything that <em>happened</em>.</p>
 
-				<p>I already had richer data than I thought possible. I just needed to know where to find it.</p>
+	<p>The data was already there. I just needed to build a system to actually use it.</p>
 
-				<hr />
+	<hr />
 
-				<h2>How to access your conversation history</h2>
+	<h2>How to access your conversation history</h2>
 
-				<p>Here's the practical guide. Everything you need to query your past sessions.</p>
+	<p>Here's the practical guide. Everything you need to query your past sessions.</p>
 
-				<h3>Find your history</h3>
+	<h3>Find your history</h3>
 
-				<pre><code>ls -la ~/.claude/projects/</code></pre>
+	<pre><code>ls -la ~/.claude/projects/</code></pre>
 
-				<p>You'll see folders named after your working directories, with dashes replacing slashes:</p>
+	<p>You'll see folders named after your working directories, with dashes replacing slashes:</p>
 
-				<pre><code>{`-Users-yourname-project-a/
+	<pre><code>{`-Users-yourname-project-a/
 -Users-yourname-project-b/
 -Users-yourname-Documents-work/`}</code></pre>
 
-				<h3>List sessions for a specific project</h3>
+	<h3>List sessions for a specific project</h3>
 
-				<pre><code>ls -la ~/.claude/projects/-Users-yourname-project-a/</code></pre>
+	<pre><code>ls -la ~/.claude/projects/-Users-yourname-project-a/</code></pre>
 
-				<p>Each <code>.jsonl</code> file is a session, named with a UUID (e.g., <code>c4bdaf0d-e808-42ce-90d0-6536fbf7983b.jsonl</code>). The timestamps are inside the files, not in the filenames - use the file's modification time or parse the internal timestamps to find sessions by date.</p>
+	<p>Filenames are UUIDs (e.g., <code>c4bdaf0d-e808-42ce-90d0-6536fbf7983b.jsonl</code>). Timestamps are inside the files, not in filenames - use modification time or parse internal timestamps to find sessions by date.</p>
 
-				<h3>Find sessions by date</h3>
+	<h3>Find sessions by date</h3>
 
-				<p>Looking for what you worked on Tuesday?</p>
+	<p>Looking for what you worked on Tuesday?</p>
 
-				<pre><code>{`find ~/.claude/projects -name "*.jsonl" -type f ! -path "*/subagents/*" -newermt "2026-01-07" ! -newermt "2026-01-08" -exec ls -la {} \\;`}</code></pre>
+	<pre><code>{`find ~/.claude/projects -name "*.jsonl" -type f ! -path "*/subagents/*" -newermt "2026-01-07" ! -newermt "2026-01-08" -exec ls -la {} \\;`}</code></pre>
 
-				<h3>Search across all conversations</h3>
+	<h3>Search across all conversations</h3>
 
-				<p>That solution you can't quite remember? Grep it:</p>
+	<p>That solution you can't quite remember? Grep it:</p>
 
-				<pre><code>{`grep -r "MITRE" ~/.claude/projects/ --include="*.jsonl" | head -20`}</code></pre>
+	<pre><code>{`grep -r "MITRE" ~/.claude/projects/ --include="*.jsonl" | head -20`}</code></pre>
 
-				<h3>Parse a session into readable format</h3>
+	<h3>Parse a session into readable format</h3>
 
-				<p>Note: The <code>.message.content</code> structure varies - sometimes it's a string (user messages), sometimes an array of objects (assistant messages with thinking blocks). This command extracts just user/assistant messages:</p>
+	<p>Note: The <code>.message.content</code> structure varies - sometimes it's a string (user messages), sometimes an array of objects (assistant messages with thinking blocks). This command extracts just user/assistant messages:</p>
 
-				<pre><code>{`cat session-file.jsonl | jq -s '[.[] | select(.type == "user" or .type == "assistant")] | .[] | {type, time: .timestamp}'`}</code></pre>
+	<pre><code>{`cat session-file.jsonl | jq -s '[.[] | select(.type == "user" or .type == "assistant")] | .[] | {type, time: .timestamp}'`}</code></pre>
 
-				<p>For a more detailed view that handles both content formats:</p>
+	<p>For a more detailed view that handles both content formats:</p>
 
-				<pre><code>{`cat session-file.jsonl | jq -s '.[] | select(.type == "user") | {type, time: .timestamp, content: .message.content}'`}</code></pre>
+	<pre><code>{`cat session-file.jsonl | jq -s '.[] | select(.type == "user") | {type, time: .timestamp, content: .message.content}'`}</code></pre>
 
-				<h3>Quick stats</h3>
+	<h3>Quick stats</h3>
 
-				<p>How many sessions total?</p>
+	<p>How many sessions total?</p>
 
-				<pre><code>{`find ~/.claude/projects -name "*.jsonl" -type f ! -path "*/subagents/*" | wc -l`}</code></pre>
+	<pre><code>{`find ~/.claude/projects -name "*.jsonl" -type f ! -path "*/subagents/*" | wc -l`}</code></pre>
 
-				<p>Total size of your history?</p>
+	<p>Total size of your history?</p>
 
-				<pre><code>du -sh ~/.claude/projects/</code></pre>
+	<pre><code>du -sh ~/.claude/projects/</code></pre>
 
-				<hr />
+	<hr />
 
-				<h2>Making Claude aware of its own memory</h2>
+	<h2>Making Claude aware of its own memory</h2>
 
-				<p>Here's the real unlock: you can tell Claude Code to access this history.</p>
+	<p>Here's the real unlock: you can tell Claude Code to access this history.</p>
 
-				<p>I added a section to my <code>CLAUDE.md</code> file (the project instructions Claude reads on startup):</p>
+	<p>I added a section to my <code>CLAUDE.md</code> file (the project instructions Claude reads on startup):</p>
 
-				<pre><code>{`## Conversation History Access
+	<pre><code>{`## Conversation History Access
 
 Claude Code stores complete conversation transcripts at ~/.claude/projects/
 
@@ -425,105 +376,105 @@ When user asks about:
 Check the JSONL files in that directory. Files are organized by working directory.
 Use grep for keyword searches, jq for parsing specific sessions.`}</code></pre>
 
-				<p>Now when I ask "What did we discuss about authentication last week?" - Claude knows where to look.</p>
+	<p>Now when I ask "What did we discuss about authentication last week?" - Claude knows where to look.</p>
 
-				<p>Want to test it? After adding this to your CLAUDE.md, start a new session and ask: "Claude, what was the very first conversation we ever had about?" It's a simple way to verify the memory is working.</p>
+	<p>Want to test it? After adding this to your CLAUDE.md, start a new session and ask: "Claude, what was the very first conversation we ever had about?" It's a simple way to verify the memory is working.</p>
 
-				<p>The snippet above is the minimum to get started. For a more complete version with trigger phrases, query examples, and use cases, see the <a href="#full-snippet">full CLAUDE.md snippet</a> at the bottom of this article.</p>
+	<p>The snippet above is the minimum to get started. For a more complete version with trigger phrases, query examples, and use cases, see the <a href="#full-snippet">full CLAUDE.md snippet</a> at the bottom of this article.</p>
 
-				<p>It's not perfect retrieval—at least not yet. Claude has to search and parse like any other file operation. But it works, and I have <a href="#building-next">plans to make it better</a>. The memory exists and is accessible.</p>
+	<p>It's not perfect retrieval—at least not yet. Claude has to search and parse like any other file operation. But it works, and I have <a href="#building-next">plans to make it better</a>. The memory exists and is accessible.</p>
 
-				<figure class="article-image">
-					<img src="/images/claude/hidden-memory/005.png" alt="Data flow showing conversation history being accessed" />
-				</figure>
+	<figure class="article-image">
+		<img src="/images/claude/hidden-memory/005.png" alt="Data flow showing conversation history being accessed" />
+	</figure>
 
-				<hr />
+	<hr />
 
-				<h2>What you can do with this</h2>
+	<h2>What you can do with this</h2>
 
-				<p>Beyond simple lookups, this data enables:</p>
+	<p>Beyond simple lookups, this data enables:</p>
 
-				<p><strong>Personal analytics</strong></p>
-				<ul>
-					<li>Which projects get most of your attention?</li>
-					<li>What times are you most productive with Claude?</li>
-					<li>How much are you spending on tokens?</li>
-				</ul>
+	<p><strong>Personal analytics</strong></p>
+	<ul>
+		<li>Which projects get most of your attention?</li>
+		<li>What times are you most productive with Claude?</li>
+		<li>How much are you spending on tokens?</li>
+	</ul>
 
-				<p><strong>Pattern recognition</strong></p>
-				<ul>
-					<li>Topics that keep coming up</li>
-					<li>Questions you ask repeatedly (maybe worth documenting)</li>
-					<li>How your usage has evolved over time</li>
-				</ul>
+	<p><strong>Pattern recognition</strong></p>
+	<ul>
+		<li>Topics that keep coming up</li>
+		<li>Questions you ask repeatedly (maybe worth documenting)</li>
+		<li>How your usage has evolved over time</li>
+	</ul>
 
-				<p><strong>Knowledge extraction</strong></p>
-				<ul>
-					<li>Export important conversations as permanent notes</li>
-					<li>Build a searchable knowledge base from your sessions</li>
-					<li>Create summaries of project work</li>
-				</ul>
+	<p><strong>Knowledge extraction</strong></p>
+	<ul>
+		<li>Export important conversations as permanent notes</li>
+		<li>Build a searchable knowledge base from your sessions</li>
+		<li>Create summaries of project work</li>
+	</ul>
 
-				<p><strong>Continuity</strong></p>
-				<ul>
-					<li>Pick up exactly where you left off, even weeks later</li>
-					<li>Reference specific past decisions</li>
-					<li>Find that code snippet Claude wrote that you didn't save</li>
-				</ul>
+	<p><strong>Continuity</strong></p>
+	<ul>
+		<li>Pick up exactly where you left off, even weeks later</li>
+		<li>Reference specific past decisions</li>
+		<li>Find that code snippet Claude wrote that you didn't save</li>
+	</ul>
 
-				<hr />
+	<hr />
 
-				<h2>The irony</h2>
+	<h2>The irony</h2>
 
-				<p>I spent way too long trying to build session logging via Stop Hooks. It failed because Claude Code doesn't pass conversation content to hooks.</p>
+	<p>I spent way too long trying to build session logging via Stop Hooks. It failed because Claude Code doesn't pass conversation content to hooks.</p>
 
-				<p>Then I discovered that Claude Code was already logging everything, automatically, in a better format than I would have designed, with more data than I would have captured.</p>
+	<p>Then I discovered that Claude Code was already logging everything, automatically, in a better format than I would have designed, with more data than I would have captured.</p>
 
-				<p>Sometimes the feature you want already exists.</p>
+	<p>Sometimes the feature you want already exists.</p>
 
-				<figure class="article-image">
-					<img src="/images/claude/hidden-memory/006.png" alt="Analytics dashboard visualization" />
-				</figure>
+	<figure class="article-image">
+		<img src="/images/claude/hidden-memory/006.png" alt="Analytics dashboard visualization" />
+	</figure>
 
-				<hr />
+	<hr />
 
-				<h2 id="building-next">What I'm building next</h2>
+	<h2 id="building-next">What I'm building next</h2>
 
-				<p>The raw data is there, but grep and jq only get you so far. I'm building two things:</p>
+	<p>The raw data is there, but grep and jq only get you so far. I'm building two things:</p>
 
-				<h3>Smarter retrieval</h3>
+	<h3>Smarter retrieval</h3>
 
-				<p>Right now Claude searches my history with basic text matching. I'm moving the data into <strong>DuckDB</strong> - a fast analytical database that can slice through hundreds of megabytes in milliseconds. On top of that, I'm adding <strong>semantic search</strong> via vector embeddings. The goal: find past conversations by <em>meaning</em>, not just keywords. "Find when I solved something like this before" - even if I used completely different words.</p>
+	<p>Right now Claude searches my history with basic text matching. I'm moving the data into <strong>DuckDB</strong> - a fast analytical database that can slice through hundreds of megabytes in milliseconds. On top of that, I'm adding <strong>semantic search</strong> via vector embeddings. The goal: find past conversations by <em>meaning</em>, not just keywords. "Find when I solved something like this before" - even if I used completely different words.</p>
 
-				<h3>Visual dashboard</h3>
+	<h3>Visual dashboard</h3>
 
-				<p>A Svelte-based interface for exploring my conversation history, using <a href="https://layercake.graphics/" target="_blank" rel="noopener noreferrer">Layercake</a> for visualizations. Activity heatmaps, project breakdowns, topic patterns over time. The kind of insights that are invisible when everything lives in flat files. Think: "Which projects get most of my attention?" or "When am I most productive with Claude?"</p>
+	<p>A Svelte-based interface for exploring my conversation history, using <a href="https://layercake.graphics/" target="_blank" rel="noopener noreferrer">Layercake</a> for visualizations. Activity heatmaps, project breakdowns, topic patterns over time. The kind of insights that are invisible when everything lives in flat files. Think: "Which projects get most of my attention?" or "When am I most productive with Claude?"</p>
 
-				<figure class="article-image">
-					<img src="/images/claude/hidden-memory/007.png" alt="Memory to insights flow: raw JSONL files to DuckDB with semantic search to visual dashboard" />
-				</figure>
+	<figure class="article-image">
+		<img src="/images/claude/hidden-memory/007.png" alt="Memory to insights flow: raw JSONL files to DuckDB with semantic search to visual dashboard" />
+	</figure>
 
-				<p>The data is a goldmine. Now I'm building the tools to actually mine it.</p>
+	<p>The data is a goldmine. Now I'm building the tools to actually mine it.</p>
 
-				<hr />
+	<hr />
 
-				<h2>The bigger picture</h2>
+	<h2>The bigger picture</h2>
 
-				<p>My mantra: reduce friction to the minimum required to fully manifest an idea. Every unnecessary step between thought and creation is a leak in the system.</p>
+	<p>My mantra: reduce friction to the minimum required to fully manifest an idea. Every unnecessary step between thought and creation is a leak in the system.</p>
 
-				<p>Starting every session from scratch is friction. Re-explaining context. Repeating decisions. Losing the thread of what you solved last week. That's cognitive overhead that doesn't serve the work.</p>
+	<p>Starting every session from scratch is friction. Re-explaining context. Repeating decisions. Losing the thread of what you solved last week. That's cognitive overhead that doesn't serve the work.</p>
 
-				<p>This discovery - that the memory already exists, just waiting to be accessed - removes that friction. Claude can now remember. Not perfectly, not magically. But the data is there. The continuity is possible.</p>
+	<p>This discovery - that the memory already exists, just waiting to be accessed - removes that friction. Claude can now remember. Not perfectly, not magically. But the data is there. The continuity is possible.</p>
 
-				<p>If you're using Claude Code, you have this too. Check <code>~/.claude/projects/</code>. Your history is waiting.</p>
+	<p>If you're using Claude Code, you have this too. Check <code>~/.claude/projects/</code>. Your history is waiting.</p>
 
-				<hr />
+	<hr />
 
-				<h2 id="full-snippet">Bonus: Full CLAUDE.md snippet</h2>
+	<h2 id="full-snippet">Bonus: Full CLAUDE.md snippet</h2>
 
-				<p>Here's the complete conversation history section from my CLAUDE.md. Copy, paste, and adapt for your own setup:</p>
+	<p>Here's the complete conversation history section from my CLAUDE.md. Copy, paste, and adapt for your own setup:</p>
 
-				<pre><code>{`## Conversation History Access (Long-Term Memory)
+	<pre><code>{`## Conversation History Access (Long-Term Memory)
 
 Claude Code automatically stores **complete conversation transcripts** locally. This gives you persistent memory across sessions.
 
@@ -596,231 +547,4 @@ If user asks about:
 - Track patterns in what topics you work on
 - Search for that "thing we talked about" without remembering exactly when
 - Analyze tool usage patterns and MCP call frequency`}</code></pre>
-
-			</div>
-		{/if}
-	</div>
-</article>
-
-<style>
-	.article {
-		padding: 60px 0 100px;
-	}
-
-	.container {
-		max-width: 800px;
-		margin: 0 auto;
-		padding: 0 24px;
-	}
-
-	.article-header {
-		margin-bottom: 48px;
-	}
-
-	.back-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		font-size: 14px;
-		color: var(--aion-purple);
-		text-decoration: none;
-		margin-bottom: 24px;
-		transition: opacity 0.2s;
-	}
-
-	.back-link:hover {
-		opacity: 0.8;
-	}
-
-	.date {
-		display: block;
-		font-size: 14px;
-		color: var(--aion-purple);
-		margin-bottom: 16px;
-	}
-
-	h1 {
-		font-size: clamp(28px, 5vw, 42px);
-		font-weight: 700;
-		line-height: 1.2;
-		color: var(--white);
-		margin: 0;
-	}
-
-	.article-content {
-		font-size: 17px;
-		line-height: 1.8;
-		color: rgba(255, 255, 255, 0.85);
-	}
-
-	.article-content p {
-		margin-bottom: 24px;
-	}
-
-	.article-content h2 {
-		font-size: 24px;
-		font-weight: 600;
-		color: var(--white);
-		margin: 48px 0 24px;
-	}
-
-	.article-content h3 {
-		font-size: 20px;
-		font-weight: 600;
-		color: var(--white);
-		margin: 32px 0 16px;
-	}
-
-	.article-content hr {
-		border: none;
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
-		margin: 48px 0;
-	}
-
-	.article-content ul {
-		margin-bottom: 24px;
-		padding-left: 24px;
-	}
-
-	.article-content li {
-		margin-bottom: 8px;
-	}
-
-	.article-content strong {
-		color: var(--white);
-	}
-
-	.article-content em {
-		font-style: italic;
-	}
-
-	.article-content code {
-		background: rgba(189, 147, 249, 0.15);
-		padding: 2px 6px;
-		border-radius: 4px;
-		font-family: 'SF Mono', 'Fira Code', monospace;
-		font-size: 0.9em;
-		color: var(--aion-purple-light);
-	}
-
-	.article-content pre {
-		background: rgba(0, 0, 0, 0.4);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 8px;
-		padding: 20px;
-		overflow-x: auto;
-		margin-bottom: 24px;
-	}
-
-	.article-content pre code {
-		background: none;
-		padding: 0;
-		font-size: 14px;
-		color: rgba(255, 255, 255, 0.9);
-		line-height: 1.6;
-	}
-
-	.article-image {
-		margin: 32px 0;
-	}
-
-	.article-image img {
-		width: 100%;
-		height: auto;
-		border-radius: 8px;
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-	}
-
-	.comparison-table,
-	.data-table {
-		margin: 24px 0;
-		overflow-x: auto;
-	}
-
-	.comparison-table table,
-	.data-table table {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 15px;
-	}
-
-	.comparison-table th,
-	.comparison-table td,
-	.data-table th,
-	.data-table td {
-		padding: 12px 16px;
-		text-align: left;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-	}
-
-	.comparison-table th,
-	.data-table th {
-		color: var(--white);
-		font-weight: 600;
-		background: rgba(189, 147, 249, 0.1);
-	}
-
-	.comparison-table td,
-	.data-table td {
-		color: rgba(255, 255, 255, 0.85);
-	}
-
-	.comparison-table tr:hover td,
-	.data-table tr:hover td {
-		background: rgba(255, 255, 255, 0.03);
-	}
-
-	:global(.code-block) {
-		position: relative;
-		margin-bottom: 24px;
-	}
-
-	:global(.code-block pre) {
-		margin-bottom: 0;
-	}
-
-	:global(.copy-btn) {
-		position: absolute;
-		top: 8px;
-		right: 8px;
-		padding: 4px 10px;
-		font-size: 12px;
-		font-weight: 500;
-		color: rgba(255, 255, 255, 0.7);
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 4px;
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	:global(.copy-btn:hover) {
-		color: var(--white);
-		background: rgba(255, 255, 255, 0.15);
-		border-color: rgba(255, 255, 255, 0.3);
-	}
-
-	@media (max-width: 768px) {
-		.article {
-			padding: 40px 0 80px;
-		}
-
-		.article-content {
-			font-size: 16px;
-		}
-
-		.article-content pre {
-			padding: 16px;
-			font-size: 13px;
-		}
-
-		.comparison-table {
-			font-size: 14px;
-		}
-
-		.comparison-table th,
-		.comparison-table td {
-			padding: 10px 12px;
-		}
-	}
-</style>
+</ArticleLayout>
