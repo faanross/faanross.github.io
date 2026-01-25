@@ -104,7 +104,7 @@
 
 				<p><strong>Option A: Separate SQLite database.</strong> Keep DuckDB for analytics, add SQLite with FTS5 for search. Clean separation - each database does what it's best at.</p>
 
-				<p><strong>Option B: DuckDB's built-in FTS extension.</strong> Use DuckDB for everything. Single database, simpler stack.</p>
+				<p><strong>Option B: DuckDB's FTS extension.</strong> Use DuckDB for everything. Single database, simpler stack. (It's a loadable extension, not built-in - you need <code>INSTALL fts; LOAD fts;</code> - but it integrates seamlessly once loaded.)</p>
 
 				<p>I spent some time researching both. SQLite's FTS5 is mature, battle-tested, widely documented. DuckDB's FTS extension is newer, less commonly used.</p>
 
@@ -134,21 +134,35 @@ PRAGMA create_fts_index(
 
 				<p>That's it. One command to install, one to create the index on my messages table.</p>
 
-				<p>The options do the heavy lifting:</p>
+				<p>The parameters explained:</p>
 
 				<ul>
-					<li><strong>Porter stemmer</strong> - Handles word variations (running → run)</li>
-					<li><strong>English stopwords</strong> - Ignores "the", "is", "at"</li>
-					<li><strong>Case insensitive</strong> - "DuckDB" matches "duckdb"</li>
+					<li><strong><code>'messages', 'id', 'content'</code></strong> - Table name, primary key column, column(s) to index</li>
+					<li><strong><code>stemmer='porter'</code></strong> - Porter stemming algorithm. Handles word variations: "running" → "run", "authentication" → "authent"</li>
+					<li><strong><code>stopwords='english'</code></strong> - Ignores common words like "the", "is", "at" that add noise without meaning</li>
+					<li><strong><code>ignore='(\\.|[^a-z])+'</code></strong> - Regex to skip during indexing. This skips punctuation and non-letter characters</li>
+					<li><strong><code>strip_accents=1</code></strong> - Treats "café" and "cafe" as equivalent</li>
+					<li><strong><code>lower=1</code></strong> - Case-insensitive: "DuckDB" matches "duckdb"</li>
 				</ul>
 
-				<p>The database grew from 69MB to about 100MB. That's the price of an index - space for speed.</p>
+				<p>The index creates a naming convention: <code>fts_main_&lt;tablename&gt;</code>. So for my <code>messages</code> table, the index is accessed via <code>fts_main_messages</code>.</p>
+
+				<p>The database grew with the index - you can check the size difference with <code>du -sh</code> before and after. The overhead is the price of ranked search.</p>
 
 				<hr />
 
 				<h2>The First Ranked Search</h2>
 
 				<p>The moment I ran my first BM25 query, I knew this was the right call.</p>
+
+				<p><strong>What is BM25?</strong> It stands for "Best Match 25" - a ranking algorithm that scores documents based on how relevant they are to a search query. It considers:</p>
+				<ul>
+					<li><strong>Term frequency</strong> - How often does the search term appear in this message?</li>
+					<li><strong>Document length</strong> - Longer documents get slightly penalized (a term appearing once in 10 words is more significant than once in 1000)</li>
+					<li><strong>Inverse document frequency</strong> - Rare terms across the corpus score higher than common ones</li>
+				</ul>
+
+				<p>The query uses DuckDB's <code>match_bm25</code> function:</p>
 
 				<pre><code>{`SELECT
     s.project_name,
@@ -160,34 +174,15 @@ WHERE fts_main_messages.match_bm25(m.id, 'authentication') IS NOT NULL
 ORDER BY score DESC
 LIMIT 5;`}</code></pre>
 
-				<p>Results:</p>
-
-				<div class="data-table">
-					<table>
-						<thead>
-							<tr>
-								<th>project_name</th>
-								<th>score</th>
-								<th>preview</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr><td>vault</td><td>4.32</td><td>[THINKING] They have `gh` installed but not authenticated...</td></tr>
-							<tr><td>vault</td><td>3.93</td><td>so I say no here Authenticate Git with your GitHub...</td></tr>
-							<tr><td>vault</td><td>3.93</td><td>[THINKING] gh is already installed. Just need to authenticate...</td></tr>
-							<tr><td>vault</td><td>3.89</td><td>[THINKING] The GitHub server is added but shows "Failed to connect"...</td></tr>
-							<tr><td>vault</td><td>3.80</td><td>[THINKING] The user is asking if I can delete repos from GitHub...</td></tr>
-						</tbody>
-					</table>
-				</div>
-
-				<figure class="article-image">
+				<!-- TODO: Replace with actual screenshot of this query result -->
+				<figure class="article-image placeholder">
 					<img src="/images/claude/ranked-search/scr-bm25-auth.png" alt="Terminal showing BM25 ranked search results for authentication" />
+					<figcaption class="placeholder-note">📸 TODO: Actual DuckDB CLI screenshot of authentication BM25 search</figcaption>
 				</figure>
 
-				<p>Notice the scores. 4.32 vs 3.80 isn't a huge spread, but it's meaningful. The top result is <em>about</em> authentication. The bottom result just mentions it while discussing something else (deleting repos).</p>
+				<p>The scores differentiate results. Higher scores mean the message is more <em>about</em> the search term, not just mentioning it in passing. A focused discussion about authentication outranks a casual aside.</p>
 
-				<p>That's BM25 working. Term frequency, document length, rarity across the corpus - all factored into a single relevance score.</p>
+				<p>That's BM25 working. Term frequency, document length, rarity across the corpus - all factored into a single relevance score. No parameter tuning needed; it just works out of the box.</p>
 
 				<figure class="article-image">
 					<img src="/images/claude/ranked-search/ranking.png" alt="Ranked search results with clear hierarchy" />
@@ -205,8 +200,10 @@ LIMIT 5;`}</code></pre>
 
 				<p>When I'm looking for DuckDB-specific insights, I don't want comparison discussions. This filters them out.</p>
 
-				<figure class="article-image">
+				<!-- TODO: Replace with actual screenshot of AND NOT query -->
+				<figure class="article-image placeholder">
 					<img src="/images/claude/ranked-search/scr-boolean-andnot.png" alt="Terminal showing DuckDB AND NOT sqlite query results" />
+					<figcaption class="placeholder-note">📸 TODO: Actual DuckDB CLI screenshot of AND NOT query</figcaption>
 				</figure>
 
 				<p><strong>Find either authentication or authorization:</strong></p>
@@ -215,8 +212,10 @@ LIMIT 5;`}</code></pre>
 
 				<p>Related concepts, both relevant. One query catches both.</p>
 
-				<figure class="article-image">
+				<!-- TODO: Replace with actual screenshot of OR query -->
+				<figure class="article-image placeholder">
 					<img src="/images/claude/ranked-search/scr-boolean-or.png" alt="Terminal showing authentication OR authorization query results" />
+					<figcaption class="placeholder-note">📸 TODO: Actual DuckDB CLI screenshot of OR query</figcaption>
 				</figure>
 
 				<figure class="article-image">
@@ -235,8 +234,10 @@ LIMIT 5;`}</code></pre>
 
 				<p>For technical terms, feature names, error messages - phrase search is essential. <code>"connection refused"</code> finds actual connection errors. <code>connection refused</code> (without quotes) finds any message with both words, regardless of context.</p>
 
-				<figure class="article-image">
-					<img src="/images/claude/ranked-search/scr-phrase-search.png" alt="Terminal showing voice mode phrase search results" />
+				<!-- TODO: Replace with actual screenshot of phrase search -->
+				<figure class="article-image placeholder">
+					<img src="/images/claude/ranked-search/scr-phrase-search.png" alt="Terminal showing phrase search results" />
+					<figcaption class="placeholder-note">📸 TODO: Actual DuckDB CLI screenshot of phrase search</figcaption>
 				</figure>
 
 				<hr />
@@ -252,12 +253,13 @@ LIMIT 5;`}</code></pre>
     con.execute("LOAD fts")
 
     # Drop existing index if it exists
+    # The try/except handles the case where the index doesn't exist yet
     try:
         con.execute("PRAGMA drop_fts_index('messages')")
-    except:
-        pass
+    except duckdb.CatalogException:
+        pass  # Index doesn't exist yet, that's fine
 
-    # Rebuild
+    # Rebuild from scratch
     con.execute("""
         PRAGMA create_fts_index(
             'messages', 'id', 'content',
@@ -266,7 +268,9 @@ LIMIT 5;`}</code></pre>
         )
     """)`}</code></pre>
 
-				<p>Every hourly ingestion now rebuilds the index automatically. Full refresh each time - simple, reliable, no drift.</p>
+				<p>Every hourly ingestion now rebuilds the index automatically. Full refresh each time.</p>
+
+				<p><strong>Why full rebuild instead of incremental?</strong> Simplicity. DuckDB's FTS doesn't support incremental index updates - you either rebuild the whole thing or manage a more complex sync. For my data size (tens of thousands of messages), a full rebuild takes seconds. If this grew to millions of rows, I'd need a different approach - possibly a separate search service like Meilisearch or Typesense. For now, simple wins.</p>
 
 				<hr />
 
@@ -476,6 +480,21 @@ LIMIT 20;`}</code></pre>
 		height: auto;
 		border-radius: 8px;
 		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+	}
+
+	.article-image.placeholder {
+		border: 2px dashed rgba(189, 147, 249, 0.4);
+		border-radius: 12px;
+		padding: 16px;
+		background: rgba(189, 147, 249, 0.05);
+	}
+
+	.placeholder-note {
+		text-align: center;
+		font-size: 14px;
+		color: var(--aion-purple);
+		margin-top: 12px;
+		font-style: italic;
 	}
 
 	.data-table {
