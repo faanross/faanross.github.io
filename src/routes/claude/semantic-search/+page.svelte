@@ -77,6 +77,8 @@
 
 				<p>When you pass text through an embedding model, it outputs a vector - a list of hundreds of numbers that represent the "meaning" of that text in high-dimensional space. The key insight: texts with similar meanings produce similar vectors, even when they use completely different words.</p>
 
+				<p><em>(Technical note: "similar vectors" means vectors that are close together when measured by a distance metric. LanceDB uses L2 (Euclidean) distance by default - literally the straight-line distance between two points in 768-dimensional space. Lower distance = more similar meaning.)</em></p>
+
 				<p>This is what makes it possible to search for "frustration" and find "this is getting tedious." The embedding model understands these express related concepts.</p>
 
 				<pre><code>"This is getting tedious"           →  [0.31, 0.42, -3.98, ..., 0.57]
@@ -93,13 +95,13 @@
 
 				<p>LanceDB fit the pattern:</p>
 				<ul>
-					<li>File-based storage (just a directory on disk)</li>
-					<li>Embedded (runs in your process, no server)</li>
+					<li>File-based storage (just a directory on disk, using the Lance columnar format)</li>
+					<li>Embedded (runs in your process, no server to manage)</li>
 					<li>Python SDK (same as my ingestion scripts)</li>
-					<li>Optimized for vector similarity search</li>
+					<li>Optimized for vector similarity search with metadata filtering</li>
 				</ul>
 
-				<p>Same philosophy as DuckDB. Point it at a directory, it works.</p>
+				<p>Same philosophy as DuckDB. Point it at a directory, it works. The Lance format stores vectors and metadata together efficiently - no need for a separate metadata store.</p>
 
 				<p>I didn't evaluate alternatives deeply. The architecture matched what I was already building. Sometimes that's reason enough.</p>
 
@@ -113,6 +115,8 @@
 
 				<p>The plan was simple: take every message from my DuckDB database, send it to the Mac Mini's embedding API, store the vector in LanceDB.</p>
 
+				<p><em>(A note on nomic-embed-text: this model technically expects prefixes for optimal results - <code>"search_document: "</code> for indexing and <code>"search_query: "</code> for queries. I didn't use them initially and got decent results anyway. Adding them later improved relevance slightly. If you're implementing this, use the prefixes from the start.)</em></p>
+
 				<p>52,279 messages.</p>
 
 				<p>I wrote the first version of <code>embed.py</code> in about twenty minutes. Loop through messages, call the API, insert into LanceDB. Clean, obvious.</p>
@@ -123,21 +127,34 @@
 
 				<p>I added a print statement every 100 messages just to see movement. That helped, but watching "100... 200... 300..." tick up slowly toward 52,000 wasn't much better. I killed the script and added <code>tqdm</code>.</p>
 
+				<pre><code class="language-python">{`from tqdm import tqdm
+
+errors = []
+for msg in tqdm(messages, desc="Embedding messages"):
+    try:
+        vector = get_embedding(msg["content"])
+        # ... store in LanceDB
+    except Exception as e:
+        errors.append({"id": msg["id"], "error": str(e)})
+        continue  # Skip this message, keep going
+
+print(f"Completed with {len(errors)} errors")`}</code></pre>
+
 				<pre><code>Embedding messages: 100%|████████████████████| 52279/52279 [20:14&lt;00:00, 43.1msg/s]</code></pre>
 
 				<p>Something as simple as progress bar can dramatically improve an experience. Same 20 minutes, but now I could see it was working, estimate when it would finish, walk away and come back.</p>
 
-				<p>At 43 messages per second, the entire history took just over 20 minutes to embed. 67 errors out of 52,279 - about 0.1%. Probably messages that exceeded the embedding API's input limit. I logged them and moved on.</p>
+				<p>At 43 messages per second, the entire history took just over 20 minutes to embed. 67 errors out of 52,279 - about 0.1%. The error handling logs failures and continues - I'd rather have 99.9% of my messages searchable than crash on edge cases. Most errors were unusual content (binary data that somehow ended up in messages, extremely long tool outputs). I logged them for later investigation and moved on.</p>
 
 				<hr />
 
 				<h2>The Truncation Problem</h2>
 
-				<p>Some Claude responses are enormous. We're talking code blocks, explanations, multi-file diffs - thousands of characters. The embedding API has a limit (around 8,000 characters for nomic-embed-text). And even if it didn't, does embedding 50,000 characters produce a meaningfully better vector than embedding the first 8,000?</p>
+				<p>Some Claude responses are enormous. We're talking code blocks, explanations, multi-file diffs - thousands of characters. The embedding model has a context limit (nomic-embed-text supports 8192 <em>tokens</em>, which is roughly 32,000 characters since tokens average ~4 characters). And even within that limit, does embedding 30,000 characters produce a meaningfully better vector than embedding the first 8,000?</p>
 
 				<p>I didn't know the answer, so I made practical choices:</p>
 				<ul>
-					<li><strong>Embedding input:</strong> Truncate to 8,000 characters (API limit anyway)</li>
+					<li><strong>Embedding input:</strong> Truncate to 8,000 characters (well within token limit, captures the gist)</li>
 					<li><strong>Stored content:</strong> Truncate to 2,000 characters (for display in search results)</li>
 				</ul>
 
@@ -156,6 +173,8 @@
 				<pre><code>python search.py "retry logic when things fail" --limit 5</code></pre>
 
 				<p>Not too sure what I was expecting tbh, but this is what I got:</p>
+
+				<p><em>(Output below is formatted for readability - actual CLI output is similar but less pretty-printed)</em></p>
 
 				<pre><code>Searching: "retry logic when things fail"
 
@@ -181,6 +200,8 @@ Distance: 223.55 (lower = more similar)
 Content: There's some basic retry behavior in the runloops. Let me
 explore the agent communication logic more thoroughly to understand
 the current error handling patterns.</code></pre>
+
+				<p>The distance scores (208.88, 220.88, 223.55) are L2 distances in 768-dimensional space. Lower means closer, meaning more semantically similar. The absolute numbers aren't intuitive - what matters is the relative ordering and that smaller is better.</p>
 
 				<p>Cool. I hadn't searched for "backoff" or "retryable errors" or "503s." But weeks ago, when I was implementing error handling, those were the conversations we had. The embedding model understood that "retry logic when things fail" is conceptually related to "implementing smarter retry behavior" even though the phrasing is completely different.</p>
 
