@@ -88,32 +88,191 @@
 
 				<hr />
 
+				<h2>Quick primer: What is JSONL?</h2>
+
+				<p>JSONL (JSON Lines) is a simple format where each line of a file is a complete, valid JSON object. Unlike regular JSON which wraps everything in one structure, JSONL lets you append new records without parsing the entire file.</p>
+
+				<pre><code>{`{"type": "user", "message": "first message", "timestamp": "..."}
+{"type": "assistant", "message": "response", "timestamp": "..."}
+{"type": "user", "message": "second message", "timestamp": "..."}`}</code></pre>
+
+				<p>One object per line. No commas between lines. No wrapping array.</p>
+
+				<p>When you <code>cat</code> a JSONL file and it looks like a wall of text, that's because each JSON object can be thousands of characters long - they wrap visually in your terminal but are still single lines. A typical Claude response might be 70,000+ characters on one line.</p>
+
+				<p>This format is perfect for logs and conversation history - new messages just append to the file, and you can stream through gigabytes of data line by line without loading everything into memory.</p>
+
+				<hr />
+
 				<h2>What's actually in there</h2>
 
-				<p>Each session is a JSONL file - one JSON object per line. Here's what gets stored:</p>
+				<p>Each session creates a JSONL file named with its session UUID. But it's not just messages - there are <strong>five distinct record types</strong>:</p>
 
-				<p><strong>For every message you send:</strong></p>
+				<div class="data-table">
+					<table>
+						<thead>
+							<tr>
+								<th>Type</th>
+								<th>What It Captures</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><code>user</code></td>
+								<td>Your messages (typed or voice-transcribed)</td>
+							</tr>
+							<tr>
+								<td><code>assistant</code></td>
+								<td>Claude's responses (including thinking blocks)</td>
+							</tr>
+							<tr>
+								<td><code>progress</code></td>
+								<td>Tool execution progress (MCP calls, file operations)</td>
+							</tr>
+							<tr>
+								<td><code>system</code></td>
+								<td>Internal events (hooks firing, stop reasons)</td>
+							</tr>
+							<tr>
+								<td><code>file-history-snapshot</code></td>
+								<td>Snapshots of file state during edits</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<p>In a typical session, you'll see roughly 2x as many assistant messages as user messages, plus progress events for every tool call, system events for hooks, and file snapshots when Claude edits files.</p>
+
+				<p><em>Note: The examples below are sanitized and simplified to illustrate the structure. Real entries contain additional metadata fields and much longer content.</em></p>
+
+				<h3>1. User messages</h3>
+
+				<p>Every message you send, whether typed or spoken via voice mode:</p>
 
 				<pre><code>{`{
   "type": "user",
-  "message": { "role": "user", "content": "your message here" },
-  "timestamp": "2026-01-07T22:26:33.425Z",
-  "sessionId": "6a704ab6-...",
-  "cwd": "/path/to/your/project"
+  "message": {
+    "role": "user",
+    "content": "Can you help me refactor this function?"
+  },
+  "timestamp": "2026-01-17T10:05:53.497Z",
+  "sessionId": "c4bdaf0d-e808-42ce-90d0-6536fbf7983b",
+  "cwd": "/Users/you/your-project",
+  "uuid": "56f6c539-729a-4ed5-95cb-47aaeb10af20",
+  "gitBranch": "main",
+  "version": "2.1.11"
 }`}</code></pre>
 
-				<p><strong>For every Claude response:</strong></p>
+				<h3>2. Assistant messages</h3>
+
+				<p>Claude's responses, including the full content and thinking blocks (if extended thinking is enabled):</p>
 
 				<pre><code>{`{
   "type": "assistant",
-  "message": { "role": "assistant", "content": [...] },
-  "timestamp": "2026-01-07T22:26:37.102Z",
-  "usage": { "input_tokens": 9500, "output_tokens": 1200 }
+  "message": {
+    "role": "assistant",
+    "content": [
+      {
+        "type": "thinking",
+        "thinking": "Let me analyze the function structure..."
+      },
+      {
+        "type": "text",
+        "text": "I can see several opportunities to improve this..."
+      }
+    ]
+  },
+  "timestamp": "2026-01-17T10:05:57.413Z",
+  "sessionId": "c4bdaf0d-e808-42ce-90d0-6536fbf7983b",
+  "usage": {
+    "input_tokens": 9500,
+    "output_tokens": 1200
+  }
 }`}</code></pre>
 
-				<p>Voice or typed - doesn't matter. Once transcribed, it's all text, all stored.</p>
+				<h3>3. Progress events</h3>
 
-				<p>The files are organized by the directory you're working in. So all your sessions in <code>/Users/you/project-a/</code> live in one folder, sessions in <code>/Users/you/project-b/</code> in another.</p>
+				<p>Every tool call generates progress events - when MCP servers are invoked, when files are read, when bash commands run:</p>
+
+				<pre><code>{`{
+  "type": "progress",
+  "data": {
+    "type": "mcp_progress",
+    "status": "started",
+    "serverName": "voicemode",
+    "toolName": "converse"
+  },
+  "toolUseID": "toolu_01DRAfS2ccqm8zYenJT6PR2R",
+  "timestamp": "2026-01-17T10:06:10.830Z",
+  "sessionId": "c4bdaf0d-e808-42ce-90d0-6536fbf7983b"
+}`}</code></pre>
+
+				<h3>4. System events</h3>
+
+				<p>Internal events like hooks firing, session stops, and other system-level signals:</p>
+
+				<pre><code>{`{
+  "type": "system",
+  "subtype": "stop_hook_summary",
+  "hookCount": 1,
+  "hookInfos": [
+    { "command": "sh /path/to/hook-wrapper.sh handle-hook Stop" }
+  ],
+  "hookErrors": [],
+  "stopReason": "",
+  "timestamp": "2026-01-17T10:07:56.454Z",
+  "sessionId": "c4bdaf0d-e808-42ce-90d0-6536fbf7983b"
+}`}</code></pre>
+
+				<h3>5. File history snapshots</h3>
+
+				<p>When Claude edits files, snapshots capture the state - enabling the undo functionality:</p>
+
+				<pre><code>{`{
+  "type": "file-history-snapshot",
+  "messageId": "7e91a3ea-e6b5-4ddb-a944-4faad3eb24ec",
+  "isSnapshotUpdate": false,
+  "snapshot": {
+    "messageId": "7e91a3ea-e6b5-4ddb-a944-4faad3eb24ec",
+    "timestamp": "2026-01-17T10:06:30.000Z",
+    "trackedFileBackups": {
+      "src/components/Button.tsx": { "content": "..." }
+    }
+  }
+}`}</code></pre>
+
+				<hr />
+
+				<h2>File organization</h2>
+
+				<p>The files are organized by the directory you're working in. So all your sessions in <code>/Users/you/project-a/</code> live in one folder, sessions in <code>/Users/you/project-b/</code> in another. The folder names use dashes instead of slashes:</p>
+
+				<pre><code>{`~/.claude/projects/
+├── -Users-you-project-a/
+│   ├── c4bdaf0d-e808-42ce-90d0-6536fbf7983b.jsonl
+│   ├── a1b2c3d4-e5f6-7890-abcd-ef1234567890.jsonl
+│   ├── subagents/          ← spawned sub-agents
+│   └── ...
+├── -Users-you-project-b/
+│   └── ...
+└── -Users-you-Documents-work/
+    └── ...`}</code></pre>
+
+				<p>You'll also notice <code>subagents/</code> folders within project directories. These contain conversations from spawned sub-agents - separate Claude instances that handle delegated tasks. For most queries, you'll want to exclude these (hence <code>! -path "*/subagents/*"</code> in the commands below) to focus on your direct conversations.</p>
+
+				<hr />
+
+				<h2>Privacy and security considerations</h2>
+
+				<p>Before you get too excited about this data goldmine, some things to keep in mind:</p>
+
+				<p><strong>No encryption at rest.</strong> These are plain text JSON files. Anyone with access to your machine - or your backups - can read your complete conversation history.</p>
+
+				<p><strong>File snapshots contain actual file contents.</strong> The <code>file-history-snapshot</code> records store the content of files Claude edits. If you're working with sensitive code, API keys, credentials, or proprietary information, that content lives in your JSONL files too.</p>
+
+				<p><strong>Your prompts reveal your thinking.</strong> Every question you've asked, every problem you've described, every piece of context you've provided - it's all there. Consider what that history reveals about your projects, your knowledge gaps, and your workflow.</p>
+
+				<p>This isn't a reason not to use the feature - just be aware of what you're storing and where. If you're on a shared machine or backing up to cloud storage, factor this into your security posture.</p>
 
 				<hr />
 
@@ -130,7 +289,7 @@
 				<ul>
 					<li><strong>Complete</strong> - both sides of every conversation, not just my input</li>
 					<li><strong>Automatic</strong> - no export step, no manual logging</li>
-					<li><strong>Permanent</strong> - local disk storage, no cloud retention policy eating your history after 30 days</li>
+					<li><strong>Local</strong> - stored on your disk, no cloud retention policy eating your history after 30 days (though future Claude Code updates could change the storage format or location)</li>
 					<li><strong>Parseable</strong> - standard JSONL format, easy to query with basic tools</li>
 				</ul>
 
@@ -179,7 +338,7 @@
 							<tr>
 								<td>Storage</td>
 								<td>Cloud, 30-day default</td>
-								<td>Local, permanent</td>
+								<td>Local disk, no auto-expiry</td>
 							</tr>
 							<tr>
 								<td>Requires setup</td>
@@ -214,7 +373,7 @@
 
 				<pre><code>ls -la ~/.claude/projects/-Users-yourname-project-a/</code></pre>
 
-				<p>Each <code>.jsonl</code> file is a session. Timestamps in the file names.</p>
+				<p>Each <code>.jsonl</code> file is a session, named with a UUID (e.g., <code>c4bdaf0d-e808-42ce-90d0-6536fbf7983b.jsonl</code>). The timestamps are inside the files, not in the filenames - use the file's modification time or parse the internal timestamps to find sessions by date.</p>
 
 				<h3>Find sessions by date</h3>
 
@@ -230,7 +389,13 @@
 
 				<h3>Parse a session into readable format</h3>
 
-				<pre><code>{`cat session-file.jsonl | jq -s '[.[] | select(.type == "user" or .type == "assistant")] | .[] | {type, content: .message.content, time: .timestamp}'`}</code></pre>
+				<p>Note: The <code>.message.content</code> structure varies - sometimes it's a string (user messages), sometimes an array of objects (assistant messages with thinking blocks). This command extracts just user/assistant messages:</p>
+
+				<pre><code>{`cat session-file.jsonl | jq -s '[.[] | select(.type == "user" or .type == "assistant")] | .[] | {type, time: .timestamp}'`}</code></pre>
+
+				<p>For a more detailed view that handles both content formats:</p>
+
+				<pre><code>{`cat session-file.jsonl | jq -s '.[] | select(.type == "user") | {type, time: .timestamp, content: .message.content}'`}</code></pre>
 
 				<h3>Quick stats</h3>
 
@@ -370,16 +535,24 @@ Claude Code automatically stores **complete conversation transcripts** locally. 
 ~/.claude/projects/
 \`\`\`
 
-Files are organized by working directory path. Each session creates a JSONL file containing:
-- All user messages (typed and voice-transcribed)
-- All Claude responses
-- Tool calls and results
-- Timestamps
-- Token usage
+Files are organized by working directory path. Each session creates a JSONL file (one JSON object per line) named with a UUID. Subagent conversations are stored in \`subagents/\` subdirectories - exclude these with \`! -path "*/subagents/*"\` to focus on direct conversations.
+
+### Record Types
+
+Five types of records are stored:
+- **user** - Your messages (typed or voice-transcribed)
+- **assistant** - Claude's responses (including thinking blocks)
+- **progress** - Tool execution events (MCP calls, file reads)
+- **system** - Internal events (hooks, stop reasons)
+- **file-history-snapshot** - File state for undo functionality (contains actual file contents)
 
 ### Data Retention
 
-**PERMANENT** - stored locally on disk, no cloud retention policy. Files stay until manually deleted.
+Stored locally on disk, no cloud retention policy. Files persist until manually deleted (though future Claude Code updates could change storage format/location).
+
+### Privacy Note
+
+These are unencrypted plain text files. File snapshots contain actual file contents. Be mindful of what's stored if on shared machines or cloud backups.
 
 ### When to Access
 
@@ -398,7 +571,7 @@ If user asks about:
    ls -la ~/.claude/projects/-Users-yourname-project/
    \`\`\`
 
-2. **Find sessions by date:**
+2. **Find sessions by date (excludes subagents):**
    \`\`\`bash
    find ~/.claude/projects -name "*.jsonl" -type f ! -path "*/subagents/*" -newermt "2026-01-10" -exec ls -la {} \\;
    \`\`\`
@@ -408,30 +581,23 @@ If user asks about:
    grep -r "keyword" ~/.claude/projects/ --include="*.jsonl"
    \`\`\`
 
-4. **Parse a specific session:**
+4. **Extract user messages from a session:**
    \`\`\`bash
-   cat [session-file].jsonl | jq -s '[.[] | select(.type == "user" or .type == "assistant")]'
+   cat [session-file].jsonl | jq -s '.[] | select(.type == "user") | {time: .timestamp, content: .message.content}'
    \`\`\`
 
-### JSONL Structure
-
-Each line is a JSON object with:
-\`\`\`json
-{
-  "type": "user" | "assistant",
-  "message": { "role": "...", "content": "..." },
-  "timestamp": "2026-01-07T22:26:33.425Z",
-  "sessionId": "6a704ab6-...",
-  "cwd": "/path/to/working/directory"
-}
-\`\`\`
+5. **Count records by type in a session:**
+   \`\`\`bash
+   cat [session-file].jsonl | jq -s 'group_by(.type) | .[] | {type: .[0].type, count: length}'
+   \`\`\`
 
 ### Use Cases
 
 - Recall specific decisions or explanations from past sessions
 - Find code snippets or solutions discussed previously
 - Track patterns in what topics you work on
-- Search for that "thing we talked about" without remembering exactly when`}</code></pre>
+- Search for that "thing we talked about" without remembering exactly when
+- Analyze tool usage patterns and MCP call frequency`}</code></pre>
 
 			</div>
 		{/if}
@@ -567,35 +733,42 @@ Each line is a JSON object with:
 		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 	}
 
-	.comparison-table {
+	.comparison-table,
+	.data-table {
 		margin: 24px 0;
 		overflow-x: auto;
 	}
 
-	.comparison-table table {
+	.comparison-table table,
+	.data-table table {
 		width: 100%;
 		border-collapse: collapse;
 		font-size: 15px;
 	}
 
 	.comparison-table th,
-	.comparison-table td {
+	.comparison-table td,
+	.data-table th,
+	.data-table td {
 		padding: 12px 16px;
 		text-align: left;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
-	.comparison-table th {
+	.comparison-table th,
+	.data-table th {
 		color: var(--white);
 		font-weight: 600;
 		background: rgba(189, 147, 249, 0.1);
 	}
 
-	.comparison-table td {
+	.comparison-table td,
+	.data-table td {
 		color: rgba(255, 255, 255, 0.85);
 	}
 
-	.comparison-table tr:hover td {
+	.comparison-table tr:hover td,
+	.data-table tr:hover td {
 		background: rgba(255, 255, 255, 0.03);
 	}
 
