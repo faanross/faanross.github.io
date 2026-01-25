@@ -149,7 +149,27 @@
 // Sometimes this:
 {"message": {"content": [{"type": "tool_use", "name": "Bash", ...}]}}`}</code></pre>
 
-				<p>I spent longer than I'd like to admit handling all the edge cases. Recursive flattening. Type checking. Null handling. The kind of grunt work that doesn't feel like progress until suddenly everything works.</p>
+				<p>I spent longer than I'd like to admit handling all the edge cases. The core extraction logic ended up looking something like this:</p>
+
+				<pre><code>{`def extract_content(message):
+    """Handle the three different message formats."""
+    if message is None:
+        return ""
+    if isinstance(message, str):
+        return message
+    if isinstance(message, list):
+        # Array of content blocks
+        return " ".join(
+            block.get("text", "")
+            for block in message
+            if isinstance(block, dict)
+        )
+    if isinstance(message, dict):
+        # Nested structure - recurse into 'content'
+        return extract_content(message.get("content", ""))
+    return str(message)`}</code></pre>
+
+				<p>Recursive flattening. Type checking at every level. The kind of grunt work that doesn't feel like progress until suddenly everything works.</p>
 
 				<figure class="article-image">
 					<img src="/images/claude/duckdb-foundation/dataflow.png" alt="Data flow from JSONL files through parsing to DuckDB" />
@@ -159,7 +179,7 @@
 
 				<h2>The Schema That Emerged</h2>
 
-				<p>After a few iterations, I landed on three tables:</p>
+				<p>After a few iterations, I landed on three tables. This is a simplified schema - the raw JSONL contains more fields (<code>uuid</code>, <code>parentUuid</code>, <code>gitBranch</code>, <code>version</code>, etc.) but I focused on what I actually wanted to query.</p>
 
 				<p><strong>Sessions</strong> - one row per conversation</p>
 
@@ -177,24 +197,27 @@
 				<pre><code>{`CREATE TABLE messages (
     id VARCHAR PRIMARY KEY,
     session_id VARCHAR,
-    type VARCHAR,           -- 'user' or 'assistant'
+    type VARCHAR,           -- 'user', 'assistant', 'progress', 'system', or 'file-history-snapshot'
     timestamp TIMESTAMP,
     content TEXT,
-    tool_name VARCHAR,
+    tool_name VARCHAR,      -- populated for tool_use content blocks
     cwd VARCHAR
 );`}</code></pre>
+
+				<p>Note: I <a href="/claude/hidden-memory">discovered earlier</a> that JSONL files contain five record types, not just user/assistant. For this foundation, I'm primarily interested in <code>user</code> and <code>assistant</code> messages, but the schema captures all types for completeness.</p>
 
 				<p><strong>Tool Calls</strong> - every tool Claude used</p>
 
 				<pre><code>{`CREATE TABLE tool_calls (
     id VARCHAR PRIMARY KEY,
     session_id VARCHAR,
+    message_id VARCHAR,     -- links back to the assistant message
     tool_name VARCHAR,
-    input_json TEXT,
+    input_json TEXT,        -- the full tool input as JSON string
     timestamp TIMESTAMP
 );`}</code></pre>
 
-				<p>Three levels of granularity. Sessions for patterns. Messages for content. Tool calls for understanding how I actually work with Claude.</p>
+				<p>Three levels of granularity. Sessions for high-level patterns. Messages for content search. Tool calls for understanding how I actually work with Claude - which tools get used, in what combinations, for which projects.</p>
 
 				<hr />
 
@@ -204,11 +227,11 @@
 
 				<pre><code>python ingest.py</code></pre>
 
-				<p>Thirty seconds of processing. Then:</p>
-
-				<pre><code>{`Sessions ingested: 367
-Messages ingested: 52,764
-Tool calls ingested: 15,825`}</code></pre>
+				<!-- TODO: Replace with actual screenshot of ingest.py terminal output -->
+				<figure class="article-image placeholder">
+					<img src="/images/claude/duckdb-foundation/scr-ingest-output.png" alt="Terminal showing ingest.py output with session, message, and tool call counts" />
+					<figcaption class="placeholder-note">📸 TODO: Actual terminal screenshot of ingest.py running</figcaption>
+				</figure>
 
 				<p>I opened the DuckDB CLI and ran my first real query:</p>
 
@@ -220,11 +243,21 @@ LIMIT 5;`}</code></pre>
 
 				<p>Results appeared instantly. My projects, ranked by how much time I'd spent in each. Data I'd never seen before, from conversations I'd already forgotten having.</p>
 
-				<p>The raw JSONL files weighed around 500MB. The DuckDB database? 69MB. Seven-to-one compression, and queries that would have taken grep minutes now returned in milliseconds.</p>
+				<p>The compression was dramatic. To verify:</p>
 
-				<figure class="article-image">
-					<img src="/images/claude/duckdb-foundation/compression.png" alt="Compression comparison: 500MB JSONL to 69MB DuckDB" />
+				<pre><code>{`# Check raw JSONL size
+du -sh ~/.claude/projects/
+
+# Check DuckDB size
+du -sh ~/repos/claude-memory/memory.duckdb`}</code></pre>
+
+				<!-- TODO: Replace with actual screenshot showing file sizes -->
+				<figure class="article-image placeholder">
+					<img src="/images/claude/duckdb-foundation/scr-compression.png" alt="Terminal showing du -sh output comparing JSONL and DuckDB sizes" />
+					<figcaption class="placeholder-note">📸 TODO: Actual terminal screenshot of du -sh commands</figcaption>
 				</figure>
+
+				<p>In my case: roughly 7:1 compression. DuckDB's columnar storage handles repetitive strings (session IDs, tool names, working directories) extremely efficiently.</p>
 
 				<hr />
 
@@ -232,17 +265,21 @@ LIMIT 5;`}</code></pre>
 
 				<p>Here's where it got interesting. I thought I knew how I worked. The data told a different story.</p>
 
+				<p><em>Note: Run these queries against your own data - your patterns will be different. That's the point.</em></p>
+
 				<p><strong>My peak productivity hours:</strong></p>
 
 				<pre><code>{`SELECT EXTRACT(HOUR FROM timestamp) as hour, COUNT(*) as messages
 FROM messages WHERE type = 'user'
-GROUP BY hour ORDER BY messages DESC LIMIT 3;`}</code></pre>
+GROUP BY hour ORDER BY messages DESC LIMIT 5;`}</code></pre>
 
-				<figure class="article-image">
+				<!-- TODO: Replace with actual screenshot of this query result -->
+				<figure class="article-image placeholder">
 					<img src="/images/claude/duckdb-foundation/scr-hours.png" alt="Terminal showing peak productivity hours query results" />
+					<figcaption class="placeholder-note">📸 TODO: Actual DuckDB CLI screenshot of hours query</figcaption>
 				</figure>
 
-				<p>9pm and 11am. Two distinct windows - late morning and late evening. Not what I would have guessed.</p>
+				<p>For me, two distinct windows emerged - late morning and late evening. Not what I would have guessed. Your data will reveal your own patterns.</p>
 
 				<p><strong>How I actually use Claude:</strong></p>
 
@@ -250,43 +287,32 @@ GROUP BY hour ORDER BY messages DESC LIMIT 3;`}</code></pre>
        ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 1) as pct
 FROM tool_calls
 GROUP BY tool_name
-ORDER BY uses DESC LIMIT 5;`}</code></pre>
+ORDER BY uses DESC LIMIT 10;`}</code></pre>
 
-				<figure class="article-image">
+				<!-- TODO: Replace with actual screenshot of this query result -->
+				<figure class="article-image placeholder">
 					<img src="/images/claude/duckdb-foundation/scr-tools.png" alt="Terminal showing tool usage query results" />
+					<figcaption class="placeholder-note">📸 TODO: Actual DuckDB CLI screenshot of tool usage query</figcaption>
 				</figure>
 
-				<div class="data-table">
-					<table>
-						<thead>
-							<tr>
-								<th>tool_name</th>
-								<th>uses</th>
-								<th>pct</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr><td>Edit</td><td>3726</td><td>23.5%</td></tr>
-							<tr><td>Bash</td><td>3700</td><td>23.4%</td></tr>
-							<tr><td>Read</td><td>3352</td><td>21.2%</td></tr>
-							<tr><td>Write</td><td>1764</td><td>11.1%</td></tr>
-							<tr><td>TodoWrite</td><td>1320</td><td>8.3%</td></tr>
-						</tbody>
-					</table>
-				</div>
-
-				<p>Edit and Read dominate. I'm modifying existing code twice as often as writing new files. The iterative refinement pattern I felt in practice, now confirmed by data.</p>
+				<p>In my case, Edit and Read dominated. I was modifying existing code roughly twice as often as writing new files. The iterative refinement pattern I felt in practice, now confirmed by data. Bash was close behind - lots of git operations, builds, and exploratory commands.</p>
 
 				<p><strong>Where the deep work happens:</strong></p>
 
-				<pre><code>{`SELECT project_name, message_count, DATE(first_message_at) as date
-FROM sessions ORDER BY message_count DESC LIMIT 3;`}</code></pre>
+				<pre><code>{`SELECT project_name, message_count,
+       DATE(first_message_at) as started,
+       DATE(last_message_at) as ended
+FROM sessions
+ORDER BY message_count DESC
+LIMIT 5;`}</code></pre>
 
-				<figure class="article-image">
+				<!-- TODO: Replace with actual screenshot of this query result -->
+				<figure class="article-image placeholder">
 					<img src="/images/claude/duckdb-foundation/scr-projects.png" alt="Terminal showing deep work sessions query results" />
+					<figcaption class="placeholder-note">📸 TODO: Actual DuckDB CLI screenshot of deep sessions query</figcaption>
 				</figure>
 
-				<p>One session hit nearly 10,000 messages. A single conversation, sustained over hours. I remember that day (working on my C2 framework Numinon) - deep in a complex build, completely in flow. The data captured the trace of what that felt like.</p>
+				<p>My longest sessions ran into the thousands of messages - sustained conversations over hours of deep work. The data captured the trace of what flow state looks like in a conversation log.</p>
 
 				<hr />
 
@@ -318,11 +344,23 @@ FROM sessions ORDER BY message_count DESC LIMIT 3;`}</code></pre>
 
 				<p>I set up a cron job - hourly ingestion:</p>
 
-				<pre><code>{`0 * * * * /path/to/venv/bin/python /path/to/ingest.py >> /path/to/cron.log 2>&1`}</code></pre>
+				<pre><code>{`# Edit crontab
+crontab -e
+
+# Add this line (adjust paths to your setup):
+0 * * * * ~/repos/claude-memory/venv/bin/python ~/repos/claude-memory/ingest.py >> ~/repos/claude-memory/cron.log 2>&1`}</code></pre>
 
 				<p>It's crude. Eventually, I'll have a proper backend with file watching and incremental updates. But right now, hourly is enough. The database stays current. Queries reflect reality.</p>
 
-				<p>I checked the cron log the next morning. Ingestion had run eight times overnight. New sessions picked up automatically. Zero manual work.</p>
+				<p>To verify it's working:</p>
+
+				<pre><code>{`# Check recent cron executions
+tail -20 ~/repos/claude-memory/cron.log
+
+# Or check the database modification time
+ls -la ~/repos/claude-memory/memory.duckdb`}</code></pre>
+
+				<p>I checked the cron log the next morning. Ingestion had run through the night, picking up new sessions automatically. Zero manual work.</p>
 
 				<p>This is what reducing friction looks like. Not grand gestures - small automations that compound. Every time I don't have to think about refreshing the database, that's cognitive load I can spend elsewhere.</p>
 
@@ -342,17 +380,16 @@ FROM sessions ORDER BY message_count DESC LIMIT 3;`}</code></pre>
 
 				<h2>The Bigger Picture</h2>
 
-				<p>This is Part 1 of a larger build. The database is the foundation. What comes next:</p>
+				<p>This is Phase 1 of an <a href="/claude/memory-system">8-phase build</a>. The database is the foundation. What comes next:</p>
 
 				<ul>
 					<li><strong>Phase 2:</strong> Full-text search with BM25 ranking</li>
-					<li><strong>Phase 3:</strong> Local LLM setup to keep data private and minimize costs</li>
-					<li><strong>Phase 4:</strong> Semantic embeddings with LanceDB for meaning-based queries</li>
+					<li><strong>Phase 3:</strong> Local LLM setup for embeddings (privacy + cost)</li>
+					<li><strong>Phase 4:</strong> Semantic search with LanceDB for meaning-based queries</li>
 					<li><strong>Phase 5:</strong> MCP server so Claude can query its own history</li>
 					<li><strong>Phase 6:</strong> Visual dashboard for pattern exploration</li>
-					<li><strong>Phase 7:</strong> Voice control and search</li>
-					<li><strong>Phase 8:</strong> Custom Go backend for production-grade performance</li>
-					<li><strong>Phase 9:</strong> Security hardening across the entire infrastructure</li>
+					<li><strong>Phase 7:</strong> Voice control interface</li>
+					<li><strong>Phase 8:</strong> Go backend for scale</li>
 				</ul>
 
 				<p>Each phase removes friction. Each phase makes the collaboration more cumulative, less amnesiac.</p>
@@ -537,6 +574,21 @@ GROUP BY hour ORDER BY hour;`}</code></pre>
 		height: auto;
 		border-radius: 8px;
 		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+	}
+
+	.article-image.placeholder {
+		border: 2px dashed rgba(189, 147, 249, 0.4);
+		border-radius: 12px;
+		padding: 16px;
+		background: rgba(189, 147, 249, 0.05);
+	}
+
+	.placeholder-note {
+		text-align: center;
+		font-size: 14px;
+		color: var(--aion-purple);
+		margin-top: 12px;
+		font-style: italic;
 	}
 
 	.data-table {
