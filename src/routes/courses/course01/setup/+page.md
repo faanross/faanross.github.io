@@ -7,7 +7,7 @@ title: "Setup Guide"
 
 Please note you don't need a special VM for development since we'll be writing code on your "daily driver" machine. Using your base OS means you can continue using this setup for future Go development after the course.
 
-There are essentially 5 things you need: **Go**, an **IDE**, the **course repo**, **network tools**, and (ideally) a **test machine** for running the final payload. I will provide instructions for all three major operating systems - Windows, macOS, and Linux. Note I am using macOS, but there should be no reason you couldn't follow along using any OS.
+There are essentially 5 things you need: **Go**, an **IDE**, the **course repo**, **network tools**, and (ideally) a **test machine** for executing the shellcode. I will provide instructions for all three major operating systems - Windows, macOS, and Linux. Note I am using macOS, but there should be no reason you couldn't follow along using any OS.
 
 
 ## 1. Install Go Programming Language
@@ -44,7 +44,7 @@ There are essentially 5 things you need: **Go**, an **IDE**, the **course repo**
 
 You can use any code editor or IDE you prefer - no specific one is required for this course.
 
-### Option A: GoLand (Recommended - What I'll Use)
+### Option A: GoLand (What I'll Use)
 - Download from: https://www.jetbrains.com/goland/
 - It's a paid tool, but you can get a **30-day free trial** (no credit card needed)
 - Just install and open - it configures Go automatically
@@ -59,6 +59,7 @@ You can use any code editor or IDE you prefer - no specific one is required for 
     - Click Install
 
 ### Option C: Other Editors
+- **Sublime Text** (https://www.sublimetext.com) - Fast, lightweight editor with Go support via packages
 - **Zed** (https://zed.dev) - Written in Rust, great LLM integration, good Go support
 - **NeoVim** or **Helix** - If you're comfortable with terminal editors, both can be configured for Go development
 
@@ -81,7 +82,51 @@ cd antisyphon_course_c2_golang
 Note: Git is optional but recommended. If you don't have it installed, the ZIP download method works perfectly fine.
 
 
-## 4. Install Network Tools
+## 4. Generate TLS Certificates
+
+Our C2 server uses HTTPS, which requires TLS certificates. You'll need to generate self-signed certificates and copy them to all lesson directories.
+
+### Step 1: Generate the Certificates
+
+Navigate into the course repository and run:
+
+#### macOS / Linux
+```bash
+cd antisyphon_course_c2_golang
+mkdir -p certs
+openssl req -x509 -newkey rsa:4096 -keyout certs/server.key -out certs/server.crt -days 365 -nodes -subj "/CN=localhost"
+```
+
+#### Windows (PowerShell)
+```powershell
+cd antisyphon_course_c2_golang
+mkdir certs
+openssl req -x509 -newkey rsa:4096 -keyout certs/server.key -out certs/server.crt -days 365 -nodes -subj "/CN=localhost"
+```
+
+**Note:** If OpenSSL isn't available on Windows, install it via Chocolatey (`choco install openssl`) or download from [slproweb.com](https://slproweb.com/products/Win32OpenSSL.html).
+
+### Step 2: Copy Certificates to All Lesson Directories
+
+Each lesson directory needs its own copy of the certificates. Run this command from the repo root to copy them everywhere:
+
+#### macOS / Linux
+```bash
+for dir in lesson-*-begin lesson-*-end; do
+  [ -d "$dir" ] && cp -r certs "$dir/"
+done
+```
+
+#### Windows (PowerShell)
+```powershell
+Get-ChildItem -Directory -Filter "lesson-*-begin" | ForEach-Object { Copy-Item -Recurse certs $_.FullName }
+Get-ChildItem -Directory -Filter "lesson-*-end" | ForEach-Object { Copy-Item -Recurse certs $_.FullName }
+```
+
+This copies the `certs/` folder into all 46 lesson directories so you won't need to do it manually for each lesson.
+
+
+## 5. Install Network Tools
 
 We'll need tools to test HTTP and DNS endpoints during the course.
 
@@ -116,7 +161,7 @@ We'll need tools to test HTTP and DNS endpoints during the course.
     - RedHat/Fedora: `sudo yum install bind-utils`
 
 
-## 5. Test Machine for Running the Final Payload
+## 6. Test Machine for Executing the Shellcode
 
 ### Important Context
 
