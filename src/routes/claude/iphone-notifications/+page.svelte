@@ -51,7 +51,7 @@
 					</svg>
 					Back to Claude
 				</a>
-				<span class="date">2025-01-10</span>
+				<span class="date">2026-01-10</span>
 				<h1>I Taught Claude to Text Me When It Needs Help</h1>
 			</header>
 
@@ -146,6 +146,8 @@
 				<p>Claude gets blocked → Claude hook fires → Sends Telegram message with token → Your phone buzzes</p>
 
 				<p>You reply: <code>/cmd TOKEN123 yes please continue</code> → Telegram sends to webhook server → Server validates token → Server runs <code>tmux send-keys</code> → Claude receives your response → Work continues</p>
+
+				<p><em>(Security note: Yes, you're exposing a webhook to the internet via ngrok. The token validation is what makes this safe - only requests with the correct session token get processed. Without the token, nothing gets injected. Additionally, only your Telegram chat ID can trigger commands.)</em></p>
 
 				<p>The insight that took me embarrassingly long to figure out:</p>
 
