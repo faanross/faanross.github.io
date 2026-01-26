@@ -25,7 +25,7 @@ There are a few DNS libraries in Go, but imo this one reigns supreme. It's not o
 
 For example in crafting DNS requests, the library will literally allow you to set every single field of the packet header except for the Z-value.
 
-We won't jump in that deep in this workshop, but I want you to get exposure to this library since in a number of my "more advanced" DNS tools (for [example](https://github.com/faanross/spinnekop), and [here](https://github.com/faanross/dns-packet-analyzer)), as well as other workshops/courses I have planned, having such complete control over DNS packet crafting allows for tremendous opportunities in creating novel and hard-to-detect DNS covert channel communication techniques.
+We won't jump in that deep in this workshop, but I want you to get exposure to this library since in a number of my "more advanced" DNS tools (for [example](https://github.com/faanross/spinnekop)), as well as other workshops/courses I have planned, having such complete control over DNS packet crafting allows for tremendous opportunities in creating novel and hard-to-detect DNS covert channel communication techniques.
 
 ## DNS Server
 
