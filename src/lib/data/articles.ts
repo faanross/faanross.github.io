@@ -15,6 +15,10 @@ export const articleSeries: ArticleSeries[] = [
 		description: "Intrusion simulations with pcap + Zeek logs",
 		articles: [
 			{
+				title: "Encrypted DNS Comparison: Detecting C2 When You Can't See the Queries",
+				url: "https://www.activecountermeasures.com/malware-of-the-day-encrypted-dns-comparison-detecting-c2-when-you-cant-see-the-queries/"
+			},
+			{
 				title: "TXT Record Abuse in DNS C2 (Joker Screenmate)",
 				url: "https://www.activecountermeasures.com/malware-of-the-day-txt-record-abuse-in-dns-c2-joker-screenmate/"
 			},
