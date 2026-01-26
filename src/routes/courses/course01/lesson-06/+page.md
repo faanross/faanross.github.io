@@ -85,7 +85,7 @@ We then send the request with `Exchange()`, and process the response contained i
 
 ## Update Agent Factory Function
 
-Now we can make the final update to our factory function:
+Now we can make the final update to our factory function in `internals/agent/models.go`:
 
 ```go
 // NewAgent creates a new agent based on the protocol
