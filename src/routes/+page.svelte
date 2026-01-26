@@ -4,8 +4,27 @@
 
 	let mounted = $state(false);
 
+	// Typewriter effect state
+	let displayedText = $state('');
+	const fullText = 'Research. Build. Teach.';
+	let typewriterComplete = $state(false);
+
 	onMount(() => {
 		mounted = true;
+
+		// Start typewriter after initial fade
+		setTimeout(() => {
+			let i = 0;
+			const typeInterval = setInterval(() => {
+				if (i < fullText.length) {
+					displayedText = fullText.slice(0, i + 1);
+					i++;
+				} else {
+					clearInterval(typeInterval);
+					typewriterComplete = true;
+				}
+			}, 80);
+		}, 500);
 	});
 </script>
 
@@ -16,10 +35,13 @@
 <section class="hero">
 	{#if mounted}
 		<div class="hero-content" in:fade={{ duration: 800 }}>
-			<img src="/images/site/potential.png" alt="Faan Rossouw" class="hero-avatar" in:fly={{ y: 20, duration: 600, delay: 100 }} />
+			<div class="avatar-wrapper image-glow" in:fly={{ y: 20, duration: 600, delay: 100 }}>
+				<div class="rotating-ring"></div>
+				<img src="/images/site/potential.png" alt="Faan Rossouw" class="hero-avatar" />
+			</div>
 			<span class="tagline" in:fly={{ y: 20, duration: 600, delay: 200 }}><em>Panta rhei</em> (πάντα ῥεῖ)</span>
 			<h1 in:fly={{ y: 20, duration: 600, delay: 400 }}>
-				Research. Build. Teach.
+				{displayedText}{#if !typewriterComplete}<span class="cursor">|</span>{/if}
 			</h1>
 			<p class="lead" in:fly={{ y: 20, duration: 600, delay: 600 }}>
 				Agentic Design + Threat Hunting
@@ -138,14 +160,70 @@
 </section>
 
 <style>
+	/* Avatar with rotating ring */
+	.avatar-wrapper {
+		position: relative;
+		width: 234px;
+		height: 234px;
+		margin: 0 auto 24px;
+	}
+
+	.rotating-ring {
+		position: absolute;
+		inset: -8px;
+		border-radius: 50%;
+		background: conic-gradient(
+			from 0deg,
+			var(--aion-yellow) 0deg,
+			var(--aion-yellow-light) 90deg,
+			var(--aion-yellow-dark) 180deg,
+			var(--aion-yellow-light) 270deg,
+			var(--aion-yellow) 360deg
+		);
+		animation: rotateRing 8s linear infinite;
+		-webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px));
+		mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px));
+	}
+
+	@keyframes rotateRing {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
+	}
+
+	/* Golden glow pulse */
+	.image-glow {
+		animation: goldenGlow 5s ease-in-out infinite;
+	}
+
+	@keyframes goldenGlow {
+		0%, 100% {
+			filter: drop-shadow(0 0 20px rgba(245, 230, 99, 0.35));
+		}
+		50% {
+			filter: drop-shadow(0 0 30px rgba(245, 230, 99, 0.5)) drop-shadow(0 0 45px rgba(245, 230, 99, 0.25));
+		}
+	}
+
 	.hero-avatar {
 		width: 234px;
 		height: 234px;
 		border-radius: 50%;
 		object-fit: cover;
-		border: 3px solid rgba(189, 147, 249, 0.4);
-		margin: 0 auto 24px;
+		border: 3px solid rgba(245, 230, 99, 0.4);
 		display: block;
+	}
+
+	/* Typewriter cursor */
+	.cursor {
+		display: inline-block;
+		color: var(--aion-yellow);
+		animation: blink 0.8s infinite;
+		margin-left: 2px;
+	}
+
+	@keyframes blink {
+		0%, 50% { opacity: 1; }
+		51%, 100% { opacity: 0; }
 	}
 
 	.hero {
