@@ -15,7 +15,7 @@ We'll now make a small change to our current `RunLoop()` so that it's able to di
 
 ## Key Differences from HTTPS Run Loop
 
-Let's have a quick look at our current `RunLoop()` implementation:
+Let's have a quick look at our current `RunLoop()` implementation in `internals/agent/runloop.go`:
 
 ```go
 func RunLoop(ctx context.Context, comm Agent, cfg *config.AgentConfig) error {
