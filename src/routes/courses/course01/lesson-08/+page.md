@@ -134,7 +134,7 @@ So our Control API Client is complete, but now of course we need to rewrite both
 
 ## DNS Handler Changes
 
-Let's first change our DNS Handler. Right now we have this single line that just says - always respond with `42.42.42.42`:
+Let's first change our DNS Handler in `internals/server/server_dns.go`. Right now we have this single line that just says - always respond with `42.42.42.42`:
 
 ```go
 A: net.ParseIP("42.42.42.42"),
