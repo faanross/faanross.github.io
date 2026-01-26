@@ -13,8 +13,6 @@ title: "Lesson 5: DNS Server"
 
 Though some of the details will differ, we'll now do the same essential thing for DNS as we just did for HTTPS. In this lesson we'll create the server, then we'll create the DNS agent (Lesson 6), and finally we'll adjust our existing runloop to make it compatible with both HTTPS and DNS (Lesson 7).
 
-When we're done with that we'll have all our foundational communication logic in place, which sets us up perfectly for the development of a trigger signal, parsing, and transition logic in our later chapters.
-
 ## Import Library
 
 We'll use another external library for DNS:
