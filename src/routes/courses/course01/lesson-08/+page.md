@@ -29,7 +29,7 @@ It checks the global flag, if the flag is `false` (i.e. we did not hit the endpo
 
 But, if the flag is `true` (i.e. we did hit the endpoint signalling our desire to change protocol) then our server will instead response with `true` (for HTTPS) or `69.69.69.69` (for DNS).
 
-In this lesson we're implementing a mechanism to allow us to trigger a new type of response from our server to the agent. Then, all we need to do in the remaining lessons is ensure that our agent can take variable actions based on that information.
+In this lesson we're implementing a mechanism to allow us to trigger a new type of response from our server to the agent. Then, all we need to do in the subsequent lessons is ensure that our agent can take variable actions based on that information.
 
 One final thing, one additional layer of nuance, we need to consider is this: I just said if we hit an endpoint the flag changes from `false` to `true`, and if the server sees that the flag is `true` it will send the "change" response to the agent.
 
