@@ -195,7 +195,7 @@ And then when we get to A, we use this variable, instead of a hardcoded value. E
 
 ## HTTPS Handler Changes
 
-The change to our HTTP Handler is even simpler since we can just directly assign the value of the global flag to the field in our JSON. This is of course because we are sending a boolean value, and it should be the same as the flag - if the flag value is `true`, our `Change` field is equal to `true`; and vice-versa.
+Now let's update our HTTPS Handler in `internals/server/server_https.go`. The change is even simpler since we can just directly assign the value of the global flag to the field in our JSON. This is of course because we are sending a boolean value, and it should be the same as the flag - if the flag value is `true`, our `Change` field is equal to `true`; and vice-versa.
 
 So replace this:
 
