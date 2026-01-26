@@ -41,7 +41,7 @@
 			</div>
 			<span class="tagline" in:fly={{ y: 20, duration: 600, delay: 200 }}><em>Panta rhei</em> (πάντα ῥεῖ)</span>
 			<h1 in:fly={{ y: 20, duration: 600, delay: 400 }}>
-				{displayedText}{#if !typewriterComplete}<span class="cursor">|</span>{/if}
+				{displayedText}<span class="cursor" class:hidden={typewriterComplete}>|</span>
 			</h1>
 			<p class="lead" in:fly={{ y: 20, duration: 600, delay: 600 }}>
 				Agentic Design + Threat Hunting
@@ -165,7 +165,7 @@
 		position: relative;
 		width: 234px;
 		height: 234px;
-		margin: 0 auto 24px;
+		margin: 0 auto 40px;
 	}
 
 	.rotating-ring {
@@ -221,17 +221,21 @@
 		margin-left: 2px;
 	}
 
+	.cursor.hidden {
+		visibility: hidden;
+	}
+
 	@keyframes blink {
 		0%, 50% { opacity: 1; }
 		51%, 100% { opacity: 0; }
 	}
 
 	.hero {
-		min-height: 60vh;
+		min-height: 80vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 80px 24px 60px;
+		padding: 100px 24px 120px;
 	}
 
 	.hero-content {
@@ -246,15 +250,16 @@
 		text-transform: uppercase;
 		letter-spacing: 0.15em;
 		color: var(--aion-yellow);
-		margin-bottom: 16px;
+		margin-bottom: 24px;
 	}
 
 	h1 {
 		font-size: clamp(36px, 5vw, 56px);
 		font-weight: 700;
 		line-height: 1.1;
-		margin-bottom: 24px;
+		margin-bottom: 20px;
 		color: var(--white);
+		white-space: nowrap;
 	}
 
 	.gradient-text {
@@ -279,7 +284,7 @@
 		gap: 24px;
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 0 24px 60px;
+		padding: 40px 24px 80px;
 	}
 
 	.section-card {
