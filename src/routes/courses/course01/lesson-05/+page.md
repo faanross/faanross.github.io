@@ -136,7 +136,7 @@ func (s *DNSServer) Stop() error {
 
 ## Factory function update
 
-Let's update our `NewServer` factory function so that it can call the `NewDNSServer` constructor.
+Let's update our `NewServer` factory function in `internals/server/models.go` so that it can call the `NewDNSServer` constructor.
 
 ```go
 // NewServer creates a new server based on the protocol
