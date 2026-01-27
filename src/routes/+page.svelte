@@ -407,6 +407,11 @@
 			padding: 60px 24px 40px;
 		}
 
+		h1 {
+			white-space: normal;
+			font-size: clamp(28px, 10vw, 36px);
+		}
+
 		.sections-grid {
 			grid-template-columns: 1fr;
 		}
