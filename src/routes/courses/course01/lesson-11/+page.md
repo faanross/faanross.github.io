@@ -140,6 +140,8 @@ Plain hashes are vulnerable to **length extension attacks**. HMAC's construction
 - HMAC signature verification on the server side
 - Replay protection using timestamps
 
+**Note:** This HMAC implementation is specifically for HTTPS communication. DNS has no HTTP headers to carry the signature and timestamp, so the DNS protocol remains unauthenticated. In a production framework, you'd implement a different authentication scheme for DNS (such as embedding signatures in the query data itself), but that's beyond our scope here.
+
 ## The Authentication Flow
 
 ```
