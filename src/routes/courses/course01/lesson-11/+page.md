@@ -31,6 +31,84 @@ There are several ways to prove identity:
 
 For our C2, we'll use a **shared secret** - a key that only the server and legitimate agents know. If an agent can prove it knows this secret (without revealing it), we can trust it's legitimate.
 
+## Authentication Options for C2
+
+Before diving into implementation, let's survey the main approaches used to authenticate agents in C2 frameworks:
+
+### 1. HMAC (Hash-based Message Authentication Code)
+
+A shared secret is used to generate a signature for each request.
+
+**Pros:**
+- Simple to implement
+- Low overhead - just adds headers to existing requests
+- No additional infrastructure required
+- Well-understood cryptographic primitive
+
+**Cons:**
+- Single shared secret across all agents (unless you implement per-agent keys)
+- Secret must be embedded in the agent binary
+- No forward secrecy - if secret is compromised, all past/future traffic is at risk
+
+### 2. Mutual TLS (mTLS)
+
+Both server and agent present certificates to authenticate each other.
+
+**Pros:**
+- Strong authentication with unique per-agent certificates
+- Built into TLS - no additional protocol work
+- Certificate revocation allows disabling compromised agents
+- Provides encryption and authentication in one
+
+**Cons:**
+- Complex certificate management (CA, issuance, distribution)
+- Certificates embedded in agent can be extracted
+- More infrastructure to maintain
+- Certificate expiration adds operational complexity
+
+### 3. Pre-Shared Keys with Challenge-Response
+
+Server sends a challenge, agent proves it knows the key by responding correctly.
+
+**Pros:**
+- Prevents replay attacks inherently
+- Can implement mutual authentication
+
+**Cons:**
+- Requires additional round-trip
+- More complex protocol design
+- Still has shared secret distribution problem
+
+### 4. Token-Based (JWT/OAuth)
+
+Agent authenticates once, receives a token for subsequent requests.
+
+**Pros:**
+- Tokens can expire quickly, limiting damage from compromise
+- Can embed claims/permissions in token
+- Stateless verification on server
+
+**Cons:**
+- Initial authentication still needs another method
+- Token theft allows impersonation until expiry
+- Overkill for most C2 scenarios
+
+### Why We're Using HMAC
+
+For this course, we'll implement **HMAC-based authentication** for several reasons:
+
+1. **Simplicity** - It's straightforward to understand and implement, making it ideal for learning
+2. **No infrastructure** - No certificate authority or token service to set up
+3. **Practical** - Many real-world systems (AWS request signing, API authentication) use this exact approach
+4. **Foundation** - The concepts transfer directly to more complex schemes
+
+**Realistic limitations to acknowledge:**
+- A single shared secret means if one agent is compromised, all agents are potentially compromised
+- The secret is embedded in the binary and could be extracted through reverse engineering
+- For production red team operations, you'd likely want per-agent keys or mTLS
+
+That said, HMAC provides meaningful protection against casual probing, request forgery, and replay attacks - a significant improvement over no authentication at all.
+
 ## What is HMAC?
 
 **HMAC (Hash-based Message Authentication Code)** is a cryptographic construction that combines:
