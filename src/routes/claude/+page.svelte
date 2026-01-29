@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "Speedrunning Jevon's Paradox In My Own Life",
+			description: "I expected AI tools to mean working less. My time logs say otherwise. A reflection on efficiency, expanded ambition, and the trap of Jevons Paradox.",
+			url: "/claude/jevons-paradox",
+			date: "2026-01-29"
+		},
+		{
 			title: "I Gave My AI Access to Its Own Memory",
 			description: "Building an MCP server so Claude can search its own conversation history. From manual queries to autonomous memory access.",
 			url: "/claude/mcp-server",
