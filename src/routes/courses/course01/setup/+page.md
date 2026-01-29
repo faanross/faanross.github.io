@@ -112,15 +112,15 @@ Each lesson directory needs its own copy of the certificates. Run this command f
 
 #### macOS / Linux
 ```bash
-for dir in lesson-*-begin lesson-*-end; do
+for dir in lesson_*_begin lesson_*_end; do
   [ -d "$dir" ] && cp -r certs "$dir/"
 done
 ```
 
 #### Windows (PowerShell)
 ```powershell
-Get-ChildItem -Directory -Filter "lesson-*-begin" | ForEach-Object { Copy-Item -Recurse certs $_.FullName }
-Get-ChildItem -Directory -Filter "lesson-*-end" | ForEach-Object { Copy-Item -Recurse certs $_.FullName }
+Get-ChildItem -Directory -Filter "lesson_*_begin" | ForEach-Object { Copy-Item -Recurse certs $_.FullName }
+Get-ChildItem -Directory -Filter "lesson_*_end" | ForEach-Object { Copy-Item -Recurse certs $_.FullName }
 ```
 
 This copies the `certs/` folder into all 46 lesson directories so you won't need to do it manually for each lesson.
