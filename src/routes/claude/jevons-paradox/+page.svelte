@@ -24,7 +24,7 @@
 	</p>
 
 	<p>
-		Well, yesterday when I woke up and noticed the circles under my eyes being just a tinge darker than before, I couldn't help but wonder what "post-Claude Code" productivity looks like in terms of hours spend in front of my screen.
+		Well, yesterday when I woke up and noticed the circles under my eyes being just a tinge darker than before, I couldn't help but wonder what "post-Claude Code" productivity looks like in terms of hours spent in front of my screen.
 	</p>
 
 	<p>So I pulled up my logs.</p>
