@@ -30,9 +30,8 @@
 		// Add copy buttons to code blocks
 		setTimeout(() => {
 			document.querySelectorAll('.article-content pre').forEach((pre) => {
-				// Skip if already wrapped (by either ArticleLayout or global)
-				const parent = pre.parentElement;
-				if (parent?.classList.contains('code-block') || parent?.classList.contains('code-block-global')) return;
+				// Skip if already wrapped
+				if (pre.parentElement?.classList.contains('code-block')) return;
 
 				const wrapper = document.createElement('div');
 				wrapper.className = 'code-block';
