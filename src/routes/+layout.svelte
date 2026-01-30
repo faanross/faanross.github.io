@@ -3,8 +3,19 @@
 	import Nav from '$lib/components/Nav.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
+	import { addCopyButtons } from '$lib/utils/addCopyButtons';
 
 	let { children } = $props();
+
+	onMount(() => {
+		setTimeout(addCopyButtons, 100);
+	});
+
+	afterNavigate(() => {
+		setTimeout(addCopyButtons, 100);
+	});
 
 	// Hide footer on dashboard routes
 	const hiddenRoutes = ['/claude/memory'];
