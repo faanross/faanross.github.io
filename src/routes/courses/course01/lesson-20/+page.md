@@ -13,7 +13,7 @@ title: "Lesson 20: Windows Shellcode Doer"
 
 Now comes the most complex part of our project: the actual Windows shellcode loader. This code performs **reflective DLL loading** - loading and executing a DLL entirely from memory without touching disk.
 
-**Important note:** This code is extremely complex and beyond the scope of this workshop to explain in detail. In fact, I created an entire separate course (longer than this one) that was dedicated solely to building this exact loader from scratch. That course is completely free and available at [https://www.faanross.com/firestarter/reflective/moc/](https://www.faanross.com/firestarter/reflective/moc/).
+**Important note:** This code is extremely complex and beyond the scope of this workshop to explain in detail. In fact, I created an entire separate course (longer than this one) that was dedicated solely to building this exact loader from scratch. That course is completely free and available at [https://www.faanross.com/courses/reflective](https://www.faanross.com/courses/reflective).
 
 In this lesson, we will:
 
