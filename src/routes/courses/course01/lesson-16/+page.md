@@ -187,45 +187,74 @@ Return the command and `true` to indicate a command was available.
 Now let's update the server's root endpoint handler to check the queue and respond appropriately. Let's add to the `RootHandler` function in `server/server_https.go`:
 
 ```go
-func RootHandler(w http.ResponseWriter, r *http.Request) {
+func RootHandler(secret string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Endpoint %s has been hit by agent\n", r.URL.Path)
 
-	log.Printf("Endpoint %s has been hit by agent\n", r.URL.Path)
+		// Read encrypted body
+		encryptedBody, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, "Error reading body", http.StatusBadRequest)
+			return
+		}
 
-	var response HTTPSResponse
+		log.Printf("Payload pre-decryption: %s", string(encryptedBody))
 
-	// FIRST, check if there are pending commands
-	cmd, exists := control.AgentCommands.GetCommand()
-	if exists {
-		log.Printf("Sending command to agent: %s\n", cmd.Command)
-		response.Job = true
-		response.Command = cmd.Command
-		response.Arguments = cmd.Arguments
-		response.JobID = fmt.Sprintf("job_%06d", rand.Intn(1000000))
-		log.Printf("Job ID: %s\n", response.JobID)
-	} else {
-		log.Printf("No commands in queue")
+		// Decrypt the payload
+		plaintext, err := crypto.Decrypt(string(encryptedBody), secret)
+		if err != nil {
+			log.Printf("Decryption failed: %v", err)
+			http.Error(w, "Decryption failed", http.StatusBadRequest)
+			return
+		}
+
+		log.Printf("Payload post-decryption: %s", string(plaintext))
+
+		var response HTTPSResponse
+
+		// FIRST, check if there are pending commands
+		cmd, exists := control.AgentCommands.GetCommand()
+		if exists {
+			log.Printf("Sending command to agent: %s\n", cmd.Command)
+			response.Job = true
+			response.Command = cmd.Command
+			response.Arguments = cmd.Arguments
+			response.JobID = fmt.Sprintf("job_%06d", rand.Intn(1000000))
+			log.Printf("Job ID: %s\n", response.JobID)
+		} else {
+			log.Printf("No commands in queue")
+		}
+
+		// THEN, check if we should transition
+		shouldChange := control.Manager.CheckAndReset()
+
+		if shouldChange {
+			response.Change = true
+			log.Printf("HTTPS: Sending transition signal (change=true)")
+		} else {
+			log.Printf("HTTPS: Normal response (change=false)")
+		}
+
+		// Marshal response to JSON
+		responseJSON, err := json.Marshal(response)
+		if err != nil {
+			log.Printf("Error marshaling response: %v\n", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		// Encrypt the response
+		encryptedResponse, err := crypto.Encrypt(responseJSON, secret)
+		if err != nil {
+			log.Printf("Error encrypting response: %v\n", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		// Set content type to octet-stream for encrypted data
+		w.Header().Set("Content-Type", "application/octet-stream")
+		w.Write([]byte(encryptedResponse))
 	}
-
-	// THEN, check if we should transition
-	shouldChange := control.Manager.CheckAndReset()
-
-	if shouldChange {
-		response.Change = true
-		log.Printf("HTTPS: Sending transition signal (change=true)")
-	} else {
-		log.Printf("HTTPS: Normal response (change=false)")
-	}
-
-	// Set content type to JSON
-	w.Header().Set("Content-Type", "application/json")
-
-	// Encode and send the response
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		log.Printf("Error encoding response: %v\n", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
 }
 ```
 
@@ -423,37 +452,58 @@ Here's the adjusted HTTP Send method:
 ```go
 // Send implements Communicator.Send for HTTPS
 func (c *HTTPSAgent) Send(ctx context.Context) (json.RawMessage, error) {
-    // Construct the URL
     url := fmt.Sprintf("https://%s/", c.serverAddr)
 
-    // Create GET request
-    req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+    // Prepare check-in data (could include agent ID, status, etc.)
+    checkInData := map[string]interface{}{
+       "status": "active",
+    }
+
+    plaintext, _ := json.Marshal(checkInData)
+
+    // Encrypt the payload
+    encryptedBody, err := crypto.Encrypt(plaintext, c.sharedSecret)
+    if err != nil {
+       return nil, fmt.Errorf("encrypting payload: %w", err)
+    }
+
+    // Create request with encrypted body
+    req, err := http.NewRequestWithContext(ctx, "POST", url,
+       strings.NewReader(encryptedBody))
     if err != nil {
        return nil, fmt.Errorf("creating request: %w", err)
     }
 
-    // Send request
+    req.Header.Set("Content-Type", "application/octet-stream")
+
+    // Sign the request (from previous lesson)
+    SignRequest(req, []byte(encryptedBody), c.sharedSecret)
+
     resp, err := c.client.Do(req)
     if err != nil {
        return nil, fmt.Errorf("sending request: %w", err)
     }
     defer resp.Body.Close()
 
-    // Check status code
     if resp.StatusCode != http.StatusOK {
-       body, _ := io.ReadAll(resp.Body)
-       return nil, fmt.Errorf("server returned status %d: %s", resp.StatusCode, body)
+       return nil, fmt.Errorf("server returned status %d", resp.StatusCode)
     }
 
-    // Read response body
-    body, err := io.ReadAll(resp.Body)
+    // Read encrypted response
+    encryptedResponse, err := io.ReadAll(resp.Body)
     if err != nil {
        return nil, fmt.Errorf("reading response: %w", err)
     }
 
+    // Decrypt response
+    decrypted, err := crypto.Decrypt(string(encryptedResponse), c.sharedSecret)
+    if err != nil {
+       return nil, fmt.Errorf("decrypting response: %w", err)
+    }
+
     // Unmarshal into HTTPSResponse to validate structure
     var httpsResp server.HTTPSResponse
-    if err := json.Unmarshal(body, &httpsResp); err != nil {
+    if err := json.Unmarshal(decrypted, &httpsResp); err != nil {
        return nil, fmt.Errorf("unmarshaling response: %w", err)
     }
 
