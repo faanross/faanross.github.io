@@ -3,8 +3,46 @@
 	import Nav from '$lib/components/Nav.svelte';
 	import Background from '$lib/components/Background.svelte';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
 
 	let { children } = $props();
+
+	// Global copy button function for ALL code blocks
+	function addCopyButtons() {
+		document.querySelectorAll('pre').forEach((pre) => {
+			// Skip if already wrapped (check both global and ArticleLayout classes)
+			const parent = pre.parentElement;
+			if (parent?.classList.contains('code-block-global') || parent?.classList.contains('code-block')) return;
+
+			const wrapper = document.createElement('div');
+			wrapper.className = 'code-block-global';
+
+			const button = document.createElement('button');
+			button.className = 'copy-btn-global';
+			button.textContent = 'Copy';
+			button.addEventListener('click', async () => {
+				const code = pre.querySelector('code')?.textContent || pre.textContent || '';
+				await navigator.clipboard.writeText(code);
+				button.textContent = 'Copied!';
+				setTimeout(() => (button.textContent = 'Copy'), 2000);
+			});
+
+			pre.parentNode?.insertBefore(wrapper, pre);
+			wrapper.appendChild(button);
+			wrapper.appendChild(pre);
+		});
+	}
+
+	onMount(() => {
+		// Initial page load - wait for content to render
+		setTimeout(addCopyButtons, 100);
+	});
+
+	// Re-run after client-side navigation
+	afterNavigate(() => {
+		setTimeout(addCopyButtons, 100);
+	});
 
 	// Hide footer on dashboard routes
 	const hiddenRoutes = ['/claude/memory'];
