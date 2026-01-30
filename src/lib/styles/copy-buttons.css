@@ -1,0 +1,33 @@
+/* Global Code Block Copy Buttons */
+.code-block-global {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.code-block-global pre {
+    margin-bottom: 0 !important;
+    padding-top: 44px !important;
+}
+
+.copy-btn-global {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.copy-btn-global:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
