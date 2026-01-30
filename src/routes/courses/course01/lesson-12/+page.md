@@ -66,8 +66,8 @@ GCM is an **AEAD** cipher (Authenticated Encryption with Associated Data) - it's
 
 ## The Encryption Flow
 
-```
-AGENT SENDING:
+**Agent Sending:**
+
 1. Prepare plaintext payload (JSON)
 2. Generate random 12-byte nonce
 3. Encrypt: ciphertext = AES-GCM(key, nonce, plaintext)
@@ -75,13 +75,13 @@ AGENT SENDING:
 5. Base64 encode for HTTP transmission
 6. Send in request body
 
-SERVER RECEIVING:
+**Server Receiving:**
+
 1. Base64 decode the body
 2. Extract nonce (first 12 bytes)
 3. Extract ciphertext (remaining bytes)
 4. Decrypt: plaintext = AES-GCM(key, nonce, ciphertext)
 5. Parse JSON from plaintext
-```
 
 ## Part 1: Derive Encryption Key
 
@@ -305,6 +305,8 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("Payload pre-decryption: %s", string(encryptedBody))
+
 	// Decrypt the payload
 	plaintext, err := crypto.Decrypt(string(encryptedBody), config.SharedSecret)
 	if err != nil {
@@ -313,7 +315,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("Decrypted payload: %s", string(plaintext))
+	log.Printf("Payload post-decryption: %s", string(plaintext))
 
 	// Process the decrypted data...
 	// (existing logic here)
@@ -375,16 +377,11 @@ go run ./cmd/agent
 
 ```bash
 2025/11/10 14:29:05 Endpoint / has been hit by agent
-2025/11/10 14:29:05 Decrypted payload: {"status":"active"}
+2025/11/10 14:29:05 Payload pre-decryption: nR3xK7mQ2p...base64_encrypted_data...
+2025/11/10 14:29:05 Payload post-decryption: {"status":"active"}
 ```
 
-**Test with wrong key (modify agent's secret temporarily):**
-
-```bash
-2025/11/10 14:29:05 Decryption failed: cipher: message authentication failed
-```
-
-The authentication tag verification fails - we can't decrypt with the wrong key.
+The pre-decryption output shows the encrypted payload (Base64-encoded AES-GCM ciphertext with prepended nonce). The post-decryption output shows the plaintext JSON. This demonstrates the encryption is working - the same data, before and after decryption.
 
 ## Security Analysis
 
