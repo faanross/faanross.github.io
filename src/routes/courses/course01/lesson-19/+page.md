@@ -98,7 +98,7 @@ Then, instead of calling any OS-specific implementation from our orchestrator, w
 
 ## Create ShellcodeResult Type
 
-First thing, we need a command-specific type for the results, which our doer will return to the orchestrator. So let's define the following in `agent/models.go`:
+First thing, we need a command-specific type for the results, which our doer will return to the orchestrator. So let's define the following in `models/results.go`:
 
 ```go
 // ShellcodeResult represents the result of shellcode execution
