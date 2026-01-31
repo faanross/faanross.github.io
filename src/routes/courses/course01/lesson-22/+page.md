@@ -32,10 +32,10 @@ Let's see how quickly we can add a complete new command!
 ## What We'll Create
 
 - `DownloadArgsClient` and `DownloadArgsAgent` types in `control/models.go`
+- `DownloadResult` type in `models/results.go`
 - `validateDownloadCommand` and `processDownloadCommand` in `control/download.go`
 - `orchestrateDownload` in `agent/download.go`
 - Registry updates for the new command
-- Result type for download data
 
 ## Part 1: Server-Side Types and Processing
 
@@ -53,7 +53,14 @@ type DownloadArgsClient struct {
 type DownloadArgsAgent struct {
 	FilePath string `json:"file_path"` // Path on agent's machine
 }
+```
 
+- **DownloadArgsClient** - The operator specifies a file path on the target machine
+- **DownloadArgsAgent** - For download, it's the same as client args (no transformation needed like shellcode)
+
+Now add the result type to `models/results.go`:
+
+```go
 // DownloadResult - what the agent sends back
 type DownloadResult struct {
 	FilePath    string `json:"file_path"`
@@ -64,10 +71,6 @@ type DownloadResult struct {
 }
 ```
 
-**Understanding the structure:**
-
-- **DownloadArgsClient** - The operator specifies a file path on the target machine
-- **DownloadArgsAgent** - For download, it's the same as client args (no transformation needed like shellcode)
 - **DownloadResult** - Contains the file data (base64 encoded), size, and success status
 
 ### Create Validator and Processor
