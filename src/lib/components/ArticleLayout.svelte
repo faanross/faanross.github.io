@@ -90,6 +90,22 @@
 			<div class="article-content" in:fly={{ y: 20, duration: 600, delay: 400 }}>
 				{@render children?.()}
 			</div>
+
+			<!-- CTA Card -->
+			<div class="cta-card" in:fly={{ y: 20, duration: 600, delay: 600 }}>
+				<div class="cta-content">
+					<span class="cta-label">Want to go deeper?</span>
+					<h3>Learn to Build AI-Powered Security Tools</h3>
+					<p>Discover how to leverage agentic AI in your security workflow. From threat hunting to automation — learn to build tools that amplify your expertise.</p>
+					<a href="https://aionsec.ai/course" class="cta-button" target="_blank" rel="noopener">
+						Explore the Course
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="5" y1="12" x2="19" y2="12"></line>
+							<polyline points="12 5 19 12 12 19"></polyline>
+						</svg>
+					</a>
+				</div>
+			</div>
 		{/if}
 	</div>
 </article>
@@ -324,6 +340,70 @@
 		margin: 0;
 	}
 
+	/* CTA Card */
+	.cta-card {
+		margin-top: 64px;
+		padding: 32px;
+		background: linear-gradient(135deg, rgba(189, 147, 249, 0.1) 0%, rgba(189, 147, 249, 0.05) 100%);
+		border: 1px solid rgba(189, 147, 249, 0.2);
+		border-radius: 16px;
+		text-align: center;
+	}
+
+	.cta-label {
+		display: inline-block;
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--aion-purple);
+		margin-bottom: 12px;
+	}
+
+	.cta-card h3 {
+		font-size: 24px;
+		font-weight: 700;
+		color: var(--white);
+		margin: 0 0 12px 0;
+	}
+
+	.cta-card p {
+		font-size: 15px;
+		color: rgba(255, 255, 255, 0.7);
+		line-height: 1.6;
+		margin: 0 0 24px 0;
+		max-width: 500px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.cta-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 24px;
+		background: var(--aion-yellow, #f5e663);
+		color: var(--aion-grey-dark, #1a1a2e);
+		font-size: 14px;
+		font-weight: 600;
+		text-decoration: none;
+		border-radius: 8px;
+		transition: all 0.2s ease;
+	}
+
+	.cta-button:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 20px rgba(245, 230, 99, 0.3);
+	}
+
+	.cta-button svg {
+		transition: transform 0.2s ease;
+	}
+
+	.cta-button:hover svg {
+		transform: translateX(4px);
+	}
+
 	/* Responsive */
 	@media (max-width: 768px) {
 		.article {
@@ -353,6 +433,19 @@
 		.article-content :global(th),
 		.article-content :global(td) {
 			padding: 10px 12px;
+		}
+
+		.cta-card {
+			margin-top: 48px;
+			padding: 24px;
+		}
+
+		.cta-card h3 {
+			font-size: 20px;
+		}
+
+		.cta-card p {
+			font-size: 14px;
 		}
 	}
 </style>
