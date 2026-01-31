@@ -2,12 +2,18 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
 
+	interface Props {
+		contentSelector?: string;
+	}
+
+	let { contentSelector = '.article-content' }: Props = $props();
+
 	let sections: { id: string; top: number }[] = $state([]);
 	let activeIndex = $state(0);
 	let visible = $state(false);
 
 	function updateSections() {
-		const headings = document.querySelectorAll('.article-content h2');
+		const headings = document.querySelectorAll(`${contentSelector} h2`);
 		sections = Array.from(headings).map((h, i) => ({
 			id: `section-${i}`,
 			top: (h as HTMLElement).offsetTop
@@ -31,7 +37,7 @@
 	}
 
 	function scrollToSection(index: number) {
-		const headings = document.querySelectorAll('.article-content h2');
+		const headings = document.querySelectorAll(`${contentSelector} h2`);
 		if (headings[index]) {
 			headings[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}

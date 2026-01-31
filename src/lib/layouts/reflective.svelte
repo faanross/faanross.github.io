@@ -1,5 +1,6 @@
 <script>
 	import { onMount, tick } from 'svelte';
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 	export let title = '';
 
 	onMount(async () => {
@@ -27,6 +28,8 @@
 		}, 100);
 	});
 </script>
+
+<ScrollProgress contentSelector=".lesson-content" />
 
 <svelte:head>
 	<title>{title} | Let's Build a Reflective Loader</title>

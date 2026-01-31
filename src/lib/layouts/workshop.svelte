@@ -1,6 +1,9 @@
 <script>
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 	export let title = '';
 </script>
+
+<ScrollProgress contentSelector=".lesson-content" />
 
 <svelte:head>
 	<title>{title} | Let's Build a Simple C2</title>
