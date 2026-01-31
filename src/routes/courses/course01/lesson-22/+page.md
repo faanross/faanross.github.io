@@ -31,7 +31,7 @@ Let's see how quickly we can add a complete new command!
 
 ## What We'll Create
 
-- `DownloadArgsClient` and `DownloadArgsAgent` types in `models/types.go`
+- `DownloadArgsClient` and `DownloadArgsAgent` types in `control/models.go`
 - `validateDownloadCommand` and `processDownloadCommand` in `control/download.go`
 - `orchestrateDownload` in `agent/download.go`
 - Registry updates for the new command
