@@ -41,7 +41,7 @@ Let's see how quickly we can add a complete new command!
 
 ### Create Argument Types
 
-First, let's define what the client sends and what the agent receives. Add to `models/types.go`:
+First, let's define what the client sends and what the agent receives. Add to `control/models.go`:
 
 ```go
 // DownloadArgsClient - what the client sends (operator requests a file)
