@@ -479,4 +479,8 @@ In the next lesson, we'll implement the actual Windows shellcode loader - the co
 
 ---
 
-[Previous: Lesson 18 - Shellcode Orchestrator](/courses/course01/lesson-18) | [Next: Lesson 20 - Windows Shellcode Doer](/courses/course01/lesson-20) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-18">← Previous: Lesson 18</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-20">Next: Lesson 20 →</a></div>
+</div>

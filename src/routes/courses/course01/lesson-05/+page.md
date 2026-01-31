@@ -222,4 +222,8 @@ Great, we have our DNS Server, now let's create our DNS agent which will be able
 
 ---
 
-[Previous: Lesson 4 - Run Loop with HTTPS](/courses/course01/lesson-04) | [Next: Lesson 6 - DNS Agent](/courses/course01/lesson-06) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-04">← Previous: Lesson 4</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-06">Next: Lesson 6 →</a></div>
+</div>

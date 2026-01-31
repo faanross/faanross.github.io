@@ -239,4 +239,8 @@ We're now ready to start the final phase of our workshop where we'll:
 
 ---
 
-[Previous: Lesson 6 - DNS Agent](/courses/course01/lesson-06) | [Next: Lesson 8 - API Switch Client](/courses/course01/lesson-08) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-06">← Previous: Lesson 6</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-08">Next: Lesson 8 →</a></div>
+</div>

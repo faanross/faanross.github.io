@@ -177,4 +177,8 @@ Now we have both DNS agent and server. In the next lesson, we'll update our RunL
 
 ---
 
-[Previous: Lesson 5 - DNS Server](/courses/course01/lesson-05) | [Next: Lesson 7 - Add DNS to RunLoop](/courses/course01/lesson-07) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-05">← Previous: Lesson 5</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-07">Next: Lesson 7 →</a></div>
+</div>

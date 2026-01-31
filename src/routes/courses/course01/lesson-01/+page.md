@@ -261,4 +261,8 @@ In the next lesson, we'll implement the HTTPS server - our first concrete type t
 
 ---
 
-[Previous: What We'll Build](/courses/course01/what-we-build) | [Next: Lesson 2 - HTTPS Server](/courses/course01/lesson-02) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/what-we-build">← Previous: What We Build</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-02">Next: Lesson 2 →</a></div>
+</div>

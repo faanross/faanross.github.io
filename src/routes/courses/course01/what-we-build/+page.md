@@ -175,4 +175,8 @@ Now that you understand what we're building, let's start with [Lesson 1: Interfa
 
 ---
 
-[Previous: Setup](/courses/course01/setup) | [Next: Lesson 1 - Interfaces and Factory Functions](/courses/course01/lesson-01) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/setup">← Previous: Setup</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-01">Next: Lesson 1 →</a></div>
+</div>

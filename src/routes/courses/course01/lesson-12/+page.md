@@ -426,4 +426,8 @@ Our C2 now has three layers of protection: TLS, HMAC authentication, and payload
 
 ---
 
-[Previous: Lesson 11 - HMAC Authentication](/courses/course01/lesson-11) | [Next: Lesson 13 - Command Endpoint](/courses/course01/lesson-13) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-11">← Previous: Lesson 11</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-13">Next: Lesson 13 →</a></div>
+</div>

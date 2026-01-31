@@ -931,4 +931,8 @@ The agent now receives commands, but doesn't execute them yet. In the next lesso
 
 ---
 
-[Previous: Lesson 15 - Queue Commands](/courses/course01/lesson-15) | [Next: Lesson 17 - Agent Execution Framework](/courses/course01/lesson-17) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-15">← Previous: Lesson 15</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-17">Next: Lesson 17 →</a></div>
+</div>

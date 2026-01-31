@@ -643,4 +643,8 @@ Thank you for completing this course!
 
 ---
 
-[Previous: Lesson 22 - Download Command](/courses/course01/lesson-22) | [Next: Course Review](/courses/course01/review) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-22">← Previous: Lesson 22</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/review">Next: Review →</a></div>
+</div>

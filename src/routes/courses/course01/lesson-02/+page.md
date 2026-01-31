@@ -300,4 +300,8 @@ Great, so we have our HTTPS Server, now let's create our own agent which will be
 
 ---
 
-[Previous: Lesson 1 - Interfaces and Factory Functions](/courses/course01/lesson-01) | [Next: Lesson 3 - HTTPS Agent](/courses/course01/lesson-03) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-01">← Previous: Lesson 1</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-03">Next: Lesson 3 →</a></div>
+</div>

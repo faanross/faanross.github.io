@@ -199,4 +199,8 @@ We have all our core HTTPS-logic. We'll now head over and do the same essential 
 
 ---
 
-[Previous: Lesson 3 - HTTPS Agent](/courses/course01/lesson-03) | [Next: Lesson 5 - DNS Server](/courses/course01/lesson-05) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-03">← Previous: Lesson 3</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-05">Next: Lesson 5 →</a></div>
+</div>

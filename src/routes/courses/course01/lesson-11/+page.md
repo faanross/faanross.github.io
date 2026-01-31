@@ -494,4 +494,8 @@ Our C2 now verifies that connecting agents possess the shared secret. In the nex
 
 ---
 
-[Previous: Lesson 10 - Protocol Transition](/courses/course01/lesson-10) | [Next: Lesson 12 - Payload Encryption](/courses/course01/lesson-12) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-10">← Previous: Lesson 10</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-12">Next: Lesson 12 →</a></div>
+</div>

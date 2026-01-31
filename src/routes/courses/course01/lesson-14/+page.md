@@ -333,4 +333,8 @@ The command is now validated and processed, ready to be queued for the agent. In
 
 ---
 
-[Previous: Lesson 13 - Command Endpoint](/courses/course01/lesson-13) | [Next: Lesson 15 - Queue Commands](/courses/course01/lesson-15) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-13">← Previous: Lesson 13</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-15">Next: Lesson 15 →</a></div>
+</div>

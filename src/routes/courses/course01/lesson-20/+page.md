@@ -426,4 +426,8 @@ This completes the core shellcode execution capability. In the next lesson, we'l
 
 ---
 
-[Previous: Lesson 19 - Shellcode Doer Interface](/courses/course01/lesson-19) | [Next: Lesson 21 - Server Receives Results](/courses/course01/lesson-21) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-19">← Previous: Lesson 19</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-21">Next: Lesson 21 →</a></div>
+</div>

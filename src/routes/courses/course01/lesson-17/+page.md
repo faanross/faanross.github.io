@@ -576,4 +576,8 @@ In the next lesson, we'll implement the actual shellcode orchestrator that will 
 
 ---
 
-[Previous: Lesson 16 - Dequeue and Send Commands](/courses/course01/lesson-16) | [Next: Lesson 18 - Shellcode Orchestrator](/courses/course01/lesson-18) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-16">← Previous: Lesson 16</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-18">Next: Lesson 18 →</a></div>
+</div>

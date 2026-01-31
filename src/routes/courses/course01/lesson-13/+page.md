@@ -223,4 +223,8 @@ In the next lesson, we'll add command validation to ensure that only valid comma
 
 ---
 
-[Previous: Lesson 12 - Payload Encryption](/courses/course01/lesson-12) | [Next: Lesson 14 - Command Validation and Processing](/courses/course01/lesson-14) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-12">← Previous: Lesson 12</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-14">Next: Lesson 14 →</a></div>
+</div>

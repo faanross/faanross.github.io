@@ -213,4 +213,8 @@ In the next lesson, we'll implement the server-side logic to dequeue commands an
 
 ---
 
-[Previous: Lesson 14 - Command Validation and Processing](/courses/course01/lesson-14) | [Next: Lesson 16 - Dequeue and Send Commands](/courses/course01/lesson-16) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-14">← Previous: Lesson 14</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-16">Next: Lesson 16 →</a></div>
+</div>

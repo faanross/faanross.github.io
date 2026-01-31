@@ -454,4 +454,8 @@ In the next (and final) lesson, we'll implement persistence - making the agent s
 
 ---
 
-[Previous: Lesson 21 - Server Receives Results](/courses/course01/lesson-21) | [Next: Lesson 23 - Persistence](/courses/course01/lesson-23) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-21">← Previous: Lesson 21</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-23">Next: Lesson 23 →</a></div>
+</div>

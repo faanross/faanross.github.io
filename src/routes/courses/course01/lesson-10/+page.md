@@ -311,4 +311,8 @@ And that's it, we now have a simple, but potent foundation for a covert channel 
 
 ---
 
-[Previous: Lesson 9 - Dual Server Startup](/courses/course01/lesson-09) | [Next: Lesson 11 - HMAC Authentication](/courses/course01/lesson-11) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-09">← Previous: Lesson 9</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-11">Next: Lesson 11 →</a></div>
+</div>

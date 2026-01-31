@@ -413,4 +413,8 @@ Our system can now dynamically change its response based on operator input. In t
 
 ---
 
-[Previous: Lesson 7 - Add DNS to RunLoop](/courses/course01/lesson-07) | [Next: Lesson 9 - Dual Server Startup](/courses/course01/lesson-09) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-07">← Previous: Lesson 7</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-09">Next: Lesson 9 →</a></div>
+</div>

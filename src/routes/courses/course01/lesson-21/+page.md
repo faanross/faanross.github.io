@@ -436,4 +436,8 @@ We have a fully functional command and control system! In the next lesson, we'll
 
 ---
 
-[Previous: Lesson 20 - Windows Shellcode Doer](/courses/course01/lesson-20) | [Next: Lesson 22 - Download Command](/courses/course01/lesson-22) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-20">← Previous: Lesson 20</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-22">Next: Lesson 22 →</a></div>
+</div>

@@ -120,4 +120,8 @@ Now go build something amazing.
 
 ---
 
-[Previous: Where to From Here](/courses/course01/where-to-from-here) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/where-to-from-here">← Previous: Where to From Here</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div></div>
+</div>

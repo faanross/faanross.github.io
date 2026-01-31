@@ -252,4 +252,8 @@ You now have a solid foundation in C2 development. The patterns you've learned a
 
 ---
 
-[Previous: Course Review](/courses/course01/review) | [Next: Final Thoughts](/courses/course01/final-thoughts) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/review">← Previous: Review</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/final-thoughts">Next: Final Thoughts →</a></div>
+</div>

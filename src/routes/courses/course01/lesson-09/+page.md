@@ -148,4 +148,8 @@ In the next lesson, we'll implement the agent-side transition logic!
 
 ---
 
-[Previous: Lesson 8 - API Switch Client](/courses/course01/lesson-08) | [Next: Lesson 10 - Protocol Transition](/courses/course01/lesson-10) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-08">← Previous: Lesson 8</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-10">Next: Lesson 10 →</a></div>
+</div>

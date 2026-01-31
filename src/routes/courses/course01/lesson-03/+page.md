@@ -204,4 +204,8 @@ We can now add a loop to our HTTPS logic so that the agent will periodically con
 
 ---
 
-[Previous: Lesson 2 - HTTPS Server](/courses/course01/lesson-02) | [Next: Lesson 4 - Run Loop with HTTPS](/courses/course01/lesson-04) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-02">← Previous: Lesson 2</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/lesson-04">Next: Lesson 4 →</a></div>
+</div>

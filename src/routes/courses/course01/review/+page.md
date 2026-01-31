@@ -231,4 +231,8 @@ This is a significant accomplishment!
 
 ---
 
-[Previous: Lesson 23 - Persistence](/courses/course01/lesson-23) | [Next: Where to From Here](/courses/course01/where-to-from-here) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div><a href="/courses/course01/lesson-23">← Previous: Lesson 23</a></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/where-to-from-here">Next: Where to From Here →</a></div>
+</div>

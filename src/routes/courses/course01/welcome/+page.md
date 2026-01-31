@@ -52,4 +52,8 @@ Head to the [Setup](/courses/course01/setup) page to configure your development 
 
 ---
 
-[Next: Setup](/courses/course01/setup) | [Course Home](/courses/course01)
+<div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+<div></div>
+<div><a href="/courses/course01">↑ Table of Contents</a></div>
+<div><a href="/courses/course01/setup">Next: Setup →</a></div>
+</div>
