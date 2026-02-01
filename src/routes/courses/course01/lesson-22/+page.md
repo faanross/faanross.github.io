@@ -439,8 +439,16 @@ go run ./cmd/server
 
 **Start the agent:**
 
+You can run the agent locally on your development machine for testing:
+
 ```bash
 go run ./cmd/agent
+```
+
+*If you want to test on a separate Windows system, you'll need to recompile and transfer the agent again since we've made changes since lesson 20:*
+
+```bash
+GOOS=windows GOARCH=amd64 go build -o agent.exe ./cmd/agent
 ```
 
 **Queue a download command:**
