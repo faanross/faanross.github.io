@@ -454,13 +454,7 @@ GOOS=windows GOARCH=amd64 go build -o agent.exe ./cmd/agent
 **Queue a download command:**
 
 ```bash
-curl -X POST http://localhost:8080/command \
-  -d '{
-    "command": "download",
-    "data": {
-      "file_path": "C:/Users/tresa/OneDrive/Desktop/test.txt"
-    }
-  }'
+curl -X POST http://localhost:8080/command -d '{"command": "download", "data": {"file_path": "C:/Users/tresa/OneDrive/Desktop/test.txt"}}'
 ```
 
 *This is a file on my target system - replace the path with a file that exists on your agent's machine.*
@@ -509,13 +503,7 @@ cat downloads/job_582947_test.txt
 **Test error handling (file not found):**
 
 ```bash
-curl -X POST http://localhost:8080/command \
-  -d '{
-    "command": "download",
-    "data": {
-      "file_path": "/nonexistent/file.txt"
-    }
-  }'
+curl -X POST http://localhost:8080/command -d '{"command": "download", "data": {"file_path": "/nonexistent/file.txt"}}'
 ```
 
 The agent will return an error result with "file not found" message.
