@@ -67,7 +67,7 @@ We'll focus on Registry Run Keys as they're the most common and effective for us
 
 ### Create Argument Types
 
-Add to `models/types.go`:
+Add to `control/models.go`:
 
 ```go
 // PersistArgsClient - what the client sends
@@ -384,19 +384,19 @@ func doPersistStartup(args models.PersistArgsAgent) models.PersistResult {
 	}
 	startupPath := filepath.Join(appData, "Microsoft", "Windows", "Start Menu", "Programs", "Startup")
 
-	// Create shortcut filename
-	shortcutPath := filepath.Join(startupPath, args.Name+".lnk")
+	// Create executable filename (we copy the exe, not a shortcut)
+	exePath := filepath.Join(startupPath, args.Name+".exe")
 
 	if args.Remove {
-		// Remove the shortcut
-		err := os.Remove(shortcutPath)
+		// Remove the executable
+		err := os.Remove(exePath)
 		if err != nil {
 			result.Success = false
-			result.Message = fmt.Sprintf("failed to remove shortcut: %v", err)
+			result.Message = fmt.Sprintf("failed to remove startup executable: %v", err)
 			return result
 		}
 		result.Success = true
-		result.Message = fmt.Sprintf("Removed startup shortcut '%s'", args.Name)
+		result.Message = fmt.Sprintf("Removed startup executable '%s'", args.Name)
 	} else {
 		// For simplicity, we'll copy the executable instead of creating a shortcut
 		// Creating proper .lnk files requires COM or external tools

