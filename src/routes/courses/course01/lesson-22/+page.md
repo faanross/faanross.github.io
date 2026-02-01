@@ -320,21 +320,18 @@ The key insight: **shellcode needs a processor** because the server transforms a
 
 We've built the agent-side logic, but there's one more piece: when the agent sends back the file data, the server needs to **save it to disk**. Currently, `ResultHandler` just logs results - we need to detect download results and handle them specially.
 
-### Update ResultHandler
+### Define the Download Directory
 
-First, add the required imports to `server/server_https.go`:
+First, add a constant to `server/server_https.go` that defines where downloaded files will be saved:
 
 ```go
-import (
-	// ... existing imports ...
-	"encoding/base64"
-	"os"
-	"path/filepath"
-)
-
 // DownloadDirectory is where downloaded files are saved
 const DownloadDirectory = "./downloads"
 ```
+
+This creates a `downloads/` folder in whatever directory the server is run from. You can change this path to save files elsewhere.
+
+### Update ResultHandler
 
 Now update the `ResultHandler` function to detect and handle download results:
 
