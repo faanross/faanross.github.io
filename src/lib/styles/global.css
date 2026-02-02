@@ -56,15 +56,18 @@ h2 {
     font-weight: 600;
     font-size: clamp(24px, 3vw, 36px);
     line-height: 1.25;
-    background: linear-gradient(135deg, #bd93f9 0%, #d4b8fc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--aion-yellow);
 }
 
 h3 {
     font-weight: 600;
     font-size: clamp(16px, 1.8vw, 20px);
+    color: var(--aion-purple);
+}
+
+h4 {
+    font-weight: 600;
+    font-size: clamp(14px, 1.5vw, 18px);
     color: var(--aion-yellow);
 }
 
