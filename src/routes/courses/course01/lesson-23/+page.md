@@ -538,6 +538,8 @@ Open `regedit.exe` and navigate to:
 
 You should see a new entry named "WindowsUpdate" pointing to your agent!
 
+![Registry Editor showing WindowsUpdate persistence entry](/courses/img/lesson-23-regedit-persistence.png)
+
 **Step 7: The magic moment - REBOOT**
 
 Restart the Windows machine. After login, the agent should automatically start and connect back to your server!
