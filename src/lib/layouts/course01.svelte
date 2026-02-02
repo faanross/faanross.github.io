@@ -68,7 +68,7 @@
 		font-weight: 600;
 		margin-top: 48px;
 		margin-bottom: 16px;
-		color: var(--aion-purple);
+		color: var(--aion-yellow);
 	}
 
 	.lesson-content :global(h3) {
@@ -76,7 +76,7 @@
 		font-weight: 600;
 		margin-top: 36px;
 		margin-bottom: 12px;
-		color: var(--white);
+		color: var(--aion-purple);
 	}
 
 	.lesson-content :global(h4) {
@@ -84,7 +84,7 @@
 		font-weight: 600;
 		margin-top: 28px;
 		margin-bottom: 10px;
-		color: rgba(255, 255, 255, 0.9);
+		color: var(--aion-yellow);
 	}
 
 	.lesson-content :global(p) {
