@@ -3,8 +3,6 @@ layout: course01
 title: "Course Review"
 ---
 
-# Course Review
-
 ## What We Built
 
 Congratulations! You've built a fully functional Command and Control framework from scratch. Let's review everything we've accomplished.

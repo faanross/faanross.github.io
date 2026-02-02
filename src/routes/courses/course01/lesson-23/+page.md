@@ -621,56 +621,6 @@ func main() {
 
 This gives you the best of both worlds: automatic persistence with fallback, while still keeping the manual command for testing and cleanup.
 
-## Course Recap
-
-Congratulations! You've built a complete Command and Control framework:
-
-```
-WHAT YOU BUILT
-
-Communication Layer:
-|-- HTTPS encrypted channel
-|-- DNS covert channel
-|-- Dynamic protocol switching
-
-Server Infrastructure:
-|-- Command endpoint with validation
-|-- Argument processing pipeline
-|-- Command queue system
-|-- Results receiver
-
-Agent Architecture:
-|-- Interface-based design
-|-- Factory pattern for protocols
-|-- Orchestrator/Doer separation
-|-- Cross-platform build support
-
-Commands Implemented:
-|-- Shellcode - Reflective DLL loading
-|-- Download - Exfiltrate files
-|-- Persist - Survive reboots
-
-Key Go Patterns Used:
-|-- Interfaces and factory functions
-|-- Method expressions
-|-- Build tags for cross-platform
-|-- Goroutines and channels
-|-- json.RawMessage for flexibility
-```
-
-## Next Steps
-
-This course gave you a foundation. Here are ideas for extending it:
-
-1. **More commands:** Upload, screenshot, keylogger, process list
-2. **Better persistence:** Scheduled tasks, services, WMI
-3. **Encryption:** Add payload encryption over HTTPS
-4. **Multi-agent:** Agent registration and tracking
-5. **Web UI:** Replace curl with a proper operator interface
-6. **Evasion:** Process injection, AMSI bypass, unhooking
-
-The patterns you learned apply to all of these extensions.
-
 ## Conclusion
 
 In this final lesson, we implemented persistence:

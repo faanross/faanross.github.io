@@ -3,8 +3,6 @@ layout: course01
 title: "Final Thoughts"
 ---
 
-# Final Thoughts
-
 ## Thank You
 
 Thank you for taking this journey with me. Building a C2 framework from scratch is no small undertaking, and you've stuck with it through 23 lessons of increasingly complex material.

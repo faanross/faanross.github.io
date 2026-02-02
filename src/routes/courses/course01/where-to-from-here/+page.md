@@ -3,8 +3,6 @@ layout: course01
 title: "Where to From Here"
 ---
 
-# Where to From Here
-
 You've built a functional C2 framework. Now what? Here are paths to continue your learning and extend your skills.
 
 ## Extend Your Framework
