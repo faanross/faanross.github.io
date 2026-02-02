@@ -80,7 +80,11 @@ type PersistArgsAgent struct {
 	Remove   bool   `json:"remove"`
 	AgentPath string `json:"agent_path"` // Path where agent executable is located
 }
+```
 
+Add to `models/results.go`:
+
+```go
 // PersistResult - what the agent sends back
 type PersistResult struct {
 	Method   string `json:"method"`
