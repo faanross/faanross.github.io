@@ -65,7 +65,7 @@ h2 {
 h3 {
     font-weight: 600;
     font-size: clamp(16px, 1.8vw, 20px);
-    color: var(--aion-purple);
+    color: var(--aion-yellow);
 }
 
 p {
