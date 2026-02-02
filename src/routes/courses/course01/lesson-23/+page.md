@@ -39,27 +39,23 @@ We'll implement two persistence mechanisms:
 
 Before we code, let's understand Windows persistence options:
 
-```
-COMMON WINDOWS PERSISTENCE MECHANISMS
+**1. Registry Run Keys (What we'll implement)**
+- `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`
+- Runs at user login (no admin required)
+- Survives reboots
 
-1. Registry Run Keys (What we'll implement)
-   |-- HKCU\Software\Microsoft\Windows\CurrentVersion\Run
-   |-- Runs at user login (no admin required)
-   |-- Survives reboots
+**2. Startup Folder (Alternative we'll implement)**
+- `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`
+- Runs at user login
+- Easy to spot (visible in Explorer)
 
-2. Startup Folder (Alternative we'll implement)
-   |-- %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
-   |-- Runs at user login
-   |-- Easy to spot (visible in Explorer)
+**3. Scheduled Tasks (More complex)**
+- Can run at boot, login, or schedule
+- Requires schtasks.exe or COM objects
 
-3. Scheduled Tasks (More complex)
-   |-- Can run at boot, login, or schedule
-   |-- Requires schtasks.exe or COM objects
-
-4. Services (Requires admin)
-   |-- Runs before user login
-   |-- More stealthy but complex
-```
+**4. Services (Requires admin)**
+- Runs before user login
+- More stealthy but complex
 
 We'll focus on Registry Run Keys as they're the most common and effective for user-level persistence.
 
