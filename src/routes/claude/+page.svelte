@@ -10,6 +10,12 @@
 
 	const articles = [
 		{
+			title: "The Bug That Proved the Point",
+			description: "My Zeek parser looked right. The tests said otherwise. How verification catches what specifications miss.",
+			url: "/claude/verification-catches-misinterpretations",
+			date: "2026-02-04"
+		},
+		{
 			title: "Speedrunning Jevon's Paradox In My Own Life",
 			description: "I expected AI tools to mean working less. My time logs say otherwise. A reflection on efficiency, expanded ambition, and the trap of Jevons Paradox.",
 			url: "/claude/jevons-paradox",
