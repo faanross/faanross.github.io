@@ -61,6 +61,20 @@
 	</section>
 {/each}
 
+<section class="aionsec-cta">
+	<div class="container">
+		{#if mounted}
+			<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 800 }}>
+				<h2>From Research to Practice</h2>
+				<p>These articles explore threats in the wild. AionSec teaches you how to build the agentic systems that detect them</p>
+				<a href="https://aionsec.ai" target="_blank" rel="noopener noreferrer" class="btn-primary">
+					Visit AionSec
+				</a>
+			</div>
+		{/if}
+	</div>
+</section>
+
 <style>
 	.articles-hero {
 		padding: 80px 0 60px;
@@ -164,6 +178,28 @@
 		flex-shrink: 0;
 	}
 
+	.aionsec-cta {
+		padding: 20px 0 100px;
+	}
+
+	.cta-card {
+		max-width: 500px;
+		margin: 0 auto;
+		text-align: center;
+		padding: 40px;
+	}
+
+	.cta-card h2 {
+		font-size: 24px;
+		margin-bottom: 12px;
+	}
+
+	.cta-card p {
+		font-size: 15px;
+		color: rgba(255, 255, 255, 0.7);
+		margin-bottom: 24px;
+	}
+
 	@media (max-width: 768px) {
 		.articles-grid {
 			grid-template-columns: 1fr;
@@ -171,6 +207,10 @@
 
 		.article-card {
 			padding: 20px;
+		}
+
+		.cta-card {
+			padding: 32px 24px;
 		}
 	}
 </style>

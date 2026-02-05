@@ -80,6 +80,20 @@
 	</section>
 {/each}
 
+<section class="aionsec-cta">
+	<div class="container">
+		{#if mounted}
+			<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 800 }}>
+				<h2>Go Deeper</h2>
+				<p>Enjoyed the talks? AionSec offers hands-on courses that take these concepts from presentation to production</p>
+				<a href="https://aionsec.ai/courses" target="_blank" rel="noopener noreferrer" class="btn-primary">
+					Explore Courses
+				</a>
+			</div>
+		{/if}
+	</div>
+</section>
+
 {#if activeVideo}
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div
@@ -262,9 +276,35 @@
 		color: var(--aion-yellow);
 	}
 
+	.aionsec-cta {
+		padding: 20px 0 100px;
+	}
+
+	.cta-card {
+		max-width: 500px;
+		margin: 0 auto;
+		text-align: center;
+		padding: 40px;
+	}
+
+	.cta-card h2 {
+		font-size: 24px;
+		margin-bottom: 12px;
+	}
+
+	.cta-card p {
+		font-size: 15px;
+		color: rgba(255, 255, 255, 0.7);
+		margin-bottom: 24px;
+	}
+
 	@media (max-width: 768px) {
 		.videos-grid {
 			grid-template-columns: 1fr;
+		}
+
+		.cta-card {
+			padding: 32px 24px;
 		}
 
 		.modal-content {

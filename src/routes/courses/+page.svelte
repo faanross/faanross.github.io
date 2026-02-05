@@ -127,6 +127,20 @@
 	</div>
 </section>
 
+<section class="aionsec-cta">
+	<div class="container">
+		{#if mounted}
+			<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 1000 }}>
+				<h2>Looking for More?</h2>
+				<p>AionSec offers structured courses on agentic AI for security — from building C2 frameworks to designing AI-powered workflows</p>
+				<a href="https://aionsec.ai/courses" target="_blank" rel="noopener noreferrer" class="btn-primary">
+					Browse AionSec Courses
+				</a>
+			</div>
+		{/if}
+	</div>
+</section>
+
 <style>
 	.courses-hero {
 		padding: 80px 0 60px;
@@ -252,6 +266,10 @@
 	}
 
 	.antisyphon-cta {
+		padding: 0 0 40px;
+	}
+
+	.aionsec-cta {
 		padding: 0 0 100px;
 	}
 
