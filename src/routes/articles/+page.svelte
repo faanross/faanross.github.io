@@ -187,6 +187,16 @@
 		margin: 0 auto;
 		text-align: center;
 		padding: 40px;
+		animation: ctaGlow 5s ease-in-out infinite;
+	}
+
+	@keyframes ctaGlow {
+		0%, 100% {
+			box-shadow: 0 0 15px rgba(245, 230, 99, 0.1), 0 0 30px rgba(245, 230, 99, 0.05);
+		}
+		50% {
+			box-shadow: 0 0 20px rgba(245, 230, 99, 0.18), 0 0 40px rgba(245, 230, 99, 0.08);
+		}
 	}
 
 	.cta-card h2 {

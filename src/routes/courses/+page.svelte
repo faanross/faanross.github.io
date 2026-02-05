@@ -113,20 +113,6 @@
 	</div>
 </section>
 
-<section class="antisyphon-cta">
-	<div class="container">
-		{#if mounted}
-			<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 900 }}>
-				<h2>More Workshops Coming</h2>
-				<p>Check out my instructor page on AntiSyphon for upcoming workshops and registration</p>
-				<a href="https://www.antisyphontraining.com/instructor/faan-ross/" target="_blank" rel="noopener noreferrer" class="btn-primary">
-					View AntiSyphon Profile
-				</a>
-			</div>
-		{/if}
-	</div>
-</section>
-
 <section class="aionsec-cta">
 	<div class="container">
 		{#if mounted}
@@ -265,10 +251,6 @@
 		padding: 10px 0;
 	}
 
-	.antisyphon-cta {
-		padding: 0 0 40px;
-	}
-
 	.aionsec-cta {
 		padding: 0 0 100px;
 	}
@@ -278,6 +260,16 @@
 		margin: 0 auto;
 		text-align: center;
 		padding: 40px;
+		animation: ctaGlow 5s ease-in-out infinite;
+	}
+
+	@keyframes ctaGlow {
+		0%, 100% {
+			box-shadow: 0 0 15px rgba(245, 230, 99, 0.1), 0 0 30px rgba(245, 230, 99, 0.05);
+		}
+		50% {
+			box-shadow: 0 0 20px rgba(245, 230, 99, 0.18), 0 0 40px rgba(245, 230, 99, 0.08);
+		}
 	}
 
 	.cta-card h2 {

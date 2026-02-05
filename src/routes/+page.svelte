@@ -114,18 +114,6 @@
 	{/if}
 </section>
 
-<section class="aionsec-cta">
-	{#if mounted}
-		<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 1300 }}>
-			<h2>Agentic AI for Security Professionals</h2>
-			<p>Learn how agentic design patterns can transform your security workflows — from threat hunting to detection engineering</p>
-			<a href="https://aionsec.ai/courses" target="_blank" rel="noopener noreferrer" class="btn-primary">
-				Explore AionSec
-			</a>
-		</div>
-	{/if}
-</section>
-
 <section class="connect-section">
 	{#if mounted}
 		<h2 in:fly={{ y: 30, duration: 600, delay: 1300 }}>Connect</h2>
@@ -166,6 +154,18 @@
 					<polyline points="22,6 12,13 2,6"></polyline>
 				</svg>
 				<span>Email</span>
+			</a>
+		</div>
+	{/if}
+</section>
+
+<section class="aionsec-cta">
+	{#if mounted}
+		<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 1500 }}>
+			<h2>Agentic AI for Security Professionals</h2>
+			<p>Learn how agentic design patterns can transform your security workflows — from threat hunting to detection engineering</p>
+			<a href="https://aionsec.ai/courses" target="_blank" rel="noopener noreferrer" class="btn-primary">
+				Explore AionSec
 			</a>
 		</div>
 	{/if}
@@ -422,6 +422,16 @@
 		margin: 0 auto;
 		text-align: center;
 		padding: 40px;
+		animation: ctaGlow 5s ease-in-out infinite;
+	}
+
+	@keyframes ctaGlow {
+		0%, 100% {
+			box-shadow: 0 0 15px rgba(245, 230, 99, 0.1), 0 0 30px rgba(245, 230, 99, 0.05);
+		}
+		50% {
+			box-shadow: 0 0 20px rgba(245, 230, 99, 0.18), 0 0 40px rgba(245, 230, 99, 0.08);
+		}
 	}
 
 	.cta-card h2 {
