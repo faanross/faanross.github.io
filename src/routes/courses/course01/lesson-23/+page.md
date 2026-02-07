@@ -206,20 +206,6 @@ type PersistResult struct {
 Create `agent/persist.go`:
 
 ```go
-package agent
-
-import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"log"
-	"os"
-
-	"your-module/internal/control"
-	"your-module/internal/models"
-	"your-module/internal/server"
-)
-
 // orchestratePersist is the orchestrator for the "persist" command
 func (agent *HTTPSAgent) orchestratePersist(job *server.HTTPSResponse) AgentTaskResult {
 
@@ -293,17 +279,6 @@ Create `agent/persist_windows.go`:
 
 ```go
 //go:build windows
-
-package agent
-
-import (
-	"fmt"
-	"os"
-	"path/filepath"
-
-	"golang.org/x/sys/windows/registry"
-	"your-module/internal/models"
-)
 
 const (
 	runKeyPath = `Software\Microsoft\Windows\CurrentVersion\Run`
@@ -452,14 +427,6 @@ Create `agent/persist_other.go`:
 
 ```go
 //go:build !windows
-
-package agent
-
-import (
-	"fmt"
-
-	"your-module/internal/models"
-)
 
 // doPersist stub for non-Windows systems
 func doPersist(args models.PersistArgsAgent) models.PersistResult {
