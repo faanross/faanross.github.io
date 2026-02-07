@@ -115,7 +115,7 @@ This registers a POST endpoint at `/results` that calls `ResultHandler` when hit
 
 ## Implement ResultHandler
 
-Now let's create the handler function. Add this to `server/server.go`:
+Now let's create the handler function. Add this to `server/server_https.go`:
 
 ```go
 // ResultHandler receives and displays the result from the Agent
