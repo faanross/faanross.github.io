@@ -116,7 +116,7 @@ func validatePersistCommand(rawArgs json.RawMessage) error {
 		return fmt.Errorf("persist command requires arguments")
 	}
 
-	var args models.PersistArgsClient
+	var args PersistArgsClient
 
 	if err := json.Unmarshal(rawArgs, &args); err != nil {
 		return fmt.Errorf("invalid argument format: %w", err)
@@ -140,7 +140,7 @@ Add the processor function in the same file:
 ```go
 // processPersistCommand processes persistence arguments
 func processPersistCommand(rawArgs json.RawMessage) (json.RawMessage, error) {
-	var clientArgs models.PersistArgsClient
+	var clientArgs PersistArgsClient
 
 	if err := json.Unmarshal(rawArgs, &clientArgs); err != nil {
 		return nil, fmt.Errorf("unmarshaling args: %w", err)
