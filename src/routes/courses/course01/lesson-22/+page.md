@@ -70,6 +70,27 @@ type DownloadResult struct {
 
 - **DownloadResult** - Contains the file data (base64 encoded), size, and success status
 
+### Register the Command
+
+Add to the `validCommands` map in `control/command_api.go`:
+
+```go
+var validCommands = map[string]struct {
+	Validator CommandValidator
+	Processor CommandProcessor
+}{
+	"shellcode": {
+		Validator: validateShellcodeCommand,
+		Processor: processShellcodeCommand,
+	},
+	"download": {  // NEW - validator only, no processor needed
+		Validator: validateDownloadCommand,
+	},
+}
+```
+
+Notice that download only needs a validator - the processor is optional and we skip it when no transformation is required.
+
 ### Create Validator
 
 Create `internal/control/download.go`:
@@ -105,27 +126,6 @@ func validateDownloadCommand(rawArgs json.RawMessage) error {
 ```
 
 **Note:** Unlike shellcode (which needs a processor to read the file and base64-encode it), download doesn't need any transformation - the arguments pass straight through to the agent. When no processing is required, we skip the processor entirely.
-
-### Register the Command
-
-Add to the `validCommands` map in `control/command_api.go`:
-
-```go
-var validCommands = map[string]struct {
-	Validator CommandValidator
-	Processor CommandProcessor
-}{
-	"shellcode": {
-		Validator: validateShellcodeCommand,
-		Processor: processShellcodeCommand,
-	},
-	"download": {  // NEW - validator only, no processor needed
-		Validator: validateDownloadCommand,
-	},
-}
-```
-
-That's it for the server side! Notice that download only needs a validator - the processor is optional and we skip it when no transformation is required.
 
 ## Part 2: Agent-Side Implementation
 
