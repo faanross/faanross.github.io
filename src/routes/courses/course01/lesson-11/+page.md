@@ -273,10 +273,9 @@ func computeHMAC(message, secret string) string {
 
 **Understanding the code:**
 
-1. **Timestamp** - We use Unix timestamp (seconds since 1970) as a string
-2. **Message** - Concatenate timestamp + body to sign both
-3. **HMAC computation** - `hmac.New` creates an HMAC instance, `Write` feeds data, `Sum(nil)` produces the final hash
-4. **Hex encoding** - Convert binary hash to hexadecimal string for HTTP headers
+`SignRequest` is the public-facing function that orchestrates the signing process. It grabs the current Unix timestamp, concatenates it with the request body to form a single message, then passes that message along with the shared secret to `computeHMAC`. The resulting signature and timestamp are attached as custom HTTP headers (`X-Auth-Timestamp` and `X-Auth-Signature`), so the server can later extract them and verify the request. The timestamp is included in the signed message so that the signature is unique to this moment in time - even identical request bodies produce different signatures at different times, which is what gives us replay protection.
+
+`computeHMAC` is where the actual cryptographic work happens. It creates an HMAC instance keyed with our shared secret and configured to use SHA-256 as the underlying hash function. The message bytes are fed into this HMAC via `Write`, and `Sum(nil)` finalizes the computation and returns the raw binary digest. That binary output is then hex-encoded into a string so it can be safely transmitted in an HTTP header. The key point is that only someone who possesses the same secret can produce the same signature for a given message - that's the entire basis of HMAC authentication.
 
 ### Update the Agent's Send Method
 
