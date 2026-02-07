@@ -443,7 +443,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 ### Apply Middleware to Routes
 
-Update your server's `Start()` method:
+Update the `Start()` method in `internals/server/server_https.go`:
 
 ```go
 func (s *HTTPSServer) Start() error {
