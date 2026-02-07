@@ -167,22 +167,63 @@ Plain hashes are vulnerable to **length extension attacks**. HMAC's construction
 
 ## Part 1: Configure the Shared Secret
 
-Both the server and agent need access to the same secret. In production, you'd inject this at build time or via secure configuration. For now, we'll define it as a constant.
+Both the server and agent need access to the same secret. We'll add it as a field to each config struct, then assign the value when we instantiate the config in each `main.go`.
 
-### Agent Configuration
+### Add to Config Structs
 
-In `internals/config/config.go`, add:
+In `internals/config/config.go`, add a `SharedSecret` field to both `AgentConfig` and `ServerConfig`:
 
 ```go
-const SharedSecret = "your-super-secret-key-change-in-production"
+// AgentConfig holds all configuration values for the agent
+type AgentConfig struct {
+	ServerIP     string
+	ServerPort   string
+	Timing       TimingConfig
+	Protocol     string // this will be the starting protocol
+	SharedSecret string // HMAC authentication key
+}
+
+// ServerConfig holds all configuration values for the server
+type ServerConfig struct {
+	ListeningInterface string
+	ListeningPort      string
+	Protocol           string // this will be the starting protocol
+	TlsKey             string
+	TlsCert            string
+	SharedSecret       string // HMAC authentication key
+}
 ```
 
-### Server Configuration
+### Assign in Agent Main
 
-Add the same constant to your server's config:
+In `cmd/agent/main.go`, add `SharedSecret` when instantiating the config:
 
 ```go
-const SharedSecret = "your-super-secret-key-change-in-production"
+cfg := &config.AgentConfig{
+	Protocol:     "https",
+	ServerIP:     "127.0.0.1",
+	ServerPort:   "8443",
+	SharedSecret: "your-super-secret-key-change-in-production",
+	Timing: config.TimingConfig{
+		Delay:  5 * time.Second,
+		Jitter: 50,
+	},
+}
+```
+
+### Assign in Server Main
+
+In `cmd/server/main.go`, add the same `SharedSecret` value:
+
+```go
+cfg := &config.ServerConfig{
+	Protocol:           "https",
+	ListeningInterface: "127.0.0.1",
+	ListeningPort:      "8443",
+	TlsCert:            "./certs/server.crt",
+	TlsKey:             "./certs/server.key",
+	SharedSecret:       "your-super-secret-key-change-in-production",
+}
 ```
 
 **Important:** In production, use a cryptographically random key (at least 32 bytes), and never commit it to source control. Consider embedding it at compile time using build flags.
