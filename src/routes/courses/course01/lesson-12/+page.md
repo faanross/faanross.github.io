@@ -295,49 +295,61 @@ func (agent *HTTPSAgent) Send(ctx context.Context) ([]byte, error) {
 Modify the server's `RootHandler` to decrypt incoming data and encrypt responses:
 
 ```go
-func RootHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Endpoint %s has been hit by agent\n", r.URL.Path)
+// RootHandler returns a handler that encrypts responses
+func RootHandler(secret string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Endpoint %s has been hit by agent\n", r.URL.Path)
 
-	// Read encrypted body
-	encryptedBody, err := io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Error reading body", http.StatusBadRequest)
-		return
+		// Read encrypted body
+		encryptedBody, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, "Error reading body", http.StatusBadRequest)
+			return
+		}
+
+		log.Printf("Payload pre-decryption: %s", string(encryptedBody))
+
+		// Decrypt the payload
+		plaintext, err := crypto.Decrypt(string(encryptedBody), secret)
+		if err != nil {
+			log.Printf("Decryption failed: %v", err)
+			http.Error(w, "Decryption failed", http.StatusBadRequest)
+			return
+		}
+
+		log.Printf("Payload post-decryption: %s", string(plaintext))
+
+		// Check if we should transition
+		shouldChange := control.Manager.CheckAndReset()
+		response := HTTPSResponse{
+			Change: shouldChange,
+		}
+		if shouldChange {
+			log.Printf("HTTPS: Sending transition signal (change=true)")
+		} else {
+			log.Printf("HTTPS: Normal response (change=false)")
+		}
+
+		// Marshal response to JSON
+		responseJSON, err := json.Marshal(response)
+		if err != nil {
+			log.Printf("Error marshaling response: %v\n", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		// Encrypt the response
+		encryptedResponse, err := crypto.Encrypt(responseJSON, secret)
+		if err != nil {
+			log.Printf("Error encrypting response: %v\n", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		// Set content type to octet-stream for encrypted data
+		w.Header().Set("Content-Type", "application/octet-stream")
+		w.Write([]byte(encryptedResponse))
 	}
-
-	log.Printf("Payload pre-decryption: %s", string(encryptedBody))
-
-	// Decrypt the payload
-	plaintext, err := crypto.Decrypt(string(encryptedBody), config.SharedSecret)
-	if err != nil {
-		log.Printf("Decryption failed: %v", err)
-		http.Error(w, "Decryption failed", http.StatusBadRequest)
-		return
-	}
-
-	log.Printf("Payload post-decryption: %s", string(plaintext))
-
-	// Process the decrypted data...
-	// (existing logic here)
-
-	// Prepare response
-	response := HTTPSResponse{
-		Job:    false,
-		Change: false,
-	}
-
-	responsePlaintext, _ := json.Marshal(response)
-
-	// Encrypt response
-	encryptedResponse, err := crypto.Encrypt(responsePlaintext, config.SharedSecret)
-	if err != nil {
-		log.Printf("Response encryption failed: %v", err)
-		http.Error(w, "Internal error", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Write([]byte(encryptedResponse))
 }
 ```
 
