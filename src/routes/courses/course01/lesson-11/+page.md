@@ -294,7 +294,7 @@ func (agent *HTTPSAgent) Send(ctx context.Context) ([]byte, error) {
 	}
 
 	// Sign the request
-	SignRequest(req, body)
+	SignRequest(req, body, c.sharedSecret)
 
 	resp, err := agent.client.Do(req)
 	if err != nil {
