@@ -82,17 +82,6 @@ type PersistArgsAgent struct {
 }
 ```
 
-Add to `models/results.go`:
-
-```go
-// PersistResult - what the agent sends back
-type PersistResult struct {
-	Method   string `json:"method"`
-	Success  bool   `json:"success"`
-	Message  string `json:"message"`
-}
-```
-
 **Understanding the fields:**
 
 - **Method** - Which persistence mechanism to use
@@ -100,21 +89,35 @@ type PersistResult struct {
 - **Remove** - Allows removing persistence (cleanup)
 - **AgentPath** - The agent needs to know its own location
 
-### Create Validator and Processor
+### Register the Command
+
+Add to `validCommands` in `control/command_api.go`:
+
+```go
+var validCommands = map[string]struct {
+	Validator CommandValidator
+	Processor CommandProcessor
+}{
+	"shellcode": {
+		Validator: validateShellcodeCommand,
+		Processor: processShellcodeCommand,
+	},
+	"download": {
+		Validator: validateDownloadCommand,
+		Processor: processDownloadCommand,
+	},
+	"persist": {  // NEW
+		Validator: validatePersistCommand,
+		Processor: processPersistCommand,
+	},
+}
+```
+
+### Create Validator
 
 Create `internal/control/persist.go`:
 
 ```go
-package control
-
-import (
-	"encoding/json"
-	"fmt"
-	"log"
-
-	"your-module/internal/models"
-)
-
 // validatePersistCommand validates "persist" command arguments
 func validatePersistCommand(rawArgs json.RawMessage) error {
 	if len(rawArgs) == 0 {
@@ -145,7 +148,13 @@ func validatePersistCommand(rawArgs json.RawMessage) error {
 		args.Method, args.Name, args.Remove)
 	return nil
 }
+```
 
+### Create Processor
+
+Add the processor function in the same file:
+
+```go
 // processPersistCommand processes persistence arguments
 func processPersistCommand(rawArgs json.RawMessage) (json.RawMessage, error) {
 	var clientArgs models.PersistArgsClient
@@ -177,31 +186,20 @@ func processPersistCommand(rawArgs json.RawMessage) (json.RawMessage, error) {
 }
 ```
 
-### Register the Command
+## Part 2: Agent-Side Implementation
 
-Add to `validCommands` in `control/command_api.go`:
+### Create Result Type
+
+Add to `models/results.go`:
 
 ```go
-var validCommands = map[string]struct {
-	Validator CommandValidator
-	Processor CommandProcessor
-}{
-	"shellcode": {
-		Validator: validateShellcodeCommand,
-		Processor: processShellcodeCommand,
-	},
-	"download": {
-		Validator: validateDownloadCommand,
-		Processor: processDownloadCommand,
-	},
-	"persist": {  // NEW
-		Validator: validatePersistCommand,
-		Processor: processPersistCommand,
-	},
+// PersistResult - what the agent sends back
+type PersistResult struct {
+	Method   string `json:"method"`
+	Success  bool   `json:"success"`
+	Message  string `json:"message"`
 }
 ```
-
-## Part 2: Agent-Side Implementation
 
 ### Create the Orchestrator
 
