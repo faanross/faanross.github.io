@@ -359,7 +359,7 @@ func VerifyRequest(r *http.Request, secret string) error {
 
 	// Recompute the signature
 	message := timestamp + string(body)
-	expectedSignature := computeHMAC(message, secret)
+	expectedSignature := serverComputeHMAC(message, secret)
 
 	// Constant-time comparison to prevent timing attacks
 	if !hmac.Equal([]byte(signature), []byte(expectedSignature)) {
@@ -387,8 +387,8 @@ func verifyTimestamp(timestampStr string) error {
 	return nil
 }
 
-// computeHMAC calculates HMAC-SHA256 (same as agent)
-func computeHMAC(message, secret string) string {
+// serverComputeHMAC calculates HMAC-SHA256 (same as agent)
+func serverComputeHMAC(message, secret string) string {
 	mac := hmac.New(sha256.New, []byte(secret))
 	mac.Write([]byte(message))
 	return hex.EncodeToString(mac.Sum(nil))
