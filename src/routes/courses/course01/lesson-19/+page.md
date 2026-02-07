@@ -125,7 +125,7 @@ Create the following file `internal/shellcode/interface_shellcode.go` and add th
 ```go
 // CommandShellcode is the interface for shellcode execution
 type CommandShellcode interface {
-	DoShellcode(dllBytes []byte, exportName string) (agent.ShellcodeResult, error)
+	DoShellcode(dllBytes []byte, exportName string) (models.ShellcodeResult, error)
 }
 ```
 
@@ -139,7 +139,7 @@ type CommandShellcode interface {
 
 - **Input 1:** `dllBytes []byte` - The raw DLL binary data (already decoded from base64)
 - **Input 2:** `exportName string` - The function to call within the DLL
-- **Output 1:** `agent.ShellcodeResult` - Contains status message
+- **Output 1:** `models.ShellcodeResult` - Contains status message
 - **Output 2:** `error` - Error if execution failed, nil if successful
 
 ## The macOS Stub Implementation
@@ -167,10 +167,10 @@ func New() CommandShellcode {
 }
 
 // DoShellcode is the stub implementation for macOS
-func (ms *macShellcode) DoShellcode(dllBytes []byte, exportName string) (agent.ShellcodeResult, error) {
+func (ms *macShellcode) DoShellcode(dllBytes []byte, exportName string) (models.ShellcodeResult, error) {
 	fmt.Println("|SHELLCODE DOER MACOS| This feature has not yet been implemented for MacOS.")
 
-	result := agent.ShellcodeResult{
+	result := models.ShellcodeResult{
 		Message: "FAILURE: Not implemented on macOS",
 	}
 	return result, nil
@@ -206,7 +206,7 @@ Returns a pointer to macShellcode. The return type is the interface, not the con
 ### Interface implementation
 
 ```go
-func (ms *macShellcode) DoShellcode(dllBytes []byte, exportName string) (agent.ShellcodeResult, error)
+func (ms *macShellcode) DoShellcode(dllBytes []byte, exportName string) (models.ShellcodeResult, error)
 ```
 
 This method signature matches the interface exactly, so `macShellcode` satisfies the `CommandShellcode` interface.
@@ -216,7 +216,7 @@ This method signature matches the interface exactly, so `macShellcode` satisfies
 ```go
 fmt.Println("|SHELLCODE DOER MACOS| This feature has not yet been implemented for MacOS.")
 
-result := agent.ShellcodeResult{
+result := models.ShellcodeResult{
      Message: "FAILURE: Not implemented on macOS",
 }
 
