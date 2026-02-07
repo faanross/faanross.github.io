@@ -131,25 +131,9 @@ That's it for the server side! Notice that download only needs a validator - the
 
 ### Create the Orchestrator
 
-Create `agent/download.go`:
+Create `agent/download.go`. First, the orchestrator:
 
 ```go
-package agent
-
-import (
-	"encoding/base64"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io"
-	"log"
-	"os"
-
-	"your-module/internal/control"
-	"your-module/internal/models"
-	"your-module/internal/server"
-)
-
 // orchestrateDownload is the orchestrator for the "download" command
 func (agent *HTTPSAgent) orchestrateDownload(job *server.HTTPSResponse) AgentTaskResult {
 
@@ -202,7 +186,15 @@ func (agent *HTTPSAgent) orchestrateDownload(job *server.HTTPSResponse) AgentTas
 
 	return finalResult
 }
+```
 
+This follows the same pattern as the shellcode orchestrator: unmarshal arguments, validate, call the doer, and build the final result.
+
+### Create the Doer
+
+Now add the doer function in the same file:
+
+```go
 // doDownload performs the actual file reading
 func doDownload(filePath string) models.DownloadResult {
 	result := models.DownloadResult{
