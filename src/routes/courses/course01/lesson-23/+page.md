@@ -104,7 +104,6 @@ var validCommands = map[string]struct {
 	},
 	"download": {
 		Validator: validateDownloadCommand,
-		Processor: processDownloadCommand,
 	},
 	"persist": {  // NEW
 		Validator: validatePersistCommand,
