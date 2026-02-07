@@ -119,7 +119,7 @@
 			<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 1000 }}>
 				<h2>Looking for More?</h2>
 				<p>AionSec offers structured courses on agentic AI for security — from building C2 frameworks to designing AI-powered workflows</p>
-				<a href="https://aionsec.ai/courses" target="_blank" rel="noopener noreferrer" class="btn-primary">
+				<a href="https://aionsec.ai/course" target="_blank" rel="noopener noreferrer" class="btn-primary">
 					Browse AionSec Courses
 				</a>
 			</div>

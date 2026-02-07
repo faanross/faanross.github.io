@@ -164,7 +164,7 @@
 		<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 1500 }}>
 			<h2>Agentic AI for Security Professionals</h2>
 			<p>Learn how agentic design patterns can transform your security workflows — from threat hunting to detection engineering</p>
-			<a href="https://aionsec.ai/courses" target="_blank" rel="noopener noreferrer" class="btn-primary">
+			<a href="https://aionsec.ai/course" target="_blank" rel="noopener noreferrer" class="btn-primary">
 				Explore AionSec
 			</a>
 		</div>

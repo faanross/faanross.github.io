@@ -86,7 +86,7 @@
 			<div class="cta-card glass-card" in:fly={{ y: 30, duration: 600, delay: 800 }}>
 				<h2>Go Deeper</h2>
 				<p>Enjoyed the talks? AionSec offers hands-on courses that take these concepts from presentation to production</p>
-				<a href="https://aionsec.ai/courses" target="_blank" rel="noopener noreferrer" class="btn-primary">
+				<a href="https://aionsec.ai/course" target="_blank" rel="noopener noreferrer" class="btn-primary">
 					Explore Courses
 				</a>
 			</div>

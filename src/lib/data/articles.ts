@@ -89,9 +89,13 @@ export const articleSeries: ArticleSeries[] = [
 		]
 	},
 	{
-		name: "Network Threat Hunting",
+		name: "Threat Hunting",
 		description: "C2 detection, DNS analysis, and threat hunting",
 		articles: [
+			{
+				title: "The MITRE ATT&CK Framework: A Threat Hunter's Strategic Compass",
+				url: "https://www.activecountermeasures.com/the-mitre-attck-framework-a-threat-hunters-strategic-compass/"
+			},
 			{
 				title: "Context Over Code: The Irreplaceable Role of Human Hunters",
 				url: "https://www.activecountermeasures.com/context-over-code-the-irreplaceable-role-of-human-hunters/"
