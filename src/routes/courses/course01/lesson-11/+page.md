@@ -451,10 +451,6 @@ func (s *HTTPSServer) Start() error {
 
 	// Apply authentication middleware to agent routes
 	r.With(AuthMiddleware).Get("/", RootHandler)
-	r.With(AuthMiddleware).Post("/results", ResultHandler)
-
-	// Control API doesn't need agent auth (operator uses different auth)
-	// r.Post("/command", commandHandler)
 
 	s.server = &http.Server{
 		Addr:    s.addr,
