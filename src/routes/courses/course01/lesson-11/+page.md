@@ -332,17 +332,12 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
-	"your-module/internals/config"
 )
 
-const (
-	// TimestampTolerance is how far off the timestamp can be (in seconds)
-	TimestampTolerance = 300 // 5 minutes
-)
+const TimestampTolerance = 300 // 5 minutes
 
 // VerifyRequest checks HMAC signature and timestamp validity
-func VerifyRequest(r *http.Request) error {
+func VerifyRequest(r *http.Request, secret string) error {
 	// Extract headers
 	timestamp := r.Header.Get("X-Auth-Timestamp")
 	signature := r.Header.Get("X-Auth-Signature")
@@ -364,7 +359,7 @@ func VerifyRequest(r *http.Request) error {
 
 	// Recompute the signature
 	message := timestamp + string(body)
-	expectedSignature := computeHMAC(message, config.SharedSecret)
+	expectedSignature := computeHMAC(message, secret)
 
 	// Constant-time comparison to prevent timing attacks
 	if !hmac.Equal([]byte(signature), []byte(expectedSignature)) {
@@ -427,17 +422,19 @@ import (
 	"net/http"
 )
 
-// AuthMiddleware wraps a handler with HMAC authentication
-func AuthMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := VerifyRequest(r); err != nil {
-			log.Printf("Authentication failed: %v", err)
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
+// AuthMiddleware returns a middleware that wraps a handler with HMAC authentication
+func AuthMiddleware(secret string) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if err := VerifyRequest(r, secret); err != nil {
+				log.Printf("Authentication failed: %v", err)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
 
-		next.ServeHTTP(w, r)
-	})
+			next.ServeHTTP(w, r)
+		})
+	}
 }
 ```
 
