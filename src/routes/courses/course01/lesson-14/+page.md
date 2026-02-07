@@ -84,7 +84,6 @@ var validCommands = map[string]struct {
 		Validator: validateShellcodeCommand,
 		Processor: processShellcodeCommand,
 	},
-	"whoami": {}, // No arguments needed
 }
 ```
 

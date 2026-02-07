@@ -122,7 +122,6 @@ var validCommands = map[string]struct {
 	"download": {  // NEW - validator only, no processor needed
 		Validator: validateDownloadCommand,
 	},
-	"whoami": {}, // No arguments needed
 }
 ```
 
