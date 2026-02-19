@@ -100,15 +100,15 @@
 			<span class="card-link">View projects</span>
 		</a>
 
-		<!-- Heptagon - Claude -->
-		<a href="/claude" class="section-card" in:fly={{ y: 30, duration: 600, delay: 1200 }}>
+		<!-- Heptagon - Agentic Design -->
+		<a href="/agentic" class="section-card" in:fly={{ y: 30, duration: 600, delay: 1200 }}>
 			<div class="card-icon">
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 					<polygon points="12,2 19.8,5.5 22,13 17.5,20 6.5,20 2,13 4.2,5.5" />
 				</svg>
 			</div>
-			<h3>Claude</h3>
-			<p>Chronicling my journey optimizing workflows with Claude Code and Obsidian</p>
+			<h3>Agentic Design</h3>
+			<p>Documenting my journey optimizing how I work with AI</p>
 			<span class="card-link">Explore</span>
 		</a>
 	{/if}

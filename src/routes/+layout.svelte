@@ -18,7 +18,7 @@
 	});
 
 	// Hide footer on dashboard routes
-	const hiddenRoutes = ['/claude/memory'];
+	const hiddenRoutes = ['/agentic/memory'];
 	$effect(() => {
 		// This is just to make hiddenRoutes reactive with page
 	});

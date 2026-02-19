@@ -2,13 +2,13 @@
 	import { page } from '$app/stores';
 
 	// Hide nav on standalone dashboard routes
-	const hiddenRoutes = ['/claude/memory'];
+	const hiddenRoutes = ['/agentic/memory'];
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
 		{ href: '/courses', label: 'Courses' },
 		{ href: '/articles', label: 'Articles' },
-		{ href: '/claude', label: 'Claude' },
+		{ href: '/agentic', label: 'Agentic' },
 		{ href: '/talks', label: 'Talks' },
 		{ href: '/projects', label: 'Projects' },
 		{ href: '/about', label: 'About' }

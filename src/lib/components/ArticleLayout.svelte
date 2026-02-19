@@ -16,8 +16,8 @@
 		title,
 		date,
 		description,
-		backLink = '/claude',
-		backText = 'Back to Claude',
+		backLink = '/agentic',
+		backText = 'Back to Agentic Design',
 		children
 	}: Props = $props();
 
@@ -169,7 +169,7 @@
 	.article-content :global(h2) {
 		font-size: 24px;
 		font-weight: 600;
-		color: var(--white);
+		color: var(--aion-yellow);
 		margin: 48px 0 24px;
 	}
 
