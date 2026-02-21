@@ -92,7 +92,7 @@ Please reach out!
 
 If you enjoyed this course, you might also like:
 
-- **Reflective DLL Loading Deep Dive** - The complete course on the shellcode loader we used: [faanross.com/firestarter/reflective/moc/](https://www.faanross.com/firestarter/reflective/moc/)
+- **Reflective DLL Loading Deep Dive** - The complete course on the shellcode loader we used: [faanross.com/courses/reflective/moc/](https://www.faanross.com/courses/reflective/moc/)
 
 ## Keep Building
 
