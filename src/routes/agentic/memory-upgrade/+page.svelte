@@ -15,13 +15,13 @@
 
 	<p>And I've been using it daily since. It's genuinely helpful in two ways. First, when I forget something specific, I can search back and find it. No huge surprise - that's the entire reason I built it. But the second use case I didn't anticipate: recovering crashed conversation threads. Say I'm deep in a session with Claude, working on something, and the terminal hangs, or I get pounded with API 500 errors, or my parallel agents drain the context window dry before compaction can kick in. Previously that meant starting over. Now I just open a new chat and say "go find the conversation we just had about X, I want to continue it." That alone has saved me a lot of friction.</p>
 
-	<p>Then a few days ago I read Rohan Deshpande's article <a href="https://x.com/rohit4verse/status/2012925228159295810">how to build an agent that never forgets</a> and realized that despite being useful, what I'd built was a well-organized chat log. Not a memory system. There was so much untapped potential.</p>
+	<p>Then a few days ago I read <a href="https://x.com/rohit4verse/status/2012925228159295810">@rohit4verse's article on how to build an agent that never forgets</a> and realized that despite being useful, what I'd built was a well-organized chat log. Not a memory system. There was so much untapped potential.</p>
 
 	<hr />
 
 	<h2>The Sentence That Really Hit Me</h2>
 
-	<p>Rohan's framing hit immediately:</p>
+	<p>Their framing hit immediately:</p>
 
 	<blockquote>
 		<p>"Here is what I thought memory meant: Keeping the conversation history and stuffing it into the context window. That works for about 10 exchanges. Then the context window fills up. So you truncate old messages. Now your agent forgets the user is vegan and recommends a steakhouse. You realize conversation history isn't memory - it's just a chat log."</p>
@@ -29,7 +29,7 @@
 
 	<p>That's my system. I have 90,000 messages indexed across 472 sessions. I can search them. I can embed them. But when I ask "what components make up Artifex?" - a threat hunting system I'm developing and which I've discussed in hundreds of sessions - the search returns individual messages that each mention one or two components. Never the full picture. So even though the search works, the memory, that is a higher level of abstraction that distills and integrates events, does not.</p>
 
-	<p>Rohan goes further with an example that maps directly to my situation:</p>
+	<p>They go further with an example that maps directly to my situation:</p>
 
 	<blockquote>
 		<p>"After two weeks, the vector database had 500 entries. When the user asked, 'What did I tell you about my work situation?' the retrieval system returned fragments from 12 different conversations. The agent saw: 'I love my job' (Week 1), 'I'm thinking about quitting' (Week 2)... Which one is true? The agent had no idea."</p>
@@ -79,7 +79,7 @@
 
 	<h2>The Gap</h2>
 
-	<p>Rohan's architecture describes three layers:</p>
+	<p>The article describes three layers:</p>
 
 	<blockquote>
 		<p>"Layer 1: Resources (Raw Data). The source of truth. Unprocessed logs, uploads, transcripts. Immutable and timestamped.<br />
