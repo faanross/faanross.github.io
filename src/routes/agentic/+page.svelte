@@ -9,14 +9,20 @@
 	});
 
 	const featured = {
-		title: "Agentic Coding as a Learning Accelerator: The Mindset and Systems That Make It Work",
-		description: "The critics say AI agents will atrophy your skills. They're half right. Here's the mindset and systems that turn agentic coding into a learning accelerator.",
-		url: "/agentic/agentic-coding-learning-accelerator",
-		date: "2026-02-19",
-		image: "/images/claude/agentic-coding-learning-accelerator/IMG-007-CHOICE-IS-YOURS.png"
+		title: "The Article That Made Me Realize I Didn't Create a Memory System After All",
+		description: "I built a memory system for Claude Code. Then I read an article that made me realize it was just a well-organized chat log. Here's the audit, the gap, and the upgrade path.",
+		url: "/agentic/memory-upgrade",
+		date: "2026-02-22",
+		image: "/images/claude/memory-upgrade/IMG-034-MEMORY-AUDIT-HERO.png"
 	};
 
 	const articles = [
+		{
+			title: "Agentic Coding as a Learning Accelerator: The Mindset and Systems That Make It Work",
+			description: "The critics say AI agents will atrophy your skills. They're half right. Here's the mindset and systems that turn agentic coding into a learning accelerator.",
+			url: "/agentic/agentic-coding-learning-accelerator",
+			date: "2026-02-19"
+		},
 		{
 			title: "The Bug That Proved the Point",
 			description: "My Zeek parser looked right. The tests said otherwise. How verification catches what specifications miss.",
