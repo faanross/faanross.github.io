@@ -9,14 +9,20 @@
 	});
 
 	const featured = {
-		title: "The Article That Made Me Realize I Didn't Create a Memory System After All",
-		description: "I built a memory system for Claude Code. Then I read an article that made me realize it was just a well-organized chat log. Here's the audit, the gap, and the upgrade path.",
-		url: "/agentic/memory-upgrade",
-		date: "2026-02-22",
-		image: "/images/claude/memory-upgrade/IMG-034-MEMORY-AUDIT-HERO.png"
+		title: "Before You Upgrade Anything, Measure What You Have",
+		description: "My memory system finds the correct answer less than a third of the time. Here are the 28-query benchmark results across five categories that prove it.",
+		url: "/agentic/benchmarks",
+		date: "2026-02-24",
+		image: "/images/claude/benchmarks/IMG-003-WHAT-I-LEARNED.png"
 	};
 
 	const articles = [
+		{
+			title: "The Article That Made Me Realize I Didn't Create a Memory System After All",
+			description: "I built a memory system for Claude Code. Then I read an article that made me realize it was just a well-organized chat log. Here's the audit, the gap, and the upgrade path.",
+			url: "/agentic/memory-upgrade",
+			date: "2026-02-22"
+		},
 		{
 			title: "Agentic Coding as a Learning Accelerator: The Mindset and Systems That Make It Work",
 			description: "The critics say AI agents will atrophy your skills. They're half right. Here's the mindset and systems that turn agentic coding into a learning accelerator.",
