@@ -9,14 +9,20 @@
 	});
 
 	const featured = {
-		title: "Before You Upgrade Anything, Measure What You Have",
-		description: "My memory system finds the correct answer less than a third of the time. Here are the 28-query benchmark results across five categories that prove it.",
-		url: "/agentic/benchmarks",
-		date: "2026-02-24",
-		image: "/images/claude/benchmarks/IMG-003-WHAT-I-LEARNED.png"
+		title: "The Obvious Approach Was Wrong",
+		description: "I expected time-decay scoring to be a straightforward improvement. Apply decay, watch numbers improve, ship it. Instead I was staring at a 35% degradation.",
+		url: "/agentic/time-decay",
+		date: "2026-02-27",
+		image: "/images/claude/time-decay/IMG-001-HERO.png"
 	};
 
 	const articles = [
+		{
+			title: "Before You Upgrade Anything, Measure What You Have",
+			description: "My memory system finds the correct answer less than a third of the time. Here are the 28-query benchmark results across five categories that prove it.",
+			url: "/agentic/benchmarks",
+			date: "2026-02-24"
+		},
 		{
 			title: "The Article That Made Me Realize I Didn't Create a Memory System After All",
 			description: "I built a memory system for Claude Code. Then I read an article that made me realize it was just a well-organized chat log. Here's the audit, the gap, and the upgrade path.",
