@@ -27,7 +27,7 @@
 		{#if mounted}
 			<div class="content-block" in:fly={{ y: 30, duration: 600, delay: 400 }}>
 				<p>
-					I'm a security researcher focused on the intersection of <strong>threat hunting</strong>
+					I'm a security researcher and educator focused on the intersection of <strong>threat hunting</strong>
 					and <strong>agentic AI</strong>.
 				</p>
 				<p>
