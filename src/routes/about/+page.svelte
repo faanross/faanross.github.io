@@ -35,11 +35,6 @@
 					to help security practitioners navigate the AI shift.
 				</p>
 				<p>
-					I also do research at <a href="https://www.activecountermeasures.com" target="_blank" rel="noopener noreferrer">Active Countermeasures</a>
-					and instruct at <a href="https://www.antisyphontraining.com/instructor/faan-ross/" target="_blank" rel="noopener noreferrer">AntiSyphon</a>,
-					teaching threat hunting and offensive security tooling.
-				</p>
-				<p>
 					If you have any questions or feedback, feel free to
 					<a href="mailto:moi@faanross.com">connect</a>.
 				</p>
