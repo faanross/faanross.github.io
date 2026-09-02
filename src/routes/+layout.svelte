@@ -2,7 +2,6 @@
 	import '$lib/styles/global.css';
 	import Nav from '$lib/components/Nav.svelte';
 	import Background from '$lib/components/Background.svelte';
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { addCopyButtons } from '$lib/utils/addCopyButtons';
@@ -17,12 +16,6 @@
 		setTimeout(addCopyButtons, 100);
 	});
 
-	// Hide footer on dashboard routes
-	const hiddenRoutes = ['/agentic/memory'];
-	$effect(() => {
-		// This is just to make hiddenRoutes reactive with page
-	});
-	const showFooter = $derived(!hiddenRoutes.some(route => $page.url.pathname.startsWith(route)));
 </script>
 
 <svelte:head>
@@ -40,7 +33,6 @@
 	{@render children()}
 </main>
 
-{#if showFooter}
 <footer>
 	<div class="container">
 		<div class="footer-links">
@@ -53,7 +45,6 @@
 		<p>&copy; 2026 Faan Rossouw</p>
 	</div>
 </footer>
-{/if}
 
 <style>
 	main {

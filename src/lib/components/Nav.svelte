@@ -1,14 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	// Hide nav on standalone dashboard routes
-	const hiddenRoutes = ['/agentic/memory'];
-
 	const navItems = [
 		{ href: '/', label: 'Home' },
 		{ href: '/courses', label: 'Courses' },
 		{ href: '/articles', label: 'Articles' },
-		{ href: '/agentic', label: 'Agentic' },
 		{ href: '/talks', label: 'Talks' },
 		{ href: '/projects', label: 'Projects' },
 		{ href: '/about', label: 'About' }
@@ -25,7 +21,6 @@
 	}
 </script>
 
-{#if !hiddenRoutes.some(route => $page.url.pathname.startsWith(route))}
 <nav class="nav">
 	<div class="nav-container">
 		<a href="/" class="logo" onclick={closeMenu}>
@@ -65,7 +60,6 @@
 		</ul>
 	</div>
 </nav>
-{/if}
 
 <style>
 	.nav {
