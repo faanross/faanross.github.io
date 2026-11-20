@@ -1,187 +1,333 @@
-<script>
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+	import { page } from '$app/state';
 	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
-	export let title = '';
+
+	interface Props {
+		title?: string;
+		children?: Snippet;
+	}
+
+	let { title = '', children }: Props = $props();
+
+	// "Lesson 5: DNS Server" -> kicker "lesson 05", heading "DNS Server".
+	const parts = $derived.by(() => {
+		const m = title.match(/^Lesson (\d+):\s*(.*)$/);
+		return m
+			? { kicker: `lesson ${m[1].padStart(2, '0')}`, heading: m[2] }
+			: { kicker: '', heading: title };
+	});
+
+	const slug = $derived(page.url.pathname.replace(/\/$/, '').split('/').pop() ?? '');
 </script>
 
-<ScrollProgress contentSelector=".lesson-content" />
+<ScrollProgress contentSelector=".lesson-body" />
 
 <svelte:head>
-	<title>{title} | Building a C2 Framework in Go</title>
+	<title>{title} · Building a C2 Framework in Go</title>
 </svelte:head>
 
-<article class="lesson">
-	<div class="lesson-header">
-		<a href="/courses/course01" class="back-link">
-			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-				<polyline points="15 18 9 12 15 6"></polyline>
-			</svg>
-			Back to Course
-		</a>
-		<h1>{title}</h1>
-	</div>
+<main class="lesson">
+	<nav class="crumbs" aria-label="Breadcrumb">
+		<a href="/">faanross</a><span class="slash">/</span><a href="/courses/course01">c2-framework-go</a><span
+			class="slash">/</span
+		><span class="here">{slug}</span>
+	</nav>
 
-	<div class="lesson-content">
-		<slot />
-	</div>
-</article>
+	<header class="head">
+		<p class="kicker">{parts.kicker || 'course archive'}</p>
+		<h1>{parts.heading}</h1>
+	</header>
+
+	<article class="lesson-body">
+		{@render children?.()}
+	</article>
+
+	<footer class="foot">
+		<a href="/courses/course01">↑ course archive</a>
+		<span class="dot">·</span>
+		<a href="/">faanross.com</a>
+	</footer>
+</main>
 
 <style>
 	.lesson {
-		max-width: 900px;
+		max-width: 48rem;
 		margin: 0 auto;
-		padding: 80px 24px;
+		padding: 56px 24px 96px;
 	}
 
-	.lesson-header {
-		margin-bottom: 40px;
+	.crumbs {
+		font-size: 12px;
+		color: var(--fg-faint);
+		margin-bottom: 64px;
+		overflow-wrap: anywhere;
 	}
 
-	.back-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		font-size: 13px;
-		color: rgba(255, 255, 255, 0.6);
-		text-decoration: none;
-		margin-bottom: 20px;
-		transition: color 0.3s ease;
+	.crumbs a,
+	.foot a {
+		color: var(--fg-dim);
+		text-decoration-color: var(--line);
 	}
 
-	.back-link:hover {
-		color: var(--aion-purple);
+	.crumbs a:hover,
+	.foot a:hover {
+		color: var(--fg);
+		text-decoration-color: var(--purple);
 	}
 
-	h1 {
-		font-size: clamp(28px, 4vw, 38px);
-		font-weight: 700;
-		line-height: 1.3;
+	.slash {
+		margin: 0 0.6ch;
+		opacity: 0.7;
 	}
 
-	.lesson-content {
-		font-size: 16px;
-		line-height: 1.8;
-		color: rgba(255, 255, 255, 0.85);
+	.here {
+		color: var(--fg-dim);
 	}
 
-	.lesson-content :global(h2) {
-		font-size: 24px;
-		font-weight: 600;
-		margin-top: 48px;
-		margin-bottom: 16px;
-		color: var(--aion-yellow);
-	}
-
-	.lesson-content :global(h3) {
-		font-size: 20px;
-		font-weight: 600;
-		margin-top: 36px;
+	.kicker {
+		font-size: 12px;
+		color: var(--purple);
+		opacity: 0.85;
 		margin-bottom: 12px;
-		color: var(--aion-purple);
 	}
 
-	.lesson-content :global(h4) {
-		font-size: 17px;
-		font-weight: 600;
-		margin-top: 28px;
-		margin-bottom: 10px;
-		color: var(--aion-yellow);
+	.head h1 {
+		font-size: clamp(22px, 3.2vw, 28px);
+		font-weight: 400;
+		line-height: 1.3;
+		letter-spacing: -0.01em;
+		margin-bottom: 48px;
 	}
 
-	.lesson-content :global(p) {
-		margin-bottom: 20px;
+	.foot {
+		margin-top: 72px;
+		padding-top: 24px;
+		border-top: 1px dashed var(--line);
+		font-size: 12px;
 	}
 
-	.lesson-content :global(ul),
-	.lesson-content :global(ol) {
-		margin-bottom: 20px;
-		padding-left: 24px;
+	.dot {
+		margin: 0 0.8ch;
+		color: var(--fg-faint);
 	}
 
-	.lesson-content :global(li) {
-		margin-bottom: 8px;
+	/* ---------------- lesson prose ---------------- */
+
+	.lesson-body {
+		font-size: 14.5px;
+		line-height: 1.85;
+		color: rgba(236, 235, 230, 0.8);
 	}
 
-	.lesson-content :global(a) {
-		color: var(--aion-purple);
-		text-decoration: none;
-		border-bottom: 1px solid transparent;
-		transition: border-color 0.3s ease;
+	.lesson-body :global(h2),
+	.lesson-body :global(h3),
+	.lesson-body :global(h4) {
+		font-weight: 400;
+		color: var(--fg);
+		line-height: 1.4;
+		scroll-margin-top: 24px;
 	}
 
-	.lesson-content :global(a:hover) {
-		border-bottom-color: var(--aion-purple);
+	.lesson-body :global(h2) {
+		font-size: 18px;
+		margin: 56px 0 16px;
 	}
 
-	.lesson-content :global(code) {
-		font-family: 'JetBrains Mono', monospace;
-		font-size: 14px;
-		background: rgba(61, 61, 71, 0.6);
-		padding: 2px 6px;
+	.lesson-body :global(h3) {
+		font-size: 15.5px;
+		margin: 40px 0 12px;
+	}
+
+	.lesson-body :global(h4) {
+		font-size: 14.5px;
+		margin: 32px 0 10px;
+		color: var(--fg-dim);
+	}
+
+	.lesson-body :global(h2)::before {
+		content: '## ';
+		color: var(--purple);
+	}
+
+	.lesson-body :global(h3)::before {
+		content: '### ';
+		color: var(--purple);
+		opacity: 0.6;
+	}
+
+	.lesson-body :global(h4)::before {
+		content: '#### ';
+		color: var(--purple);
+		opacity: 0.4;
+	}
+
+	.lesson-body :global(p) {
+		margin-bottom: 18px;
+	}
+
+	.lesson-body :global(strong) {
+		color: var(--fg);
+		font-weight: 400;
+		background: rgba(189, 147, 249, 0.12);
+		padding: 0 3px;
+		border-radius: 2px;
+	}
+
+	.lesson-body :global(em) {
+		color: var(--fg);
+	}
+
+	.lesson-body :global(ul),
+	.lesson-body :global(ol) {
+		margin: 0 0 18px;
+		padding-left: 2.2ch;
+	}
+
+	.lesson-body :global(li) {
+		margin-bottom: 6px;
+		padding-left: 0.6ch;
+	}
+
+	.lesson-body :global(li::marker) {
+		color: var(--purple);
+	}
+
+	.lesson-body :global(a) {
+		color: var(--fg);
+		text-decoration-color: var(--purple-soft);
+	}
+
+	.lesson-body :global(a:hover) {
+		color: var(--yellow);
+		text-decoration-color: currentColor;
+	}
+
+	.lesson-body :global(:not(pre) > code) {
+		font-family: var(--mono);
+		font-size: 0.92em;
+		color: var(--yellow);
+		background: rgba(236, 235, 230, 0.05);
+		padding: 1px 5px;
+		border-radius: 3px;
+		overflow-wrap: anywhere;
+	}
+
+	.lesson-body :global(pre) {
+		background: var(--bg-raised);
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		padding: 18px 20px;
+		margin: 22px 0;
+		overflow-x: auto;
+		font-size: 13px;
+		line-height: 1.65;
+		tab-size: 4;
+	}
+
+	.lesson-body :global(pre code) {
+		font-family: var(--mono);
+		color: rgba(236, 235, 230, 0.86);
+	}
+
+	/* Prism tokens from mdsvex, in the same purple/yellow as the eyes. */
+	.lesson-body :global(.token.comment),
+	.lesson-body :global(.token.prolog),
+	.lesson-body :global(.token.doctype) {
+		color: rgba(236, 235, 230, 0.38);
+		font-style: italic;
+	}
+
+	.lesson-body :global(.token.keyword),
+	.lesson-body :global(.token.builtin),
+	.lesson-body :global(.token.important),
+	.lesson-body :global(.token.boolean) {
+		color: var(--purple);
+	}
+
+	.lesson-body :global(.token.string),
+	.lesson-body :global(.token.char),
+	.lesson-body :global(.token.number),
+	.lesson-body :global(.token.regex) {
+		color: var(--yellow);
+	}
+
+	.lesson-body :global(.token.function),
+	.lesson-body :global(.token.class-name) {
+		color: #f2efe8;
+	}
+
+	.lesson-body :global(.token.operator),
+	.lesson-body :global(.token.punctuation) {
+		color: rgba(236, 235, 230, 0.5);
+	}
+
+	.lesson-body :global(blockquote) {
+		margin: 22px 0;
+		padding: 2px 0 2px 18px;
+		border-left: 2px solid var(--purple);
+		color: var(--fg-dim);
+	}
+
+	.lesson-body :global(blockquote p:last-child) {
+		margin-bottom: 0;
+	}
+
+	.lesson-body :global(img) {
+		display: block;
+		max-width: 100%;
+		height: auto;
+		margin: 24px 0;
+		border: 1px solid var(--line);
 		border-radius: 4px;
 	}
 
-	.lesson-content :global(pre) {
-		background: rgba(20, 20, 25, 0.8);
-		border: 1px solid rgba(189, 147, 249, 0.2);
-		border-radius: 8px;
-		padding: 20px;
-		overflow-x: auto;
-		margin: 24px 0;
-	}
-
-	.lesson-content :global(pre code) {
-		background: none;
-		padding: 0;
-		font-size: 13px;
-		line-height: 1.6;
-	}
-
-	.lesson-content :global(blockquote) {
-		border-left: 3px solid var(--aion-purple);
-		margin: 24px 0;
-		padding: 12px 20px;
-		background: rgba(189, 147, 249, 0.1);
-		border-radius: 0 8px 8px 0;
-	}
-
-	.lesson-content :global(blockquote p) {
-		margin: 0;
-	}
-
-	.lesson-content :global(img) {
-		max-width: 100%;
-		height: auto;
-		border-radius: 8px;
-		margin: 24px 0;
-	}
-
-	.lesson-content :global(table) {
+	.lesson-body :global(table) {
 		width: 100%;
 		border-collapse: collapse;
-		margin: 24px 0;
+		margin: 22px 0;
+		font-size: 13px;
+		display: block;
+		overflow-x: auto;
 	}
 
-	.lesson-content :global(th),
-	.lesson-content :global(td) {
-		padding: 12px;
-		border: 1px solid rgba(189, 147, 249, 0.2);
+	.lesson-body :global(th),
+	.lesson-body :global(td) {
+		padding: 9px 12px;
+		border-bottom: 1px solid var(--line);
 		text-align: left;
+		vertical-align: top;
 	}
 
-	.lesson-content :global(th) {
-		background: rgba(189, 147, 249, 0.1);
-		font-weight: 600;
+	.lesson-body :global(th) {
+		font-weight: 400;
+		color: var(--fg-faint);
+		border-bottom-color: rgba(236, 235, 230, 0.18);
 	}
 
-	.lesson-content :global(hr) {
+	.lesson-body :global(hr) {
 		border: none;
-		border-top: 1px solid rgba(189, 147, 249, 0.2);
-		margin: 40px 0;
+		border-top: 1px dashed var(--line);
+		margin: 48px 0 0;
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 640px) {
 		.lesson {
-			padding: 60px 20px;
+			padding: 32px 20px 72px;
+		}
+
+		.crumbs {
+			margin-bottom: 44px;
+		}
+
+		.lesson-body {
+			font-size: 14px;
+		}
+
+		.lesson-body :global(pre) {
+			padding: 16px;
+			margin-left: -4px;
+			margin-right: -4px;
 		}
 	}
 </style>
