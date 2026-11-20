@@ -9,7 +9,7 @@
 
 	const links = [
 		{ label: 'github', href: 'https://github.com/faanross' },
-		{ label: 'youtube', href: 'https://www.youtube.com/@FaanRoss' },
+		{ label: 'youtube', href: 'https://www.youtube.com/@aionsec' },
 		{ label: 'linkedin', href: 'https://www.linkedin.com/in/faan-rossouw' },
 		{ label: 'x', href: 'https://x.com/faanross' },
 		{ label: 'email', href: 'mailto:moi@faanross.com' },
