@@ -88,24 +88,25 @@
 	}
 
 	.dot {
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.25);
+		width: 6px;
+		height: 6px;
+		border-radius: 1px;
+		background: rgba(236, 235, 230, 0.2);
 		border: none;
 		cursor: pointer;
 		padding: 0;
-		transition: all 0.3s ease;
+		transition:
+			background 0.2s ease,
+			transform 0.2s ease;
 	}
 
 	.dot:hover {
-		background: rgba(245, 230, 99, 0.6);
-		transform: scale(1.2);
+		background: var(--purple);
+		transform: scale(1.3);
 	}
 
 	.dot.active {
-		background: var(--aion-yellow, #f5e663);
-		box-shadow: 0 0 4px rgba(245, 230, 99, 0.25);
+		background: var(--yellow);
 	}
 
 	@media (max-width: 1100px) {

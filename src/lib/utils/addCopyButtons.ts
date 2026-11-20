@@ -1,6 +1,6 @@
 /**
  * Adds copy buttons to all pre elements that don't already have them.
- * Skips elements already wrapped by ArticleLayout (.code-block) or global (.code-block-global).
+ * Skips elements that are already wrapped (.code-block or .code-block-global).
  */
 export function addCopyButtons(): void {
 	document.querySelectorAll('pre').forEach((pre) => {
