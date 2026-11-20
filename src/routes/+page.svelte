@@ -57,9 +57,8 @@
 			await type(FIRST);
 			await wait(1200);
 			if (over) return;
-			typed = ''; // gone, no backspacing
-			await wait(500);
-			if (over) return;
+			// The yellow line vanishes, caret and all, and the purple line starts
+			// typing in the same frame: no lone caret in between.
 			lineColor = 'var(--purple)';
 			await type(motto);
 			await wait(1000);
