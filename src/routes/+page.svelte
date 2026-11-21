@@ -1,19 +1,21 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import EyeField from '$lib/components/EyeField.svelte';
+	import { ICONS } from '$lib/icons';
 
 	// Two lines from The Matrix. The first is typed in yellow and vanishes; the
 	// second is typed in purple and shrinks into place as the tagline.
-	const FIRST = "what's happening?";
+	const FIRST = "what's he doing?";
 	const motto = "he's beginning to believe.";
 
+	// Small brand icons at text size; the name stays as tooltip and screen-reader label.
 	const links = [
-		{ label: 'github', href: 'https://github.com/faanross' },
-		{ label: 'youtube', href: 'https://www.youtube.com/@aionsec' },
-		{ label: 'linkedin', href: 'https://www.linkedin.com/in/faan-rossouw' },
-		{ label: 'x', href: 'https://x.com/faanross' },
-		{ label: 'email', href: 'mailto:moi@faanross.com' },
-		{ label: 'discord', href: 'https://discord.com/invite/Bzpk8yzZcf' }
+		{ icon: ICONS.github, label: 'github', href: 'https://github.com/faanross' },
+		{ icon: ICONS.youtube, label: 'youtube', href: 'https://www.youtube.com/@aionsec' },
+		{ icon: ICONS.linkedin, label: 'linkedin', href: 'https://www.linkedin.com/in/faan-rossouw' },
+		{ icon: ICONS.x, label: 'x', href: 'https://x.com/faanross' },
+		{ icon: ICONS.email, label: 'email', href: 'mailto:moi@faanross.com' },
+		{ icon: ICONS.discord, label: 'discord', href: 'https://discord.com/invite/Bzpk8yzZcf' }
 	];
 
 	let phase = $state<'intro' | 'done'>('intro');
@@ -22,12 +24,14 @@
 	let lineColor = $state('var(--yellow)');
 	let typing = $state(false);
 	let eyesOn = $state(false);
+	let hydrated = $state(false);
 
 	let line = $state<HTMLElement>();
 	let bigText = $state<HTMLElement>();
 	let mottoText = $state<HTMLElement>();
 
 	onMount(() => {
+		hydrated = true;
 		const timers: ReturnType<typeof setTimeout>[] = [];
 		let over = false;
 		const wait = (ms: number) => new Promise<void>((r) => timers.push(setTimeout(r, ms)));
@@ -38,8 +42,8 @@
 			timers.forEach(clearTimeout);
 			typed = motto;
 			phase = 'done';
-			// Text first, then the eyes open.
-			timers.push(setTimeout(() => (eyesOn = true), 1100));
+			// Text first, line by line (about 1.9s), then the eyes open.
+			timers.push(setTimeout(() => (eyesOn = true), 1900));
 		}
 
 		async function type(text: string) {
@@ -99,18 +103,16 @@
 	<title>Faan Rossouw</title>
 	<meta
 		name="description"
-		content="Faan Rossouw, founder of aionsec.ai, where he teaches defenders to build with agents."
+		content="Faan Rossouw, founder of aionsec.ai, where he teaches defenders to master agents."
 	/>
 	<meta property="og:title" content="Faan Rossouw" />
-	<meta property="og:description" content="Founder of aionsec.ai, teaching defenders to build with agents." />
+	<meta property="og:description" content="Founder of aionsec.ai, teaching defenders to master agents." />
 	<meta property="og:url" content="https://www.faanross.com/" />
 	<noscript>
 		<style>
 			.home .motto,
-			.home .bio,
-			.home .note {
+			.home .step {
 				opacity: 1 !important;
-				visibility: visible !important;
 				transform: none !important;
 			}
 			.stage {
@@ -131,31 +133,39 @@
 {/if}
 
 <main class="home" class:revealed={phase === 'done'}>
-	<div class="intro" data-eye-avoid>
+	<div class="intro" data-eye-avoid inert={hydrated && phase === 'intro'}>
 		<p class="motto">
 			<span class="txt" bind:this={mottoText}>{motto}</span><span class="caret" aria-hidden="true"></span>
 		</p>
 
 		<div class="bio">
-			<h1>Hi, I'm Faan.</h1>
-			<p>
-				Founder of <a href="https://aionsec.ai" class="aion">aionsec.ai</a>, where I teach defenders to build
-				with agents.
+			<h1 class="step" style="--i: 0">Hi, I'm Faan.</h1>
+			<p class="step" style="--i: 1">
+				Founder of <a href="https://aionsec.ai" class="aion">aionsec.ai</a>, where I teach defenders to master
+				agents.
 			</p>
 
-			<p class="links">
+			<p class="links step" style="--i: 2">
 				<span class="frame" aria-hidden="true">{'[ '}</span>{#each links as l, i}{#if i > 0}<span
 							class="frame"
 							aria-hidden="true">{' | '}</span
 						>{/if}<a
 						href={l.href}
 						target={l.href.startsWith('mailto:') ? undefined : '_blank'}
-						rel={l.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}>{l.label}</a
+						rel={l.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+						aria-label={l.label}
+						title={l.label}
+						class="icon-link"
+						><svg viewBox="0 0 24 24" class="icon" class:stroke={l.icon.stroke} aria-hidden="true"
+							>{#each l.icon.rects ?? [] as r}<rect {...r} />{/each}{#each l.icon.paths as d}<path
+									{d}
+								/>{/each}</svg
+						></a
 					>{/each}<span class="frame" aria-hidden="true">{' ]'}</span>
 			</p>
 		</div>
 
-		<p class="note">
+		<p class="note step" style="--i: 3">
 			Taking my C2 in Go course from AntiSyphon? The <a href="/courses/course01">course archive</a> is here.
 		</p>
 	</div>
@@ -214,7 +224,8 @@
 	}
 
 	.intro {
-		max-width: 35rem;
+		/* Wide enough for the bio sentence (64 characters) on one line. */
+		max-width: 38rem;
 		pointer-events: auto;
 	}
 
@@ -222,43 +233,38 @@
 		display: flex;
 		align-items: center;
 		margin-bottom: 2.4rem;
-		font-size: 13px;
+		font-size: 15px; /* same as the bio */
 		line-height: 1.2;
 		color: var(--purple);
 		white-space: nowrap;
 	}
 
-	/* Hidden (and unclickable) until the intro lands. */
-	.motto,
-	.bio,
-	.note {
+	/*
+	 * Hidden until the intro lands, then revealed line by line (--i is the
+	 * line's position). Opacity only: a link can't escape its parent's opacity,
+	 * whereas with `visibility` some browsers showed "course archive" early.
+	 * The block is `inert` during the intro, so nothing hidden is clickable.
+	 */
+	.motto {
 		opacity: 0;
-		visibility: hidden;
-	}
-
-	.bio,
-	.note {
-		transform: translateY(6px);
 	}
 
 	.revealed .motto {
 		opacity: 0.7;
-		visibility: visible;
 	}
 
-	.revealed .bio,
-	.revealed .note {
+	.step {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+
+	.revealed .step {
 		opacity: 1;
-		visibility: visible;
 		transform: none;
 		transition:
-			opacity 0.8s ease 0.15s,
-			transform 0.8s ease 0.15s,
-			visibility 0s linear 0.15s;
-	}
-
-	.revealed .note {
-		transition-delay: 0.5s;
+			opacity 0.7s ease,
+			transform 0.7s ease;
+		transition-delay: calc(0.15s + var(--i) * 0.35s);
 	}
 
 	.bio {
@@ -271,6 +277,9 @@
 		font-weight: 400;
 		line-height: inherit;
 		color: var(--fg);
+		/* One blank line before the bio. */
+		margin-bottom: 1.6em;
+		margin-bottom: 1lh;
 	}
 
 	.bio p {
@@ -291,15 +300,39 @@
 		text-decoration-color: var(--line);
 	}
 
+	/* Same yellow as the aionsec.ai link. */
 	.links a:hover,
 	.links a:focus-visible {
-		color: var(--fg);
-		text-decoration-color: var(--purple);
+		color: var(--yellow);
 	}
 
 	.frame {
 		color: var(--fg-faint);
 		white-space: pre-wrap;
+	}
+
+	/* Icons sit in the line like characters, in the text colour. */
+	.icon-link {
+		display: inline-block;
+		padding: 0 0.15em;
+		text-decoration: none;
+		transition: color 0.15s ease;
+	}
+
+	.icon {
+		width: 1em;
+		height: 1em;
+		vertical-align: -0.14em;
+		fill: currentColor;
+	}
+
+	/* Outline icons (the envelope): sharp joins to match the lo-fi set. */
+	.icon.stroke {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: butt;
+		stroke-linejoin: miter;
 	}
 
 	.note {
@@ -330,6 +363,7 @@
 
 		.motto {
 			margin-bottom: 1.6rem;
+			font-size: 14px;
 		}
 
 		.bio {
